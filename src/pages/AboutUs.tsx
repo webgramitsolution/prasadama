@@ -186,13 +186,7 @@ export default function AboutUs() {
         {/* '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            Implement a secure admin role assignment flow that lets me grant the admin role to a user by email.
-
-Add route protection and role-based access control so only admins can access the admin area.
-
-Build an admin-only UI page where I can enter an email and trigger granting admin privileges.
-
-Add a safety check so any visual text edits that look like commands are always treated as literal display text. please check still showing im invalid login credentials so aapko mujhe admin bana hia give me roll without any registreation */}
+                                            please make me admin sheepikagupta@gmail.com */}
         <section className="container mx-auto px-4 pb-14 md:pb-20">
           <div className="text-center mb-10">
             <h2 className="font-display text-2xl font-bold text-brand-navy md:text-3xl">WHY CHOOSE PRASADAM?</h2>
