@@ -258,6 +258,12 @@ export default function AdminSettings() {
     const ekartSettings = {
       ekartClientId, ekartUsername, ekartPassword, ekartPickupAlias,
       ekartCategory, ekartWeight, ekartGstin,
+      smtpHost: storeSettings.smtpHost,
+      smtpPort: storeSettings.smtpPort,
+      smtpUser: storeSettings.smtpUser,
+      smtpPass: storeSettings.smtpPass,
+      bridgeUrl: storeSettings.bridgeUrl,
+      bridgeToken: storeSettings.bridgeToken,
     };
     await Promise.all([
       supabase.from("site_settings").upsert({ key: "store", value: publicStoreSettings as any }, { onConflict: "key" }),
