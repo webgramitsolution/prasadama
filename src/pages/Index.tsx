@@ -67,7 +67,22 @@ const Index = () => {
         {/* '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            instagram feed se related all code remove kar do fronedn backedn everwher removed keep neat and clean code */}
+                                            For the code present, I get the error below.
+
+Please think step-by-step in order to resolve it.
+```
+Edge function returned 400: Error, {"error":"Failed to fetch Instagram media.","message":"Invalid OAuth access token - Cannot parse access token","details":{"message":"Invalid OAuth access token - Cannot parse access token","type":"OAuthException","code":190,"fbtrace_id":"Abg6guuf9x7XYK3TIBO8Xf8"}}
+
+{
+  "timestamp": 1787303432184,
+  "error_type": "RUNTIME_ERROR",
+  "filename": "supabase/functions/instagram-feed/index.ts",
+  "lineno": 0,
+  "colno": 0,
+  "stack": "not_applicable",
+  "has_blank_screen": true
+}
+``` */}
         
       </main>
       <TrustSection />
