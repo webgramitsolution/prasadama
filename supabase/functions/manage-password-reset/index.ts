@@ -107,7 +107,7 @@ serve(async (req) => {
 
       // 3. Send Email
       const smtpHost = Deno.env.get("SMTP_HOST") || "smtp.hostinger.com";
-      const smtpUser = Deno.env.get("SMTP_USER") || "sales@houskase.com";
+      const smtpUser = Deno.env.get("SMTP_USER");
       const smtpPass = Deno.env.get("SMTP_PASS");
 
       const client = new RobustSmtp();
