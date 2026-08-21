@@ -205,7 +205,7 @@ export function Header() {
                   <SignedImage
                     src={logoUrl || DEFAULT_LOGO_URL}
                     alt="Prasadam"
-                    className="h-9 w-auto object-contain"
+                    className="h-12 w-auto object-contain"
                   />
                 </Link>
               </div>
@@ -215,13 +215,13 @@ export function Header() {
                 <SignedImage
                   src={logoUrl || DEFAULT_LOGO_URL}
                   alt="Prasadam"
-                  className="h-9 w-auto object-contain sm:hidden"
+                  className="h-12 w-auto object-contain sm:hidden"
                 />
                 {/* Desktop & tablet — Prasadam logo */}
                 <img
                   src={DEFAULT_LOGO_URL}
                   alt="Prasadam"
-                  className="hidden h-12 w-auto object-contain sm:block"
+                  className="hidden h-16 w-auto object-contain sm:block"
                 />
               </Link>
             )}
