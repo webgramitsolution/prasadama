@@ -86,7 +86,7 @@ serve(async (req) => {
   }
 
   try {
-    const { email, password, fullName, correlationId, testOnly } = await req.json();
+    const { email, password, fullName, correlationId } = await req.json();
 
     if (!email || !password || !fullName) {
       throw new Error("Missing required fields");
@@ -95,37 +95,30 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     
-    const { data: smtpSettings } = await supabase.from("site_settings").select("value").eq("key", "ekart_settings").maybeSingle();
-    const smtpVal = (smtpSettings?.value ?? {}) as any;
-
-    const smtpHost = smtpVal.smtpHost || Deno.env.get("SMTP_HOST") || "smtp.hostinger.com";
-    const smtpUser = smtpVal.smtpUser || Deno.env.get("SMTP_USER") || "sales@houskase.com";
-    const smtpPass = smtpVal.smtpPass || Deno.env.get("SMTP_PASS");
-    const bridgeUrl = smtpVal.bridgeUrl || Deno.env.get("MAIL_BRIDGE_URL");
-    const bridgeToken = smtpVal.bridgeToken || Deno.env.get("MAIL_BRIDGE_TOKEN");
+    const smtpHost = Deno.env.get("SMTP_HOST") || "smtp.hostinger.com";
+    const smtpUser = Deno.env.get("SMTP_USER") || "sales@houskase.com";
+    const smtpPass = Deno.env.get("SMTP_PASS");
 
     if (!smtpPass) {
       throw new Error("SMTP password is not set.");
     }
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
-    let otp = "123456";
-    if (!testOnly) {
-      otp = Math.floor(100000 + Math.random() * 900000).toString();
-      const { error: dbError } = await supabase
-        .from("signup_otp_events")
-        .insert([
-          { 
-            email, 
-            otp_code: otp, 
-            correlation_id: correlationId,
-            full_name: fullName,
-            password_hash: await sha256Hex(`${email.trim().toLowerCase()}:${password}`)
-          }
-        ]);
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-      if (dbError) throw new Error("Failed to store verification code");
-    }
+    const { error: dbError } = await supabase
+      .from("signup_otp_events")
+      .insert([
+        { 
+          email, 
+          otp_code: otp, 
+          correlation_id: correlationId,
+          full_name: fullName,
+          password_hash: await sha256Hex(`${email.trim().toLowerCase()}:${password}`)
+        }
+      ]);
+
+    if (dbError) throw new Error("Failed to store verification code");
 
     // Attempting our RobustSmtp client which uses raw Deno.connect/readable/writable
     // instead of high-level libraries that might use restricted APIs.
@@ -199,13 +192,14 @@ serve(async (req) => {
       console.error("Manual SMTP failed:", smtpErr.message);
       
       // Fallback to PHP Bridge if configured
+      const bridgeUrl = Deno.env.get("MAIL_BRIDGE_URL");
       if (bridgeUrl) {
         console.log("Falling back to PHP bridge...");
         const res = await fetch(bridgeUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            token: bridgeToken ?? "",
+            token: Deno.env.get("MAIL_BRIDGE_TOKEN") ?? "",
             to: email,
             subject: "Verify your Prasadam Account",
             fullName: fullName,

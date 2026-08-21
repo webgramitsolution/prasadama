@@ -55,12 +55,6 @@ export default function AdminSettings() {
     socialYoutube: "",
     socialLinkedin: "",
     socialWhatsapp: "",
-    smtpHost: "smtp.hostinger.com",
-    smtpPort: "465",
-    smtpUser: "",
-    smtpPass: "",
-    bridgeUrl: "",
-    bridgeToken: "",
   });
 
   // Notification Settings
@@ -177,12 +171,6 @@ export default function AdminSettings() {
         socialYoutube: v.socialYoutube || "",
         socialLinkedin: v.socialLinkedin || "",
         socialWhatsapp: v.socialWhatsapp || "",
-        smtpHost: v.smtpHost || "smtp.hostinger.com",
-        smtpPort: v.smtpPort || "465",
-        smtpUser: v.smtpUser || "",
-        smtpPass: v.smtpPass || "",
-        bridgeUrl: v.bridgeUrl || "",
-        bridgeToken: v.bridgeToken || "",
       });
     }
 
@@ -258,12 +246,6 @@ export default function AdminSettings() {
     const ekartSettings = {
       ekartClientId, ekartUsername, ekartPassword, ekartPickupAlias,
       ekartCategory, ekartWeight, ekartGstin,
-      smtpHost: storeSettings.smtpHost,
-      smtpPort: storeSettings.smtpPort,
-      smtpUser: storeSettings.smtpUser,
-      smtpPass: storeSettings.smtpPass,
-      bridgeUrl: storeSettings.bridgeUrl,
-      bridgeToken: storeSettings.bridgeToken,
     };
     await Promise.all([
       supabase.from("site_settings").upsert({ key: "store", value: publicStoreSettings as any }, { onConflict: "key" }),
@@ -319,11 +301,7 @@ export default function AdminSettings() {
           </TabsTrigger>
           <TabsTrigger value="integrations" className="gap-2 flex-1 min-w-[100px]">
             <Truck className="h-4 w-4" />
-            Ekart
-          </TabsTrigger>
-          <TabsTrigger value="smtp" className="gap-2 flex-1 min-w-[100px]">
-            <Bell className="h-4 w-4" />
-            SMTP
+            Integrations
           </TabsTrigger>
         </TabsList>
 
@@ -698,125 +676,6 @@ export default function AdminSettings() {
                     <li>Tracking IDs are automatically updated in the order details.</li>
                   </ul>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="smtp">
-          <Card className="shadow-card">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bell className="h-5 w-5" />
-                SMTP Configuration (Hostinger)
-              </CardTitle>
-              <CardDescription>
-                Configure your SMTP settings for OTP and transactional emails. 
-                These will be used by the backend Edge Functions.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="smtpHost">SMTP Host</Label>
-                  <Input 
-                    id="smtpHost" 
-                    placeholder="smtp.hostinger.com" 
-                    value={storeSettings.smtpHost}
-                    onChange={(e) => setStoreSettings(prev => ({ ...prev, smtpHost: e.target.value }))} 
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="smtpPort">SMTP Port</Label>
-                  <Input 
-                    id="smtpPort" 
-                    placeholder="465" 
-                    value={storeSettings.smtpPort}
-                    onChange={(e) => setStoreSettings(prev => ({ ...prev, smtpPort: e.target.value }))}
-                  />
-                </div>
-              </div>
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="smtpUser">SMTP Username</Label>
-                  <Input 
-                    id="smtpUser" 
-                    placeholder="sales@houskase.com" 
-                    value={storeSettings.smtpUser}
-                    onChange={(e) => setStoreSettings(prev => ({ ...prev, smtpUser: e.target.value }))}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="smtpPass">SMTP Password</Label>
-                  <Input 
-                    id="smtpPass" 
-                    type="password" 
-                    placeholder="••••••••" 
-                    value={storeSettings.smtpPass}
-                    onChange={(e) => setStoreSettings(prev => ({ ...prev, smtpPass: e.target.value }))}
-                  />
-                </div>
-              </div>
-              
-              <Separator />
-              
-              <div className="space-y-4">
-                <h3 className="font-semibold text-sm">Mailer PHP Bridge (Optional)</h3>
-                <p className="text-xs text-muted-foreground">
-                  If direct SMTP fails due to environment restrictions, you can use the PHP bridge.
-                </p>
-                <div className="space-y-2">
-                  <Label htmlFor="bridgeUrl">Bridge URL</Label>
-                  <Input 
-                    id="bridgeUrl" 
-                    placeholder="https://yourdomain.com/mailer.php" 
-                    value={storeSettings.bridgeUrl}
-                    onChange={(e) => setStoreSettings(prev => ({ ...prev, bridgeUrl: e.target.value }))}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="bridgeToken">Bridge Secret Token</Label>
-                  <Input 
-                    id="bridgeToken" 
-                    type="password" 
-                    placeholder="Your random secret token" 
-                    value={storeSettings.bridgeToken}
-                    onChange={(e) => setStoreSettings(prev => ({ ...prev, bridgeToken: e.target.value }))}
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-end pt-4">
-                <Button 
-                  variant="outline" 
-                  className="gap-2"
-                  disabled={isSaving}
-                  onClick={async () => {
-                    setIsSaving(true);
-                    try {
-                      const { data, error } = await supabase.functions.invoke("send-signup-otp", {
-                        body: { 
-                          email: storeSettings.storeEmail, 
-                          password: "TEST_PASSWORD", 
-                          fullName: "SMTP Test User",
-                          testOnly: true 
-                        }
-                      });
-                      if (error) throw error;
-                      toast({ title: "Test Email Sent", description: "Check your inbox for a verification code." });
-                    } catch (err: any) {
-                      toast({ 
-                        title: "SMTP Test Failed", 
-                        description: err.message || "Failed to send test email", 
-                        variant: "destructive" 
-                      });
-                    } finally {
-                      setIsSaving(false);
-                    }
-                  }}
-                >
-                  {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Bell className="h-4 w-4" />}
-                  Test SMTP
-                </Button>
               </div>
             </CardContent>
           </Card>
