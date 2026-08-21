@@ -11,6 +11,28 @@ async function sha256Hex(value: string) {
   return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+async function hashOtp(email: string, otp: string) {
+  return await sha256Hex(`otp:${String(email).trim().toLowerCase()}:${otp}`);
+}
+
+const toHex = (arr: Uint8Array) => Array.from(arr).map((b) => b.toString(16).padStart(2, "0")).join("");
+
+/** Verifies a password against a `pbkdf2$iters$salt$hash` record. */
+async function verifyPassword(password: string, stored: string) {
+  const parts = String(stored || "").split("$");
+  if (parts.length !== 4 || parts[0] !== "pbkdf2") return false;
+  const iterations = parseInt(parts[1], 10);
+  const salt = Uint8Array.from(parts[2].match(/.{2}/g)!.map((b) => parseInt(b, 16)));
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", salt, iterations, hash: "SHA-256" }, key, 256);
+  const candidate = toHex(new Uint8Array(bits));
+  // constant-time-ish comparison
+  if (candidate.length !== parts[3].length) return false;
+  let diff = 0;
+  for (let i = 0; i < candidate.length; i++) diff |= candidate.charCodeAt(i) ^ parts[3].charCodeAt(i);
+  return diff === 0;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -35,7 +57,7 @@ serve(async (req) => {
       .from("signup_otp_events")
       .select("*")
       .eq("email", email)
-      .eq("otp_code", code)
+      .eq("otp_code", await hashOtp(email, code))
       .gt("expires_at", new Date().toISOString())
       .order("created_at", { ascending: false })
       .limit(1)
@@ -49,8 +71,7 @@ serve(async (req) => {
     }
 
     // The stored value is a one-way hash; confirm the supplied password matches the signup password.
-    const suppliedHash = await sha256Hex(`${String(email).trim().toLowerCase()}:${password}`);
-    if (!event.password_hash || event.password_hash !== suppliedHash) {
+    if (!event.password_hash || !(await verifyPassword(password, event.password_hash))) {
       return new Response(
         JSON.stringify({ error: "Invalid or expired verification code" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }

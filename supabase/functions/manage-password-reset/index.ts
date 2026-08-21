@@ -68,6 +68,14 @@ class RobustSmtp {
   }
 }
 
+async function hashResetOtp(email: string, otp: string) {
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(`otp:${String(email).trim().toLowerCase()}:${otp}`),
+  );
+  return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -93,7 +101,7 @@ serve(async (req) => {
       const code = Math.floor(100000 + Math.random() * 900000).toString();
       const { error: dbError } = await supabase
         .from("password_reset_otps")
-        .insert([{ email, otp_code: code }]);
+        .insert([{ email, otp_code: await hashResetOtp(email, code) }]);
 
       if (dbError) throw new Error("Failed to generate code.");
 
@@ -176,7 +184,7 @@ serve(async (req) => {
         .from("password_reset_otps")
         .select("*")
         .eq("email", email)
-        .eq("otp_code", otp)
+        .eq("otp_code", await hashResetOtp(email, otp))
         .gt("expires_at", new Date().toISOString())
         .eq("verified", false)
         .maybeSingle();
