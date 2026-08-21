@@ -113,7 +113,8 @@ serve(async (req) => {
 
       const client = new RobustSmtp();
       try {
-        await client.connect(smtpHost, 465, true);
+        const port = smtpPort();
+        await client.connect(smtpHost, port, port === 465);
         await client.login(smtpUser, smtpPass!);
         
         const logoUrl = "/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
