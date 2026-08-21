@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import { logEmailDelivery, smtpPort } from "../_shared/email-log.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -141,8 +142,9 @@ serve(async (req) => {
     
     const client = new RobustSmtp();
     try {
-      console.log(`Connecting to ${smtpHost}:465...`);
-      await client.connect(smtpHost, 465, true);
+      const port = smtpPort();
+      console.log(`Connecting to ${smtpHost}:${port}...`);
+      await client.connect(smtpHost, port, port === 465);
       await client.login(smtpUser, smtpPass);
       
       const logoUrl = "/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
@@ -204,8 +206,27 @@ serve(async (req) => {
 
       await client.sendMail(smtpUser, email, "Verify your Prasadam Account", html);
       console.log("Email sent successfully!");
+      await logEmailDelivery({
+        email_type: "signup_otp",
+        recipient: email,
+        subject: "Verify your Prasadam Account",
+        status: "sent",
+        smtp_host: smtpHost,
+        smtp_port: smtpPort(),
+        correlation_id: correlationId ?? null,
+      });
     } catch (smtpErr: any) {
       console.error("Manual SMTP failed:", smtpErr.message);
+      await logEmailDelivery({
+        email_type: "signup_otp",
+        recipient: email,
+        subject: "Verify your Prasadam Account",
+        status: "failed",
+        smtp_host: smtpHost,
+        smtp_port: smtpPort(),
+        error_message: smtpErr?.message ?? "SMTP failure",
+        correlation_id: correlationId ?? null,
+      });
       
       // Fallback to PHP Bridge if configured
       const bridgeUrl = Deno.env.get("MAIL_BRIDGE_URL");

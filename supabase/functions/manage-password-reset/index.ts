@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import { logEmailDelivery, smtpPort } from "../_shared/email-log.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -171,7 +172,25 @@ serve(async (req) => {
           </html>`;
 
         await client.sendMail(smtpUser, email, "Your Password Reset Code", html);
-
+        await logEmailDelivery({
+          email_type: "password_reset_otp",
+          recipient: email,
+          subject: "Your Password Reset Code",
+          status: "sent",
+          smtp_host: smtpHost,
+          smtp_port: smtpPort(),
+        });
+      } catch (mailErr: any) {
+        await logEmailDelivery({
+          email_type: "password_reset_otp",
+          recipient: email,
+          subject: "Your Password Reset Code",
+          status: "failed",
+          smtp_host: smtpHost,
+          smtp_port: smtpPort(),
+          error_message: mailErr?.message ?? "SMTP failure",
+        });
+        throw mailErr;
       } finally {
         client.close();
       }
