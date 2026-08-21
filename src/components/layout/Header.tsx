@@ -343,7 +343,7 @@ export function Header() {
       </div>
 
       {/* Bottom Header - Mega Menu Bar (Desktop/Tablet only) */}
-      <div className="hidden md:block bg-[#AD1E2A] text-white">
+      <div className="hidden md:block bg-[#661714] text-white">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-center h-10 overflow-x-auto">
             <nav className="flex items-center gap-1">
