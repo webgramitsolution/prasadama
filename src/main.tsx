@@ -21,7 +21,7 @@ if (typeof window !== "undefined") {
   window.addEventListener("beforeinstallprompt", (event) => {
     event.preventDefault();
     window.houskaseDeferredInstallPrompt = event as BeforeInstallPromptEvent;
-    window.dispatchEvent(new Event("houskase-beforeinstallprompt"));
+    window.dispatchEvent(new Event("prasadam-beforeinstallprompt"));
   });
 
   window.addEventListener(

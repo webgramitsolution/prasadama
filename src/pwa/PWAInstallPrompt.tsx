@@ -71,12 +71,12 @@ export const PWAInstallPrompt = () => {
     };
 
     window.addEventListener("beforeinstallprompt", onBeforeInstall);
-    window.addEventListener("houskase-beforeinstallprompt", onStoredBeforeInstall);
+    window.addEventListener("prasadam-beforeinstallprompt", onStoredBeforeInstall);
     window.addEventListener("appinstalled", onInstalled);
     return () => {
       window.clearTimeout(fallbackTimer);
       window.removeEventListener("beforeinstallprompt", onBeforeInstall);
-      window.removeEventListener("houskase-beforeinstallprompt", onStoredBeforeInstall);
+      window.removeEventListener("prasadam-beforeinstallprompt", onStoredBeforeInstall);
       window.removeEventListener("appinstalled", onInstalled);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
