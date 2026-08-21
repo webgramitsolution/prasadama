@@ -100,9 +100,12 @@ export function Header() {
   return (
     <header className="sticky top-0 left-0 right-0 z-50 bg-card shadow-sm">
 
+      {/* Top Announcement Header */}
+      <AnnouncementBar />
+
       {/* Main Header - White/Card */}
       <div className="bg-card md:border-b md:border-border">
-        <div className="container mx-auto pl-3 pr-4 sm:px-4">
+        <div className="container mx-auto px-3 sm:px-4">
           <div className="flex items-center gap-2 sm:gap-3 h-14 sm:h-16">
             {/* Mobile Menu */}
             <Sheet 
