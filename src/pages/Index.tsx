@@ -67,22 +67,13 @@ const Index = () => {
         {/* '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            For the code present, I get the error below.
+                                            Improve the UI to show a specific, user-friendly message when OTP delivery fails and include a retry button. Verify that OTP emails send successfully for new signups and that the OTP link/code works end to end.
 
-Please think step-by-step in order to resolve it.
-```
-Edge function returned 400: Error, {"error":"SMTP Error: failed to lookup address information: Name or service not known. The environment restricts raw sockets. Please upload 'mailer.php' to your Hostinger server and set MAIL_BRIDGE_URL secret."}
+Implement an OTP resend feature with rate limiting and a countdown timer after login or signup.
 
-{
-  "timestamp": 1787304342629,
-  "error_type": "RUNTIME_ERROR",
-  "filename": "supabase/functions/send-signup-otp/index.ts",
-  "lineno": 0,
-  "colno": 0,
-  "stack": "not_applicable",
-  "has_blank_screen": true
-}
-``` */}
+Harden the mailer.php bridge by adding authentication/verification and validating inputs to prevent misuse.
+
+Add admin-accessible logs to track OTP email delivery attempts and failures for my account.  suno  Emil ka SMTP open karo main host deta hu */}
         
       </main>
       <TrustSection />
