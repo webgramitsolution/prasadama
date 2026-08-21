@@ -721,23 +721,39 @@ export default function AdminSettings() {
                   <Input 
                     id="smtpHost" 
                     placeholder="smtp.hostinger.com" 
-                    value={storeSettings.socialFacebook} // Hijacking temporarily or adding state? Let's add real state.
-                    onChange={(e) => setStoreSettings(prev => ({ ...prev, socialFacebook: e.target.value }))} 
+                    value={storeSettings.smtpHost}
+                    onChange={(e) => setStoreSettings(prev => ({ ...prev, smtpHost: e.target.value }))} 
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="smtpPort">SMTP Port</Label>
-                  <Input id="smtpPort" placeholder="465" defaultValue="465" />
+                  <Input 
+                    id="smtpPort" 
+                    placeholder="465" 
+                    value={storeSettings.smtpPort}
+                    onChange={(e) => setStoreSettings(prev => ({ ...prev, smtpPort: e.target.value }))}
+                  />
                 </div>
               </div>
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="smtpUser">SMTP Username</Label>
-                  <Input id="smtpUser" placeholder="sales@houskase.com" />
+                  <Input 
+                    id="smtpUser" 
+                    placeholder="sales@houskase.com" 
+                    value={storeSettings.smtpUser}
+                    onChange={(e) => setStoreSettings(prev => ({ ...prev, smtpUser: e.target.value }))}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="smtpPass">SMTP Password</Label>
-                  <Input id="smtpPass" type="password" placeholder="••••••••" />
+                  <Input 
+                    id="smtpPass" 
+                    type="password" 
+                    placeholder="••••••••" 
+                    value={storeSettings.smtpPass}
+                    onChange={(e) => setStoreSettings(prev => ({ ...prev, smtpPass: e.target.value }))}
+                  />
                 </div>
               </div>
               
@@ -750,11 +766,22 @@ export default function AdminSettings() {
                 </p>
                 <div className="space-y-2">
                   <Label htmlFor="bridgeUrl">Bridge URL</Label>
-                  <Input id="bridgeUrl" placeholder="https://yourdomain.com/mailer.php" />
+                  <Input 
+                    id="bridgeUrl" 
+                    placeholder="https://yourdomain.com/mailer.php" 
+                    value={storeSettings.bridgeUrl}
+                    onChange={(e) => setStoreSettings(prev => ({ ...prev, bridgeUrl: e.target.value }))}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="bridgeToken">Bridge Secret Token</Label>
-                  <Input id="bridgeToken" type="password" placeholder="Your random secret token" />
+                  <Input 
+                    id="bridgeToken" 
+                    type="password" 
+                    placeholder="Your random secret token" 
+                    value={storeSettings.bridgeToken}
+                    onChange={(e) => setStoreSettings(prev => ({ ...prev, bridgeToken: e.target.value }))}
+                  />
                 </div>
               </div>
 
