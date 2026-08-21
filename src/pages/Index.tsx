@@ -67,19 +67,22 @@ const Index = () => {
         {/* '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            Verify that sheepikagupta@gmail.com can access all admin-only pages by adding a quick admin-only test page and checking permissions.
+                                            For the code present, I get the error below.
 
-Implement an admin account management screen that lets me add/remove admins securely (with invitation or password reset) instead of entering passwords directly.
+Please think step-by-step in order to resolve it.
+```
+Edge function returned 400: Error, {"error":"SMTP Error: failed to lookup address information: Name or service not known. The environment restricts raw sockets. Please upload 'mailer.php' to your Hostinger server and set MAIL_BRIDGE_URL secret."}
 
-Improve the header logo sizing with responsive CSS (desktop/mobile) so it stays clear and properly aligned at all screen widths.
-
-Add an on-screen confirmation message after my admin role is updated so I can clearly see when the change for sheepikagupta@gmail.com is applied.
-
-Add an automatic admin-role assignment flow when the first user signs up with a specific email like sheepikagupta@gmail.com.
-
-Improve the login page to show a clear message when a user is not yet registered or not assigned an admin role, instead of showing an “invalid” state.
-
-Implement a dashboard/admin utility that verifies whether my email has an admin role and shows how to fix it if not. ye abhi bhi "INvalid Login Credentials" show ho rha hai please deep chck fix it and make me admin */}
+{
+  "timestamp": 1787304342629,
+  "error_type": "RUNTIME_ERROR",
+  "filename": "supabase/functions/send-signup-otp/index.ts",
+  "lineno": 0,
+  "colno": 0,
+  "stack": "not_applicable",
+  "has_blank_screen": true
+}
+``` */}
         
       </main>
       <TrustSection />

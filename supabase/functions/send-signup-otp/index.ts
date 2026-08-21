@@ -129,7 +129,7 @@ serve(async (req) => {
       await client.connect(smtpHost, 465, true);
       await client.login(smtpUser, smtpPass);
       
-      const logoUrl = "/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
+      const logoUrl = "https://id-preview--4d51562e-e0ab-4432-8eef-9c0eeece0a1e.lovable.app/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
       const headerBg = "#001B3D";
       const footerBg = "#ad1e2a";
       const accentColor = "#E94E63";
