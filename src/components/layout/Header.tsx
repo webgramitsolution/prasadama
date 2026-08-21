@@ -100,9 +100,12 @@ export function Header() {
   return (
     <header className="sticky top-0 left-0 right-0 z-50 bg-card shadow-sm">
 
+      {/* Top Announcement Header */}
+      <AnnouncementBar />
+
       {/* Main Header - White/Card */}
       <div className="bg-card md:border-b md:border-border">
-        <div className="container mx-auto pl-3 pr-4 sm:px-4">
+        <div className="container mx-auto px-3 sm:px-4">
           <div className="flex items-center gap-2 sm:gap-3 h-14 sm:h-16">
             {/* Mobile Menu */}
             <Sheet 
@@ -198,46 +201,32 @@ export function Header() {
               </SheetContent>
             </Sheet>
 
-            {/* Logo */}
-            {window.location.pathname.startsWith('/admin') || window.location.pathname.startsWith('/dashboard') ? (
-              <div className="flex items-center flex-shrink-0 md:hidden">
-                <Link to="/" className="flex items-center gap-1.5 flex-shrink-0">
-                  <SignedImage
-                    src={logoUrl || DEFAULT_LOGO_URL}
-                    alt="Prasadam"
-                    className="h-9 w-auto object-contain"
-                  />
-                </Link>
-              </div>
-            ) : (
-            <Link to="/" className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-                {/* Mobile (phone) — Prasadam logo */}
-                <SignedImage
-                  src={logoUrl || DEFAULT_LOGO_URL}
-                  alt="Prasadam"
-                  className="h-9 w-auto object-contain sm:hidden"
-                />
-                {/* Desktop & tablet — Prasadam logo */}
-                <img
-                  src={DEFAULT_LOGO_URL}
-                  alt="Prasadam"
-                  className="hidden h-12 w-auto object-contain sm:block"
-                />
-              </Link>
-            )}
-
-            {/* Location pickers removed per request */}
-
-            {/* Search Bar - Desktop */}
-            <div className="hidden md:block flex-1 max-w-2xl mx-1 sm:mx-2">
+            {/* Search Bar - Desktop (left side, equal width to actions) */}
+            <div className="hidden md:block flex-1 min-w-0 max-w-xl">
               <InstantSearch placeholder="Search products..." />
             </div>
+
+            {/* Logo - centered */}
+            <Link to="/" className="flex items-center justify-center gap-1.5 sm:gap-2 flex-shrink-0">
+              {/* Mobile (phone) — Prasadam logo */}
+              <SignedImage
+                src={logoUrl || DEFAULT_LOGO_URL}
+                alt="Prasadam"
+                className="h-9 w-auto object-contain sm:hidden"
+              />
+              {/* Desktop & tablet — Prasadam logo */}
+              <img
+                src={DEFAULT_LOGO_URL}
+                alt="Prasadam"
+                className="hidden h-12 w-auto object-contain sm:block"
+              />
+            </Link>
 
             {/* Spacer for mobile */}
             <div className="md:hidden flex-1" />
 
             {/* Action Buttons - Icon on top, text below */}
-              <div className="hidden md:flex items-center gap-1 -mr-1">
+              <div className="hidden md:flex flex-1 min-w-0 items-center justify-end gap-1">
               <Link to="/courier-tracking" className="flex flex-col items-center justify-center w-14 h-14 hover:bg-secondary/50 rounded-md transition-colors">
                 <Truck className="h-4.5 w-4.5 text-foreground mb-0.5" />
                 <span className="text-[10px] text-foreground font-medium">Track Order</span>
@@ -343,7 +332,7 @@ export function Header() {
       </div>
 
       {/* Bottom Header - Mega Menu Bar (Desktop/Tablet only) */}
-      <div className="hidden md:block bg-[#AD1E2A] text-white">
+      <div className="hidden md:block bg-[#661714] text-white">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-center h-10 overflow-x-auto">
             <nav className="flex items-center gap-1">
@@ -361,8 +350,6 @@ export function Header() {
           </div>
         </div>
       </div>
-
-      <AnnouncementBar />
     </header>
   );
 }
