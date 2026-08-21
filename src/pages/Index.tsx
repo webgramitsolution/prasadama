@@ -17,7 +17,7 @@ import { VoiceAssistant } from "@/components/voice/VoiceAssistant";
 
 import { TrustSection } from "@/components/home/TrustSection";
 import { AvailableOnBanner } from "@/components/home/AvailableOnBanner";
-
+import InstagramFeed from "@/components/home/InstagramFeed";
 
 import { SEOHead, SchemaGenerators } from "@/components/SEOHead";
 import { ResponsiveDebug } from "@/components/debug/ResponsiveDebug";
@@ -64,16 +64,11 @@ const Index = () => {
         
         <BlogSection />
         <TrustedFamilies />
+        <InstagramFeed />
         {/* '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            Improve the UI to show a specific, user-friendly message when OTP delivery fails and include a retry button. Verify that OTP emails send successfully for new signups and that the OTP link/code works end to end.
-
-Implement an OTP resend feature with rate limiting and a countdown timer after login or signup.
-
-Harden the mailer.php bridge by adding authentication/verification and validating inputs to prevent misuse.
-
-Add admin-accessible logs to track OTP email delivery attempts and failures for my account.  suno  Emil ka SMTP open karo main host deta hu */}
+                                            still opning buyer dashboard why please fix it. */}
         
       </main>
       <TrustSection />
