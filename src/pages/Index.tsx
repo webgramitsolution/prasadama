@@ -67,8 +67,7 @@ const Index = () => {
         {/* '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            make me admin  logo ki size thoda bada karo clear show nhi ho rha hia.  sheepikagupta@gmail.com abhi ishe hi admain bana do ishe mail id sheepikagupta@gmail.com
- and password @BMW456wx#12 */}
+                                            showing invalid when i login as admin */}
         
       </main>
       <TrustSection />
