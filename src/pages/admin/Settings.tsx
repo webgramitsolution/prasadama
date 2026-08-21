@@ -177,6 +177,12 @@ export default function AdminSettings() {
         socialYoutube: v.socialYoutube || "",
         socialLinkedin: v.socialLinkedin || "",
         socialWhatsapp: v.socialWhatsapp || "",
+        smtpHost: v.smtpHost || "smtp.hostinger.com",
+        smtpPort: v.smtpPort || "465",
+        smtpUser: v.smtpUser || "",
+        smtpPass: v.smtpPass || "",
+        bridgeUrl: v.bridgeUrl || "",
+        bridgeToken: v.bridgeToken || "",
       });
     }
 
