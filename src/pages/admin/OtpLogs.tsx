@@ -32,7 +32,7 @@ export default function AdminOtpLogs() {
       // @ts-ignore - Table may not exist in all environments yet
       const { data, error } = await supabase
         .from("signup_otp_events" as any)
-        .select("id, created_at, email, otp_code, correlation_id, full_name, expires_at")
+        .select("id, created_at, email, correlation_id, full_name, expires_at")
         .order("created_at", { ascending: false })
         .limit(200);
 

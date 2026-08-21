@@ -52,6 +52,12 @@ serve(async (req) => {
     }
 
     if (action === "test") {
+      if (!isAdmin) {
+        return new Response(
+          JSON.stringify({ success: false, error: "Administrator access required" }),
+          { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
       return new Response(
         JSON.stringify({ success: true, message: "Ekart credentials verified." }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
