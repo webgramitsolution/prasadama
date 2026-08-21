@@ -95,9 +95,14 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     
-    const smtpHost = Deno.env.get("SMTP_HOST") || "smtp.hostinger.com";
-    const smtpUser = Deno.env.get("SMTP_USER") || "sales@houskase.com";
-    const smtpPass = Deno.env.get("SMTP_PASS");
+    const { data: smtpSettings } = await supabase.from("site_settings").select("value").eq("key", "ekart_settings").maybeSingle();
+    const smtpVal = (smtpSettings?.value ?? {}) as any;
+
+    const smtpHost = smtpVal.smtpHost || Deno.env.get("SMTP_HOST") || "smtp.hostinger.com";
+    const smtpUser = smtpVal.smtpUser || Deno.env.get("SMTP_USER") || "sales@houskase.com";
+    const smtpPass = smtpVal.smtpPass || Deno.env.get("SMTP_PASS");
+    const bridgeUrl = smtpVal.bridgeUrl || Deno.env.get("MAIL_BRIDGE_URL");
+    const bridgeToken = smtpVal.bridgeToken || Deno.env.get("MAIL_BRIDGE_TOKEN");
 
     if (!smtpPass) {
       throw new Error("SMTP password is not set.");
@@ -192,14 +197,13 @@ serve(async (req) => {
       console.error("Manual SMTP failed:", smtpErr.message);
       
       // Fallback to PHP Bridge if configured
-      const bridgeUrl = Deno.env.get("MAIL_BRIDGE_URL");
       if (bridgeUrl) {
         console.log("Falling back to PHP bridge...");
         const res = await fetch(bridgeUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            token: Deno.env.get("MAIL_BRIDGE_TOKEN") ?? "",
+            token: bridgeToken ?? "",
             to: email,
             subject: "Verify your Prasadam Account",
             fullName: fullName,
