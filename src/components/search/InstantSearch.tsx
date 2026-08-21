@@ -1,0 +1,384 @@
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { Search, Package, Layers, ArrowRight, X, Loader2, Mic, MicOff } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { cn } from "@/lib/utils";
+import { SignedImage } from "@/components/common/SignedImage";
+
+interface Product {
+  id: string;
+  name: string;
+  slug: string;
+  images: string[] | null;
+  category: { name: string } | null;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+interface InstantSearchProps {
+  className?: string;
+  placeholder?: string;
+  onClose?: () => void;
+  autoFocus?: boolean;
+  mobileMenuOpen?: boolean;
+}
+
+const SR: any =
+  typeof window !== "undefined"
+    ? (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    : null;
+
+export function InstantSearch({ className, placeholder = "Search products...", onClose, autoFocus = false, mobileMenuOpen }: InstantSearchProps) {
+  useEffect(() => {
+    const handleVoiceSearch = () => {
+      startVoice();
+    };
+    window.addEventListener('start-instant-search-voice', handleVoiceSearch);
+    return () => window.removeEventListener('start-instant-search-voice', handleVoiceSearch);
+  }, []);
+
+  const [query, setQuery] = useState("");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [listening, setListening] = useState(false);
+  // -1 = nothing highlighted (default, before an actual search)
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<any>(null);
+  const navigate = useNavigate();
+
+  const startVoice = () => {
+    if (!SR) {
+      alert("Voice search is not supported in this browser. Please use Chrome.");
+      return;
+    }
+    try {
+      const rec = new SR();
+      rec.lang = "en-IN";
+      rec.continuous = false;
+      rec.interimResults = true;
+      rec.maxAlternatives = 1;
+      let finalText = "";
+      rec.onresult = (e: any) => {
+        let live = "";
+        for (let i = e.resultIndex; i < e.results.length; i++) {
+          const res = e.results[i];
+          if (res.isFinal) finalText += res[0].transcript;
+          else live += res[0].transcript;
+        }
+        setQuery((finalText || live).trim());
+      };
+      rec.onend = () => {
+        setListening(false);
+        if (finalText.trim()) setShowResults(true);
+      };
+      rec.onerror = () => setListening(false);
+      rec.start();
+      recognitionRef.current = rec;
+      setListening(true);
+    } catch (err) {
+      console.error("voice search start failed", err);
+      setListening(false);
+    }
+  };
+  const stopVoice = () => {
+    try { recognitionRef.current?.stop(); } catch {}
+    setListening(false);
+  };
+
+  // Search as user types
+  useEffect(() => {
+    if (query.length < 1) {
+      setProducts([]);
+      setCategories([]);
+      setShowResults(false);
+      setActiveIndex(-1);
+      return;
+    }
+
+    const searchTimeout = setTimeout(async () => {
+      setIsLoading(true);
+      setShowResults(true);
+
+      try {
+        // Search products
+        const { data: productData } = await supabase
+          .from("products")
+          .select("id, name, slug, images, category:categories(name)")
+          .eq("is_active", true)
+          .ilike("name", `%${query}%`)
+          .limit(5);
+
+        // Search categories
+        const { data: categoryData } = await supabase
+          .from("categories")
+          .select("id, name, slug")
+          .eq("is_active", true)
+          .ilike("name", `%${query}%`)
+          .limit(3);
+
+        setProducts((productData as unknown as Product[]) || []);
+        setCategories(categoryData || []);
+        // Reflect the active search: first matching option becomes the selected one.
+        setActiveIndex((categoryData?.length || 0) + (productData?.length || 0) > 0 ? 0 : -1);
+      } catch (error) {
+        console.error("Search error:", error);
+      }
+
+      setIsLoading(false);
+    }, 200);
+
+    return () => clearTimeout(searchTimeout);
+  }, [query]);
+
+  // Close results and explicitly blur when mobile menu closes
+  useEffect(() => {
+    if (mobileMenuOpen === false) {
+      setShowResults(false);
+      const timer = setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.blur();
+          if (document.activeElement === inputRef.current) {
+            (document.activeElement as HTMLElement).blur();
+          }
+        }
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+  }, [mobileMenuOpen]);
+
+  // Close on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setShowResults(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleProductClick = (slug: string) => {
+    navigate(`/product/${slug}`);
+    setShowResults(false);
+    setQuery("");
+    onClose?.();
+  };
+
+  const handleCategoryClick = (slug: string) => {
+    navigate(`/products?category=${slug}`);
+    setShowResults(false);
+    setQuery("");
+    onClose?.();
+  };
+
+  const handleViewAll = () => {
+    navigate(`/products?search=${encodeURIComponent(query)}`);
+    setShowResults(false);
+    setQuery("");
+    onClose?.();
+  };
+
+  const handleClear = () => {
+    setQuery("");
+    setShowResults(false);
+    setActiveIndex(-1);
+    inputRef.current?.focus();
+  };
+
+  // Flattened option list drives keyboard selection + aria-activedescendant.
+  const options = [
+    ...categories.map((c) => ({ kind: "category" as const, id: `opt-cat-${c.id}`, slug: c.slug })),
+    ...products.map((p) => ({ kind: "product" as const, id: `opt-prod-${p.id}`, slug: p.slug })),
+  ];
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showResults || options.length === 0) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActiveIndex((i) => (i + 1) % options.length);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveIndex((i) => (i <= 0 ? options.length - 1 : i - 1));
+    } else if (e.key === "Enter") {
+      const opt = options[activeIndex];
+      if (!opt) return;
+      e.preventDefault();
+      if (opt.kind === "category") handleCategoryClick(opt.slug);
+      else handleProductClick(opt.slug);
+    } else if (e.key === "Escape") {
+      setShowResults(false);
+      setActiveIndex(-1);
+    }
+  };
+
+  return (
+    <div ref={containerRef} className={cn("relative", className)}>
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          ref={inputRef}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => {
+            if (query.length > 0) setShowResults(true);
+          }}
+          onKeyDown={handleKeyDown}
+          placeholder={placeholder}
+          role="combobox"
+          aria-expanded={showResults}
+          aria-controls="instant-search-listbox"
+          aria-autocomplete="list"
+          aria-activedescendant={activeIndex >= 0 ? options[activeIndex]?.id : undefined}
+          className="pl-10 pr-20 h-11 bg-background border-border focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-ring"
+          autoFocus={false}
+          tabIndex={0}
+          onBlur={() => {
+            setTimeout(() => setShowResults(false), 200);
+          }}
+        />
+        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+          {query && (
+            <button
+              onClick={handleClear}
+              className="p-1 text-muted-foreground hover:text-foreground"
+              aria-label="Clear search"
+              type="button"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+          <button
+            onClick={listening ? stopVoice : startVoice}
+            type="button"
+            aria-label={listening ? "Stop voice search" : "Voice search"}
+            className={cn(
+              "p-1.5 rounded-md transition-colors",
+              listening
+                ? "bg-destructive/10 text-destructive animate-pulse"
+                : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+            )}
+          >
+            {listening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Search Results Dropdown */}
+      {showResults && (
+        <div id="instant-search-listbox" role="listbox" className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-xl z-50 overflow-hidden max-h-[70vh] overflow-y-auto">
+          {isLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : (
+            <>
+              {/* Categories */}
+              {categories.length > 0 && (
+                <div className="p-3 border-b border-border">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-2">
+                    Categories
+                  </p>
+                  <div className="space-y-1">
+                    {categories.map((category, i) => (
+                      <button
+                        key={category.id}
+                        id={`opt-cat-${category.id}`}
+                        role="option"
+                        aria-selected={activeIndex === i}
+                        onMouseEnter={() => setActiveIndex(i)}
+                        onClick={() => handleCategoryClick(category.slug)}
+                        className={cn(
+                          "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left",
+                          activeIndex === i ? "bg-secondary" : "hover:bg-secondary"
+                        )}
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
+                          <Layers className="h-4 w-4 text-accent" />
+                        </div>
+                        <span className="font-medium text-foreground">{category.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Products */}
+              {products.length > 0 && (
+                <div className="p-3">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-2">
+                    Products
+                  </p>
+                  <div className="space-y-1">
+                    {products.map((product, i) => (
+                      <button
+                        key={product.id}
+                        id={`opt-prod-${product.id}`}
+                        role="option"
+                        aria-selected={activeIndex === categories.length + i}
+                        onMouseEnter={() => setActiveIndex(categories.length + i)}
+                        onClick={() => handleProductClick(product.slug)}
+                        className={cn(
+                          "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left",
+                          activeIndex === categories.length + i ? "bg-secondary" : "hover:bg-secondary"
+                        )}
+                      >
+                        <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0 overflow-hidden">
+                          {product.images?.[0] ? (
+                            <SignedImage src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <Package className="h-5 w-5 text-muted-foreground" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-foreground truncate">{product.name}</p>
+                          {product.category && (
+                            <p className="text-xs text-muted-foreground">{product.category.name}</p>
+                          )}
+                        </div>
+                        <ArrowRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* No Results */}
+              {products.length === 0 && categories.length === 0 && query.length > 0 && (
+                <div className="p-6 text-center">
+                  <Package className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
+                  <p className="text-muted-foreground">No results found for "{query}"</p>
+                </div>
+              )}
+
+              {/* View All Button */}
+              {(products.length > 0 || categories.length > 0) && (
+                <div className="p-3 border-t border-border">
+                  <Button 
+                    onClick={handleViewAll}
+                    variant="outline" 
+                    className="w-full gap-2"
+                  >
+                    View all results for "{query}"
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

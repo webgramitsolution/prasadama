@@ -1,0 +1,185 @@
+import { Helmet } from "react-helmet-async";
+
+interface SEOHeadProps {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+  noIndex?: boolean;
+  keywords?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  ogType?: string;
+}
+
+export function SEOHead({
+  title = "Houskase — Everyday Home, Kitchen & Cleaning Essentials",
+  description = "Discover Houskase: premium towels, tissues, kitchen and cleaning essentials for Indian homes. Shop quality products, exclusive offers and track orders online.",
+  canonical,
+  ogImage = "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/a390cef2-bad1-4afd-b4ad-0871686a4f01",
+  noIndex = false,
+  keywords,
+  jsonLd,
+  ogType = "website",
+}: SEOHeadProps) {
+  const fullTitle = title.includes("Houskase") ? title : `${title} | Houskase`;
+  const CANONICAL_HOST = "https://houskase.com";
+  const path = `${window.location.pathname}${window.location.search}`;
+  const absolute = (u: string) =>
+    /^https?:/i.test(u) ? u.replace(/^https?:\/\/(localhost|.*\.lovable\.app)(:\d+)?/i, CANONICAL_HOST) : `${CANONICAL_HOST}${u.startsWith("/") ? "" : "/"}${u}`;
+  const currentUrl = canonical ? absolute(canonical) : `${CANONICAL_HOST}${path === "/" ? "/" : path.replace(/\/$/, "")}`;
+
+  const schemas = jsonLd
+    ? Array.isArray(jsonLd) ? jsonLd : [jsonLd]
+    : [];
+
+  return (
+    <Helmet>
+      <title>{fullTitle}</title>
+      <meta name="description" content={description} />
+      {keywords && <meta name="keywords" content={keywords} />}
+      {noIndex && <meta name="robots" content="noindex, nofollow" />}
+      {!noIndex && <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />}
+      <link rel="canonical" href={currentUrl} />
+      <link rel="alternate" hrefLang="en-IN" href={currentUrl} />
+      <link rel="alternate" hrefLang="x-default" href={currentUrl} />
+
+      {/* Open Graph */}
+      <meta property="og:title" content={fullTitle} />
+      <meta property="og:description" content={description} />
+      <meta property="og:image" content={ogImage} />
+      <meta property="og:type" content={ogType} />
+      <meta property="og:url" content={currentUrl} />
+      <meta property="og:site_name" content="Houskase" />
+      <meta property="og:locale" content="en_IN" />
+
+      {/* Twitter */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={fullTitle} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={ogImage} />
+
+      {/* JSON-LD Structured Data */}
+      {schemas.map((schema, i) => (
+        <script key={i} type="application/ld+json">
+          {JSON.stringify(schema)}
+        </script>
+      ))}
+    </Helmet>
+  );
+}
+
+// Reusable schema generators
+export const SchemaGenerators = {
+  organization: (name: string, url: string, logoUrl?: string) => ({
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name,
+    url,
+    ...(logoUrl && { logo: logoUrl }),
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer service",
+      availableLanguage: ["English", "Hindi"],
+    },
+  }),
+
+  website: (name: string, url: string) => ({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name,
+    url,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${url}/products?search={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  }),
+
+  product: (product: {
+    name: string;
+    description?: string;
+    image?: string;
+    price: number;
+    currency?: string;
+    sku?: string;
+    brand?: string;
+    category?: string;
+    url: string;
+    inStock?: boolean;
+  }) => ({
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    ...(product.description && { description: product.description }),
+    ...(product.image && { image: product.image }),
+    ...(product.sku && { sku: product.sku }),
+    ...(product.brand && { brand: { "@type": "Brand", name: product.brand } }),
+    ...(product.category && { category: product.category }),
+    offers: {
+      "@type": "Offer",
+      price: product.price,
+      priceCurrency: product.currency || "INR",
+      availability: product.inStock !== false
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      url: product.url,
+    },
+  }),
+
+  breadcrumb: (items: { name: string; url: string }[]) => ({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  }),
+
+  faqPage: (faqs: { question: string; answer: string }[]) => ({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map(faq => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  }),
+
+  localBusiness: (business: {
+    name: string;
+    url: string;
+    address?: string;
+    phone?: string;
+    email?: string;
+  }) => ({
+    "@context": "https://schema.org",
+    "@type": "Store",
+    name: business.name,
+    url: business.url,
+    ...(business.address && {
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: business.address,
+        addressCountry: "IN",
+      },
+    }),
+    ...(business.phone && { telephone: business.phone }),
+    ...(business.email && { email: business.email }),
+  }),
+
+  collectionPage: (name: string, description: string, url: string) => ({
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name,
+    description,
+    url,
+  }),
+};

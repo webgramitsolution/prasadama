@@ -1,0 +1,1364 @@
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { BottomNavigation } from "@/components/layout/BottomNavigation";
+
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { 
+  FileText, Truck, Shield, Minus, Plus, Check, 
+  Package, Clock, Phone, MessageCircle, Factory, 
+  Award, ChevronRight, ShoppingCart, Star, Zap, CheckCircle2, MapPin, X, ChevronLeft, Loader2
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useRFQCart } from "@/hooks/useRFQCart";
+import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
+import { RelatedProducts } from "@/components/products/RelatedProducts";
+import { ReviewsSummary } from "@/components/products/ReviewsSummary";
+import { ReelsSection } from "@/components/reels/ReelsSection";
+import InstagramFeed from "@/components/home/InstagramFeed";
+import { ProductOffers } from "@/components/products/ProductOffers";
+import { ProductCoupons } from "@/components/products/ProductCoupons";
+import { CustomerReviews, type ReviewStats } from "@/components/products/CustomerReviews";
+import { Input } from "@/components/ui/input";
+import { SEOHead, SchemaGenerators } from "@/components/SEOHead";
+import { SignedImage } from "@/components/common/SignedImage";
+import { FormattedProductText } from "@/components/products/FormattedProductText";
+
+
+interface Attribute {
+  name: string;
+  values: string[];
+  usedForVariations: boolean;
+  visibleOnProduct: boolean;
+  existingAttributeId?: string;
+}
+
+interface ProductVariation {
+  id: string;
+  product_id: string;
+  sku: string | null;
+  size: string | null;
+  color: string | null;
+  color_image: string | null;
+  gallery_images: string[] | null;
+  shop_price: number;
+  shop_regular_price: number | null;
+  retail_price: number;
+  retail_regular_price: number | null;
+  guest_price: number;
+  regular_price: number | null;
+  shop_moq: number | null;
+  retail_moq: number | null;
+  stock_quantity: number | null;
+  weight: number | null;
+}
+
+interface ProductAttribute {
+  name: string;
+  value: string;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  short_description: string | null;
+  images: string[] | null;
+  guest_price: number;
+  shop_price: number;
+  retail_price: number;
+  regular_price: number;
+  shop_moq: number;
+  retail_moq: number;
+  gst_percentage: number | null;
+  gst_enabled?: boolean | null;
+  gst_pricing_mode?: string | null;
+  stock_quantity: number | null;
+  features: string[] | null;
+  has_variations: boolean | null;
+  weight: number | null;
+  length: number | null;
+  width: number | null;
+  height: number | null;
+  category_id: string | null;
+  category: { name: string } | null;
+  brand: { name: string } | null;
+  sku: string | null;
+  banner_image?: string | null;
+}
+
+function DeliveryChecker() {
+  const [pincode, setPincode] = useState("");
+  const [checking, setChecking] = useState(false);
+  const [result, setResult] = useState<{
+    delivery_days: number;
+    delivery_days_max?: number;
+    city: string | null;
+    state: string | null;
+    is_cod_available: boolean | null;
+    fallback?: boolean;
+  } | null>(null);
+  const [invalid, setInvalid] = useState(false);
+
+  const isValidIndianPincode = (p: string) => /^[1-8][0-9]{5}$/.test(p);
+
+  const getDefaultDeliveryResult = () => ({
+    delivery_days: 3,
+    delivery_days_max: 4,
+    city: null,
+    state: null,
+    is_cod_available: true,
+    fallback: true,
+  });
+
+  const handleCheck = async () => {
+    setResult(null);
+    setInvalid(false);
+    if (!isValidIndianPincode(pincode)) {
+      setInvalid(true);
+      return;
+    }
+    // Every valid Indian pincode should show standard delivery availability immediately.
+    // The database entry only enriches city/state/custom timeline when available.
+    setResult(getDefaultDeliveryResult());
+    setChecking(true);
+    try {
+      const { data } = await supabase
+        .from("delivery_pincodes")
+        .select("delivery_days, city, state, is_cod_available")
+        .eq("pincode", pincode)
+        .eq("is_active", true)
+        .maybeSingle();
+      if (data) {
+        setResult({
+          city: data.city,
+          state: data.state,
+          delivery_days: data.delivery_days || 5,
+          is_cod_available: data.is_cod_available,
+          fallback: false
+        });
+      }
+    } catch {
+      setResult(getDefaultDeliveryResult());
+    } finally {
+      setChecking(false);
+    }
+  };
+
+  const minDate = result ? new Date(Date.now() + (result.delivery_days || 0) * 86400000) : null;
+  const maxDate = result
+    ? new Date(Date.now() + ((result as any).delivery_days_max ?? result.delivery_days ?? 0) * 86400000)
+    : null;
+  const fmt = (d: Date) => d.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" });
+
+  return (
+    <div className="pt-3 border-t border-border">
+      <p className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1.5">
+        <MapPin className="h-3.5 w-3.5 text-destructive" />
+        Check Delivery Details
+      </p>
+      <div className="flex gap-2">
+        <Input
+          placeholder="Enter 6-digit Pincode"
+          inputMode="numeric"
+          value={pincode}
+          onChange={(e) => {
+            setPincode(e.target.value.replace(/\D/g, "").slice(0, 6));
+            setInvalid(false);
+          }}
+          className="h-9 text-xs flex-1"
+          onKeyDown={(e) => e.key === "Enter" && handleCheck()}
+        />
+        <Button size="sm" className="h-9 text-xs px-4 bg-accent hover:bg-accent-hover" onClick={handleCheck} disabled={checking}>
+          {checking ? "..." : "Check"}
+        </Button>
+      </div>
+      {result && (
+        <div className="mt-2 p-2.5 rounded-lg bg-success/5 border border-success/20 space-y-1">
+          <p className="text-xs font-medium text-success flex items-center gap-1">
+            <Check className="h-3.5 w-3.5" /> Delivery available
+            {result.city && (
+              <span className="text-muted-foreground font-normal">
+                to {result.city}{result.state ? `, ${result.state}` : ""}
+              </span>
+            )}
+          </p>
+          <p className="text-xs text-foreground">
+            {result.delivery_days_max && result.delivery_days_max !== result.delivery_days ? (
+              <>
+                Estimated delivery between{" "}
+                <span className="font-semibold">{minDate && fmt(minDate)}</span> –{" "}
+                <span className="font-semibold">{maxDate && fmt(maxDate)}</span>
+                <span className="text-muted-foreground"> ({result.delivery_days}-{result.delivery_days_max} days)</span>
+              </>
+            ) : (
+              <>
+                Estimated delivery by <span className="font-semibold">{minDate && fmt(minDate)}</span>
+                <span className="text-muted-foreground"> ({result.delivery_days} days)</span>
+              </>
+            )}
+          </p>
+          {result.is_cod_available && <p className="text-[10px] text-success">✓ Cash on Delivery available</p>}
+            <p className="text-[10px] text-muted-foreground">
+              {result.fallback
+                ? "Standard shipping across India via trusted courier partners."
+                : "Delivery timeline is based on your serviceable pincode."}
+            </p>
+        </div>
+      )}
+      {invalid && (
+        <p className="mt-2 text-xs text-destructive">Please enter a valid 6-digit Indian pincode.</p>
+      )}
+    </div>
+  );
+}
+
+
+export default function ProductDetail() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [variations, setVariations] = useState<ProductVariation[]>([]);
+  const [productAttributes, setProductAttributes] = useState<ProductAttribute[]>([]);
+  const [variationAttributes, setVariationAttributes] = useState<Attribute[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState<string>("");
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedVariationId, setSelectedVariationId] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState(1);
+  const { addToRFQCart } = useRFQCart();
+  const { user, role } = useAuth();
+  const { addToCart } = useCart();
+  const [isAddingToRFQ, setIsAddingToRFQ] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [zoomOpen, setZoomOpen] = useState(false);
+  const [reviewStats, setReviewStats] = useState<ReviewStats | null>(null);
+  const handleReviewStats = useCallback((s: ReviewStats) => setReviewStats(s), []);
+  const [selectedOtherValues, setSelectedOtherValues] = useState<Record<string, string>>({});
+  const [zoomIndex, setZoomIndex] = useState(0);
+  const galleryRef = useRef<string[]>([]);
+  const [galleryPaused, setGalleryPaused] = useState(false);
+
+  // Auto-slide the main feature image
+  useEffect(() => {
+    if (galleryPaused) return;
+    const timer = window.setInterval(() => {
+      const imgs = galleryRef.current || [];
+      if (!imgs || imgs.length <= 1) return;
+      setSelectedImage((prev) => {
+        const i = imgs.indexOf(prev || (imgs[0] as string));
+        return imgs[(i + 1) % imgs.length] as string;
+      });
+    }, 3000);
+    return () => window.clearInterval(timer);
+  }, [galleryPaused]);
+
+  const getRolePrice = (p: Product | null, v: ProductVariation | null | undefined) => {
+    const guestPrice = v?.guest_price ?? p?.guest_price ?? 0;
+    return guestPrice > 0 ? guestPrice : (v?.retail_price ?? p?.retail_price ?? 0);
+  };
+
+  const getRoleMoq = (p: Product | null, v: ProductVariation | null | undefined) => {
+    const moq = v?.retail_moq ?? p?.retail_moq ?? 1;
+    return moq && moq > 1 ? moq : 1;
+  };
+
+  const getMrp = (p: Product | null, v: ProductVariation | null | undefined) => {
+    // For variations, prioritize the regular_price field, then fall back to others
+    const varRegular = v?.regular_price ?? v?.shop_regular_price ?? v?.retail_regular_price ?? 0;
+    if (varRegular > 0) return varRegular;
+    const productRegular = p?.regular_price ?? 0;
+    if (productRegular > 0) return productRegular;
+    // Fallback to highest available price field to avoid 0 MRP
+    return Math.max(v?.guest_price ?? 0, v?.retail_price ?? 0, p?.guest_price ?? 0, p?.retail_price ?? 0, 0);
+  };
+
+  const getPriceLabel = () => null;
+
+  const fetchProductAttributes = async (productId: string) => {
+    const { data } = await supabase
+      .from("product_attribute_assignments")
+      .select("*, attribute:product_attributes(name), attribute_value:product_attribute_values(value)")
+      .eq("product_id", productId)
+      .eq("visible_on_product", true);
+    if (data) {
+      setProductAttributes(data.map((a: any) => ({
+        name: a.attribute?.name || "",
+        value: a.attribute_value?.value || "",
+      })));
+    }
+  };
+
+  // Reset selection state when product changes
+  useEffect(() => {
+    setSelectedSize(null);
+    setSelectedColor(null);
+    setSelectedVariationId(null);
+    setSelectedImage("");
+    setQuantity(1);
+    setVariations([]);
+    setProductAttributes([]);
+  }, [id]);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!id) return;
+      
+      setLoading(true);
+      // Sequential lookup: slug -> ID -> UUID filter
+      let { data: productData, error: productError } = await supabase
+        .from("products")
+        .select(`*, category:categories(name), brand:brands(name)`)
+        .eq("slug", id)
+        .maybeSingle();
+
+      if (!productData && !productError && id) {
+        const { data: idData } = await supabase
+          .from("products")
+          .select(`*, category:categories(name), brand:brands(name)`)
+          .eq("id", id)
+          .maybeSingle();
+        
+        if (idData) {
+          productData = idData;
+        } else {
+          const isUuid = id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
+          const { data: orData, error: orError } = await supabase
+            .from("products")
+            .select(`*, category:categories(name), brand:brands(name)`)
+            .or(isUuid ? `id.eq."${id}"` : `id.filter.(eq."${id}")`)
+            .maybeSingle();
+          productData = orData;
+          productError = orError;
+        }
+      }
+
+      if (productError || !productData) {
+        setLoading(false);
+        return;
+      }
+      
+      setProduct(productData as unknown as Product);
+      if (productData.images?.[0]) setSelectedImage(productData.images[0]);
+      setQuantity(1);
+      
+      if (productData.has_variations) {
+        const { data: vars } = await supabase
+          .from("product_variations")
+          .select("*")
+          .eq("product_id", productData.id)
+          .eq("is_active", true);
+        setVariations(vars || []);
+
+        const { data: assignments } = await supabase
+          .from("product_attribute_assignments")
+          .select("*, attribute:product_attributes(id, name), attribute_value:product_attribute_values(value)")
+          .eq("product_id", productData.id)
+          .eq("used_for_variations", true);
+        
+        if (assignments) {
+          const grouped: Record<string, Attribute> = {};
+          assignments.forEach((a: any) => {
+            const name = a.attribute?.name || "";
+            if (!grouped[name]) {
+              grouped[name] = { name, values: [], usedForVariations: true, visibleOnProduct: true };
+            }
+            if (a.attribute_value?.value && !grouped[name].values.includes(a.attribute_value.value)) {
+              grouped[name].values.push(a.attribute_value.value);
+            }
+          });
+          setVariationAttributes(Object.values(grouped));
+        }
+      }
+      await fetchProductAttributes(productData.id);
+      setLoading(false);
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  const { uniqueSizes, uniqueColors, colorImageMap, otherAttributes } = useMemo(() => {
+    // 1. Get all attributes used for variations from variationAttributes (fetched from assignments)
+    // We strictly filter for standard naming conventions
+    const others = variationAttributes.filter(a => {
+      const n = a.name.toLowerCase().trim();
+      return n !== "size" && n !== "color" && n !== "colour";
+    });
+
+    // 2. Identify if ANY variations actually use standard size/color fields
+    // This handles how the database structure maps variation values
+    const sizes = [...new Set(variations.map(v => v.size).filter(Boolean))] as string[];
+    const colors = [...new Set(variations.map(v => v.color).filter(Boolean))] as string[];
+    const imageMap: Record<string, string> = {};
+    
+    variations.forEach(v => {
+      if (v.color && v.color_image) {
+        imageMap[v.color] = v.color_image;
+      }
+    });
+    
+    return { uniqueSizes: sizes, uniqueColors: colors, colorImageMap: imageMap, otherAttributes: others };
+  }, [variations, variationAttributes]);
+
+  const selectedVariation = useMemo(() => {
+    if (!product?.has_variations || variations.length === 0) return null;
+    if (selectedVariationId) {
+      return variations.find(v => v.id === selectedVariationId);
+    }
+    // Only filter by size/color if they actually exist in variations
+    const hasSizeVariants = variations.some(v => v.size);
+    const hasColorVariants = variations.some(v => v.color);
+    return variations.find(v => 
+      (!hasSizeVariants || !selectedSize || v.size?.toLowerCase().trim() === selectedSize.toLowerCase().trim()) && 
+      (!hasColorVariants || !selectedColor || v.color?.toLowerCase().trim() === selectedColor.toLowerCase().trim())
+    );
+  }, [variations, selectedSize, selectedColor, selectedVariationId, product]);
+
+  const currentMoq = getRoleMoq(product, selectedVariation);
+  const hasExplicitMoq = Boolean(
+    (selectedVariation?.shop_moq && selectedVariation.shop_moq > 1) ||
+    (selectedVariation?.retail_moq && selectedVariation.retail_moq > 1) ||
+    (product?.shop_moq && product.shop_moq > 1) ||
+    (product?.retail_moq && product.retail_moq > 1)
+  );
+  const currentPrice = getRolePrice(product, selectedVariation);
+  const currentMrp = getMrp(product, selectedVariation);
+  const gstPercent = Number(product?.gst_percentage ?? 0);
+  const gstEnabled = product?.gst_enabled !== false && gstPercent > 0;
+  const gstInclusive = gstEnabled && product?.gst_pricing_mode === "inclusive";
+  const displayInclPrice = gstInclusive ? currentPrice : Math.round(currentPrice * (1 + gstPercent / 100));
+  const currentStock = selectedVariation?.stock_quantity ?? product?.stock_quantity ?? 0;
+  const moqValid = quantity >= currentMoq;
+
+  const handleAddToRFQ = async () => {
+    if (!product) return;
+    setIsAddingToRFQ(true);
+    try {
+      await addToRFQCart(product.id, quantity, selectedVariation?.id);
+    } finally {
+      setIsAddingToRFQ(false);
+    }
+  };
+
+  const [isBuyingNow, setIsBuyingNow] = useState(false);
+
+  const handleAddToCartClick = async () => {
+    if (!product || !moqValid) return;
+    setIsAddingToCart(true);
+    try {
+      const success = await addToCart(product.id, quantity, selectedVariation?.id);
+      return success;
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
+  const handleBuyNow = async () => {
+    if (!product || !moqValid || isBuyingNow) return;
+    setIsBuyingNow(true);
+    try {
+      const success = await handleAddToCartClick();
+      if (success) navigate("/checkout");
+    } finally {
+      setIsBuyingNow(false);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedColor && colorImageMap[selectedColor]) {
+      setSelectedImage(colorImageMap[selectedColor]);
+    }
+  }, [selectedColor, colorImageMap]);
+
+  useEffect(() => {
+    if (uniqueSizes.length > 0 && !selectedSize) {
+      setSelectedSize(uniqueSizes[0] || null);
+    }
+    if (uniqueColors.length > 0 && !selectedColor) {
+      setSelectedColor(uniqueColors[0] || null);
+    }
+    otherAttributes.forEach(attr => {
+      if (!selectedOtherValues[attr.name] && attr.values.length > 0) {
+        setSelectedOtherValues(prev => ({ ...prev, [attr.name]: attr.values[0] || "" }));
+      }
+    });
+  }, [uniqueSizes, uniqueColors, selectedSize, selectedColor, otherAttributes, selectedOtherValues]);
+
+  // Update quantity when buyerType or MOQ changes (e.g., after auth loads)
+  useEffect(() => {
+    if (product && currentMoq > 0) {
+      setQuantity(prev => Math.max(prev, currentMoq));
+    }
+  }, [currentMoq, product]);
+
+  const handleQuantityChange = (delta: number) => {
+    const newQty = quantity + delta;
+    if (newQty >= currentMoq && newQty <= Math.max(currentStock, 9999)) {
+      setQuantity(newQty);
+    }
+  };
+
+  const handleWhatsAppClick = () => {
+    if (!product) return;
+    const url = `${window.location.origin}/product/${product.slug}`;
+    const message = encodeURIComponent(
+      `Hi, I'm interested in:\n\n*${product.name}*\nQuantity: ${quantity}\n${selectedVariation ? `Variation: ${selectedSize || ""} ${selectedColor || ""}` : ""}\n\n${url}\n\nPlease provide pricing and availability.`
+    );
+    window.open(`https://wa.me/919266129195?text=${message}`, "_blank");
+  };
+
+  const handleVariantSelect = (variantId: string) => {
+    setSelectedVariationId(variantId);
+    const variant = variations.find(v => v.id === variantId);
+    if (variant) {
+      if (variant.size) setSelectedSize(variant.size);
+      if (variant.color) setSelectedColor(variant.color);
+      // Show variation's feature image, or first gallery image, or keep current
+      if (variant.color_image) {
+        setSelectedImage(variant.color_image);
+      } else if (variant.gallery_images?.length) {
+        setSelectedImage(variant.gallery_images[0] as string);
+      }
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="pt-4 pb-20">
+          <div className="container mx-auto px-4">
+            <div className="grid md:grid-cols-12 gap-6">
+              <div className="md:col-span-5">
+                <Skeleton className="aspect-square rounded-lg" />
+              </div>
+              <div className="md:col-span-7 space-y-4">
+                <Skeleton className="h-6 w-48" />
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-24 w-full" />
+              </div>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="pt-20 pb-20">
+          <div className="container mx-auto px-4 text-center">
+            <h1 className="text-2xl font-bold text-foreground mb-4">Product not found</h1>
+            <Link to="/products">
+              <Button>Back to Products</Button>
+            </Link>
+          </div>
+        </main>
+      <Footer />
+      <BottomNavigation />
+    </div>
+    );
+  }
+
+  // Merge product images with selected variation's gallery images
+  const baseImages = product.images?.length ? product.images : ["/placeholder.svg"];
+  const variationGallery = selectedVariation?.gallery_images?.length ? selectedVariation.gallery_images : [];
+  const variationFeatureImage = selectedVariation?.color_image ? [selectedVariation.color_image] : [];
+  const productImages = [
+    ...variationFeatureImage,
+    ...variationGallery.filter(img => !variationFeatureImage.includes(img)),
+    ...baseImages.filter(img => !variationFeatureImage.includes(img) && !variationGallery.includes(img)),
+  ];
+  galleryRef.current = productImages;
+
+  return (
+    <div className="min-h-screen bg-background">
+      <SEOHead
+        title={`${product.name}${product.category?.name ? ` — ${product.category.name}` : ""} | Houskase`}
+        description={product.short_description?.slice(0, 160) || product.description?.replace(/<[^>]*>/g, "").substring(0, 160) || `Buy ${product.name} at Houskase. Premium quality, ₹${currentPrice} only. Fast shipping across India.`}
+        keywords={`${product.name}, buy ${product.name} online, ${product.category?.name || "Houskase"}, ${product.brand?.name || ""}, India`}
+        ogType="product"
+        ogImage={productImages[0] !== "/placeholder.svg" ? (productImages[0] as string) : ""}
+        jsonLd={[
+          {
+            ...SchemaGenerators.product({
+              name: product.name,
+              description: product.short_description || (product.description ? product.description.substring(0, 300) : ""),
+              image: productImages[0] !== "/placeholder.svg" ? (productImages[0] as string) : "",
+              price: currentPrice,
+              sku: product.sku || "",
+              brand: product.brand?.name || "",
+              category: product.category?.name || "",
+              url: `https://houskase.com/product/${product.slug}`,
+              inStock: (currentStock ?? 0) > 0,
+            }),
+            "@id": `https://houskase.com/product/${product.slug}#product`,
+            ...(reviewStats && reviewStats.total > 0
+              ? {
+                  aggregateRating: {
+                    "@type": "AggregateRating",
+                    ratingValue: Number(reviewStats.avg.toFixed(2)),
+                    reviewCount: reviewStats.total,
+                    bestRating: 5,
+                    worstRating: 1,
+                  },
+                  review: reviewStats.items.map((r) => ({
+                    "@type": "Review",
+                    author: { "@type": "Person", name: r.author },
+                    datePublished: r.date,
+                    ...(r.title ? { name: r.title } : {}),
+                    ...(r.body ? { reviewBody: r.body } : {}),
+                    reviewRating: { "@type": "Rating", ratingValue: r.rating, bestRating: 5, worstRating: 1 },
+                  })),
+                }
+              : {}),
+          },
+          SchemaGenerators.breadcrumb([
+            { name: "Home", url: "https://houskase.com/" },
+            { name: "Products", url: "https://houskase.com/products" },
+            ...(product.category ? [{ name: product.category.name, url: `https://houskase.com/products?category=${product.category.name.toLowerCase()}` }] : []),
+            { name: product.name, url: `https://houskase.com/product/${product.slug}` },
+          ]),
+        ]}
+      />
+      <Header />
+      
+      <main className="pt-0">
+        <div className="container mx-auto px-3 sm:px-4 py-2 max-w-full">
+
+
+          {/* Main Product Section - modern 2-column layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] gap-5 lg:gap-10 items-start min-w-0">
+            {/* Left: Image Gallery - STICKY */}
+            <div className="md:sticky md:top-24 min-w-0">
+              <div className="space-y-3">
+                {/* Main Image */}
+                <div
+                  className="relative bg-card rounded-lg overflow-hidden border border-border cursor-zoom-in aspect-square shadow-sm"
+                  onMouseEnter={() => setGalleryPaused(true)}
+                  onMouseLeave={() => setGalleryPaused(false)}
+                  onClick={() => {
+                    const currentImg = (selectedImage || productImages[0]) as string;
+                    const idx = productImages.indexOf(currentImg);
+                    setZoomIndex(idx >= 0 ? idx : 0);
+                    setZoomOpen(true);
+                  }}
+                >
+                  <SignedImage
+                    src={(selectedImage || productImages[0]) as string}
+                    alt={product.name}
+                    className="absolute inset-0 w-full h-full object-contain"
+                  />
+                </div>
+
+                {/* Thumbnail Gallery - max 6 visible, scrollable */}
+                <div className="relative group">
+                  {productImages.length > 6 && (
+                    <button
+                      type="button"
+                      aria-label="Previous image"
+                      onClick={() => {
+                        const el = document.getElementById('thumb-scroll');
+                        if (el) el.scrollBy({ left: -200, behavior: 'smooth' });
+                      }}
+                      className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 border border-border rounded-full w-6 h-6 flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+
+                      <ChevronRight className="h-3 w-3 rotate-180" />
+                    </button>
+                  )}
+                  <div
+                    id="thumb-scroll"
+                    className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide max-w-full"
+                  >
+                    {productImages.map((img, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        data-gallery-thumb
+                        aria-label={`View image ${idx + 1}`}
+                        aria-current={selectedImage === img}
+                        onClick={() => setSelectedImage(img)}
+                        className={cn(
+                          "flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all bg-card",
+                          selectedImage === img 
+                            ? "border-accent" 
+                            : "border-border hover:border-accent/50"
+                        )}
+                      >
+                        <SignedImage src={img} alt="" className="w-full h-full object-contain bg-card" />
+                      </button>
+                    ))}
+                  </div>
+                  {productImages.length > 6 && (
+                    <button
+                      type="button"
+                      aria-label="Next image"
+                      onClick={() => {
+                        const el = document.getElementById('thumb-scroll');
+                        if (el) el.scrollBy({ left: 200, behavior: 'smooth' });
+                      }}
+                      className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 border border-border rounded-full w-6 h-6 flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+
+                      <ChevronRight className="h-3 w-3" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Product Info + Buy Box in one white card */}
+            <div className="min-w-0 space-y-5 bg-card rounded-xl border border-border p-4 sm:p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+              {/* Title & Meta */}
+              <div>
+                <h1 className="text-lg sm:text-xl md:text-lg lg:text-xl md:font-semibold font-bold text-foreground leading-tight md:leading-none mb-1 md:mb-0.5">
+                  {product.name}
+                </h1>
+
+                <div className="flex items-center gap-2 flex-wrap text-xs text-muted-foreground">
+                  {product.sku && <span>SKU: {product.sku}</span>}
+                  {product.brand && (
+                    <>
+                      <span>•</span>
+                      <span>Brand: <span className="text-foreground font-medium">{product.brand.name}</span></span>
+                    </>
+                  )}
+                </div>
+
+                {/* Price & Review Summary Inline */}
+                <div className="mt-3">
+                  {getPriceLabel() && (
+                    <span className="text-[10px] font-medium text-accent bg-accent/10 px-1.5 py-0.5 rounded mb-1.5 inline-block">
+                      {getPriceLabel()}
+                    </span>
+                  )}
+                  <div className="flex items-center flex-wrap gap-x-3 gap-y-2">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl sm:text-3xl font-extrabold text-foreground">₹{currentPrice.toLocaleString("en-IN")}</span>
+                      {currentMrp > 0 && currentMrp !== currentPrice && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl sm:text-xl text-muted-foreground line-through">₹{currentMrp.toLocaleString("en-IN")}</span>
+                          {currentMrp > currentPrice && (
+                            <span className="text-xl sm:text-xl font-semibold text-success">
+                              {Math.round(((currentMrp - currentPrice) / currentMrp) * 100)}% OFF
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="flex items-center">
+                      <div className="hidden sm:block">
+                        <ReviewsSummary productId={product.id} />
+                      </div>
+                      <div className="block sm:hidden">
+                        <ReviewsSummary productId={product.id} variant="compact" />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-1 space-y-0.5">
+                    {gstEnabled && (
+                      <p className="text-xs text-muted-foreground">
+                        ₹{displayInclPrice.toLocaleString("en-IN")} (Incl. of all taxes) ·{" "}
+                        <span className="text-success font-medium">
+                          {gstInclusive ? `GST included (${gstPercent}%)` : `+${gstPercent}% GST`}
+                        </span>
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Variant Selection */}
+              {variations.length > 0 && (uniqueSizes.length > 0 || uniqueColors.length > 0 || otherAttributes.length > 0) && (
+                <div className="space-y-5">
+                  {/* Standard Size Variations - Only if 'Size' attribute exists explicitly */}
+                  {uniqueSizes.length > 0 && variationAttributes.some(a => a.name.toLowerCase().trim() === 'size') && (
+                    <div>
+                      <p className="text-sm font-bold text-foreground mb-2.5">
+                        {uniqueColors.length > 0 || otherAttributes.length > 0 ? "Product Variation" : "Size Attribute"}: <span className="font-normal">{selectedSize || "Select"}</span>
+                      </p>
+                      <div className="grid grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-2">
+                        {uniqueSizes.map((size) => {
+                          const sizeVariation = variations.find(v => 
+                            v.size?.toLowerCase().trim() === size?.toLowerCase().trim() && 
+                            (!selectedColor || v.color?.toLowerCase().trim() === selectedColor?.toLowerCase().trim())
+                          );
+                          const sizePrice = sizeVariation ? getRolePrice(product, sizeVariation) : 0;
+                          const sizeMrp = sizeVariation ? getMrp(product, sizeVariation) : 0;
+                          const isSelected = selectedSize === size;
+                          return (
+                            <button
+                              key={size}
+                              onClick={() => {
+                                setSelectedSize(size);
+                                if (sizeVariation) handleVariantSelect(sizeVariation.id);
+                              }}
+                              className={cn(
+                                "rounded-lg border-2 text-left transition-all overflow-hidden w-full min-w-0",
+                                isSelected
+                                  ? "border-[#007185] shadow-md ring-1 ring-[#007185]"
+                                  : "border-border hover:border-[#007185]/50 hover:shadow-sm"
+                              )}
+                            >
+                              <div className={cn(
+                                "px-1.5 py-1.5 sm:px-3 sm:py-2 md:py-1.5",
+                                isSelected ? "bg-[#edfdff]" : "bg-[#f3f9f2]"
+                              )}>
+                                <p className="text-[11px] sm:text-[14px] font-bold text-foreground leading-tight truncate">{size}</p>
+                              </div>
+                              {sizePrice > 0 && (
+                                <div className="px-1.5 py-1.5 sm:px-3 sm:py-2 md:py-1.5 border-t border-border bg-white">
+                                  <p className="text-[11px] sm:text-[13px] font-bold text-foreground leading-none truncate">₹{sizePrice.toLocaleString("en-IN")}</p>
+                                  {sizeMrp > 0 && sizeMrp !== sizePrice && (
+                                    <p className="text-[9px] sm:text-[11px] text-muted-foreground line-through leading-none mt-1 truncate">₹{sizeMrp.toLocaleString("en-IN")}</p>
+                                  )}
+                                </div>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {uniqueColors.length > 0 && (
+                    <div>
+                      <p className="text-sm font-bold text-foreground mb-2.5">
+                        Colour/Style: <span className="font-normal">{selectedColor || "Select"}</span>
+                      </p>
+                      <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-4 lg:grid-cols-6 gap-2">
+                        {uniqueColors.map((color) => {
+                          const shouldFilterBySize = uniqueSizes.length > 0 && selectedSize;
+                          const colorVariation = variations.find(v => 
+                            v.color?.toLowerCase().trim() === color?.toLowerCase().trim() && 
+                            (!shouldFilterBySize || v.size?.toLowerCase().trim() === selectedSize?.toLowerCase().trim())
+                          );
+                          const colorPrice = colorVariation ? getRolePrice(product, colorVariation) : 0;
+                          const colorMrp = colorVariation ? getMrp(product, colorVariation) : 0;
+                          const hasImage = colorImageMap[color];
+                          const hasSizes = uniqueSizes.length > 0;
+                          return (
+                            <button
+                              key={color}
+                              onClick={() => {
+                                setSelectedColor(color);
+                                if (colorVariation) handleVariantSelect(colorVariation.id);
+                              }}
+                              className={cn(
+                                "rounded-lg border-2 overflow-hidden transition-all",
+                                selectedColor === color
+                                  ? "border-[#007185] shadow-sm"
+                                  : "border-border hover:border-[#007185]/50"
+                              )}
+                            >
+                              {hasImage ? (
+                                <SignedImage src={hasImage} alt={color} className="w-full aspect-square object-cover" />
+                              ) : (
+                                <div className="w-full aspect-square bg-secondary flex items-center justify-center">
+                                  <span className="text-[10px] text-muted-foreground font-medium">{color}</span>
+                                </div>
+                              )}
+                              {!hasSizes && (
+                                <div className="p-1.5 border-t border-border bg-white">
+                                  {colorPrice > 0 && (
+                                    <p className="text-[11px] sm:text-[13px] font-bold text-foreground leading-none">₹{colorPrice.toLocaleString("en-IN")}</p>
+                                  )}
+                                  {colorMrp > 0 && colorMrp > colorPrice && (
+                                    <p className="text-[9px] sm:text-[11px] text-muted-foreground line-through leading-none mt-1">₹{colorMrp.toLocaleString("en-IN")}</p>
+                                  )}
+                                </div>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {otherAttributes.length > 0 && otherAttributes.map((attr) => (
+                    <div key={attr.name}>
+                      <p className="text-sm font-bold text-foreground mb-2.5">
+                        {attr.name}: <span className="font-normal">{selectedOtherValues[attr.name] || "Select"}</span>
+                      </p>
+                      <div className="grid grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-2">
+                        {attr.values.map((val) => {
+                          const isSelected = selectedOtherValues[attr.name] === val;
+                          
+                          // We need to find the variation that matches this attribute value.
+                          // Match variation values with the 'size' or 'color' field mapping
+                          const matchingVar = variations.find(v => 
+                            (v.size && v.size.toLowerCase().trim() === val.toLowerCase().trim()) || 
+                            (v.color && v.color.toLowerCase().trim() === val.toLowerCase().trim())
+                          );
+                          const varPrice = matchingVar ? getRolePrice(product, matchingVar) : 0;
+                          const varMrp = matchingVar ? getMrp(product, matchingVar) : 0;
+
+                          return (
+                            <button
+                              key={val}
+                              onClick={() => {
+                                setSelectedOtherValues(prev => ({ ...prev, [attr.name]: val }));
+                                if (matchingVar) handleVariantSelect(matchingVar.id);
+                              }}
+                              className={cn(
+                                "rounded-lg border-2 text-left transition-all overflow-hidden w-full min-w-0",
+                                isSelected
+                                  ? "border-[#007185] shadow-md ring-1 ring-[#007185]"
+                                  : "border-border hover:border-[#007185]/50 hover:shadow-sm"
+                              )}
+                            >
+                              <div className={cn(
+                                "px-1.5 py-1.5 sm:px-3 sm:py-2 md:py-1.5",
+                                isSelected ? "bg-[#edfdff]" : "bg-[#f3f9f2]"
+                              )}>
+                                <p className="text-[11px] sm:text-[14px] font-bold text-foreground leading-tight truncate">{val}</p>
+                              </div>
+                              <div className="px-1.5 py-1.5 sm:px-3 sm:py-2 md:py-1.5 border-t border-border bg-white">
+                                <p className="text-[11px] sm:text-[13px] font-bold text-foreground leading-none truncate">
+                                  ₹{(varPrice || 0).toLocaleString("en-IN")}
+                                </p>
+                                {varMrp > 0 && varMrp !== varPrice && (
+                                  <p className="text-[9px] sm:text-[11px] text-muted-foreground line-through leading-none mt-1 truncate">
+                                    ₹{varMrp.toLocaleString("en-IN")}
+                                  </p>
+                                )}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Available Offers */}
+              <ProductOffers categoryId={product.category_id} />
+
+              {/* Available Coupons */}
+              <ProductCoupons categoryId={product.category_id} />
+
+              {/* Buy Box */}
+              <div className="space-y-3 pt-4 border-t border-border">
+                {hasExplicitMoq && (
+                  <p className="text-xs text-muted-foreground">Minimum Order Quantity- {currentMoq}</p>
+                )}
+
+                {hasExplicitMoq && !moqValid && (
+                  <p className="text-xs text-destructive font-medium">
+                    Minimum order quantity for this product is {currentMoq} units
+                  </p>
+                )}
+
+                {/* Quantity + CTA Buttons in one row */}
+                <div className="flex items-stretch gap-2.5">
+                  <div className="flex items-center border border-border rounded-lg shrink-0 h-11">
+                    <button
+                      aria-label="Decrease quantity"
+                      onClick={() => handleQuantityChange(-1)}
+                      disabled={quantity <= currentMoq}
+                      className="px-2.5 h-full hover:bg-secondary rounded-l-lg transition-colors disabled:opacity-40"
+                    >
+                      <Minus className="h-4 w-4" />
+                    </button>
+                    <span className="w-8 text-center text-sm font-semibold">{quantity}</span>
+                    <button
+                      aria-label="Increase quantity"
+                      onClick={() => handleQuantityChange(1)}
+                      className="px-2.5 h-full hover:bg-secondary rounded-r-lg transition-colors"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <Button
+                    className="flex-1 min-w-0 bg-accent hover:bg-accent-hover text-[11px] sm:text-sm font-bold h-11 uppercase tracking-tight sm:tracking-wide rounded-lg px-2 inline-flex items-center justify-center gap-1 sm:gap-1.5"
+                    onClick={handleAddToCartClick}
+                    disabled={isAddingToCart || isBuyingNow || !moqValid}
+                  >
+                    {isAddingToCart ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShoppingCart className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
+                    {isAddingToCart ? "Adding..." : "ADD TO CART"}
+                  </Button>
+                  <Button
+                    className="hidden lg:inline-flex flex-1 min-w-0 bg-primary hover:bg-primary/90 text-[11px] sm:text-sm font-bold h-11 uppercase tracking-tight sm:tracking-wide rounded-lg px-2 items-center justify-center gap-1 sm:gap-1.5"
+                    onClick={handleBuyNow}
+                    disabled={isAddingToCart || isBuyingNow || !moqValid}
+                  >
+                    {isBuyingNow ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
+                    {isBuyingNow ? "PROCESSING..." : "BUY NOW"}
+                  </Button>
+                </div>
+
+                {/* Tablet only: Full width Buy Now below the row */}
+                <Button
+                  className="hidden md:flex lg:hidden w-full bg-primary hover:bg-primary/90 text-sm font-bold h-11 uppercase tracking-wide rounded-lg items-center justify-center gap-1.5 mt-2"
+                  onClick={handleBuyNow}
+                  disabled={isAddingToCart || isBuyingNow || !moqValid}
+                >
+                  {isBuyingNow ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
+                  {isBuyingNow ? "PROCESSING..." : "BUY NOW"}
+                </Button>
+
+                {/* Mobile: Buy Now button inside the page content, not fixed */}
+                <div className="md:hidden pt-2">
+                  <Button
+                    className="w-full bg-primary hover:bg-primary/90 text-sm font-bold h-11 uppercase tracking-wide rounded-lg inline-flex items-center justify-center gap-1.5"
+                    onClick={handleBuyNow}
+                    disabled={isAddingToCart || isBuyingNow || !moqValid}
+                  >
+                    {isBuyingNow ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
+                    {isBuyingNow ? "PROCESSING..." : "BUY NOW"}
+                  </Button>
+                </div>
+
+                {/* Payment methods + secure payment badges */}
+                <div className="space-y-2">
+                  <img
+                    src="https://ik.imagekit.io/houskaseseepika/PAYMENT-GETWAY-2%20(1).avif?updatedAt=1787223477133"
+                    alt="100% secure payment methods"
+                    loading="lazy"
+                    className="w-full h-auto rounded-lg"
+                  />
+                  <img
+                    src="https://ik.imagekit.io/houskaseseepika/Secure-Payment%20(2).avif"
+                    alt="100% secure payment"
+                    loading="lazy"
+                    className="w-full h-auto rounded-lg"
+                  />
+                </div>
+
+                {/* Quick Actions Row */}
+                <div className="grid grid-cols-3 divide-x divide-border border border-border rounded-lg">
+                  <button
+                    onClick={() => window.open("tel:+919266129195")}
+                    className="flex flex-col items-center gap-1.5 py-3 hover:bg-secondary/50 transition-colors"
+                  >
+                    <Phone className="h-5 w-5 text-primary" />
+                    <span className="text-[10px] text-center text-muted-foreground leading-tight">
+                      Call us at<br />+91 92661 29195
+                    </span>
+                  </button>
+                  <button
+                    onClick={handleWhatsAppClick}
+                    className="flex flex-col items-center gap-1.5 py-3 hover:bg-secondary/50 transition-colors"
+                  >
+                    <MessageCircle className="h-5 w-5 text-success" />
+                    <span className="text-[10px] text-center text-muted-foreground leading-tight">
+                      Buy on<br />Chat
+                    </span>
+                  </button>
+                  <button
+                    onClick={handleAddToRFQ}
+                    className="flex flex-col items-center gap-1.5 py-3 hover:bg-secondary/50 transition-colors"
+                  >
+                    <FileText className="h-5 w-5 text-accent" />
+                    <span className="text-[10px] text-center text-muted-foreground leading-tight">
+                      Ask for Bulk<br />Qty Quote
+                    </span>
+                  </button>
+                </div>
+
+                {/* Delivery Pincode Check */}
+                <DeliveryChecker />
+
+                {/* Returns + Shipping */}
+                <div className="grid grid-cols-2 gap-2 pt-3 border-t border-border">
+                  <div className="flex items-center gap-2.5 p-2.5 rounded-lg border border-border bg-secondary/20">
+                    <div className="w-9 h-9 rounded-lg bg-success/10 flex items-center justify-center shrink-0">
+                      <Shield className="h-4 w-4 text-success" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-foreground leading-tight">Returns</p>
+                      <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">As per Brand / 7 days</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2.5 p-2.5 rounded-lg border border-border bg-secondary/20">
+                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <Truck className="h-4 w-4 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-foreground leading-tight">Shipping</p>
+                      <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">Free for bulk orders</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Specifications Table */}
+              {(productAttributes.length > 0 || product.category || hasExplicitMoq) && (
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-sm font-semibold text-foreground uppercase tracking-wider">SPECIFICATIONS</p>
+                  </div>
+                  <div className="rounded-lg overflow-hidden text-xs">
+                    {(() => {
+                      const rows: Array<{ label: string; value: string }> = [];
+
+                      // Add product attributes
+                      const grouped: Record<string, string[]> = {};
+                      (productAttributes || []).forEach(attr => {
+                        if (attr?.name && attr?.value) {
+                          const key = attr.name;
+                          if (!grouped[key]) grouped[key] = [];
+                          if (!grouped[key].includes(attr.value)) {
+                            grouped[key].push(attr.value);
+                          }
+                        }
+                      });
+
+                      Object.entries(grouped).forEach(([name, values]) => {
+                        let displayValues = values;
+                        const nameLower = name.toLowerCase();
+                        if (nameLower === "color" || nameLower === "colour") {
+                          displayValues = selectedColor ? [selectedColor] : values;
+                        } else if (nameLower === "size") {
+                          displayValues = selectedSize ? [selectedSize] : values;
+                        }
+                        rows.push({ label: name, value: displayValues.join(", ") });
+                      });
+
+                      // Add static fields
+                      if (product.category) {
+                        rows.push({ label: "Category", value: product.category.name });
+                      }
+                      if (hasExplicitMoq) {
+                        rows.push({ label: "MOQ", value: `${currentMoq} units` });
+                      }
+
+                      return rows.map((row, idx) => (
+                        <div
+                          key={`${row.label}-${idx}`}
+                          className={cn(
+                            "grid grid-cols-2",
+                            idx % 2 !== 0 ? "bg-[#f8f9fa]" : "bg-white"
+                          )}
+                        >
+                          <div className="p-2.5 font-medium text-muted-foreground">
+                            {row.label}
+                          </div>
+                          <div className="p-2.5 text-foreground">
+                            {row.value}
+                          </div>
+                        </div>
+                      ));
+                    })()}
+                  </div>
+                </div>
+              )}
+
+              {/* Overview */}
+              {(product.short_description || product.description) && (
+                <div>
+                  <p className="text-sm font-semibold text-foreground mb-2">OVERVIEW</p>
+                  <div 
+                    className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap
+                      [&_h1]:text-sm [&_h1]:font-bold [&_h1]:text-foreground [&_h1]:mb-2
+                      [&_h2]:text-xs [&_h2]:font-bold [&_h2]:text-foreground [&_h2]:mt-3 [&_h2]:mb-1
+                      [&_p]:mb-2 [&_p]:leading-relaxed
+                      [&_ul]:list-disc [&_ul]:pl-4 [&_ul]:mb-2 [&_ul]:space-y-0.5
+                      [&_ol]:list-decimal [&_ol]:pl-4 [&_ol]:mb-2
+                      [&_strong]:text-foreground [&_strong]:font-semibold
+                      [&_em]:italic [&_br]:block"
+                  >
+                    <FormattedProductText text={product.short_description || product.description} />
+                  </div>
+                </div>
+              )}
+            </div>
+
+          </div>
+
+
+          {/* Promotional banner (admin-uploadable per product) */}
+          {product.banner_image && (
+            <div className="mt-6 rounded-xl overflow-hidden border border-border">
+              <SignedImage
+                src={product.banner_image}
+                alt={`${product.name} promotional banner`}
+                className="w-full h-auto object-cover"
+              />
+            </div>
+          )}
+
+          {/* Related products → Description blocks → Reviews → Trending reels */}
+          <RelatedProducts currentProductId={product.id} categoryId={product.category_id} />
+
+          {Array.isArray((product as any).description_blocks) &&
+            (product as any).description_blocks.length > 0 && (
+              <section className="mt-10 space-y-8" aria-label="Product details">
+                {((product as any).description_blocks as Array<{ image?: string; text?: string }>).map(
+                  (block, idx) => (
+                    <div
+                      key={idx}
+                      className={`grid gap-4 sm:gap-8 items-center md:grid-cols-2 ${idx % 2 === 1 ? "md:[&>*:first-child]:order-2" : ""}`}
+                    >
+                      {block.image && (
+                        <div className="rounded-xl overflow-hidden border border-border bg-white">
+                          <SignedImage
+                            src={block.image}
+                            alt={`${product.name} detail ${idx + 1}`}
+                            className="w-full h-auto object-contain"
+                          />
+                        </div>
+                      )}
+                      {block.text && (
+                        <div className="text-sm text-muted-foreground leading-relaxed">
+                          <FormattedProductText text={block.text} />
+                        </div>
+                      )}
+                    </div>
+                  )
+                )}
+              </section>
+            )}
+
+          <CustomerReviews
+            productId={product.id}
+            productName={product.name}
+            onStats={handleReviewStats}
+          />
+          <div className="mt-[30px]">
+            <ReelsSection title="Trending Reels" placement="product" />
+            <InstagramFeed />
+          </div>
+          
+        </div>
+      </main>
+
+      <Footer />
+
+      {/* Image Zoom Modal - Amazon Style */}
+      {zoomOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setZoomOpen(false)}>
+          <div
+            className="relative bg-background rounded-xl shadow-2xl w-[95vw] h-[90vh] md:w-[85vw] md:h-[85vh] flex flex-col md:flex-row overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setZoomOpen(false)}
+              className="absolute top-3 right-3 z-20 bg-background/80 border border-border rounded-full w-8 h-8 flex items-center justify-center shadow-sm hover:bg-secondary transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+
+            {/* Main Image Area with hover zoom */}
+            <div className="flex-1 flex items-center justify-center relative min-h-0 overflow-hidden">
+              {/* Mobile swipe area */}
+              <div
+                className="w-full h-full flex items-center justify-center p-4 md:p-6 cursor-zoom-in group"
+                onTouchStart={(e) => {
+                  const touch = e.touches[0];
+                  if (touch) (e.currentTarget as any)._touchStartX = touch.clientX;
+                }}
+                onTouchEnd={(e) => {
+                  const startX = (e.currentTarget as any)._touchStartX;
+                  if (startX === undefined) return;
+                  const endX = e.changedTouches[0]?.clientX;
+                  if (endX === undefined) return;
+                  const diff = startX - endX;
+                  if (Math.abs(diff) > 50) {
+                    if (diff > 0 && zoomIndex < productImages.length - 1) {
+                      setZoomIndex(zoomIndex + 1);
+                    } else if (diff < 0 && zoomIndex > 0) {
+                      setZoomIndex(zoomIndex - 1);
+                    }
+                  }
+                }}
+                onMouseMove={(e) => {
+                  const img = e.currentTarget.querySelector('img');
+                  if (!img) return;
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const x = ((e.clientX - rect.left) / rect.width) * 100;
+                  const y = ((e.clientY - rect.top) / rect.height) * 100;
+                  img.style.transformOrigin = `${x}% ${y}%`;
+                  img.style.transform = 'scale(2)';
+                }}
+                onMouseLeave={(e) => {
+                  const img = e.currentTarget.querySelector('img');
+                  if (img) {
+                    img.style.transform = 'scale(1)';
+                    img.style.transformOrigin = 'center center';
+                  }
+                }}
+              >
+                <SignedImage
+                  src={productImages[zoomIndex] as string}
+                  alt={product.name}
+                  className="max-w-full max-h-full object-contain select-none transition-transform duration-150 ease-out"
+                  draggable={false}
+                />
+              </div>
+
+              {/* Desktop navigation arrows */}
+              {zoomIndex > 0 && (
+                <button
+                  onClick={() => setZoomIndex(zoomIndex - 1)}
+                  className="hidden md:flex absolute left-3 top-1/2 -translate-y-1/2 bg-background/90 border border-border rounded-full w-9 h-9 items-center justify-center shadow-sm hover:bg-secondary transition-colors z-10"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+              )}
+              {zoomIndex < productImages.length - 1 && (
+                <button
+                  onClick={() => setZoomIndex(zoomIndex + 1)}
+                  className="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 bg-background/90 border border-border rounded-full w-9 h-9 items-center justify-center shadow-sm hover:bg-secondary transition-colors z-10"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+
+            {/* Right side panel - product info + thumbnails (desktop) / bottom strip (mobile) */}
+            <div className="flex flex-row md:flex-col gap-2 p-3 md:p-4 overflow-x-auto md:overflow-y-auto md:w-[280px] border-t md:border-t-0 md:border-l border-border bg-secondary/10 scrollbar-hide">
+              {/* Product info - desktop only */}
+              <div className="hidden md:block mb-2">
+                <h3 className="text-sm font-semibold text-foreground leading-tight line-clamp-3 mb-1.5">{product.name}</h3>
+                {selectedSize && (
+                  <p className="text-xs text-muted-foreground">Size: <span className="font-medium text-foreground">{selectedSize}</span></p>
+                )}
+                {selectedColor && (
+                  <p className="text-xs text-muted-foreground">Colour: <span className="font-medium text-foreground">{selectedColor}</span></p>
+                )}
+              </div>
+
+              {/* Thumbnail grid - wrapping on desktop, horizontal on mobile */}
+              <div className="flex md:flex-wrap gap-2">
+                {productImages.map((img, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setZoomIndex(idx)}
+                    className={cn(
+                      "flex-shrink-0 w-14 h-14 md:w-[60px] md:h-[60px] rounded-lg overflow-hidden border-2 transition-all",
+                      zoomIndex === idx
+                        ? "border-accent shadow-sm"
+                        : "border-border hover:border-accent/50"
+                    )}
+                  >
+                    <SignedImage src={img} alt="" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Mobile image counter */}
+            <div className="absolute bottom-16 left-1/2 -translate-x-1/2 md:hidden bg-black/60 text-white text-xs px-3 py-1 rounded-full">
+              {zoomIndex + 1} / {productImages.length}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
