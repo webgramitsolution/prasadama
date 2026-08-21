@@ -86,7 +86,7 @@ serve(async (req) => {
   }
 
   try {
-    const { email, password, fullName, correlationId } = await req.json();
+    const { email, password, fullName, correlationId, testOnly } = await req.json();
 
     if (!email || !password || !fullName) {
       throw new Error("Missing required fields");
