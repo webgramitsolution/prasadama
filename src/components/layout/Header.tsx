@@ -201,46 +201,32 @@ export function Header() {
               </SheetContent>
             </Sheet>
 
-            {/* Logo */}
-            {window.location.pathname.startsWith('/admin') || window.location.pathname.startsWith('/dashboard') ? (
-              <div className="flex items-center flex-shrink-0 md:hidden">
-                <Link to="/" className="flex items-center gap-1.5 flex-shrink-0">
-                  <SignedImage
-                    src={logoUrl || DEFAULT_LOGO_URL}
-                    alt="Prasadam"
-                    className="h-9 w-auto object-contain"
-                  />
-                </Link>
-              </div>
-            ) : (
-            <Link to="/" className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-                {/* Mobile (phone) — Prasadam logo */}
-                <SignedImage
-                  src={logoUrl || DEFAULT_LOGO_URL}
-                  alt="Prasadam"
-                  className="h-9 w-auto object-contain sm:hidden"
-                />
-                {/* Desktop & tablet — Prasadam logo */}
-                <img
-                  src={DEFAULT_LOGO_URL}
-                  alt="Prasadam"
-                  className="hidden h-12 w-auto object-contain sm:block"
-                />
-              </Link>
-            )}
-
-            {/* Location pickers removed per request */}
-
-            {/* Search Bar - Desktop */}
-            <div className="hidden md:block flex-1 max-w-2xl mx-1 sm:mx-2">
+            {/* Search Bar - Desktop (left side, equal width to actions) */}
+            <div className="hidden md:block flex-1 min-w-0 max-w-xl">
               <InstantSearch placeholder="Search products..." />
             </div>
+
+            {/* Logo - centered */}
+            <Link to="/" className="flex items-center justify-center gap-1.5 sm:gap-2 flex-shrink-0">
+              {/* Mobile (phone) — Prasadam logo */}
+              <SignedImage
+                src={logoUrl || DEFAULT_LOGO_URL}
+                alt="Prasadam"
+                className="h-9 w-auto object-contain sm:hidden"
+              />
+              {/* Desktop & tablet — Prasadam logo */}
+              <img
+                src={logoUrl || DEFAULT_LOGO_URL}
+                alt="Prasadam"
+                className="hidden h-12 w-auto object-contain sm:block"
+              />
+            </Link>
 
             {/* Spacer for mobile */}
             <div className="md:hidden flex-1" />
 
             {/* Action Buttons - Icon on top, text below */}
-              <div className="hidden md:flex items-center gap-1 -mr-1">
+              <div className="hidden md:flex flex-1 min-w-0 items-center justify-end gap-1">
               <Link to="/courier-tracking" className="flex flex-col items-center justify-center w-14 h-14 hover:bg-secondary/50 rounded-md transition-colors">
                 <Truck className="h-4.5 w-4.5 text-foreground mb-0.5" />
                 <span className="text-[10px] text-foreground font-medium">Track Order</span>
