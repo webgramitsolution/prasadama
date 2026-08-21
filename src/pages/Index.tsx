@@ -67,13 +67,7 @@ const Index = () => {
         {/* '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            Add a clear UI status message on OTP delivery failure explaining whether SMTP credentials/config are missing or misconfigured and what to do next, with a Retry button.
-
-Implement an admin-only page to securely set and test my Hostinger SMTP settings (server, username, app password) using environment-backed storage so OTP sending works without exposing credentials in the UI.
-
-Build an admin dashboard that lists OTP delivery attempts and failures with timestamps, error reasons, and actions to retry or re-initiate OTP.
-
-Add end-to-end tests covering signup/login OTP success, expired/invalid links, resend countdown behavior, and rate limiting.  ab maderchod main kab se bol raha hu hostinger SMTP form open karo  - ky AI hai ky check kar rha hia tu */}
+                                            sir open SMTP form jo main credential fill kar du. hostinger jisase otp aayeg */}
         
       </main>
       <TrustSection />
