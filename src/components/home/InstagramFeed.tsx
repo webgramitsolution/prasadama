@@ -150,64 +150,18 @@ const InstagramFeed = () => {
   }
 
   if (error || posts.length === 0) {
+    // Never break the homepage when the feed is unavailable — show a simple follow CTA.
+    if (import.meta.env.DEV) {
+      console.warn("Instagram feed unavailable:", error?.message);
+    }
     return (
       <section className="pt-12 pb-7 bg-white">
         <div className="container mx-auto px-4 text-center">
           <SectionHeading title="Instagram Feed" />
-          <div className="bg-orange-50 border border-orange-100 p-6 rounded-xl max-w-2xl mx-auto mb-8">
-            <p className="text-orange-700 font-medium mb-2">Setup Required</p>
-            <p className="text-orange-600 text-sm mb-4">
-              To display your Instagram posts, you need to provide a valid <strong>Instagram User Access Token</strong>.
-            </p>
-            
-            {error?.length && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-lg text-left">
-                <p className="text-red-700 text-xs font-bold uppercase">Token Length Warning</p>
-                <p className="text-red-600 text-sm">
-                  Detected token length: <strong>{error.length} characters</strong>. 
-                  A real Instagram token is usually 100+ characters. 
-                  You might have copied the App ID or Client Secret by mistake.
-                </p>
-              </div>
-            )}
-
-            <div className="text-gray-700 text-xs text-left border-t border-orange-100 pt-4 space-y-4">
-              <div>
-                <p className="font-bold mb-2">Step-by-Step Instructions:</p>
-                <ol className="list-decimal ml-4 space-y-1">
-                  <li>Go to <a href="https://developers.facebook.com/" target="_blank" className="text-blue-600 underline">Meta for Developers</a>.</li>
-                  <li>Create an App (Type: "Consumer" or "Business").</li>
-                  <li>Add the <strong>Instagram Basic Display</strong> product.</li>
-                  <li>Generate a <strong>User Token</strong> using the "User Token Generator" in the Basic Display settings.</li>
-                  <li>Copy that token and add it to your <strong>Backend Secrets</strong> as <code className="bg-gray-100 px-1 rounded">INSTAGRAM_ACCESS_TOKEN</code>.</li>
-                </ol>
-              </div>
-
-              <div className="pt-2 border-t border-orange-100">
-                <p className="font-bold mb-2">Verify Connection:</p>
-                <div className="flex flex-col gap-2">
-                  <Button 
-                    onClick={testConnection} 
-                    disabled={isTesting}
-                    size="sm"
-                    variant="outline"
-                    className="w-full md:w-auto self-start border-orange-200 text-orange-700 hover:bg-orange-100 rounded-[8px]"
-                  >
-                    {isTesting ? "Testing..." : "Test Instagram Connection"}
-                  </Button>
-                  
-                  {testResult && (
-                    <div className={`p-2 rounded text-[11px] ${testResult.status === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                      {testResult.message}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <p className="mt-2 text-[10px] text-gray-500 italic">Current error: {error?.message || "Invalid Token"}</p>
-            </div>
-          </div>
-          <Button 
+          <p className="text-muted-foreground text-sm mb-6">
+            Follow us on Instagram for daily glimpses of our prasadam and temple offerings.
+          </p>
+          <Button
             onClick={() => window.open('https://www.instagram.com/houskase_official', '_blank')}
             className="bg-[#E4405F] hover:bg-[#D82D4B] text-white rounded-[10px]"
           >
@@ -217,6 +171,7 @@ const InstagramFeed = () => {
       </section>
     );
   }
+
 
   return (
     <section className="pt-12 pb-7 bg-white">
