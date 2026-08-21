@@ -71,10 +71,12 @@ serve(async (req) => {
     const data = await response.json()
 
     if (data.error) {
+      console.error("Instagram API error:", data.error);
       return new Response(
         JSON.stringify({ 
           error: "Failed to fetch Instagram media.",
-          message: "Failed to fetch Instagram media."
+          message: data.error.message || "Failed to fetch Instagram media.",
+          details: data.error
         }),
         { 
           status: 400, 

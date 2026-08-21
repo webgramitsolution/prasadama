@@ -68,7 +68,22 @@ const Index = () => {
         {/* '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            I have approved the plan */}
+                                            For the code present, I get the error below.
+
+Please think step-by-step in order to resolve it.
+```
+Edge function returned 400: Error, {"error":"Failed to fetch Instagram media.","message":"Failed to fetch Instagram media."}
+
+{
+  "timestamp": 1787303123035,
+  "error_type": "RUNTIME_ERROR",
+  "filename": "supabase/functions/instagram-feed/index.ts",
+  "lineno": 0,
+  "colno": 0,
+  "stack": "not_applicable",
+  "has_blank_screen": true
+}
+``` */}
         
       </main>
       <TrustSection />
