@@ -17,7 +17,6 @@ import { VoiceAssistant } from "@/components/voice/VoiceAssistant";
 
 import { TrustSection } from "@/components/home/TrustSection";
 import { AvailableOnBanner } from "@/components/home/AvailableOnBanner";
-import InstagramFeed from "@/components/home/InstagramFeed";
 
 import { SEOHead, SchemaGenerators } from "@/components/SEOHead";
 import { ResponsiveDebug } from "@/components/debug/ResponsiveDebug";
@@ -64,7 +63,6 @@ const Index = () => {
         
         <BlogSection />
         <TrustedFamilies />
-        <InstagramFeed />
         {/* '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             

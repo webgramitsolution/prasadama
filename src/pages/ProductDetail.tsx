@@ -20,7 +20,6 @@ import { useCart } from "@/contexts/CartContext";
 import { RelatedProducts } from "@/components/products/RelatedProducts";
 import { ReviewsSummary } from "@/components/products/ReviewsSummary";
 import { ReelsSection } from "@/components/reels/ReelsSection";
-import InstagramFeed from "@/components/home/InstagramFeed";
 import { ProductOffers } from "@/components/products/ProductOffers";
 import { ProductCoupons } from "@/components/products/ProductCoupons";
 import { CustomerReviews, type ReviewStats } from "@/components/products/CustomerReviews";
@@ -1230,7 +1229,6 @@ export default function ProductDetail() {
           />
           <div className="mt-[30px]">
             <ReelsSection title="Trending Reels" placement="product" />
-            <InstagramFeed />
           </div>
           
         </div>
