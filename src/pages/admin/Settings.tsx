@@ -749,7 +749,7 @@ export default function AdminSettings() {
             </CardContent>
           </Card>
         </TabsContent>
-      </Routes>
+      </Tabs>
     </div>
   );
 }
