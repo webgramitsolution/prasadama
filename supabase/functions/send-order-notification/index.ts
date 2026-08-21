@@ -17,8 +17,8 @@ class SmtpClient {
   private writer: WritableStreamDefaultWriter<Uint8Array> | null = null
   private encoder = new TextEncoder()
 
-  async connect(hostname: string) {
-    this.conn = await Deno.connectTls({ hostname, port: 465 })
+  async connect(hostname: string, port = 465) {
+    this.conn = await Deno.connectTls({ hostname, port })
     this.reader = this.conn.readable.getReader()
     this.writer = this.conn.writable.getWriter()
     await this.expect([220])
@@ -275,7 +275,7 @@ Deno.serve(async (req) => {
         
       const client = new SmtpClient()
       try { 
-        await client.connect(host); 
+        await client.connect(host, port); 
         await client.login(user, pass); 
         await client.send(user, to, subject, html);
         
