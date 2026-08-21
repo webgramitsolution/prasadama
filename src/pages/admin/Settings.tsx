@@ -55,6 +55,12 @@ export default function AdminSettings() {
     socialYoutube: "",
     socialLinkedin: "",
     socialWhatsapp: "",
+    smtpHost: "smtp.hostinger.com",
+    smtpPort: "465",
+    smtpUser: "",
+    smtpPass: "",
+    bridgeUrl: "",
+    bridgeToken: "",
   });
 
   // Notification Settings
