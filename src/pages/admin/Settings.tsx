@@ -301,7 +301,11 @@ export default function AdminSettings() {
           </TabsTrigger>
           <TabsTrigger value="integrations" className="gap-2 flex-1 min-w-[100px]">
             <Truck className="h-4 w-4" />
-            Integrations
+            Ekart
+          </TabsTrigger>
+          <TabsTrigger value="smtp" className="gap-2 flex-1 min-w-[100px]">
+            <Bell className="h-4 w-4" />
+            SMTP
           </TabsTrigger>
         </TabsList>
 
