@@ -81,6 +81,7 @@ import AdminSecurityLogs from "./pages/admin/SecurityLogs";
 import InvoicePreview from "./pages/dev/InvoicePreview";
 import AdminSecurityDiagnostics from "./pages/admin/SecurityDiagnostics";
 import AdminSmsLogs from "./pages/admin/SmsLogs";
+import AdminEmailSettings from "./pages/admin/EmailSettings";
 
 
 const queryClient = new QueryClient({
@@ -184,6 +185,7 @@ const App = () => (
                  <Route path="otp-logs" element={<AdminOtpLogs />} />
                  <Route path="security-logs" element={<AdminSecurityLogs />} />
                  <Route path="sms-logs" element={<AdminSmsLogs />} />
+                 <Route path="email-settings" element={<AdminEmailSettings />} />
                  
               </Route>
 

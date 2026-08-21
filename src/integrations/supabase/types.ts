@@ -571,6 +571,54 @@ export type Database = {
           },
         ]
       }
+      email_delivery_logs: {
+        Row: {
+          correlation_id: string | null
+          created_at: string
+          email_type: string
+          error_message: string | null
+          id: string
+          metadata: Json
+          order_id: string | null
+          provider: string
+          recipient: string
+          smtp_host: string | null
+          smtp_port: number | null
+          status: string
+          subject: string | null
+        }
+        Insert: {
+          correlation_id?: string | null
+          created_at?: string
+          email_type: string
+          error_message?: string | null
+          id?: string
+          metadata?: Json
+          order_id?: string | null
+          provider?: string
+          recipient: string
+          smtp_host?: string | null
+          smtp_port?: number | null
+          status?: string
+          subject?: string | null
+        }
+        Update: {
+          correlation_id?: string | null
+          created_at?: string
+          email_type?: string
+          error_message?: string | null
+          id?: string
+          metadata?: Json
+          order_id?: string | null
+          provider?: string
+          recipient?: string
+          smtp_host?: string | null
+          smtp_port?: number | null
+          status?: string
+          subject?: string | null
+        }
+        Relationships: []
+      }
       email_logs: {
         Row: {
           content: string | null

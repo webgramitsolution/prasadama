@@ -56,6 +56,7 @@ export default function Signup() {
   const [attemptsLeft, setAttemptsLeft] = useState<number | null>(null);
   const [maxAttemptsReached, setMaxAttemptsReached] = useState(false);
   const [resendIn, setResendIn] = useState(0);
+  const [expiresIn, setExpiresIn] = useState(0);
   const [resending, setResending] = useState(false);
   const [lastSentAt, setLastSentAt] = useState<Date | null>(null);
   const [changeEmailOpen, setChangeEmailOpen] = useState(false);
@@ -67,6 +68,12 @@ export default function Signup() {
   const [verifyHint, setVerifyHint] = useState<string | null>(null);
 
   const inflightRef = useRef(false); // hard-lock against rapid clicks
+
+  useEffect(() => {
+    if (expiresIn <= 0) return;
+    const t = setInterval(() => setExpiresIn((s) => (s > 0 ? s - 1 : 0)), 1000);
+    return () => clearInterval(t);
+  }, [expiresIn]);
 
   useEffect(() => {
     if (resendIn <= 0) return;
@@ -159,6 +166,7 @@ export default function Signup() {
       setAttemptsLeft(null);
       setMaxAttemptsReached(false);
       setResendIn(payload?.resendAvailableInSec ?? 60);
+      setExpiresIn(payload?.expiresInSec ?? 600);
       setLastSentAt(payload?.sentAt ? new Date(payload.sentAt) : new Date());
       setSendError(null);
       const retryCount = typeof payload?.retryCount === "number" ? payload.retryCount : 0;
@@ -277,6 +285,7 @@ export default function Signup() {
     setAttemptsLeft(null);
     setMaxAttemptsReached(false);
     setResendIn(0);
+    setExpiresIn(0);
     setLastSentAt(null);
     setDeliveryState("idle");
     setDeliveryMessage(null);
@@ -284,6 +293,7 @@ export default function Signup() {
 
   const lastSentLabel = lastSentAt ? lastSentAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : null;
 
+  const expiryLabel = `${Math.floor(expiresIn / 60)}:${String(expiresIn % 60).padStart(2, "0")}`;
   const resendDisabled = resendIn > 0 || resending || inflightRef.current;
   const otpDisabled = maxAttemptsReached || isLoading;
   const showDeliveryState = deliveryMessage && deliveryState !== "idle";
@@ -396,7 +406,17 @@ export default function Signup() {
             <div className="space-y-1">
               <h2 className="text-xl font-semibold">Verify your email</h2>
               <p className="text-sm text-muted-foreground">
-                Enter the 6-digit code sent to <span className="font-medium text-foreground">{email}</span>. Expires in 10 minutes.
+                Enter the 6-digit code sent to <span className="font-medium text-foreground">{email}</span>.
+              </p>
+              <p
+                className={`text-sm font-medium ${expiresIn > 0 ? "text-muted-foreground" : "text-destructive"}`}
+                data-testid="otp-expiry"
+                role="status"
+                aria-live="polite"
+              >
+                {expiresIn > 0
+                  ? `Code expires in ${expiryLabel}`
+                  : "This code has expired. Request a new one to continue."}
               </p>
               {lastCorrelationId && (
                 <p className="text-[10px] text-muted-foreground font-mono opacity-60" data-testid="correlation-id">

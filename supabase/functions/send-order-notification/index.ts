@@ -1,6 +1,7 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { z } from 'npm:zod@3.23.8'
+import { logEmailDelivery, smtpPort } from '../_shared/email-log.ts'
 
 const BodySchema = z.object({
   order_id: z.string().uuid().optional(),
@@ -16,8 +17,8 @@ class SmtpClient {
   private writer: WritableStreamDefaultWriter<Uint8Array> | null = null
   private encoder = new TextEncoder()
 
-  async connect(hostname: string) {
-    this.conn = await Deno.connectTls({ hostname, port: 465 })
+  async connect(hostname: string, port = 465) {
+    this.conn = await Deno.connectTls({ hostname, port })
     this.reader = this.conn.readable.getReader()
     this.writer = this.conn.writable.getWriter()
     await this.expect([220])
@@ -258,6 +259,7 @@ Deno.serve(async (req) => {
     }
 
     const host = Deno.env.get('SMTP_HOST') || 'smtp.hostinger.com'
+    const port = smtpPort()
 
     const user = Deno.env.get('SMTP_USER')
     const pass = Deno.env.get('SMTP_PASS')
@@ -273,10 +275,19 @@ Deno.serve(async (req) => {
         
       const client = new SmtpClient()
       try { 
-        await client.connect(host); 
+        await client.connect(host, port); 
         await client.login(user, pass); 
         await client.send(user, to, subject, html);
         
+        await logEmailDelivery({
+          email_type: parsed.data.type,
+          recipient: to,
+          subject,
+          status: 'sent',
+          smtp_host: host,
+          smtp_port: port,
+          order_id: order.id ?? null,
+        });
         // Log delivery
         try {
           await admin.from('email_logs').insert({
@@ -290,6 +301,16 @@ Deno.serve(async (req) => {
         }
       } catch (err) {
         console.error('SMTP error:', err);
+        await logEmailDelivery({
+          email_type: parsed.data.type,
+          recipient: to,
+          subject,
+          status: 'failed',
+          smtp_host: host,
+          smtp_port: port,
+          error_message: err instanceof Error ? err.message : 'Unknown SMTP error',
+          order_id: order.id ?? null,
+        });
         try {
           await admin.from('email_logs').insert({
             recipient_email: to,

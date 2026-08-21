@@ -67,6 +67,7 @@ const menuItems = [
   { icon: Inbox, label: "Contact Inquiries", href: "/admin/contact-inquiries" },
     
     { icon: Mail, label: "OTP Logs", href: "/admin/otp-logs" },
+    { icon: Mail, label: "Email & SMTP", href: "/admin/email-settings" },
     { icon: MessageSquare, label: "SMS Logs", href: "/admin/sms-logs" },
     { icon: ShieldAlert, label: "Security Logs", href: "/admin/security-logs" },
    { icon: Bell, label: "Notifications", href: "/admin/notifications" },
