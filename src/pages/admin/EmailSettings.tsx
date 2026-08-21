@@ -133,7 +133,7 @@ export default function AdminEmailSettings() {
   };
 
   const filteredLogs = (logs || []).filter((log) => {
-    const types = TYPE_GROUPS[group];
+    const types = TYPE_GROUPS[group] ?? [];
     const matchesGroup = types.length === 0 || types.includes(log.email_type);
     const term = search.trim().toLowerCase();
     const matchesSearch =
