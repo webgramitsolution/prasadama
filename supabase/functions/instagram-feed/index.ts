@@ -70,11 +70,20 @@ serve(async (req) => {
     const response = await fetch(url)
     const data = await response.json()
 
-    if (data.error) {
+    if (!response.ok || data.error) {
+      const igError = data?.error ?? {}
+      console.error(
+        `Instagram media request failed [${response.status}]:`,
+        JSON.stringify(igError),
+      )
       return new Response(
-        JSON.stringify({ 
-          error: "Failed to fetch Instagram media.",
-          message: "Failed to fetch Instagram media."
+        JSON.stringify({
+          error: 'Failed to fetch Instagram media.',
+          message: igError.message || `Instagram API returned ${response.status}.`,
+          type: igError.type,
+          code: igError.code,
+          error_subcode: igError.error_subcode,
+          status: response.status,
         }),
         { 
           status: 400, 
@@ -82,6 +91,7 @@ serve(async (req) => {
         }
       )
     }
+
 
     return new Response(
       JSON.stringify(data),
