@@ -109,21 +109,23 @@ serve(async (req) => {
     }
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    let otp = "123456";
+    if (!testOnly) {
+      otp = Math.floor(100000 + Math.random() * 900000).toString();
+      const { error: dbError } = await supabase
+        .from("signup_otp_events")
+        .insert([
+          { 
+            email, 
+            otp_code: otp, 
+            correlation_id: correlationId,
+            full_name: fullName,
+            password_hash: await sha256Hex(`${email.trim().toLowerCase()}:${password}`)
+          }
+        ]);
 
-    const { error: dbError } = await supabase
-      .from("signup_otp_events")
-      .insert([
-        { 
-          email, 
-          otp_code: otp, 
-          correlation_id: correlationId,
-          full_name: fullName,
-          password_hash: await sha256Hex(`${email.trim().toLowerCase()}:${password}`)
-        }
-      ]);
-
-    if (dbError) throw new Error("Failed to store verification code");
+      if (dbError) throw new Error("Failed to store verification code");
+    }
 
     // Attempting our RobustSmtp client which uses raw Deno.connect/readable/writable
     // instead of high-level libraries that might use restricted APIs.
