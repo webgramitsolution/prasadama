@@ -6,7 +6,7 @@ export default defineTool({
   name: "list_my_orders",
   title: "List my orders",
   description:
-    "List the signed-in user's Houskase orders — id, order number, status, payment status, total, placed date. RLS restricts to the caller's own orders.",
+    "List the signed-in user's Prasadam orders — id, order number, status, payment status, total, placed date. RLS restricts to the caller's own orders.",
   inputSchema: {
     limit: z.number().int().min(1).max(50).optional().describe("Max rows (default 20)."),
   },

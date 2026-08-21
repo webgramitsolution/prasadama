@@ -106,7 +106,7 @@ function withAudit(toolName, fn) {
 
 ${retryHint}
 
-This limit protects Houskase from runaway agent retries. If you need higher limits, contact the Houskase team.`;
+This limit protects Prasadam from runaway agent retries. If you need higher limits, contact the Prasadam team.`;
       recordMcpCall({
         toolName,
         input: args,
@@ -147,8 +147,8 @@ This limit protects Houskase from runaway agent retries. If you need higher limi
 // src/lib/mcp/tools/search_products.ts
 var search_products_default = defineTool({
   name: "search_products",
-  title: "Search Houskase products",
-  description: "Search the Houskase catalog by keyword and/or category. Returns product name, slug, short description, price, MOQ, and stock.",
+  title: "Search Prasadam products",
+  description: "Search the Prasadam catalog by keyword and/or category. Returns product name, slug, short description, price, MOQ, and stock.",
   inputSchema: {
     query: z.string().trim().optional().describe("Free-text search across name and description."),
     category_slug: z.string().trim().optional().describe("Filter by category slug (optional)."),
@@ -180,7 +180,7 @@ import { z as z2 } from "npm:zod@^3.25.76";
 var get_product_default = defineTool2({
   name: "get_product",
   title: "Get product details",
-  description: "Fetch full details for a single Houskase product by id or slug \u2014 description, features, images, pricing, and stock.",
+  description: "Fetch full details for a single Prasadam product by id or slug \u2014 description, features, images, pricing, and stock.",
   inputSchema: {
     id: z2.string().trim().optional().describe("Product UUID."),
     slug: z2.string().trim().optional().describe("Product slug (alternative to id).")
@@ -206,7 +206,7 @@ import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@0.22.2";
 var list_categories_default = defineTool3({
   name: "list_categories",
   title: "List product categories",
-  description: "List all active product categories on Houskase (name, slug, parent).",
+  description: "List all active product categories on Prasadam (name, slug, parent).",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: withAudit("list_categories", async (_input, ctx) => {
@@ -225,7 +225,7 @@ import { z as z3 } from "npm:zod@^3.25.76";
 var list_my_orders_default = defineTool4({
   name: "list_my_orders",
   title: "List my orders",
-  description: "List the signed-in user's Houskase orders \u2014 id, order number, status, payment status, total, placed date. RLS restricts to the caller's own orders.",
+  description: "List the signed-in user's Prasadam orders \u2014 id, order number, status, payment status, total, placed date. RLS restricts to the caller's own orders.",
   inputSchema: {
     limit: z3.number().int().min(1).max(50).optional().describe("Max rows (default 20).")
   },
@@ -247,7 +247,7 @@ import { z as z4 } from "npm:zod@^3.25.76";
 var get_order_default = defineTool5({
   name: "get_order",
   title: "Get order details",
-  description: "Fetch full details for one of the signed-in user's Houskase orders \u2014 items, shipping address, totals, status. RLS restricts to the caller's own orders.",
+  description: "Fetch full details for one of the signed-in user's Prasadam orders \u2014 items, shipping address, totals, status. RLS restricts to the caller's own orders.",
   inputSchema: {
     order_id: z4.string().trim().optional().describe("Order UUID."),
     order_number: z4.string().trim().optional().describe("Order number (alternative to order_id).")
@@ -344,7 +344,7 @@ import { z as z7 } from "npm:zod@^3.25.76";
 var create_rfq_default = defineTool8({
   name: "create_rfq",
   title: "Create bulk quote request (RFQ)",
-  description: "Create a Houskase bulk quote request (RFQ) for the signed-in user with a list of products, quantities, and optional notes. Returns the RFQ number.",
+  description: "Create a Prasadam bulk quote request (RFQ) for the signed-in user with a list of products, quantities, and optional notes. Returns the RFQ number.",
   inputSchema: {
     items: z7.array(
       z7.object({
@@ -421,7 +421,7 @@ var create_rfq_default = defineTool8({
       content: [
         {
           type: "text",
-          text: `RFQ ${rfq.rfq_number} submitted with ${items.length} product(s), total quantity ${totalQty}. The Houskase sales team will respond with a quote.`
+          text: `RFQ ${rfq.rfq_number} submitted with ${items.length} product(s), total quantity ${totalQty}. The Prasadam sales team will respond with a quote.`
         }
       ],
       structuredContent: {
@@ -437,7 +437,7 @@ var create_rfq_default = defineTool8({
 // src/lib/mcp/tools/initiate_checkout.ts
 import { defineTool as defineTool9 } from "npm:@lovable.dev/mcp-js@0.22.2";
 import { z as z8 } from "npm:zod@^3.25.76";
-var APP_URL = "https://houskase.com";
+var APP_URL = "https://prasadam.com";
 var initiate_checkout_default = defineTool9({
   name: "initiate_checkout",
   title: "Start checkout for my cart",
@@ -511,7 +511,7 @@ import { defineTool as defineTool10 } from "npm:@lovable.dev/mcp-js@0.22.2";
 var get_my_profile_default = defineTool10({
   name: "get_my_profile",
   title: "Get my profile",
-  description: "Return the signed-in user's Houskase profile (name, phone, buyer type).",
+  description: "Return the signed-in user's Prasadam profile (name, phone, buyer type).",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: withAudit("get_my_profile", async (_input, ctx) => {
@@ -528,10 +528,10 @@ var get_my_profile_default = defineTool10({
 // src/lib/mcp/index.ts
 var projectRef = "cxyfwxbirzskvoesgtia";
 var mcp_default = defineMcp({
-  name: "houskase-mcp",
-  title: "Houskase",
+  name: "prasadam-mcp",
+  title: "Prasadam",
   version: "0.2.0",
-  instructions: "Tools for Houskase \u2014 India's premium household essentials store. Browse the catalog with search_products / get_product / list_categories. Read the signed-in user's own data with list_my_orders / get_order / get_order_timeline / list_my_rfqs / get_my_profile (all RLS-protected). Mutating tools: initiate_checkout (creates a pending order and returns a browser URL to finish paying) and create_rfq (submits a bulk quote request).",
+  instructions: "Tools for Prasadam \u2014 India's premium temple prasad & devotional offerings store. Browse the catalog with search_products / get_product / list_categories. Read the signed-in user's own data with list_my_orders / get_order / get_order_timeline / list_my_rfqs / get_my_profile (all RLS-protected). Mutating tools: initiate_checkout (creates a pending order and returns a browser URL to finish paying) and create_rfq (submits a bulk quote request).",
   auth: auth.oauth.issuer({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated"

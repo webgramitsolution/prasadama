@@ -94,7 +94,7 @@ export default function ForgotPassword() {
 
   return (
     <AuthShell mode="login">
-      <SEOHead title="Reset Password" description="Securely reset your Houskase account password via email verification." noIndex />
+      <SEOHead title="Reset Password" description="Securely reset your Prasadam account password via email verification." noIndex />
       
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
         <div className="mb-6">

@@ -44,7 +44,7 @@ export default function Onboarding() {
 
       toast({
         title: "Profile Updated!",
-        description: "Welcome to Houskase. Your profile is ready.",
+        description: "Welcome to Prasadam. Your profile is ready.",
       });
 
       // Check if admin to route correctly
@@ -68,7 +68,7 @@ export default function Onboarding() {
 
   return (
     <AuthShell mode="signup">
-      <SEOHead title="Complete Your Profile" description="Just a few more details to get you started with Houskase." />
+      <SEOHead title="Complete Your Profile" description="Just a few more details to get you started with Prasadam." />
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}

@@ -110,10 +110,10 @@ serve(async (req) => {
     
     if (type === "otp") {
       if (!phone || !otp) throw new Error("Missing OTP data");
-      message = `Your OTP for Login is ${otp}. Please verify within 10 minutes - HouseKase International. More Details: https://houskase.com/`;
+      message = `Your OTP for Login is ${otp}. Please verify within 10 minutes - Prasadam — A Divine Taste. More Details: https://houskase.com/`;
     } else if (type === "order_confirmation") {
       if (!phone || !orderNumber) throw new Error("Missing Order data");
-      message = `Dear ${fullName || 'Customer'}, your order #${orderNumber} has been confirmed successfully. More Details: https://houskase.com/ Thank you for choosing HouseKase International.`;
+      message = `Dear ${fullName || 'Customer'}, your order #${orderNumber} has been confirmed successfully. More Details: https://houskase.com/ Thank you for choosing Prasadam — A Divine Taste.`;
     } else {
       throw new Error("Invalid notification type");
     }

@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { InstantSearch } from "@/components/search/InstantSearch";
 import { supabase } from "@/integrations/supabase/client";
 const mobileMenuBanner = { url: "/products-hero-banner.jpg", asset_id: "v2" };
-const DEFAULT_LOGO_URL = "https://ik.imagekit.io/houskaseseepika/home%20(1)%20(1).png?updatedAt=1787220696428";
+const DEFAULT_LOGO_URL = "/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { SignedImage } from "@/components/common/SignedImage";
 import {
@@ -135,7 +135,7 @@ export function Header() {
                   >
                     <img
                       src={`${mobileMenuBanner.url}?v=${mobileMenuBanner.asset_id}`}
-                      alt="Houskase — Complete cleaning, perfect results"
+                      alt="Prasadam — A Divine Taste"
                       className="w-full h-auto object-cover bg-secondary"
                       loading="eager"
                       onError={(e) => {
@@ -204,23 +204,23 @@ export function Header() {
                 <Link to="/" className="flex items-center gap-1.5 flex-shrink-0">
                   <SignedImage
                     src={logoUrl || DEFAULT_LOGO_URL}
-                    alt="Houskase"
+                    alt="Prasadam"
                     className="h-9 w-auto object-contain"
                   />
                 </Link>
               </div>
             ) : (
             <Link to="/" className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-                {/* Mobile (phone) — keep existing logo */}
+                {/* Mobile (phone) — Prasadam logo */}
                 <SignedImage
                   src={logoUrl || DEFAULT_LOGO_URL}
-                  alt="Houskase"
+                  alt="Prasadam"
                   className="h-9 w-auto object-contain sm:hidden"
                 />
-                {/* Desktop & tablet — new logo */}
+                {/* Desktop & tablet — Prasadam logo */}
                 <img
                   src={DEFAULT_LOGO_URL}
-                  alt="Houskase"
+                  alt="Prasadam"
                   className="hidden h-12 w-auto object-contain sm:block"
                 />
               </Link>

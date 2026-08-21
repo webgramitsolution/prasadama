@@ -141,10 +141,10 @@ const App = () => (
               <Route path="/track-order/:orderNumber" element={<CourierTracking />} />
               <Route path="/dev/invoice-preview" element={<InvoicePreview />} />
               <Route path="/dev/email-preview-internal" element={<EmailPreview />} />
-              <Route path="/privacy-policy" element={<PageContent pageKey="privacy_policy" title="Privacy Policy" description="How Houskase collects, uses, stores, and protects your personal data — including cookies, order history, and marketing preferences." />} />
-              <Route path="/terms-of-service" element={<PageContent pageKey="terms_of_service" title="Terms of Service" description="The terms governing your use of Houskase — accounts, orders, payments, cancellations, and acceptable use of the marketplace." />} />
-              <Route path="/payment-terms" element={<PageContent pageKey="payment_terms" title="Payment Terms" description="Accepted payment methods, invoicing rules, taxes, and refund timing for retail and wholesale orders on Houskase." />} />
-              <Route path="/shipping-delivery" element={<PageContent pageKey="shipping_delivery" title="Shipping & Delivery" description="Shipping timelines, courier partners, delivery charges, and how Houskase handles delayed or damaged shipments across India." />} />
+              <Route path="/privacy-policy" element={<PageContent pageKey="privacy_policy" title="Privacy Policy" description="How Prasadam collects, uses, stores, and protects your personal data — including cookies, order history, and marketing preferences." />} />
+              <Route path="/terms-of-service" element={<PageContent pageKey="terms_of_service" title="Terms of Service" description="The terms governing your use of Prasadam — accounts, orders, payments, cancellations, and acceptable use of the marketplace." />} />
+              <Route path="/payment-terms" element={<PageContent pageKey="payment_terms" title="Payment Terms" description="Accepted payment methods, invoicing rules, taxes, and refund timing for retail and wholesale orders on Prasadam." />} />
+              <Route path="/shipping-delivery" element={<PageContent pageKey="shipping_delivery" title="Shipping & Delivery" description="Shipping timelines, courier partners, delivery charges, and how Prasadam handles delayed or damaged shipments across India." />} />
               <Route path="/shipping-policy" element={<Navigate to="/shipping-delivery" replace />} />
               <Route path="/return-policy" element={<Navigate to="/payment-terms" replace />} />
 

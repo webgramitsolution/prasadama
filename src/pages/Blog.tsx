@@ -37,13 +37,13 @@ export default function Blog() {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Blog — Houskase Home & Cleaning Tips"
-        description="Guides, tips and stories from Houskase on towels, tissues and everyday cleaning essentials for Indian homes and businesses."
+        title="Blog — Prasadam Home & Pooja Samagri Tips"
+        description="Guides, tips and stories from Prasadam on temple prasad, mithai & sweets and everyday pooja samagri offerings for Indian homes and businesses."
       />
       <Header />
       <main className="container mx-auto px-3 sm:px-4 py-8">
         <h1 className="text-2xl sm:text-3xl font-display font-bold text-foreground">Blog</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Tips, guides and stories from the Houskase team.</p>
+        <p className="mt-1 text-sm text-muted-foreground">Tips, guides and stories from the Prasadam team.</p>
 
         {loading ? (
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

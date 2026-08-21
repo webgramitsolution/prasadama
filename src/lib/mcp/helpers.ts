@@ -39,8 +39,8 @@ export function withAudit<Args, Result>(
 
       const friendly =
         `⏳ ${reason}\n\n${retryHint}\n\n` +
-        `This limit protects Houskase from runaway agent retries. ` +
-        `If you need higher limits, contact the Houskase team.`;
+        `This limit protects Prasadam from runaway agent retries. ` +
+        `If you need higher limits, contact the Prasadam team.`;
 
       recordMcpCall({
         toolName,

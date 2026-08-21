@@ -90,10 +90,10 @@ export default function OAuthConsent() {
             <div className="text-center mb-6">
               <ShieldCheck className="mx-auto h-10 w-10 text-accent mb-2" />
               <h1 className="text-2xl font-semibold text-foreground">
-                Connect {details.client?.name ?? "an app"} to Houskase
+                Connect {details.client?.name ?? "an app"} to Prasadam
               </h1>
               <p className="mt-2 text-sm text-muted-foreground">
-                This lets {details.client?.name ?? "the app"} access Houskase as you — browse products
+                This lets {details.client?.name ?? "the app"} access Prasadam as you — browse products
                 and read your own orders, quotes, and profile. It cannot see anyone else's data.
               </p>
             </div>

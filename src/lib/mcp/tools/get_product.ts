@@ -6,7 +6,7 @@ export default defineTool({
   name: "get_product",
   title: "Get product details",
   description:
-    "Fetch full details for a single Houskase product by id or slug — description, features, images, pricing, and stock.",
+    "Fetch full details for a single Prasadam product by id or slug — description, features, images, pricing, and stock.",
   inputSchema: {
     id: z.string().trim().optional().describe("Product UUID."),
     slug: z.string().trim().optional().describe("Product slug (alternative to id)."),

@@ -221,8 +221,8 @@ export function VoiceAssistant() {
 
     if (/(hello|hi|hey|namaste|नमस्ते)/i.test(original)) {
       return respond(t(
-        "Hello! I am your Houskase shopping assistant.",
-        "नमस्ते! मैं हौसकेस की शॉपिंग सहायक हूँ।"
+        "Hello! I am your Prasadam shopping assistant.",
+        "नमस्ते! मैं प्रसादम की शॉपिंग सहायक हूँ।"
       ));
     }
 
@@ -378,12 +378,12 @@ export function VoiceAssistant() {
             </div>
             <button
               onClick={() => { setOpen(true); setMinimized(false); }}
-              aria-label="Open Houskase Assistant"
+              aria-label="Open Prasadam Assistant"
               className="relative h-16 w-16 rounded-full shadow-xl flex items-center justify-center hover:scale-105 transition-transform"
               style={{ backgroundColor: BRAND }}
             >
               <span className="h-11 w-11 rounded-full bg-white flex items-center justify-center overflow-hidden">
-                <img src="/favicon.png" alt="Houskase Assistant" className="h-8 w-8 object-contain" />
+                <img src="/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png" alt="Prasadam Assistant" className="h-8 w-8 object-contain" />
               </span>
               <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-white text-[10px] font-bold flex items-center justify-center shadow" style={{ color: BRAND }}>
                 1
@@ -405,10 +405,10 @@ export function VoiceAssistant() {
             <div className="flex items-center justify-between px-3 py-2.5" style={{ backgroundColor: BRAND }}>
               <div className="flex items-center gap-2">
                 <span className="h-8 w-8 rounded-full bg-white flex items-center justify-center overflow-hidden">
-                  <img src="/favicon.png" alt="" className="h-6 w-6 object-contain" />
+                  <img src="/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png" alt="" className="h-6 w-6 object-contain" />
                 </span>
                 <div className="text-white">
-                  <p className="text-xs font-bold leading-tight">Houskase Assistant</p>
+                  <p className="text-xs font-bold leading-tight">Prasadam Assistant</p>
                   <span className="flex items-center gap-1 text-[9px] text-white/80">
                     <span className="h-1.5 w-1.5 rounded-full bg-green-400" /> Online
                   </span>
@@ -420,7 +420,7 @@ export function VoiceAssistant() {
             </div>
             <div className="p-3 space-y-3">
               <div className="flex items-start gap-2 rounded-lg bg-[#F7F7F7] p-2.5">
-                <img src="/favicon.png" alt="" className="h-4 w-4 object-contain mt-0.5" />
+                <img src="/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png" alt="" className="h-4 w-4 object-contain mt-0.5" />
                 <p className="text-[11px] text-[#333333]">Hi! How can I help you today?</p>
               </div>
               <button
@@ -483,10 +483,10 @@ export function VoiceAssistant() {
             <div className="px-4 py-3 flex items-center justify-between" style={{ backgroundColor: BRAND }}>
               <div className="flex items-center gap-3">
                 <span className="h-10 w-10 rounded-full bg-white flex items-center justify-center overflow-hidden">
-                  <img src="/favicon.png" className="h-7 w-7 object-contain" alt="Houskase Assistant" />
+                  <img src="/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png" className="h-7 w-7 object-contain" alt="Prasadam Assistant" />
                 </span>
                 <div className="text-white">
-                  <h3 className="font-bold text-sm leading-tight">Houskase Assistant</h3>
+                  <h3 className="font-bold text-sm leading-tight">Prasadam Assistant</h3>
                   <div className="flex items-center gap-1.5 text-[10px] text-white/85">
                     <span className={cn("w-1.5 h-1.5 rounded-full", thinking || listening || isSpeaking ? "bg-amber-300 animate-pulse" : "bg-green-400")} />
                     {listening ? "Listening..." : thinking ? "Thinking..." : isSpeaking ? "Speaking..." : "Online"}
@@ -511,8 +511,8 @@ export function VoiceAssistant() {
               {messages.length === 0 ? (
                 <div className="space-y-5">
                   <div className="text-center space-y-2 pt-2">
-                    <img src="/favicon.png" alt="" className="h-12 w-12 object-contain mx-auto" />
-                    <h3 className="font-bold text-lg text-[#333333]">Welcome to Houskase 👋</h3>
+                    <img src="/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png" alt="" className="h-12 w-12 object-contain mx-auto" />
+                    <h3 className="font-bold text-lg text-[#333333]">Welcome to Prasadam 👋</h3>
                     <p className="text-[13px] text-[#333333]/70 leading-relaxed px-2">
                       Hi! I'm your shopping assistant. Ask me about products, orders, delivery, or anything else. I'm here to help!
                     </p>
@@ -559,7 +559,7 @@ export function VoiceAssistant() {
                     <div key={i} className={cn("flex gap-2", m.role === "user" ? "justify-end" : "items-start")}>
                       {m.role === "assistant" && (
                         <span className="h-7 w-7 rounded-full bg-[#F7F7F7] flex items-center justify-center flex-shrink-0 mt-1">
-                          <img src="/favicon.png" alt="" className="h-4 w-4 object-contain" />
+                          <img src="/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png" alt="" className="h-4 w-4 object-contain" />
                         </span>
                       )}
                       <div className="max-w-[78%] space-y-2">
@@ -619,7 +619,7 @@ export function VoiceAssistant() {
                   {thinking && (
                     <div className="flex items-start gap-2">
                       <span className="h-7 w-7 rounded-full bg-[#F7F7F7] flex items-center justify-center flex-shrink-0">
-                        <img src="/favicon.png" alt="" className="h-4 w-4 object-contain" />
+                        <img src="/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png" alt="" className="h-4 w-4 object-contain" />
                       </span>
                       <div className="bg-[#F7F7F7] px-3.5 py-3 rounded-2xl rounded-bl-md">
                         <div className="flex items-center gap-1">

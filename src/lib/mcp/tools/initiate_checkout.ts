@@ -7,7 +7,7 @@ const APP_URL = "https://houskase.com";
 /**
  * Initiate checkout for the signed-in user's cart.
  *
- * Payment on Houskase runs through the Razorpay browser SDK (a JS modal), so
+ * Payment on Prasadam runs through the Razorpay browser SDK (a JS modal), so
  * there is no external hosted payment page. This tool creates a pending order
  * on the backend and returns a checkout URL the user opens in their browser to
  * complete payment.

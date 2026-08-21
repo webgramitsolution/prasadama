@@ -41,7 +41,7 @@ export default function AdminSettings() {
     ekartUsername: "",
     ekartPassword: "",
     ekartPickupAlias: "",
-    ekartCategory: "Home & Kitchen",
+    ekartCategory: "Temple Prasad",
     ekartWeight: "500",
     ekartGstin: "",
     currency: "INR",
@@ -85,7 +85,7 @@ export default function AdminSettings() {
   const [heroMarqueeSettings, setHeroMarqueeSettings] = useState({
     enabled: true,
     items: [
-      { id: "hm1", text: "🌿 100% Bamboo — Ultra-absorbent & lint-free" },
+      { id: "hm1", text: "🌿 100% Pure — Traditional & Divine" },
       { id: "hm2", text: "🚚 Free shipping across India on orders above ₹499" },
       { id: "hm3", text: "🏆 Trusted by 25,000+ homes & businesses" },
       { id: "hm4", text: "♻️ Reusable, washable & eco-friendly essentials" },
@@ -157,7 +157,7 @@ export default function AdminSettings() {
         ekartUsername: v.ekartUsername || "",
         ekartPassword: v.ekartPassword || "",
         ekartPickupAlias: v.ekartPickupAlias || "",
-        ekartCategory: v.ekartCategory || "Home & Kitchen",
+        ekartCategory: v.ekartCategory || "Temple Prasad",
         ekartWeight: v.ekartWeight || "500",
         ekartGstin: v.ekartGstin || "",
         currency: v.currency || "INR",

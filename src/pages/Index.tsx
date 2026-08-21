@@ -27,9 +27,9 @@ const Index = () => {
   const noop = useCallback(() => {}, []);
 
   const jsonLd = [
-    SchemaGenerators.website("Houskase", siteUrl),
+    SchemaGenerators.website("Prasadam", siteUrl),
     SchemaGenerators.localBusiness({
-      name: "Houskase - Everyday Essentials",
+      name: "Prasadam - A Divine Taste",
       url: siteUrl,
     }),
   ];
@@ -38,9 +38,9 @@ const Index = () => {
     <div className="min-h-screen bg-background relative">
       <ResponsiveDebug />
       <SEOHead
-        title="Houskase - Premium Towels, Tissues & Cleaning Essentials"
-        description="Houskase delivers thoughtfully crafted everyday essentials — premium towels, tissues, cleaning accessories and more. Trusted quality across India."
-        keywords="Houskase, towels, tissues, cleaning accessories, household essentials, India"
+        title="Prasadam — A Divine Taste | Temple Prasad & Devotional Offerings"
+        description="Prasadam delivers blessed temple prasad, mithai, dry fruit prasad and pooja samagri — devotional offerings crafted with purity and delivered with care across India."
+        keywords="Prasadam, temple prasad, mithai, dry fruit prasad, pooja samagri, devotional offerings, India"
         jsonLd={jsonLd}
       />
       <Header />

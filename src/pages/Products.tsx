@@ -325,17 +325,17 @@ export default function Products() {
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
       <SEOHead
-        title={categoryBanner?.name ? `${categoryBanner.name} — Buy Online at Houskase` : "Shop Houskase Products — Towels, Tissues & Cleaning Essentials"}
+        title={categoryBanner?.name ? `${categoryBanner.name} — Buy Online at Prasadam` : "Shop Prasadam Offerings — Temple Prasad, Mithai & Pooja Samagri"}
         description={categoryBanner?.name
-          ? `Shop ${categoryBanner.name} from Houskase. Premium quality, trusted brand, fast delivery across India. Best prices & exclusive offers.`
-          : "Shop Houskase Products — Towels, Tissues & Cleaning Essentials. Premium towels, tissues, and cleaning accessories with fast delivery."}
-        keywords={`${categoryBanner?.name || "Houskase"}, buy ${categoryBanner?.name || "essentials"} online, towels, tissues, cleaning, India`}
+          ? `Shop from Prasadam. Premium quality, trusted brand, fast delivery across India. Best prices & exclusive offers.`
+          : "Shop Prasadam Offerings — Temple Prasad, Mithai & Pooja Samagri. Premium temple prasad, mithai & sweets, and pooja samagri accessories with fast delivery."}
+        keywords={`${categoryBanner?.name || "Prasadam"}, buy ${categoryBanner?.name || "offerings"} online, temple prasad, mithai & sweets, pooja samagri, India`}
         jsonLd={[
           SchemaGenerators.collectionPage(
-            categoryBanner?.name ? `${categoryBanner.name} — Houskase` : "All Products — Houskase",
+            categoryBanner?.name ? `${categoryBanner.name} — Prasadam` : "All Products — Prasadam",
             categoryBanner?.name
-              ? `Shop ${categoryBanner.name} from Houskase with fast delivery across India.`
-              : "Browse the complete Houskase catalogue of everyday essentials.",
+              ? `Shop from Prasadam with fast delivery across India.`
+              : "Browse the complete Prasadam catalogue of devotional offerings.",
             "https://houskase.com/products"
           ),
           SchemaGenerators.breadcrumb([
@@ -365,7 +365,7 @@ export default function Products() {
               <div className="relative rounded-lg overflow-hidden">
                 <img
                   src={`${mobileMenuBanner.url}?v=${mobileMenuBanner.asset_id}`}
-                  alt="Houskase Products"
+                  alt="Prasadam Offerings"
                   className="w-full h-auto object-cover bg-secondary"
                   loading="eager"
                   onError={(e) => {
@@ -388,7 +388,7 @@ export default function Products() {
               even when the mobile banner is showing (no visible category h1). */}
           {!selectedCategory && (
             <h1 className="sr-only">
-              Shop Houskase Products — Towels, Tissues & Cleaning Essentials
+              Shop Prasadam Offerings — Temple Prasad, Mithai & Pooja Samagri
             </h1>
           )}
 

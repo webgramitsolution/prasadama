@@ -13,11 +13,11 @@ import getMyProfile from "./tools/get_my_profile";
 const projectRef = import.meta.env['VITE_SUPABASE_PROJECT_ID'] ?? "project-ref-unset";
 
 export default defineMcp({
-  name: "houskase-mcp",
-  title: "Houskase",
+  name: "prasadam-mcp",
+  title: "Prasadam",
   version: "0.2.0",
   instructions:
-    "Tools for Houskase — India's premium household essentials store. Browse the catalog with search_products / get_product / list_categories. Read the signed-in user's own data with list_my_orders / get_order / get_order_timeline / list_my_rfqs / get_my_profile (all RLS-protected). Mutating tools: initiate_checkout (creates a pending order and returns a browser URL to finish paying) and create_rfq (submits a bulk quote request).",
+    "Tools for Prasadam — India's premium temple prasad & devotional offerings store. Browse the catalog with search_products / get_product / list_categories. Read the signed-in user's own data with list_my_orders / get_order / get_order_timeline / list_my_rfqs / get_my_profile (all RLS-protected). Mutating tools: initiate_checkout (creates a pending order and returns a browser URL to finish paying) and create_rfq (submits a bulk quote request).",
   auth: auth.oauth.issuer({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated",

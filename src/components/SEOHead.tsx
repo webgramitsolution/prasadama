@@ -12,8 +12,8 @@ interface SEOHeadProps {
 }
 
 export function SEOHead({
-  title = "Houskase — Everyday Home, Kitchen & Cleaning Essentials",
-  description = "Discover Houskase: premium towels, tissues, kitchen and cleaning essentials for Indian homes. Shop quality products, exclusive offers and track orders online.",
+  title = "Prasadam — A Divine Taste — Temple Prasad & Devotional Offerings",
+  description = "Discover Prasadam: premium temple prasad, mithai, pooja samagri and devotional offerings. Shop quality products, exclusive offers and track orders online.",
   canonical,
   ogImage = "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/a390cef2-bad1-4afd-b4ad-0871686a4f01",
   noIndex = false,
@@ -21,7 +21,7 @@ export function SEOHead({
   jsonLd,
   ogType = "website",
 }: SEOHeadProps) {
-  const fullTitle = title.includes("Houskase") ? title : `${title} | Houskase`;
+  const fullTitle = title.includes("Prasadam") ? title : `${title} | Prasadam`;
   const CANONICAL_HOST = "https://houskase.com";
   const path = `${window.location.pathname}${window.location.search}`;
   const absolute = (u: string) =>
@@ -49,7 +49,7 @@ export function SEOHead({
       <meta property="og:image" content={ogImage} />
       <meta property="og:type" content={ogType} />
       <meta property="og:url" content={currentUrl} />
-      <meta property="og:site_name" content="Houskase" />
+      <meta property="og:site_name" content="Prasadam" />
       <meta property="og:locale" content="en_IN" />
 
       {/* Twitter */}

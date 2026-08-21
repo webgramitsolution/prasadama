@@ -4,7 +4,7 @@ import { supabaseForUser, withAudit } from "../helpers";
 export default defineTool({
   name: "list_categories",
   title: "List product categories",
-  description: "List all active product categories on Houskase (name, slug, parent).",
+  description: "List all active product categories on Prasadam (name, slug, parent).",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: withAudit("list_categories", async (_input, ctx) => {

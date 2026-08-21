@@ -150,7 +150,7 @@ export default function Checkout() {
         amount: rzp.amount,
         currency: rzp.currency,
         order_id: rzp.razorpay_order_id,
-        name: "Houskase",
+        name: "Prasadam",
         description: `Order ${rzp.order_number}`,
         prefill: {
           name: (formData.get("fullName") as string) || profile?.full_name || "",
@@ -489,7 +489,7 @@ export default function Checkout() {
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
-      <SEOHead title="Checkout" description="Complete your order on Houskase. Secure checkout with multiple payment options." noIndex />
+      <SEOHead title="Checkout" description="Complete your order on Prasadam. Secure checkout with multiple payment options." noIndex />
       <Header />
       
       <main className="pb-20 overflow-x-hidden">

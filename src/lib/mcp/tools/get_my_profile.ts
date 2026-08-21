@@ -4,7 +4,7 @@ import { supabaseForUser, withAudit } from "../helpers";
 export default defineTool({
   name: "get_my_profile",
   title: "Get my profile",
-  description: "Return the signed-in user's Houskase profile (name, phone, buyer type).",
+  description: "Return the signed-in user's Prasadam profile (name, phone, buyer type).",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: withAudit("get_my_profile", async (_input, ctx) => {

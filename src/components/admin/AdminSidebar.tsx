@@ -148,8 +148,8 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
         {!collapsed ? (
           <Link to="/" className="flex items-center">
             <img
-              src="https://ik.imagekit.io/houskaseseepika/home%20(1)%20(1).png?updatedAt=1787220696428"
-              alt="Houskase"
+              src="/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png"
+              alt="Prasadam"
               className="h-8 w-auto object-contain"
             />
           </Link>
@@ -158,7 +158,7 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
             <Link to="/" className="flex items-center">
               <img
                 src="/favicon.png"
-                alt="Houskase"
+                alt="Prasadam"
                 className="h-10 w-10 object-contain"
               />
             </Link>

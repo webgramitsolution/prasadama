@@ -129,8 +129,8 @@ export function HeroSection({ onFetchStatus }: HeroSectionProps) {
     .map((v: unknown) => (typeof v === "string" ? v.trim() : ""))
     .filter(Boolean)
     .join(" — ");
-  const heroLinkLabel = overlayHeading || activeSlide?.badge_label?.trim() || "Shop the featured Houskase collection";
-  const heroImageAlt = overlayHeading || activeSlide?.badge_label?.trim() || activeSlide?.cta_text?.trim() || "Houskase featured home essentials";
+  const heroLinkLabel = overlayHeading || activeSlide?.badge_label?.trim() || "Shop the featured Prasadam offerings";
+  const heroImageAlt = overlayHeading || activeSlide?.badge_label?.trim() || activeSlide?.cta_text?.trim() || "Prasadam blessed temple offerings";
 
 
   return (

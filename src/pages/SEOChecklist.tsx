@@ -44,8 +44,8 @@ export default function SEOChecklist() {
   return (
     <div className="container mx-auto max-w-3xl px-4 py-10">
       <Helmet>
-        <title>Sitemap Re-Submit Checklist — Houskase</title>
-        <meta name="description" content="Step-by-step checklist to re-submit the Houskase sitemap in Google Search Console." />
+        <title>Sitemap Re-Submit Checklist — Prasadam</title>
+        <meta name="description" content="Step-by-step checklist to re-submit the Prasadam sitemap in Google Search Console." />
         <link rel="canonical" href="https://houskase.com/seo-checklist" />
         <meta name="robots" content="noindex" />
       </Helmet>

@@ -13,7 +13,7 @@ const NotFound = () => {
     <div className="flex min-h-screen items-center justify-center bg-muted">
       <SEOHead
         title="404 — Page Not Found"
-        description="The Houskase page you're looking for doesn't exist or has moved. Return home or browse our product catalogue."
+        description="The Prasadam page you're looking for doesn't exist or has moved. Return home or browse our product catalogue."
         canonical={`https://houskase.com${location.pathname}`}
         noIndex
       />

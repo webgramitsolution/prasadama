@@ -11,7 +11,7 @@ export default defineTool({
   name: "create_rfq",
   title: "Create bulk quote request (RFQ)",
   description:
-    "Create a Houskase bulk quote request (RFQ) for the signed-in user with a list of products, quantities, and optional notes. Returns the RFQ number.",
+    "Create a Prasadam bulk quote request (RFQ) for the signed-in user with a list of products, quantities, and optional notes. Returns the RFQ number.",
   inputSchema: {
     items: z
       .array(
@@ -113,7 +113,7 @@ export default defineTool({
       content: [
         {
           type: "text",
-          text: `RFQ ${rfq.rfq_number} submitted with ${items.length} product(s), total quantity ${totalQty}. The Houskase sales team will respond with a quote.`,
+          text: `RFQ ${rfq.rfq_number} submitted with ${items.length} product(s), total quantity ${totalQty}. The Prasadam sales team will respond with a quote.`,
         },
       ],
       structuredContent: {

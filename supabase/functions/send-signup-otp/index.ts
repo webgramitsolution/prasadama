@@ -129,7 +129,7 @@ serve(async (req) => {
       await client.connect(smtpHost, 465, true);
       await client.login(smtpUser, smtpPass);
       
-      const logoUrl = "https://ik.imagekit.io/houskaseseepika/home%20(1)%20(1).png?updatedAt=1787220696428";
+      const logoUrl = "/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
       const headerBg = "#001B3D";
       const footerBg = "#ad1e2a";
       const accentColor = "#E94E63";
@@ -158,7 +158,7 @@ serve(async (req) => {
       <body>
         <div class="container">
           <div class="header">
-            <img src="${logoUrl}" alt="HousKase" class="logo">
+            <img src="${logoUrl}" alt="Prasadam" class="logo">
           </div>
           <div class="body">
             <div class="icon-circle">
@@ -166,13 +166,13 @@ serve(async (req) => {
             </div>
             <h1 class="status-title">Account Verification</h1>
             <p class="greeting">Hi <strong>${fullName}</strong>,</p>
-            <p style="color: #666; font-size: 16px;">Thank you for choosing HousKase. Use the verification code below to complete your registration:</p>
+            <p style="color: #666; font-size: 16px;">Thank you for choosing Prasadam. Use the verification code below to complete your registration:</p>
             <div class="otp-code">${otp}</div>
             <p style="color: #999; font-size: 14px;">This code will expire in 10 minutes. If you did not request this, please ignore this email.</p>
           </div>
           <div class="footer">
             <div class="scam-advisory">
-              <strong>Important Scam Advisory:</strong> Beware of any fake offers and fraudulent site. <strong>HousKase</strong> representatives do not demand money or ask for any personal details like your password/PIN/CVV by contacting you.
+              <strong>Important Scam Advisory:</strong> Beware of any fake offers and fraudulent site. <strong>Prasadam</strong> representatives do not demand money or ask for any personal details like your password/PIN/CVV by contacting you.
             </div>
             <div class="social-links">
               <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" class="social-icon" alt="FB"></a>
@@ -180,13 +180,13 @@ serve(async (req) => {
               <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" class="social-icon" alt="Insta"></a>
             </div>
             <p>This email was sent by: <a href="mailto:sales@houskase.com" style="color:#fff; font-weight:bold;">sales@houskase.com</a></p>
-            <p>&copy; ${new Date().getFullYear()} HousKase International. All rights reserved.</p>
+            <p>&copy; ${new Date().getFullYear()} Prasadam International. All rights reserved.</p>
           </div>
         </div>
       </body>
       </html>`;
 
-      await client.sendMail(smtpUser, email, "Verify your Houskase Account", html);
+      await client.sendMail(smtpUser, email, "Verify your Prasadam Account", html);
       console.log("Email sent successfully!");
     } catch (smtpErr: any) {
       console.error("Manual SMTP failed:", smtpErr.message);
@@ -201,7 +201,7 @@ serve(async (req) => {
           body: JSON.stringify({
             token: Deno.env.get("MAIL_BRIDGE_TOKEN") ?? "",
             to: email,
-            subject: "Verify your Houskase Account",
+            subject: "Verify your Prasadam Account",
             fullName: fullName,
             from: smtpUser,
             message: `Your verification code is: ${otp}`

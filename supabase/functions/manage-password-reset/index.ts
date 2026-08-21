@@ -107,7 +107,7 @@ serve(async (req) => {
         await client.connect(smtpHost, 465, true);
         await client.login(smtpUser, smtpPass!);
         
-        const logoUrl = "https://ik.imagekit.io/houskaseseepika/home%20(1)%20(1).png?updatedAt=1787220696428";
+        const logoUrl = "/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
         const headerBg = "#001B3D";
         const footerBg = "#ad1e2a";
         const accentColor = "#E94E63";
@@ -135,7 +135,7 @@ serve(async (req) => {
           <body>
             <div class="container">
               <div class="header">
-                <img src="${logoUrl}" alt="HousKase" class="logo">
+                <img src="${logoUrl}" alt="Prasadam" class="logo">
               </div>
               <div class="body">
                 <div class="icon-circle">
@@ -148,7 +148,7 @@ serve(async (req) => {
               </div>
               <div class="footer">
                 <div class="scam-advisory">
-                  <strong>Important Scam Advisory:</strong> Beware of any fake offers and fraudulent site. <strong>HousKase</strong> representatives do not demand money or ask for any personal details like your password/PIN/CVV by contacting you.
+                  <strong>Important Scam Advisory:</strong> Beware of any fake offers and fraudulent site. <strong>Prasadam</strong> representatives do not demand money or ask for any personal details like your password/PIN/CVV by contacting you.
                 </div>
                 <div class="social-links">
                   <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" class="social-icon" alt="FB"></a>
@@ -156,7 +156,7 @@ serve(async (req) => {
                   <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" class="social-icon" alt="Insta"></a>
                 </div>
                 <p>This email was sent by: <a href="mailto:sales@houskase.com" style="color:#fff; font-weight:bold;">sales@houskase.com</a></p>
-                <p>&copy; ${new Date().getFullYear()} HousKase International. All rights reserved.</p>
+                <p>&copy; ${new Date().getFullYear()} Prasadam — A Divine Taste. All rights reserved.</p>
               </div>
             </div>
           </body>

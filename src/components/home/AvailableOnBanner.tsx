@@ -1,19 +1,11 @@
 export function AvailableOnBanner() {
   return (
-    <div className="w-full my-[5px]">
-      <picture className="block w-full">
-        <source
-          media="(min-width: 768px)"
-          srcSet="https://ik.imagekit.io/houskase3/houskase%20bout%20us/avialble%20on.avif"
-          type="image/avif"
-        />
-        <img
-          src="https://ik.imagekit.io/houskase3/houskase%20bout%20us/available.png"
-          alt="Houskase available on app stores"
-          loading="lazy"
-          className="w-full object-cover"
-        />
-      </picture>
+    <div className="w-full my-[5px] rounded-xl overflow-hidden border border-border bg-gradient-to-r from-[#7a1a1f] to-[#A03225] text-white">
+      <div className="flex items-center justify-center gap-2 py-3 px-4 text-center">
+        <span className="text-sm font-semibold tracking-wide">
+          Prasadam — A Divine Taste · Blessed offerings delivered to your home
+        </span>
+      </div>
     </div>
   );
 }
