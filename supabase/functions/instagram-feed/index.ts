@@ -17,12 +17,13 @@ serve(async (req) => {
     if (!accessToken) {
       return new Response(
         JSON.stringify({ 
-          error: 'INSTAGRAM_ACCESS_TOKEN not set',
+          data: [],
+          error: 'missing_token',
           message: 'Instagram Access Token is missing. Please add it to your Backend Secrets.',
           length: 0
         }),
         { 
-          status: 400, 
+          status: 200, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
         }
       )
@@ -71,14 +72,18 @@ serve(async (req) => {
     const data = await response.json()
 
     if (data.error) {
+      // Return 200 so the client can render a friendly setup panel instead of
+      // treating this as a hard function failure (which blanked the section).
       return new Response(
-        JSON.stringify({ 
-          error: "Failed to fetch Instagram media.",
-          message: "Failed to fetch Instagram media."
+        JSON.stringify({
+          data: [],
+          error: 'instagram_api_error',
+          message: data.error.message || 'Failed to fetch Instagram media.',
+          length: accessToken.length
         }),
-        { 
-          status: 400, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         }
       )
     }
