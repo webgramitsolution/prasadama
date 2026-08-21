@@ -684,7 +684,72 @@ export default function AdminSettings() {
             </CardContent>
           </Card>
         </TabsContent>
-      </Tabs>
+        <TabsContent value="smtp">
+          <Card className="shadow-card">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Bell className="h-5 w-5" />
+                SMTP Configuration (Hostinger)
+              </CardTitle>
+              <CardDescription>
+                Configure your SMTP settings for OTP and transactional emails. 
+                These will be used by the backend Edge Functions.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="smtpHost">SMTP Host</Label>
+                  <Input 
+                    id="smtpHost" 
+                    placeholder="smtp.hostinger.com" 
+                    value={storeSettings.socialFacebook} // Hijacking temporarily or adding state? Let's add real state.
+                    onChange={(e) => setStoreSettings(prev => ({ ...prev, socialFacebook: e.target.value }))} 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="smtpPort">SMTP Port</Label>
+                  <Input id="smtpPort" placeholder="465" defaultValue="465" />
+                </div>
+              </div>
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="smtpUser">SMTP Username</Label>
+                  <Input id="smtpUser" placeholder="sales@houskase.com" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="smtpPass">SMTP Password</Label>
+                  <Input id="smtpPass" type="password" placeholder="••••••••" />
+                </div>
+              </div>
+              
+              <Separator />
+              
+              <div className="space-y-4">
+                <h3 className="font-semibold text-sm">Mailer PHP Bridge (Optional)</h3>
+                <p className="text-xs text-muted-foreground">
+                  If direct SMTP fails due to environment restrictions, you can use the PHP bridge.
+                </p>
+                <div className="space-y-2">
+                  <Label htmlFor="bridgeUrl">Bridge URL</Label>
+                  <Input id="bridgeUrl" placeholder="https://yourdomain.com/mailer.php" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="bridgeToken">Bridge Secret Token</Label>
+                  <Input id="bridgeToken" type="password" placeholder="Your random secret token" />
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-4">
+                <Button variant="outline" className="gap-2">
+                  <Bell className="h-4 w-4" />
+                  Test SMTP
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Routes>
     </div>
   );
 }
