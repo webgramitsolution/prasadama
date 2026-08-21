@@ -67,13 +67,15 @@ const Index = () => {
         {/* '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            Improve the UI to show a specific, user-friendly message when OTP delivery fails and include a retry button. Verify that OTP emails send successfully for new signups and that the OTP link/code works end to end.
+                                            Implement a user-friendly OTP delivery failure message in the UI with a Retry button.
 
-Implement an OTP resend feature with rate limiting and a countdown timer after login or signup.
+Build an OTP resend flow with rate limiting and a countdown timer after signup/login.
 
-Harden the mailer.php bridge by adding authentication/verification and validating inputs to prevent misuse.
+Test the OTP send and verify journey end to end for new signups, including invalid/expired links.
 
-Add admin-accessible logs to track OTP email delivery attempts and failures for my account.  suno  Emil ka SMTP open karo main host deta hu */}
+Harden mailer.php by adding authentication/verification and validating all inputs to prevent misuse.
+
+Add admin-accessible logs that track OTP email delivery attempts and failures for my account. - are yaar ye show hoga hi kyu ki Hostinger ka Host email id password ye sab chahiye tabhi to opt send karega ye */}
         
       </main>
       <TrustSection />
