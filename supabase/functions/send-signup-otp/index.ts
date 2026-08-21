@@ -112,7 +112,7 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     
     const smtpHost = Deno.env.get("SMTP_HOST") || "smtp.hostinger.com";
-    const smtpUser = Deno.env.get("SMTP_USER") || "sales@houskase.com";
+    const smtpUser = Deno.env.get("SMTP_USER");
     const smtpPass = Deno.env.get("SMTP_PASS");
 
     if (!smtpPass) {
