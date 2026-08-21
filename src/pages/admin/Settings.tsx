@@ -786,8 +786,35 @@ export default function AdminSettings() {
               </div>
 
               <div className="flex justify-end pt-4">
-                <Button variant="outline" className="gap-2">
-                  <Bell className="h-4 w-4" />
+                <Button 
+                  variant="outline" 
+                  className="gap-2"
+                  disabled={isSaving}
+                  onClick={async () => {
+                    setIsSaving(true);
+                    try {
+                      const { data, error } = await supabase.functions.invoke("send-signup-otp", {
+                        body: { 
+                          email: storeSettings.storeEmail, 
+                          password: "TEST_PASSWORD", 
+                          fullName: "SMTP Test User",
+                          testOnly: true 
+                        }
+                      });
+                      if (error) throw error;
+                      toast({ title: "Test Email Sent", description: "Check your inbox for a verification code." });
+                    } catch (err: any) {
+                      toast({ 
+                        title: "SMTP Test Failed", 
+                        description: err.message || "Failed to send test email", 
+                        variant: "destructive" 
+                      });
+                    } finally {
+                      setIsSaving(false);
+                    }
+                  }}
+                >
+                  {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Bell className="h-4 w-4" />}
                   Test SMTP
                 </Button>
               </div>
