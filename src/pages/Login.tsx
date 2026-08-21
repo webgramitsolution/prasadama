@@ -50,7 +50,14 @@ export default function Login() {
     setIsLoading(true);
     const { error } = await signIn(email, password);
     if (error) {
-      toast({ title: "Sign In Failed", description: error.message, variant: "destructive" });
+      const isInvalidCredentials = error.message.toLowerCase().includes("invalid login credentials");
+      toast({ 
+        title: "Sign In Failed", 
+        description: isInvalidCredentials 
+          ? "Invalid email or password. If you haven't registered yet, please create an account first." 
+          : error.message, 
+        variant: "destructive" 
+      });
       setIsLoading(false);
       return;
     }
