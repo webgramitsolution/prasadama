@@ -83,6 +83,12 @@ const InstagramFeed = () => {
         throw { message, length };
       }
       
+      // The function returns 200 with an `error` field when the token is
+      // missing/invalid, so the UI can show a setup panel instead of blanking.
+      if (data && data.error) {
+        throw { message: data.message || "Instagram feed is temporarily unavailable.", length: data.length };
+      }
+
       if (data && data.data) {
         if (cursor) {
           setPosts(prev => [...prev, ...data.data]);
