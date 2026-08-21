@@ -216,7 +216,7 @@ export function Header() {
               />
               {/* Desktop & tablet — Prasadam logo */}
               <img
-                src={logoUrl || DEFAULT_LOGO_URL}
+                src={DEFAULT_LOGO_URL}
                 alt="Prasadam"
                 className="hidden h-12 w-auto object-contain sm:block"
               />
