@@ -80,6 +80,22 @@ async function sha256Hex(value: string) {
   return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+/** One-way hash of an OTP, salted with the recipient email so codes are never stored in clear text. */
+export async function hashOtp(email: string, otp: string) {
+  return await sha256Hex(`otp:${email.trim().toLowerCase()}:${otp}`);
+}
+
+/** Slow, salted KDF (PBKDF2-SHA256) for the pending signup password. */
+export async function derivePassword(password: string, saltHex?: string) {
+  const salt = saltHex
+    ? Uint8Array.from(saltHex.match(/.{2}/g)!.map((b) => parseInt(b, 16)))
+    : crypto.getRandomValues(new Uint8Array(16));
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", salt, iterations: 210000, hash: "SHA-256" }, key, 256);
+  const hex = (arr: Uint8Array) => Array.from(arr).map((b) => b.toString(16).padStart(2, "0")).join("");
+  return `pbkdf2$210000$${hex(salt)}$${hex(new Uint8Array(bits))}`;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -111,10 +127,10 @@ serve(async (req) => {
       .insert([
         { 
           email, 
-          otp_code: otp, 
+          otp_code: await hashOtp(email, otp), 
           correlation_id: correlationId,
           full_name: fullName,
-          password_hash: await sha256Hex(`${email.trim().toLowerCase()}:${password}`)
+          password_hash: await derivePassword(password)
         }
       ]);
 
