@@ -85,7 +85,7 @@ export default function PWADiagnosticsPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
       <Helmet>
-        <title>PWA Diagnostics — Houskase</title>
+        <title>PWA Diagnostics — Prasadam</title>
         <meta name="robots" content="noindex" />
       </Helmet>
 

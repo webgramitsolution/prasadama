@@ -34,9 +34,9 @@ interface ProductLite {
   images: string[] | null;
 }
 
-const HERO_BG = "https://ik.imagekit.io/houskase3/houskase%20bout%20us/about%20banner.png";
-const WHO_IMAGE = "https://ik.imagekit.io/houskase3/houskase%20bout%20us/about%20us.png";
-const ECO_IMAGE = "https://ik.imagekit.io/houskase3/houskase%20bout%20us/environmnt.png";
+const HERO_BG = "/products-hero-banner.jpg";
+const WHO_IMAGE = "/auth-pooja.jpg";
+const ECO_IMAGE = "/auth-mithai.jpg";
 
 export default function AboutUs() {
   const [products, setProducts] = useState<ProductLite[]>([]);
@@ -109,8 +109,8 @@ export default function AboutUs() {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="About Houskase | Wipe Away Worries"
-        description="Houskase delivers premium household hygiene, cleaning and towel essentials — modern innovation for a cleaner, smarter, healthier lifestyle."
+        title="About Prasadam | A Divine Taste"
+        description="Prasadam brings you pure, blessed temple prasad, mithai, dry fruit prasad and pooja samagri — devotional offerings delivered with care from temple to your home."
       />
       <Header />
       <main>
@@ -118,20 +118,20 @@ export default function AboutUs() {
         <section className="relative -mt-5 overflow-hidden bg-background md:min-h-[430px] md:bg-brand-navy-soft">
           <div className="hidden md:block absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${HERO_BG})` }} />
           <div className="md:hidden h-[245px] bg-brand-navy-soft">
-            <img src={HERO_BG} alt="Houskase product collection" className="h-full w-full object-cover object-center" />
+            <img src={HERO_BG} alt="Prasadam devotional offerings collection" className="h-full w-full object-cover object-center" />
           </div>
           {/* Gradient limited to the left half so the product art on the right stays clean */}
           <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-3/5 bg-gradient-to-r from-background via-background/70 to-transparent md:block" />
           <div className="container relative mx-auto px-4 py-7 md:py-16">
             <div className="max-w-[520px]">
                 <h1 className="font-display text-[2.25rem] font-extrabold leading-[0.98] text-brand-navy md:text-[3.9rem]">
-                  ABOUT<br />HOUSKASE<sup className="text-xl md:text-2xl align-super">™</sup>
+                  ABOUT<br />PRASADAM<sup className="text-xl md:text-2xl align-super">™</sup>
                 </h1>
                 <p className="mt-4 text-lg md:text-xl font-semibold leading-tight text-foreground">
-                  Modern Innovation for a Cleaner,<br />Smarter &amp; Healthier Lifestyle.
+                  A Divine Taste, Delivered<br />From Temple to Your Home.
                 </p>
                 <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">
-                  We create premium household essentials that simplify everyday cleaning while delivering exceptional quality, durability, and convenience for modern homes.
+                  We prepare and pack blessed temple prasad, mithai, dry fruit prasad and pooja samagri with purity and devotion, for every home and every occasion.
                 </p>
                 <div className="mt-7 flex flex-nowrap gap-2 sm:gap-3">
                   <Button asChild size="lg" className="rounded px-4 text-xs bg-brand-navy text-primary-foreground hover:bg-primary-dark sm:px-6 sm:text-sm">
@@ -149,20 +149,20 @@ export default function AboutUs() {
         <section className="bg-background py-0">
           <div className="grid md:grid-cols-2">
             <div className="min-h-[320px] bg-secondary/40 md:min-h-[430px]">
-              <img src={WHO_IMAGE} alt="Houskase products in a clean family kitchen" className="h-full w-full object-cover" />
+              <img src={WHO_IMAGE} alt="Prasadam devotional offerings prepared with devotion" className="h-full w-full object-cover" />
             </div>
             <div className="flex items-center px-4 py-10 md:px-14 lg:px-20">
               <div className="max-w-xl">
               <p className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground">Who We Are</p>
               <div className="mb-4 h-1 w-14 rounded-full bg-brand-navy" />
               <h2 className="mb-5 font-display text-3xl font-bold text-brand-navy md:text-4xl">
-                Welcome to HOUSKASE<sup className="text-lg">™</sup>
+                Welcome to PRASADAM<sup className="text-lg">™</sup>
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                Welcome to Houskase, where modern innovation meets everyday convenience. We are dedicated to redefining home hygiene and household care by delivering premium-quality, high-performance solution essentials designed for the contemporary lifestyle.
+                Welcome to Prasadam, where devotion meets everyday convenience. We are dedicated to bringing pure, hygienically prepared temple prasad and devotional offerings straight to your doorstep, so faith and tradition stay effortless.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                From our signature ultra-absorbent <b className="text-brand-navy">Non-Woven Cleaning Cloth Rolls</b> to smart <b className="text-brand-navy">Compressed Pearl Towel Tablets</b>, tough-acting <b className="text-brand-navy">Liquid Dishwashes</b> and <b className="text-brand-navy">Magic Cleaning Cloths</b> — every product is crafted to make maintaining a clean, healthy, and beautiful space completely effortless.
+                From our signature <b className="text-brand-navy">Temple Prasad Boxes</b> to blessed <b className="text-brand-navy">Mithai & Sweets</b>, wholesome <b className="text-brand-navy">Dry Fruit Prasad</b> and complete <b className="text-brand-navy">Pooja Samagri Kits</b> — every offering is prepared to make your Bhog and celebrations completely effortless.
               </p>
               </div>
             </div>
@@ -176,25 +176,25 @@ export default function AboutUs() {
             </div>
             <h3 className="mt-3 mb-3 font-display text-2xl font-bold text-brand-navy md:text-3xl">OUR PHILOSOPHY</h3>
             <p className="max-w-3xl mx-auto text-muted-foreground leading-relaxed">
-              At Houskase, we believe a clean environment is the foundation of a happy, stress-free life — but cleaning shouldn't feel like a chore. That's why we engineer products that combine{" "}
-              <b className="text-brand-navy">Superior Functionality</b>, <b className="text-brand-navy">Multi-Purpose Versatility</b> and <b className="text-brand-navy">Premium Durability</b> — so you spend less time cleaning and more time living.
+              At Prasadam, we believe every offering carries devotion — and receiving prasad should feel as sacred as the temple visit itself. That's why we craft every box with{" "}
+              <b className="text-brand-navy">Purity of Ingredients</b>, <b className="text-brand-navy">Hygienic Preparation</b> and <b className="text-brand-navy">Timely Delivery</b> — so blessings reach you fresh, wherever you are.
             </p>
           </div>
           </div>
         </section>
 
-        {/* WHY CHOOSE HOUSKASE */}
+        {/* WHY CHOOSE PRASADAM */}
         <section className="container mx-auto px-4 pb-14 md:pb-20">
           <div className="text-center mb-10">
-            <h2 className="font-display text-2xl font-bold text-brand-navy md:text-3xl">WHY CHOOSE HOUSKASE?</h2>
+            <h2 className="font-display text-2xl font-bold text-brand-navy md:text-3xl">WHY CHOOSE PRASADAM?</h2>
             <div className="mx-auto mt-2 h-1 w-16 rounded-full bg-brand-navy" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-5">
               {[
-               { Icon: Award, title: "PREMIUM QUALITY", body: "High-performance materials with superior absorbency, strength, and durability for everyday use." },
-               { Icon: Leaf, title: "ECO-FRIENDLY", body: "Reusable cleaning cloths help reduce paper waste and support sustainable living." },
-               { Icon: WandSparkles, title: "MULTI-PURPOSE", body: "Perfect for Kitchen, Bathroom, Office, Car, Travel and every corner of your home." },
-               { Icon: Sparkles, title: "SMART INNOVATION", body: "Thoughtfully designed products for modern lifestyles with practical everyday functionality." },
+               { Icon: Award, title: "PREMIUM QUALITY", body: "Pure, sattvik ingredients with careful preparation and hygienic packing for every offering." },
+               { Icon: Leaf, title: "SATTVIK & PURE", body: "Prepared with devotion using natural, sattvik ingredients free from adulteration." },
+               { Icon: WandSparkles, title: "FOR EVERY OCCASION", body: "Perfect for daily Bhog, festivals, poojas, weddings and every sacred celebration." },
+               { Icon: Sparkles, title: "BLESSED DELIVERY", body: "Thoughtfully packed devotional offerings delivered with care from temple to your home." },
              ].map(({ Icon, title, body }) => (
               <div key={title} className="rounded-lg border bg-card p-6 text-center shadow-sm transition-shadow hover:shadow-md">
                 <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-brand-red">
@@ -207,10 +207,10 @@ export default function AboutUs() {
           </div>
         </section>
 
-        {/* OUR PRODUCTS (from DB) */}
+        {/* OUR OFFERINGS (from DB) */}
         <section className="container mx-auto px-4 pb-14 md:pb-20">
           <div className="text-center mb-8">
-            <h2 className="font-display text-2xl font-bold text-brand-navy md:text-3xl">OUR PRODUCTS</h2>
+            <h2 className="font-display text-2xl font-bold text-brand-navy md:text-3xl">OUR OFFERINGS</h2>
             <div className="mx-auto mt-2 h-1 w-16 rounded-full bg-brand-navy" />
           </div>
           {products.length === 0 ? (
@@ -298,15 +298,15 @@ export default function AboutUs() {
         {/* WHY CUSTOMERS LOVE (badges strip) */}
         <section className="bg-brand-red py-10 text-primary-foreground">
           <div className="container mx-auto px-4">
-            <h3 className="mb-8 text-center font-display text-lg font-bold md:text-2xl">WHY CUSTOMERS LOVE HOUSKASE</h3>
+            <h3 className="mb-8 text-center font-display text-lg font-bold md:text-2xl">WHY DEVOTEES LOVE PRASADAM</h3>
             <div className="grid grid-cols-2 text-center sm:grid-cols-3 md:grid-cols-6">
               {[
-                { Icon: Droplets, label: "Ultra Absorbent" },
-                { Icon: Wind, label: "Lint Free" },
-                { Icon: WashingMachine, label: "Washable" },
-                { Icon: Recycle, label: "Reusable" },
+                { Icon: Droplets, label: "Pure Ghee Used" },
+                { Icon: Wind, label: "Freshly Prepared" },
+                { Icon: WashingMachine, label: "Hygienically Packed" },
+                { Icon: Recycle, label: "Sustainable Packaging" },
                 { Icon: ShieldCheck, label: "Premium Quality" },
-                { Icon: WandSparkles, label: "Multipurpose" },
+                { Icon: WandSparkles, label: "For Every Occasion" },
               ].map(({ Icon, label }) => (
                 <div key={label} className="flex flex-col items-center gap-3 border-l border-r border-primary-foreground/25 px-3 py-3 first:border-l-0 last:border-r-0">
                   <div className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-brand-red ring-2 ring-primary-foreground/40 shadow-md md:h-20 md:w-20">
@@ -323,21 +323,21 @@ export default function AboutUs() {
         <section className="container mx-auto px-4 py-14 md:py-20">
           <div className="grid md:grid-cols-2 gap-10 items-center">
             <div className="aspect-[4/3] overflow-hidden rounded-lg bg-brand-green-soft">
-              <img src={ECO_IMAGE} alt="Eco-conscious Houskase product innovation" className="h-full w-full object-cover" />
+              <img src={ECO_IMAGE} alt="Sustainable Prasadam packaging initiative" className="h-full w-full object-cover" />
             </div>
             <div>
               <div className="inline-flex items-center gap-2 mb-3">
                 <Leaf className="h-5 w-5 text-brand-green" />
-                <h2 className="font-display text-2xl font-bold text-brand-green md:text-3xl">ECO-CONSCIOUS INNOVATION</h2>
+                <h2 className="font-display text-2xl font-bold text-brand-green md:text-3xl">SUSTAINABLE & MINDFUL PACKAGING</h2>
               </div>
               <p className="text-base text-muted-foreground leading-relaxed mb-6 md:text-lg">
-                Our reusable cleaning cloths can be washed and reused up to <b>100 times</b>, significantly reducing single-use waste while maintaining excellent cleaning performance. Every Houskase essential is designed to help homes clean better with less throwaway waste, reliable durability, and everyday convenience.
+                Our eco-friendly packaging uses <b>recyclable and biodegradable materials</b>, significantly reducing single-use waste while keeping every offering fresh. Every Prasadam box is designed to bring blessings to your home with mindful, sustainable care.
               </p>
               <div className="grid grid-cols-3 gap-4 text-center">
                 {[
-                  { Icon: Sparkles, label: "Clean Better." },
+                  { Icon: Sparkles, label: "Give Better." },
                   { Icon: Recycle, label: "Waste Less." },
-                  { Icon: Sparkles, label: "Live Smarter." },
+                  { Icon: Sparkles, label: "Bless More." },
                 ].map(({ Icon, label }) => (
                   <div key={label} className="flex flex-col items-center gap-3 border-x border-border/70 px-2">
                     <span className="flex h-14 w-14 items-center justify-center rounded-full bg-brand-green text-primary-foreground shadow-sm md:h-16 md:w-16">
@@ -352,10 +352,10 @@ export default function AboutUs() {
 
           <div className="mt-12 grid grid-cols-2 rounded-lg border bg-brand-navy-soft p-4 md:grid-cols-4">
               {[
-                { Icon: Smile, num: "50,000+", label: "Happy Customers" },
+                { Icon: Smile, num: "50,000+", label: "Happy Devotees" },
                 { Icon: Building2, num: "100+", label: "Cities Served" },
-                { Icon: ShoppingBag, num: "10+", label: "Premium Products" },
-                { Icon: BadgeCheck, num: "100%", label: "Quality Tested" },
+                { Icon: ShoppingBag, num: "10+", label: "Devotional Offerings" },
+                { Icon: BadgeCheck, num: "100%", label: "Purity Assured" },
               ].map(({ Icon, num, label }) => (
               <div key={label} className="flex items-center gap-3 border-x border-background/90 px-3 py-3">
                 <Icon className="h-10 w-10 shrink-0 text-brand-navy md:h-11 md:w-11" aria-hidden="true" />
@@ -373,8 +373,8 @@ export default function AboutUs() {
           <div className="grid gap-8 md:grid-cols-2 md:items-center">
             <div className="order-2 md:order-1">
               <img
-                src="https://ik.imagekit.io/houskase3/houskase%20bout%20us/file_000000001c80720caf75d7d75c42af41.png"
-                alt="Our Promise – Premium Quality"
+                src="/auth-pooja.jpg"
+                alt="Our Promise – Pure & Blessed Offerings"
                 className="mx-auto h-[220px] w-[220px] rounded-lg object-contain"
                 loading="lazy"
               />
@@ -382,11 +382,11 @@ export default function AboutUs() {
             <div className="order-1 md:order-2">
               <h2 className="mb-4 font-display text-2xl font-bold text-brand-navy md:text-3xl">OUR PROMISE</h2>
               <p className="text-muted-foreground leading-relaxed mb-3">
-                We are committed to continuous innovation by delivering modern household solutions that save your time, effort, and money.
+                We are committed to purity and devotion, delivering prasad and pooja essentials that save your time while keeping traditions alive.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                With Houskase, you're not just buying cleaning products — you are choosing{" "}
-                <b className="text-brand-navy">a smarter, cleaner, and more organized way of living.</b>
+                With Prasadam, you're not just ordering offerings — you are choosing{" "}
+                <b className="text-brand-navy">a divine taste, delivered with care to your doorstep.</b>
               </p>
             </div>
           </div>
@@ -395,8 +395,8 @@ export default function AboutUs() {
         {/* CTA FOOTER STRIP */}
         <section className="relative overflow-hidden py-10 text-primary-foreground" style={{ backgroundColor: "#AD1E2A" }}>
           <img
-            src="https://ik.imagekit.io/houskase/Banner_rxFiE4NWw.png?updatedAt=1785301567142"
-            alt="Houskase product collection"
+            src="/products-hero-banner.jpg"
+            alt="Prasadam devotional offerings collection"
             className="absolute inset-0 h-full w-full object-cover object-[75%_top]"
             loading="lazy"
           />
@@ -407,9 +407,9 @@ export default function AboutUs() {
           <div className="container relative mx-auto flex min-h-[210px] md:min-h-[260px] flex-col items-start justify-center gap-4 px-4 text-left">
             <div className="max-w-xl">
               <p className="font-display font-bold text-2xl md:text-3xl">
-                HOUSKASE<sup className="text-lg">™</sup> <span className="italic font-normal opacity-90">— Wipe Away Worries.</span>
+                PRASADAM<sup className="text-lg">™</sup> <span className="italic font-normal opacity-90">— A Divine Taste.</span>
               </p>
-              <p className="mt-1 text-sm text-primary-foreground/80">Premium Household Essentials for Everyday Living.</p>
+              <p className="mt-1 text-sm text-primary-foreground/80">Blessed Temple Prasad & Devotional Offerings, Delivered With Care.</p>
             </div>
             <Button asChild size="lg" variant="secondary" className="rounded px-6">
               <Link to="/products">EXPLORE COLLECTION <ArrowRight className="ml-2 h-4 w-4" /></Link>

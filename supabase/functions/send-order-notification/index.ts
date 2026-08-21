@@ -46,7 +46,7 @@ class SmtpClient {
     await this.command(`RCPT TO:<${to}>`, [250, 251])
     await this.command('DATA', [354])
     await this.command([
-      `From: HousKase <${from}>`, `To: ${to}`, `Subject: ${subject}`,
+      `From: Prasadam <${from}>`, `To: ${to}`, `Subject: ${subject}`,
       'MIME-Version: 1.0', 'Content-Type: text/html; charset=utf-8', '', html, '.',
     ].join('\r\n'), [250])
     await this.command('QUIT', [221])
@@ -88,7 +88,7 @@ Deno.serve(async (req) => {
         total: 1300,
         billing_address: { full_name: "Test Customer", email: "test@example.com" }
       };
-      items = [{ product_name: "Premium Bamboo Towel", quantity: 2, total_price: 1500, variation_details: "Color: White" }];
+      items = [{ product_name: "Premium Dry Fruit Prasad", quantity: 2, total_price: 1500, variation_details: "Pack: 500g" }];
     } else {
       const { data: orderData } = await admin.from('orders').select('*').eq('id', parsed.data.order_id!).maybeSingle()
       order = orderData;
@@ -130,13 +130,13 @@ Deno.serve(async (req) => {
       order_confirmed: 'Good news! Your order has been confirmed and is being prepared.',
       order_processing: 'Your order is currently being processed by our warehouse team.',
       order_shipped: 'Great news! Your package has been dispatched and is on its way to you.',
-      order_delivered: 'Your package has been delivered successfully. We hope you love your new HousKase products!',
+      order_delivered: 'Your package has been delivered successfully. We hope you love your new Prasadam devotional offerings!',
       order_cancelled: 'Your order has been cancelled as per request or due to unforeseen circumstances. If you have any questions, please contact support.',
     }
 
     const itemRows = (items ?? []).map((item) => `<tr><td style="padding:12px;border-bottom:1px solid #eee;font-size:14px;color:#444;">${escapeHtml(item.product_name)}${item.variation_details ? `<br><small style="color:#666">${escapeHtml(item.variation_details)}</small>` : ''}</td><td style="padding:12px;border-bottom:1px solid #eee;text-align:center;font-size:14px;color:#444;">${item.quantity}</td><td style="padding:12px;border-bottom:1px solid #eee;text-align:right;font-size:14px;color:#444;font-weight:600;">₹${Number(item.total_price ?? 0).toFixed(2)}</td></tr>`).join('')
     
-    const logoUrl = "https://ik.imagekit.io/houskaseseepika/home%20(1)%20(1).png?updatedAt=1787220696428";
+    const logoUrl = "/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
     const headerBg = "#001B3D";
     const footerBg = "#ad1e2a";
     const accentColor = "#E94E63";
@@ -180,7 +180,7 @@ Deno.serve(async (req) => {
       <div class="container">
         <div class="header">
           <div class="header-left">
-            <img src="${logoUrl}" alt="HousKase" class="logo">
+            <img src="${logoUrl}" alt="Prasadam" class="logo">
           </div>
           <div class="header-right">
             <p class="order-meta">Order Number: ${escapeHtml(order.order_number)}</p>
@@ -195,7 +195,7 @@ Deno.serve(async (req) => {
           <h1 class="status-title">${typeLabels[parsed.data.type]}</h1>
           <p class="greeting">Hi <strong>${escapeHtml(billing.full_name || shipping.full_name || 'Customer')}</strong>,</p>
           <p class="description">${typeDescriptions[parsed.data.type]}</p>
-          <p style="font-size: 14px; color: #666;">${parsed.data.type === 'order_delivered' ? 'Thank you for choosing HousKase.' : 'You will receive the next update when your order status changes.'}</p>
+          <p style="font-size: 14px; color: #666;">${parsed.data.type === 'order_delivered' ? 'Thank you for choosing Prasadam.' : 'You will receive the next update when your order status changes.'}</p>
 
           
           <a href="https://houskase.com/dashboard" class="btn">VIEW YOUR ORDER</a>
@@ -232,7 +232,7 @@ Deno.serve(async (req) => {
         
         <div class="footer">
           <div class="scam-advisory">
-            <strong>Important Scam Advisory:</strong> Beware of any fake offers and fraudulent site. <strong>HousKase</strong> representatives do not demand money or ask for any personal details like your password/PIN/CVV by contacting you. Your bank account details may be requested only in case a refund is due for your order.
+            <strong>Important Scam Advisory:</strong> Beware of any fake offers and fraudulent site. <strong>Prasadam</strong> representatives do not demand money or ask for any personal details like your password/PIN/CVV by contacting you. Your bank account details may be requested only in case a refund is due for your order.
           </div>
           
           <div class="social-links">

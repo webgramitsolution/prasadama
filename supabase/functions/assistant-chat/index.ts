@@ -77,7 +77,7 @@ serve(async (req) => {
       .join("; ");
     const pageList = SITE_PAGES.map((p) => `${p.name}: houskase.com${p.url}`).join(" | ");
 
-    const systemPrompt = `You are Houskase's shopping assistant on houskase.com (premium towels & home essentials, India).
+    const systemPrompt = `You are Prasadam's shopping assistant on houskase.com (temple prasad & devotional offerings, India).
 Answer the user's ACTUAL question conversationally and helpfully. Never reply with a canned page link unless the user genuinely asked where to find that page.
 
 Rules:

@@ -18,7 +18,7 @@ type ToolExample = { name: string; desc: string; input: string; output: string }
 const TOOL_EXAMPLES: ToolExample[] = [
   {
     name: "search_products",
-    desc: "Full-text search over the Houskase catalog.",
+    desc: "Full-text search over the Prasadam catalog.",
     input: `{
   "query": "bamboo towel",
   "limit": 5
@@ -59,8 +59,8 @@ const TOOL_EXAMPLES: ToolExample[] = [
     input: `{}`,
     output: `{
   "categories": [
-    { "id": "…", "name": "Kitchen", "slug": "kitchen", "parent_id": null },
-    { "id": "…", "name": "Face & Face Towels", "slug": "face-towels", "parent_id": null }
+    { "id": "…", "name": "Temple Offerings", "slug": "offerings", "parent_id": null },
+    { "id": "…", "name": "Mithai & Sweets", "slug": "mithai-sweets", "parent_id": null }
   ]
 }`,
   },
@@ -208,8 +208,8 @@ export default function Connect() {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Connect Houskase to ChatGPT & Claude — Agent Setup"
-        description="Connect Houskase to ChatGPT, Claude, or any MCP-compatible AI assistant. Copy the URL and follow the steps."
+        title="Connect Prasadam to ChatGPT & Claude — Agent Setup"
+        description="Connect Prasadam to ChatGPT, Claude, or any MCP-compatible AI assistant. Copy the URL and follow the steps."
         canonical="https://houskase.com/connect"
       />
       <Header />
@@ -221,7 +221,7 @@ export default function Connect() {
               <Bot className="h-3.5 w-3.5" /> Agent integrations
             </span>
             <h1 className="mt-3 text-3xl md:text-4xl font-display font-bold text-foreground">
-              Connect Houskase to your AI assistant
+              Connect Prasadam to your AI assistant
             </h1>
             <p className="mt-3 text-muted-foreground">
               Use ChatGPT, Claude, or any MCP-compatible AI to browse the catalog, check your orders,
@@ -264,8 +264,8 @@ export default function Connect() {
                     </>,
                     <>In the chat composer's <strong>+</strong> menu, turn on Developer mode.</>,
                     <>Click <strong>Add sources</strong>, then <strong>Connect more</strong>.</>,
-                    <>Name the connector <em>Houskase</em> and paste the MCP URL above.</>,
-                    <>Sign in with your Houskase account when prompted, then ask ChatGPT to use Houskase — e.g. "show my recent Houskase orders".</>,
+                    <>Name the connector <em>Prasadam</em> and paste the MCP URL above.</>,
+                    <>Sign in with your Prasadam account when prompted, then ask ChatGPT to use Prasadam — e.g. "show my recent Prasadam orders".</>,
                   ]}
                 />
               </TabsContent>
@@ -285,9 +285,9 @@ export default function Connect() {
                       </a>
                       .
                     </>,
-                    <>Name the connector <em>Houskase</em> and paste the MCP URL above.</>,
+                    <>Name the connector <em>Prasadam</em> and paste the MCP URL above.</>,
                     <>Enable the connector from the chat composer.</>,
-                    <>Sign in with your Houskase account when prompted, then ask Claude to use Houskase.</>,
+                    <>Sign in with your Prasadam account when prompted, then ask Claude to use Prasadam.</>,
                   ]}
                 />
               </TabsContent>
@@ -298,15 +298,15 @@ export default function Connect() {
           <section className="rounded-2xl border border-border bg-card p-5 md:p-6 mb-6">
             <h2 className="text-lg font-semibold text-foreground mb-3">What you can ask the assistant</h2>
             <ul className="space-y-2 text-sm text-foreground">
-              <li>• "Find bamboo towels under ₹500 on Houskase."</li>
-              <li>• "Show my last three Houskase orders and their status."</li>
+              <li>• "Find premium sweets under ₹500 on Prasadam."</li>
+              <li>• "Show my last three Prasadam orders and their status."</li>
               <li>• "Give me the full status timeline for order ORD-20260716-1234."</li>
-              <li>• "Start a Houskase checkout for my cart shipping to my Mumbai address."</li>
-              <li>• "Create an RFQ on Houskase for 500 face towels and 200 hand towels — B2B."</li>
+              <li>• "Start a Prasadam checkout for my cart shipping to my Mumbai address."</li>
+              <li>• "Create an RFQ on Prasadam for 500 units of sweets and 200 boxes of dry fruits — B2B."</li>
               <li>• "List my bulk quote requests."</li>
             </ul>
             <p className="mt-3 text-xs text-muted-foreground">
-              The assistant only sees your own data — Houskase's RLS ensures it can't read anyone else's orders,
+              The assistant only sees your own data — Prasadam's RLS ensures it can't read anyone else's orders,
               cart, or profile. Every tool call is recorded in your MCP activity log.
             </p>
           </section>
@@ -322,7 +322,7 @@ export default function Connect() {
             </p>
             <div className="grid gap-2 sm:grid-cols-2 mb-5">
               {[
-                { name: "openid", detail: "Confirms your Houskase identity to the assistant." },
+                { name: "openid", detail: "Confirms your Prasadam identity to the assistant." },
                 { name: "email", detail: "Shares your account email address." },
                 { name: "profile", detail: "Shares your basic profile (name, avatar)." },
                 { name: "offline_access", detail: "Lets the assistant refresh the session while connected." },
@@ -335,7 +335,7 @@ export default function Connect() {
             </div>
             <p className="text-sm text-foreground mb-2">Boundaries the assistant <strong>cannot</strong> cross:</p>
             <ul className="space-y-1.5 text-sm text-muted-foreground mb-4">
-              <li>• It cannot read anyone else's orders, cart, RFQs, or profile — Houskase's row-level security enforces this per row.</li>
+              <li>• It cannot read anyone else's orders, cart, RFQs, or profile — Prasadam's row-level security enforces this per row.</li>
               <li>• It cannot see your password, OTP codes, or payment details.</li>
               <li>• Per-user rate limits apply (60 calls/min, 2000/day; 10 checkouts/hour, 20 RFQs/hour) to prevent abuse.</li>
               <li>• Every call is logged in the audit trail with a hash of the input — never the raw payload.</li>
@@ -359,7 +359,7 @@ export default function Connect() {
                 <Steps
                   items={[
                     <>Open <a href="https://chatgpt.com/#settings/Connectors" target="_blank" rel="noreferrer" className="text-accent hover:underline inline-flex items-center gap-0.5">ChatGPT → Settings → Connectors <ExternalLink className="h-3 w-3" /></a>.</>,
-                    <>Find <em>Houskase</em> in the list.</>,
+                    <>Find <em>Prasadam</em> in the list.</>,
                     <>Click <strong>Disconnect</strong> or <strong>Remove</strong>.</>,
                     <>Confirm — the assistant loses access immediately.</>,
                   ]}
@@ -369,7 +369,7 @@ export default function Connect() {
                 <Steps
                   items={[
                     <>Open <a href="https://claude.ai/customize/connectors" target="_blank" rel="noreferrer" className="text-accent hover:underline inline-flex items-center gap-0.5">Claude → Connectors <ExternalLink className="h-3 w-3" /></a>.</>,
-                    <>Select <em>Houskase</em>.</>,
+                    <>Select <em>Prasadam</em>.</>,
                     <>Click <strong>Remove</strong> / <strong>Disconnect</strong>.</>,
                     <>Confirm to revoke the token.</>,
                   ]}
@@ -437,7 +437,7 @@ export default function Connect() {
               <RefreshCw className="h-4 w-4 text-accent" /> Refresh after we ship updates
             </h2>
             <p className="text-sm text-muted-foreground mb-4">
-              Assistants cache the tool list. When Houskase ships new tools, refresh the connector to see them.
+              Assistants cache the tool list. When Prasadam ships new tools, refresh the connector to see them.
             </p>
             <Tabs defaultValue="chatgpt" className="w-full">
               <TabsList className="grid grid-cols-2 mb-4">
@@ -447,20 +447,20 @@ export default function Connect() {
               <TabsContent value="chatgpt">
                 <Steps
                   items={[
-                    <>Open ChatGPT's app preferences and pick <em>Houskase</em> under Enabled apps.</>,
+                    <>Open ChatGPT's app preferences and pick <em>Prasadam</em> under Enabled apps.</>,
                     <>Next to <strong>Information</strong>, click <strong>Refresh</strong>.</>,
                     <>If the URL changed, paste the latest URL from above.</>,
-                    <>Start a new chat and ask ChatGPT to use Houskase.</>,
+                    <>Start a new chat and ask ChatGPT to use Prasadam.</>,
                   ]}
                 />
               </TabsContent>
               <TabsContent value="claude">
                 <Steps
                   items={[
-                    <>Open the Connectors page in Claude and select <em>Houskase</em>.</>,
+                    <>Open the Connectors page in Claude and select <em>Prasadam</em>.</>,
                     <>Refresh or update the connector's tools.</>,
                     <>If the URL changed, paste the latest URL from above.</>,
-                    <>Ask Claude to use Houskase.</>,
+                    <>Ask Claude to use Prasadam.</>,
                   ]}
                 />
               </TabsContent>

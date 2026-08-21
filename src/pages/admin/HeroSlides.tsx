@@ -183,7 +183,7 @@ export default function AdminHeroSlides() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Brand Heading</Label>
-                    <Input value={overlay.brand || ""} onChange={(e) => set({ brand: e.target.value })} placeholder="HOUSKASE™" />
+                    <Input value={overlay.brand || ""} onChange={(e) => set({ brand: e.target.value })} placeholder="PRASADAM™" />
                   </div>
                   <div className="space-y-2">
                     <Label>Main Title</Label>

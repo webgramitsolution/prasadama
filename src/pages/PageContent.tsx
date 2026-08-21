@@ -168,7 +168,7 @@ export default function PageContent({ pageKey, title, description }: PageContent
 
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead title={`${title} - Houskase`} description={description || `Read the official Houskase ${title.toLowerCase()}. Terms, policies, and important information for shoppers, retailers, and bulk buyers across India.`} />
+      <SEOHead title={`${title} - Prasadam`} description={description || `Read the official Prasadam ${title.toLowerCase()}. Terms, policies, and important information for shoppers, retailers, and bulk buyers across India.`} />
       <Header />
       <main className="pb-12">
         {/* Premium hero */}
@@ -176,7 +176,7 @@ export default function PageContent({ pageKey, title, description }: PageContent
           <div className="container mx-auto px-4 sm:px-6 max-w-6xl py-6 md:py-8">
             <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 text-primary px-3 py-1 text-[11px] font-medium mb-2">
               <ShieldCheck className="h-3.5 w-3.5" />
-              Houskase Legal
+              Prasadam Legal
             </div>
             <h1 className="text-2xl md:text-3xl lg:text-4xl font-display font-bold text-foreground tracking-tight">
               {title}

@@ -5,12 +5,9 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 
 const SLIDES = [
-  "https://ik.imagekit.io/houskaseseepika/sports%20Towel.png?updatedAt=1787237122292",
-  "https://ik.imagekit.io/houskaseseepika/Non-Woven%20White%20Cleaning%20Cloth%20Roll?updatedAt=1787237015324",
-  "https://ik.imagekit.io/houskaseseepika/Kitchen%20Cleaning%20Essentials.webp?updatedAt=1787230012126",
-  "https://ik.imagekit.io/houskaseseepika/Dry%20&%20Wet%20Tissues.webp?updatedAt=1787230011852",
-  "https://ik.imagekit.io/houskaseseepika/Kitchen%20Care%20Combo.webp?updatedAt=1787230011656",
-  "https://ik.imagekit.io/houskaseseepika/Sports%20Towels%20&%20Gym%20Essentials.webp?updatedAt=1787230011513",
+  "/products-hero-banner.jpg",
+  "/auth-mithai.jpg",
+  "/auth-pooja.jpg",
 ];
 
 const BRAND = "#AD1E2A";
@@ -76,12 +73,12 @@ export function AuthShell({ mode, children }: Props) {
         <div className="flex flex-col items-center justify-center pt-10 pb-6 shrink-0">
           <Link
             to="/"
-            aria-label="Go to Houskase home"
+            aria-label="Go to Prasadam home"
             className="group h-24 w-24 min-h-11 min-w-11 rounded-full bg-white flex items-center justify-center ring-2 ring-white/40 overflow-hidden shadow-lg transition-all duration-200 hover:ring-white/80 hover:shadow-2xl hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white"
           >
             <img
-              src="https://ik.imagekit.io/houskaseseepika/logo%20-%20houskase.jpg"
-              alt="Houskase"
+              src="/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png"
+              alt="Prasadam"
               width={80}
               height={80}
               loading="eager"

@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 
 
 const highlights = [
-  { icon: Leaf, title: "Eco-conscious", text: "Reusable, washable bamboo essentials made to last." },
-  { icon: ShieldCheck, title: "Quality tested", text: "Every batch checked for absorbency and durability." },
-  { icon: Sparkles, title: "Everyday premium", text: "Thoughtfully crafted products for home & business." },
+  { icon: Leaf, title: "Pure & Sattvik", text: "Prepared with devotion using pure, natural ingredients." },
+  { icon: ShieldCheck, title: "Hygiene assured", text: "Every batch checked for freshness and purity before it reaches you." },
+  { icon: Sparkles, title: "Blessed offerings", text: "Thoughtfully packed prasad and pooja samagri for home & temple." },
 ];
 
 export function AboutUsSection() {
@@ -17,8 +17,8 @@ export function AboutUsSection() {
         <div className="grid gap-6 lg:grid-cols-2 items-stretch">
           <div className="overflow-hidden rounded-xl border border-border min-h-[320px] sm:min-h-[420px] lg:min-h-full">
             <img
-              src="https://ik.imagekit.io/houskase3/houskase%20bout%20us/about%20us.png"
-              alt="Houskase premium bamboo home essentials"
+              src="/auth-pooja.jpg"
+              alt="Prasadam blessed temple offerings"
               loading="lazy"
               className="w-full h-full min-h-[320px] sm:min-h-[420px] object-cover"
             />
@@ -37,13 +37,13 @@ export function AboutUsSection() {
             </div>
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
 
-              Houskase is an Indian everyday-essentials brand building thoughtfully crafted towels, tissues and
-              cleaning accessories for modern homes, offices and businesses. We obsess over the small things —
-              absorbency, lint-free finish, softness after the tenth wash — so your daily routine simply works better.
+              Prasadam is an Indian devotional brand bringing you thoughtfully prepared temple prasad, mithai,
+              dry fruit prasad and pooja samagri for homes and temples alike. We obsess over the small things —
+              purity of ingredients, hygienic packing, freshness in every box — so every offering feels truly blessed.
             </p>
             <p className="mt-3 text-sm sm:text-base text-muted-foreground leading-relaxed">
-              From single packs to bulk supply, we serve customers across 20,000+ pincodes with honest pricing,
-              responsive support and products we happily use in our own homes.
+              From single boxes to bulk temple orders, we serve devotees across 20,000+ pincodes with honest pricing,
+              responsive support and offerings we happily bring into our own homes and pujas.
             </p>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-3">

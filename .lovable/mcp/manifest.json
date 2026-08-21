@@ -11,15 +11,15 @@
   },
   "mcp": {
     "server": {
-      "name": "houskase-mcp",
+      "name": "prasadam-mcp",
       "version": "0.2.0",
-      "title": "Houskase"
+      "title": "Prasadam"
     },
     "tools": [
       {
         "name": "search_products",
-        "title": "Search Houskase products",
-        "description": "Search the Houskase catalog by keyword and/or category. Returns product name, slug, short description, price, MOQ, and stock.",
+        "title": "Search Prasadam products",
+        "description": "Search the Prasadam catalog by keyword and/or category. Returns product name, slug, short description, price, MOQ, and stock.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -51,7 +51,7 @@
       {
         "name": "get_product",
         "title": "Get product details",
-        "description": "Fetch full details for a single Houskase product by id or slug — description, features, images, pricing, and stock.",
+        "description": "Fetch full details for a single Prasadam product by id or slug — description, features, images, pricing, and stock.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -77,7 +77,7 @@
       {
         "name": "list_categories",
         "title": "List product categories",
-        "description": "List all active product categories on Houskase (name, slug, parent).",
+        "description": "List all active product categories on Prasadam (name, slug, parent).",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -93,7 +93,7 @@
       {
         "name": "list_my_orders",
         "title": "List my orders",
-        "description": "List the signed-in user's Houskase orders — id, order number, status, payment status, total, placed date. RLS restricts to the caller's own orders.",
+        "description": "List the signed-in user's Prasadam orders — id, order number, status, payment status, total, placed date. RLS restricts to the caller's own orders.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -117,7 +117,7 @@
       {
         "name": "get_order",
         "title": "Get order details",
-        "description": "Fetch full details for one of the signed-in user's Houskase orders — items, shipping address, totals, status. RLS restricts to the caller's own orders.",
+        "description": "Fetch full details for one of the signed-in user's Prasadam orders — items, shipping address, totals, status. RLS restricts to the caller's own orders.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -193,7 +193,7 @@
       {
         "name": "create_rfq",
         "title": "Create bulk quote request (RFQ)",
-        "description": "Create a Houskase bulk quote request (RFQ) for the signed-in user with a list of products, quantities, and optional notes. Returns the RFQ number.",
+        "description": "Create a Prasadam bulk quote request (RFQ) for the signed-in user with a list of products, quantities, and optional notes. Returns the RFQ number.",
         "annotations": {
           "readOnlyHint": false,
           "destructiveHint": false,
@@ -335,7 +335,7 @@
       {
         "name": "get_my_profile",
         "title": "Get my profile",
-        "description": "Return the signed-in user's Houskase profile (name, phone, buyer type).",
+        "description": "Return the signed-in user's Prasadam profile (name, phone, buyer type).",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,

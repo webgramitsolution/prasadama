@@ -100,7 +100,7 @@ serve(async (req) => {
       const smsRes = await fetch(`${supabaseUrl}/functions/v1/send-sms`, {
         method: "POST",
         headers: { Authorization: `Bearer ${serviceKey}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "otp", phone: mobile, otp, appName: "Houskase" }),
+        body: JSON.stringify({ type: "otp", phone: mobile, otp, appName: "Prasadam" }),
       });
       if (!smsRes.ok) {
         console.error("checkout-otp: SMS send failed", smsRes.status);

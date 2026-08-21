@@ -1,5 +1,5 @@
 import { jsPDF } from "jspdf";
-const HOUSKASE_LOGO_URL = "https://ik.imagekit.io/houskaseseepika/home%20(1)%20(1).png?updatedAt=1787220696428";
+const PRASADAM_LOGO_URL = "/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
 
 interface InvoiceItem {
   name: string;
@@ -124,7 +124,7 @@ export async function generateGSTInvoice(data: InvoiceData): Promise<jsPDF> {
 
   const brandColor: [number, number, number] = [30, 82, 130];
 
-  const storeName = data.store_name || "HousKase";
+  const storeName = data.store_name || "Prasadam";
   const storeGSTIN = data.store_gstin || "";
   const storeAddress = data.store_address || "";
   const storePhone = data.store_phone || "";
@@ -137,9 +137,9 @@ export async function generateGSTInvoice(data: InvoiceData): Promise<jsPDF> {
 
   y = 10;
 
-  // Logo (always brand logo - falls back to Houskase logo if store setting missing)
+  // Logo (always brand logo - falls back to Prasadam logo if store setting missing)
   let logoWidth = 0;
-  const logoUrl = data.store_logo_url || HOUSKASE_LOGO_URL;
+  const logoUrl = data.store_logo_url || PRASADAM_LOGO_URL;
   const logoBase64 = await loadImageAsBase64(logoUrl);
   if (logoBase64) {
     try {

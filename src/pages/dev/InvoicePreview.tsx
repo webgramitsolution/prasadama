@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 type Fixture = { label: string; data: Parameters<typeof generateGSTInvoice>[0] };
 
 const baseStore = {
-  store_name: "Houskase Retail Pvt Ltd",
+  store_name: "Prasadam Retail Pvt Ltd",
   store_gstin: "07AAACH1234N1Z5",
   store_address: "12/45, Green Park Extension, Hauz Khas\nNew Delhi, Delhi 110016",
   store_phone: "+91 98765 43210",
@@ -13,9 +13,9 @@ const baseStore = {
 };
 
 const sampleItems = [
-  { name: "Premium Bamboo Bath Towel (Extra Large) — Antimicrobial, Quick-Dry, 600 GSM", quantity: 4, unit_price: 899, total_price: 3596, variation: "Ivory / 70x140 cm", hsn: "6302", discount: 200 },
-  { name: "Organic Cotton Hand Towel Set of 6", quantity: 2, unit_price: 1299, total_price: 2598, hsn: "6302" },
-  { name: "Kitchen Napkin Combo Pack", quantity: 1, unit_price: 499, total_price: 499, hsn: "6304" },
+  { name: "Premium Motichoor Laddu (Extra Large) — Traditional, Desi Ghee, 600g", quantity: 4, unit_price: 899, total_price: 3596, variation: "Ivory / 70x140 cm", hsn: "6302", discount: 200 },
+  { name: "Organic Pooja Samagri Set of 6", quantity: 2, unit_price: 1299, total_price: 2598, hsn: "6302" },
+  { name: "Bhog Offering Combo Pack", quantity: 1, unit_price: 499, total_price: 499, hsn: "6304" },
 ];
 
 const fixtures: Fixture[] = [

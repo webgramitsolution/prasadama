@@ -102,7 +102,7 @@ export default function ResetPassword() {
   if (success) {
     return (
       <div className="min-h-[100dvh] flex items-center justify-center px-4 bg-background">
-        <SEOHead title="Password Reset" description="Your Houskase password has been updated successfully. You can now sign in and continue where you left off." noIndex />
+        <SEOHead title="Password Reset" description="Your Prasadam password has been updated successfully. You can now sign in and continue where you left off." noIndex />
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-sm w-full text-center">
           <div className="w-16 h-16 mx-auto rounded-full bg-success/10 flex items-center justify-center mb-6">
             <CheckCircle className="h-8 w-8 text-success" />
@@ -117,7 +117,7 @@ export default function ResetPassword() {
   if (!hasAccess) {
     return (
       <div className="min-h-[100dvh] flex items-center justify-center px-4 bg-background">
-        <SEOHead title="Reset Password" description="This Houskase password-reset link is invalid or expired. Request a new one to set a fresh password for your account." noIndex />
+        <SEOHead title="Reset Password" description="This Prasadam password-reset link is invalid or expired. Request a new one to set a fresh password for your account." noIndex />
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-sm w-full text-center">
           <div className="w-16 h-16 mx-auto rounded-full bg-warning/10 flex items-center justify-center mb-6">
             <AlertTriangle className="h-8 w-8 text-warning" />
@@ -136,7 +136,7 @@ export default function ResetPassword() {
 
   return (
     <div className="min-h-[100dvh] flex items-center justify-center px-4 bg-background">
-      <SEOHead title="Set New Password" description="Choose a new password for your Houskase account. Use at least 8 characters with letters and numbers for a stronger password." noIndex />
+      <SEOHead title="Set New Password" description="Choose a new password for your Prasadam account. Use at least 8 characters with letters and numbers for a stronger password." noIndex />
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-sm w-full">
         <h1 className="text-2xl font-display font-bold text-foreground mb-1">Set New Password</h1>
         <p className="text-muted-foreground text-sm mb-6">Enter your new password below.</p>

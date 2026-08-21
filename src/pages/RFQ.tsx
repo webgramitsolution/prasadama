@@ -283,7 +283,7 @@ export default function RFQ() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead title="Request for Quotation (RFQ)" description="Submit bulk order requests and get competitive pricing on Houskase industrial products." />
+      <SEOHead title="Request for Quotation (RFQ)" description="Submit bulk order requests and get competitive pricing on Prasadam industrial products." />
       <Header />
       
       <main className="pt-4 pb-20">

@@ -8,29 +8,29 @@ import { ChevronRight, Droplets, Leaf, Shield, ArrowRight, Sparkles, Scale, Shop
 
 const faqs = [
   {
-    question: "Are bamboo towels better than cotton towels?",
+    question: "What is the significance of Temple Prasad?",
     answer:
-      "For most Indian households — yes. Bamboo towels are ~3× more absorbent than standard cotton, naturally antibacterial thanks to bamboo kun, and hypoallergenic. Cotton is cheaper up front, but bamboo lasts longer, dries faster in humid weather, and stays softer wash after wash.",
+      "Prasad is a material substance that is first offered to a deity and then consumed by devotees. It is considered to be infused with the deity's blessing and is a key part of Hindu worship, representing divine grace and the sharing of spiritual merit.",
   },
   {
-    question: "Is cotton ever the better choice?",
+    question: "How to ensure the purity of Bhog?",
     answer:
-      "Yes — if you want the lowest price today, don't mind slower drying, and prefer a slightly firmer texture (some people find bamboo too soft). Cotton is also easier to bleach, so it can be a better fit for very high-stain use cases like kitchens or gyms — though a bamboo–cotton blend usually beats both.",
+      "Purity in Bhog is maintained by using Sattvic ingredients like pure ghee, organic grains, and fresh fruits. The preparation should be done in a clean, dedicated space with a meditative and devotional mindset, avoiding any prohibited ingredients.",
   },
   {
-    question: "Which one is more sustainable?",
+    question: "Which Prasad is best for different occasions?",
     answer:
-      "Bamboo, by a wide margin. Bamboo grass regrows in 3–5 years without replanting, needs no pesticides, and uses about a third of the water conventional cotton demands. Conventional cotton is one of the most water- and chemical-intensive crops in the world; organic cotton narrows the gap but doesn't close it.",
+      "Ladoo and Modak are traditional for Ganesh Chaturthi, while Halwa or Kheer are often offered during Purnima or Navratri. Dry fruits and Mishri are versatile options that have a long shelf life and are suitable for daily offerings.",
   },
   {
-    question: "Which lasts longer with regular washing?",
+    question: "Is it better to buy Prasad or make it at home?",
     answer:
-      "Bamboo. Well-made bamboo towels retain their softness and absorbency for 300–500 washes; standard cotton starts feeling coarse after ~150 washes. Skip fabric softeners on either — they coat the fibres and cut absorbency.",
+      "While home-made Prasad is ideal for personal devotion, authentic Temple Prasad sourced from sacred sites carries unique spiritual energy. Prasadam ensures that even when you buy, you get offerings prepared with traditional methods and pure ingredients.",
   },
   {
-    question: "Are bamboo towels safe for babies and sensitive skin?",
+    question: "Are these offerings suitable for daily pooja?",
     answer:
-      "Yes. They are hypoallergenic, lint-free, and free from harsh chemicals — which is why paediatricians often recommend bamboo over cotton for babies and for anyone with eczema or acne-prone skin.",
+      "Yes. Our offerings are specially curated to be suitable for daily rituals (Nitya Pooja) as well as special occasions. They are packaged to maintain freshness and sanctity.",
   },
 ];
 
@@ -40,17 +40,18 @@ const rows: Array<{
   cotton: string;
   winner: "bamboo" | "cotton" | "tie";
 }> = [
-  { property: "Absorbency", bamboo: "Up to 3× cotton", cotton: "Standard baseline", winner: "bamboo" },
-  { property: "Softness (after 50 washes)", bamboo: "Retains cashmere-like feel", cotton: "Gradually roughens", winner: "bamboo" },
-  { property: "Antibacterial", bamboo: "Natural (bamboo kun)", cotton: "None without treatment", winner: "bamboo" },
-  { property: "Lint & shedding", bamboo: "Very low", cotton: "Moderate to high", winner: "bamboo" },
-  { property: "Dry time after use", bamboo: "Fast — great for humid Indian summers", cotton: "Slow when thick", winner: "bamboo" },
-  { property: "Water used to grow", bamboo: "~1/3 of cotton", cotton: "Very high", winner: "bamboo" },
-  { property: "Upfront price", bamboo: "Higher", cotton: "Lower", winner: "cotton" },
-  { property: "Bleach tolerance", bamboo: "Moderate", cotton: "High", winner: "cotton" },
-  { property: "Biodegradable", bamboo: "Yes, fully", cotton: "Yes, but slower", winner: "bamboo" },
-  { property: "Life span (typical)", bamboo: "300–500 washes", cotton: "~150 washes", winner: "bamboo" },
+  { property: "Purity & Sanctity", bamboo: "High (Traditional Prep)", cotton: "Variable (Commercial)", winner: "bamboo" },
+  { property: "Ingredient Quality", bamboo: "Pure Ghee & Natural", cotton: "Often uses substitutes", winner: "bamboo" },
+  { property: "Spiritual Significance", bamboo: "High (Sacred Tradition)", cotton: "General Sweet", winner: "bamboo" },
+  { property: "Preparation Mindset", bamboo: "Devotional & Meditative", cotton: "Production Focused", winner: "bamboo" },
+  { property: "Shelf Life (Natural)", bamboo: "Longer (Dry Fruit/Mithai)", cotton: "Short (Standard)", winner: "bamboo" },
+  { property: "Authenticity", bamboo: "Temple-Style Authentic", cotton: "Modern Variations", winner: "bamboo" },
+  { property: "Price", bamboo: "Premium (for purity)", cotton: "Economical", winner: "cotton" },
+  { property: "Customizability", bamboo: "Ritual-Specific", cotton: "Generic", winner: "bamboo" },
+  { property: "Packaging", bamboo: "Sanitary & Sacred", cotton: "Commercial Standard", winner: "bamboo" },
+  { property: "Divine Blessing", bamboo: "Core Focus", cotton: "Not Applicable", winner: "bamboo" },
 ];
+
 
 export default function BambooVsCottonTowels() {
   const url = "https://houskase.com/guides/bamboo-vs-cotton-towels";
@@ -59,13 +60,13 @@ export default function BambooVsCottonTowels() {
     {
       "@context": "https://schema.org",
       "@type": "Article",
-      headline: "Bamboo Towels vs. Cotton Towels: Which is Better?",
+      headline: "Guide to Pure Temple Prasad & Devotional Offerings",
       description:
-        "A head-to-head comparison of bamboo and cotton towels — absorbency, softness, durability, sustainability, price. Which one wins for Indian homes?",
-      author: { "@type": "Organization", name: "Houskase" },
+        "A guide to choosing the purest temple prasad and devotional offerings. Understand the significance of different types of Bhog for your pooja.",
+      author: { "@type": "Organization", name: "Prasadam" },
       publisher: {
         "@type": "Organization",
-        name: "Houskase",
+        name: "Prasadam",
         logo: { "@type": "ImageObject", url: "https://houskase.com/icon-512.png" },
       },
       mainEntityOfPage: url,
@@ -75,7 +76,7 @@ export default function BambooVsCottonTowels() {
     SchemaGenerators.breadcrumb([
       { name: "Home", url: "https://houskase.com/" },
       { name: "Guides", url: "https://houskase.com/guides/bamboo-vs-cotton-towels" },
-      { name: "Bamboo vs. Cotton Towels", url },
+      { name: "Guide to Pure Temple Prasad", url },
     ]),
     SchemaGenerators.faqPage(faqs),
   ];
@@ -83,9 +84,9 @@ export default function BambooVsCottonTowels() {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Bamboo Towels vs. Cotton Towels: Which is Better?"
-        description="A head-to-head comparison of bamboo and cotton towels — absorbency, softness, sustainability, and price. See which is the smarter buy for Indian homes."
-        keywords="bamboo vs cotton towels, are bamboo towels better than cotton, best towels India, bamboo bath towels, cotton bath towels"
+        title="Guide to Pure Temple Prasad & Devotional Offerings"
+        description="Explore the tradition of temple prasad and learn how to select the best offerings for your devotional needs."
+        keywords="temple prasad, devotional offerings, best mithai for pooja, dry fruit prasad, pure bhog India"
         canonical={url}
         ogType="article"
         jsonLd={jsonLd}
@@ -100,7 +101,7 @@ export default function BambooVsCottonTowels() {
             <ChevronRight className="h-3 w-3" />
             <Link to="/products" className="hover:text-foreground">Guides</Link>
             <ChevronRight className="h-3 w-3" />
-            <span className="text-foreground">Bamboo vs. Cotton Towels</span>
+            <span className="text-foreground">Guide to Pure Temple Prasad</span>
           </nav>
 
           <motion.header
@@ -113,40 +114,35 @@ export default function BambooVsCottonTowels() {
               <Scale className="h-3.5 w-3.5" /> Buyer's Guide
             </span>
             <h1 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-display font-bold text-foreground leading-tight">
-              Bamboo Towels vs. Cotton Towels: Which is Better?
+              Guide to Pure Temple Prasad & Devotional Offerings
             </h1>
             <p className="mt-4 text-base md:text-lg text-muted-foreground max-w-2xl">
-              The short answer: bamboo wins on absorbency, softness, hygiene, and sustainability; cotton wins
-              on price. Here's a side-by-side breakdown so you can pick the right towel for your home.
+              Authentic temple offerings are not just sweets; they are a medium of divine grace. Here's a guide to understanding the purity and significance of the Prasad we offer.
             </p>
           </motion.header>
 
           {/* Verdict card */}
           <section aria-labelledby="verdict" className="mb-12 rounded-2xl border border-accent/30 bg-accent/5 p-6 md:p-8">
             <h2 id="verdict" className="text-xl md:text-2xl font-display font-bold text-foreground mb-3 flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-accent" /> The verdict
+              <Sparkles className="h-5 w-5 text-accent" /> Our Promise
             </h2>
             <p className="text-foreground leading-relaxed">
-              For daily bath, face, and gym use — <strong>bamboo towels are the better buy for most people</strong>.
-              They absorb roughly three times more water than standard cotton, feel softer even after 300+ washes,
-              and stay fresher between washes thanks to bamboo's natural antimicrobial fibre. Cotton is still worth
-              buying when you want the lowest sticker price or you need a heavy-duty towel you can bleach — a
-              bamboo–cotton blend often gives you the best of both.
+              At <strong>Prasadam</strong>, we believe that devotional offerings must be pure and authentic. Our Prasad is prepared using traditional recipes and Sattvic ingredients like pure A2 ghee and organic grains, ensuring that your pooja is performed with the highest standards of sanctity.
             </p>
           </section>
 
           {/* Comparison table */}
           <section aria-labelledby="comparison" className="mb-14">
             <h2 id="comparison" className="text-2xl md:text-3xl font-display font-bold text-foreground mb-6">
-              Bamboo vs. cotton at a glance
+              Prasadam vs. Market Sweets
             </h2>
             <div className="overflow-x-auto rounded-xl border border-border">
               <table className="w-full text-sm">
                 <thead className="bg-secondary/50 text-foreground">
                   <tr>
                     <th className="text-left px-4 py-3 font-semibold">Property</th>
-                    <th className="text-left px-4 py-3 font-semibold">Bamboo</th>
-                    <th className="text-left px-4 py-3 font-semibold">Cotton</th>
+                    <th className="text-left px-4 py-3 font-semibold">Prasadam</th>
+                    <th className="text-left px-4 py-3 font-semibold">Commercial Sweets</th>
                     <th className="text-left px-4 py-3 font-semibold">Winner</th>
                   </tr>
                 </thead>
@@ -164,7 +160,7 @@ export default function BambooVsCottonTowels() {
                               ? "inline-flex items-center rounded-full bg-primary/10 text-primary px-2 py-0.5 text-xs font-semibold"
                               : "text-xs text-muted-foreground"
                         }>
-                          {r.winner === "tie" ? "Tie" : r.winner === "bamboo" ? "Bamboo" : "Cotton"}
+                          {r.winner === "tie" ? "Tie" : r.winner === "bamboo" ? "Prasadam" : "Market"}
                         </span>
                       </td>
                     </tr>
@@ -174,51 +170,48 @@ export default function BambooVsCottonTowels() {
             </div>
           </section>
 
-          {/* Why bamboo wins on absorbency */}
-          <section aria-labelledby="absorbency" className="mb-14">
-            <h2 id="absorbency" className="text-2xl md:text-3xl font-display font-bold text-foreground mb-4 flex items-center gap-2">
-              <Droplets className="h-6 w-6 text-accent" /> Why bamboo is more absorbent
+          {/* Spiritual Significance */}
+          <section aria-labelledby="significance" className="mb-14">
+            <h2 id="significance" className="text-2xl md:text-3xl font-display font-bold text-foreground mb-4 flex items-center gap-2">
+              <Droplets className="h-6 w-6 text-accent" /> Spiritual Significance of Bhog
             </h2>
             <p className="text-foreground leading-relaxed mb-3">
-              Bamboo fibre is hollow at the core, with micro-gaps along the length of every strand. When water
-              hits the fabric, those gaps pull moisture in by capillary action — the same effect that lets a
-              paper towel soak up a spill, but distributed across every fibre in the weave. Cotton fibres are
-              solid and flatter, so they trap water on the surface and take longer to move it away.
+              Bhog is the food offered to a deity. In the Bhagavad Gita, Lord Krishna says that he accepts whatever is offered with love and devotion—be it a leaf, a flower, a fruit, or water. When we offer Bhog, it becomes Prasad, sanctified by the Lord's acceptance.
             </p>
             <p className="text-muted-foreground leading-relaxed">
-              For Indian summers and monsoon-heavy cities, that means bamboo dries you off with fewer wipes and
-              then dries itself faster on the rack — so towels stay fresh instead of turning musty.
+              Using pure ingredients is essential because the food we offer should be 'Sattvic'—pure, clean, and wholesome. This purity helps in calming the mind and elevating our spiritual state.
             </p>
           </section>
 
-          {/* Sustainability */}
-          <section aria-labelledby="sustainability" className="mb-14">
-            <h2 id="sustainability" className="text-2xl md:text-3xl font-display font-bold text-foreground mb-4 flex items-center gap-2">
-              <Leaf className="h-6 w-6 text-accent" /> The sustainability gap is bigger than most people think
+          {/* Purity Standards */}
+          <section aria-labelledby="purity" className="mb-14">
+            <h2 id="purity" className="text-2xl md:text-3xl font-display font-bold text-foreground mb-4 flex items-center gap-2">
+              <Leaf className="h-6 w-6 text-accent" /> Our Purity Standards
             </h2>
             <ul className="space-y-2 text-foreground">
-              <li className="flex gap-2"><span className="text-accent font-bold">•</span> Bamboo regrows in 3–5 years; cotton is replanted every season.</li>
-              <li className="flex gap-2"><span className="text-accent font-bold">•</span> Cotton uses ~2,700 litres of water per shirt (WWF estimate); bamboo needs roughly a third of that per kg of fibre.</li>
-              <li className="flex gap-2"><span className="text-accent font-bold">•</span> Bamboo grows without pesticides. Conventional cotton accounts for ~16% of global insecticide use.</li>
-              <li className="flex gap-2"><span className="text-accent font-bold">•</span> Both biodegrade — but bamboo does it faster because the fibre is finer and free of chemical residues.</li>
+              <li className="flex gap-2"><span className="text-accent font-bold">•</span> Sourced from certified Sattvic kitchens that follow traditional preparation rules.</li>
+              <li className="flex gap-2"><span className="text-accent font-bold">•</span> Only pure cow ghee and natural sweeteners are used in our mithai.</li>
+              <li className="flex gap-2"><span className="text-accent font-bold">•</span> No artificial preservatives, colors, or flavors are added.</li>
+              <li className="flex gap-2"><span className="text-accent font-bold">•</span> Packaged in eco-friendly and sanitary containers to maintain sanctity.</li>
             </ul>
           </section>
 
-          {/* When cotton wins */}
-          <section aria-labelledby="cotton-wins" className="mb-14">
-            <h2 id="cotton-wins" className="text-2xl md:text-3xl font-display font-bold text-foreground mb-4 flex items-center gap-2">
-              <Shield className="h-6 w-6 text-primary" /> When to still buy cotton (or a blend)
+          {/* Choosing the Right Offering */}
+          <section aria-labelledby="choosing" className="mb-14">
+            <h2 id="choosing" className="text-2xl md:text-3xl font-display font-bold text-foreground mb-4 flex items-center gap-2">
+              <Shield className="h-6 w-6 text-primary" /> Choosing the Right Offering
             </h2>
             <p className="text-foreground leading-relaxed mb-3">
-              Cotton earns its place in a few scenarios:
+              Depending on the deity and the occasion, different types of Prasad are preferred:
             </p>
             <ul className="space-y-2 text-muted-foreground">
-              <li className="flex gap-2"><span className="text-primary font-bold">•</span> <span><strong className="text-foreground">Tight budget</strong> — a good cotton towel outperforms a cheap bamboo blend.</span></li>
-              <li className="flex gap-2"><span className="text-primary font-bold">•</span> <span><strong className="text-foreground">Heavy stains you plan to bleach</strong> — cotton handles chlorine better.</span></li>
-              <li className="flex gap-2"><span className="text-primary font-bold">•</span> <span><strong className="text-foreground">Preference for a firmer, "toothier" texture</strong> — some people find bamboo too silky.</span></li>
-              <li className="flex gap-2"><span className="text-primary font-bold">•</span> <span><strong className="text-foreground">Bamboo–cotton blends</strong> keep bamboo's softness and hygiene while lowering the price.</span></li>
+              <li className="flex gap-2"><span className="text-primary font-bold">•</span> <span><strong className="text-foreground">Daily Pooja</strong> — Dry fruits, Mishri, or simple Besan Ladoo are perfect.</span></li>
+              <li className="flex gap-2"><span className="text-primary font-bold">•</span> <span><strong className="text-foreground">Special Festivals</strong> — Modak for Ganesh, Halwa for Devi, or seasonal fruits.</span></li>
+              <li className="flex gap-2"><span className="text-primary font-bold">•</span> <span><strong className="text-foreground">Bhog for Annakut</strong> — A variety of 56 dishes (Chhappan Bhog) for grand occasions.</span></li>
+              <li className="flex gap-2"><span className="text-primary font-bold">•</span> <span><strong className="text-foreground">Travel & Distant Pooja</strong> — Dry fruit mixes are best as they stay fresh longer.</span></li>
             </ul>
           </section>
+
 
           {/* FAQs */}
           <section aria-labelledby="faq" className="mb-14">
@@ -248,8 +241,8 @@ export default function BambooVsCottonTowels() {
               >
                 <ShoppingBag className="h-5 w-5 text-accent shrink-0 mt-0.5" />
                 <div>
-                  <div className="font-semibold text-foreground">Shop Houskase towels</div>
-                  <div className="text-xs text-muted-foreground mt-0.5">Bamboo, cotton, and premium blends — engineered for Indian homes.</div>
+                  <div className="font-semibold text-foreground">Shop Prasadam offerings</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">Temple prasad, mithai & sweets, and pooja samagri — delivered with divine care.</div>
                 </div>
               </Link>
             </div>
@@ -258,14 +251,14 @@ export default function BambooVsCottonTowels() {
           {/* CTA */}
           <section className="rounded-2xl bg-gradient-to-br from-accent/10 to-primary/10 border border-accent/20 p-6 md:p-10 text-center">
             <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-3">
-              Try bamboo — feel the difference
+              Experience the Divine Taste
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto mb-6">
-              Softer, faster-drying, and built to last hundreds of washes. Upgrade your bathroom essentials today.
+              Pure, authentic, and prepared with devotion. Elevate your spiritual experience with our curated offerings.
             </p>
             <Link to="/products">
               <Button size="lg" className="bg-accent hover:bg-accent-hover text-accent-foreground">
-                Shop Towels
+                Shop Prasad
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>

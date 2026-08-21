@@ -5,13 +5,13 @@ import {
   HelpCircle, FileText, ShoppingBag, Instagram
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-const FOOTER_LOGO_URL = "https://ik.imagekit.io/houskaseseepika/home%20(1)%20(1).png?updatedAt=1787220696428";
+const FOOTER_LOGO_URL = "/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
 
 const categoryLinks = [
-  { label: "Office", href: "/products?category=office" },
-  { label: "Face & Bath Towels", href: "/products?category=face-face-towels" },
-  { label: "Sports Towel & Costumes", href: "/products?category=sports-towel-costumes" },
-  { label: "Cleaning Accessories", href: "/products?category=cleaning-accessories" },
+  { label: "Temple Prasad", href: "/products?category=office" },
+  { label: "Mithai & Sweets", href: "/products?category=face-face-towels" },
+  { label: "Pooja Samagri", href: "/products?category=sports-towel-costumes" },
+  { label: "Devotional Offerings", href: "/products?category=cleaning-accessories" },
 ];
 
 const policyLinks = [
@@ -95,7 +95,7 @@ export function Footer() {
             <div className="flex flex-col gap-1.5">
               <img
                 src={FOOTER_LOGO_URL}
-                alt="Houskase"
+                alt="Prasadam"
                 className="h-11 w-auto object-contain"
                 onError={(e) => {
                   const img = e.currentTarget;
@@ -107,7 +107,7 @@ export function Footer() {
               />
             </div>
             <p className="text-primary-foreground/85 text-[15px] leading-relaxed">
-              Houskase delivers thoughtfully crafted essentials for your home, office and on-the-go life — premium towels, tissues, cleaning accessories and more. Trusted quality, delivered across India.
+              Prasadam delivers thoughtfully crafted devotional offerings and temple prasad for your spiritual journey — premium sweets, pooja samagri, bhog and more. Trusted quality, delivered across India.
             </p>
           </div>
 
@@ -182,7 +182,7 @@ export function Footer() {
       <div className="border-t border-white/20 mt-[5px]">
         <div className="container mx-auto px-4 py-[10px]">
           <p className="text-white/70 text-xs text-center">
-            © 2026 Houskase International Private Limited Industrial Supplies. All rights reserved.
+            © 2026 Prasadam International Private Limited. All rights reserved.
           </p>
         </div>
       </div>

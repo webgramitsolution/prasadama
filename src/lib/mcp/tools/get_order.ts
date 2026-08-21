@@ -6,7 +6,7 @@ export default defineTool({
   name: "get_order",
   title: "Get order details",
   description:
-    "Fetch full details for one of the signed-in user's Houskase orders — items, shipping address, totals, status. RLS restricts to the caller's own orders.",
+    "Fetch full details for one of the signed-in user's Prasadam orders — items, shipping address, totals, status. RLS restricts to the caller's own orders.",
   inputSchema: {
     order_id: z.string().trim().optional().describe("Order UUID."),
     order_number: z.string().trim().optional().describe("Order number (alternative to order_id)."),

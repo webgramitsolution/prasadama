@@ -247,8 +247,8 @@ export default function Help() {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Help & FAQ"
-        description="Find answers to common questions about ordering, shipping, payments, and returns on Houskase."
-        keywords="Houskase help, FAQ, B2B marketplace support, shipping, returns, payment"
+        description="Find answers to common questions about ordering, shipping, payments, and returns on Prasadam."
+        keywords="Prasadam help, FAQ, B2B marketplace support, shipping, returns, payment"
         jsonLd={SchemaGenerators.faqPage(
           faqCategories.flatMap(s => s.faqs)
         )}
@@ -262,13 +262,13 @@ export default function Help() {
             <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
                 <Headphones className="h-4 w-4" />
-                Houskase Care
+                Prasadam Care
               </div>
               <h1 className="max-w-2xl font-display text-3xl font-extrabold leading-tight md:text-5xl">
                 Help, support and order guidance
               </h1>
               <p className="mt-4 max-w-xl text-sm leading-relaxed text-primary-foreground/82 md:text-base">
-                Quick answers for orders, shipping, payments, returns and bulk requirements — with direct access to the Houskase support team.
+                Quick answers for orders, shipping, payments, returns and bulk requirements — with direct access to the Prasadam support team.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Button asChild size="lg" variant="secondary" className="rounded px-5">
@@ -354,7 +354,7 @@ export default function Help() {
             transition={{ duration: 0.5, delay: 0.5 }}
             className="relative w-full mt-8 overflow-hidden rounded-xl border border-border shadow-lg"
             style={{
-              backgroundImage: "url('https://ik.imagekit.io/houskase/Banner.png')",
+              backgroundImage: "url('/products-hero-banner.jpg')",
               backgroundSize: "cover",
               backgroundPosition: "right center",
               backgroundRepeat: "no-repeat",

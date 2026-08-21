@@ -102,7 +102,7 @@ export default function Login() {
 
   return (
     <AuthShell mode="login">
-      <SEOHead title="Sign In" description="Sign in to your Houskase account to track orders, manage bulk quote requests, and check out faster with saved addresses." />
+      <SEOHead title="Sign In" description="Sign in to your Prasadam account to track orders, manage bulk quote requests, and check out faster with saved addresses." />
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">

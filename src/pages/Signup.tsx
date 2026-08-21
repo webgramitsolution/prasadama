@@ -290,7 +290,7 @@ export default function Signup() {
 
   return (
     <AuthShell mode="signup">
-      <SEOHead title="Create Account" description="Create your Houskase account to start shopping premium everyday essentials." />
+      <SEOHead title="Create Account" description="Create your Prasadam account to start shopping premium devotional offerings." />
       <AnimatePresence mode="wait">
         {step === "form" && (
           <motion.div key="form" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}>
@@ -538,7 +538,7 @@ export default function Signup() {
               <CheckCircle2 className="h-8 w-8 text-white" />
             </div>
             <h2 className="text-xl font-semibold">Account created!</h2>
-            <p className="text-sm text-muted-foreground">Welcome to Houskase. Redirecting you now…</p>
+            <p className="text-sm text-muted-foreground">Welcome to Prasadam. Redirecting you now…</p>
           </motion.div>
         )}
       </AnimatePresence>

@@ -584,9 +584,9 @@ export default function ProductDetail() {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={`${product.name}${product.category?.name ? ` — ${product.category.name}` : ""} | Houskase`}
-        description={product.short_description?.slice(0, 160) || product.description?.replace(/<[^>]*>/g, "").substring(0, 160) || `Buy ${product.name} at Houskase. Premium quality, ₹${currentPrice} only. Fast shipping across India.`}
-        keywords={`${product.name}, buy ${product.name} online, ${product.category?.name || "Houskase"}, ${product.brand?.name || ""}, India`}
+        title={`${product.name}${product.category?.name ? ` — ${product.category.name}` : ""} | Prasadam`}
+        description={product.short_description?.slice(0, 160) || product.description?.replace(/<[^>]*>/g, "").substring(0, 160) || `Buy ${product.name} at Prasadam. Premium quality, ₹${currentPrice} only. Fast shipping across India.`}
+        keywords={`${product.name}, buy ${product.name} online, ${product.category?.name || "Prasadam"}, ${product.brand?.name || ""}, India`}
         ogType="product"
         ogImage={productImages[0] !== "/placeholder.svg" ? (productImages[0] as string) : ""}
         jsonLd={[

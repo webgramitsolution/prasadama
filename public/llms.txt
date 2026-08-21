@@ -1,13 +1,13 @@
-# Houskase
+# Prasadam
 
-> Houskase — Effortless everyday essentials. Premium towels, tissues, cleaning accessories, kitchen & office supplies delivered across India.
+> Prasadam — Prasadam — A Divine Taste. Temple prasad, mithai & sweets, dry fruit prasad, pooja samagri, devotional offerings, and Bhog delivered across India.
 
-Houskase is an Indian direct-to-consumer brand selling premium household essentials, including face & bath towels, sports towels, dry & wet tissues, kitchen items, office supplies, and cleaning accessories. Both retail and bulk (B2B / RFQ) options are available.
+Prasadam is an Indian direct-to-consumer brand selling premium household essentials, including temple prasad, mithai & sweets, dry fruit prasad, pooja samagri, devotional offerings, and Bhog. Both retail and bulk (B2B / RFQ) options are available.
 
 ## Pages
 
 - [Home](/): Brand overview, featured products, trending reels, promo banners.
-- [Products](/products): Full catalog of towels, tissues, cleaning and household essentials with filters and search.
+- [Products](/products): Full catalog of temple prasad, mithai & sweets, and devotional offerings with filters and search.
 - [Bulk Order / RFQ](/rfq): Request-for-quotation flow for wholesale and business buyers.
 - [About Us](/about-us): Brand story, values, cities served, and quality commitments.
 - [Help & FAQ](/help): Orders, shipping, payments, returns, and customer support.

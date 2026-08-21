@@ -133,14 +133,14 @@ export const PWAInstallPrompt = () => {
     <>
       <div className="fixed top-1 left-1/2 -translate-x-1/2 z-[100] w-[calc(100%-1rem)] max-w-md">
         <div className="flex items-center gap-3 rounded-xl border border-border bg-background/95 backdrop-blur shadow-lg p-3">
-          <img src="/favicon.png" alt="Houskase" className="h-10 w-10 rounded-lg" />
+          <img src="/favicon.png" alt="Prasadam" className="h-10 w-10 rounded-lg" />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold leading-tight truncate">
-              {document.title || "Houskase"}
+              {document.title || "Prasadam"}
             </p>
             <p className="text-xs text-muted-foreground truncate">
               {(document.querySelector('meta[name="description"]') as HTMLMetaElement | null)?.content ||
-                "Shop Houskase for premium towels, tissues, kitchen & cleaning essentials."}
+                "Shop Prasadam for premium temple prasad, mithai, pooja samagri & devotional offerings."}
             </p>
           </div>
           <button
@@ -170,9 +170,9 @@ export const PWAInstallPrompt = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-3 mb-4">
-              <img src="/favicon.png" alt="Houskase" className="h-12 w-12 rounded-xl" />
+              <img src="/favicon.png" alt="Prasadam" className="h-12 w-12 rounded-xl" />
               <div className="flex-1">
-                <h3 className="font-semibold">Install Houskase on iPhone</h3>
+                <h3 className="font-semibold">Install Prasadam on iPhone</h3>
                 <p className="text-xs text-muted-foreground">Add to Home Screen in Safari</p>
               </div>
               <button
@@ -218,7 +218,7 @@ export const PWAInstallPrompt = () => {
               </li>
               <li className="flex items-start gap-3">
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">4</span>
-                <span>Tap <b>Add</b> — Houskase icon will appear on your home screen.</span>
+                <span>Tap <b>Add</b> — Prasadam icon will appear on your home screen.</span>
               </li>
             </ol>
 

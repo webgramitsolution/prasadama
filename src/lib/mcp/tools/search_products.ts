@@ -4,9 +4,9 @@ import { supabaseForUser, withAudit } from "../helpers";
 
 export default defineTool({
   name: "search_products",
-  title: "Search Houskase products",
+  title: "Search Prasadam products",
   description:
-    "Search the Houskase catalog by keyword and/or category. Returns product name, slug, short description, price, MOQ, and stock.",
+    "Search the Prasadam catalog by keyword and/or category. Returns product name, slug, short description, price, MOQ, and stock.",
   inputSchema: {
     query: z.string().trim().optional().describe("Free-text search across name and description."),
     category_slug: z.string().trim().optional().describe("Filter by category slug (optional)."),

@@ -46,11 +46,11 @@ export default function BlogPost() {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={post ? post.meta_title || `${post.title} — Houskase Blog` : "Blog — Houskase"}
+        title={post ? post.meta_title || `${post.title} — Prasadam Blog` : "Blog — Prasadam"}
         description={
           post?.meta_description ||
           post?.excerpt ||
-          "Read the latest from the Houskase blog."
+          "Read the latest from the Prasadam blog."
         }
         canonical={post ? post.canonical_url || `${window.location.origin}/blog/${post.slug}` : undefined}
         ogType="article"
@@ -65,8 +65,8 @@ export default function BlogPost() {
                 description: post.meta_description || post.excerpt || undefined,
                 image: post.cover_image || undefined,
                 datePublished: post.published_at,
-                author: { "@type": "Person", name: post.author || "Houskase" },
-                publisher: { "@type": "Organization", name: "Houskase" },
+                author: { "@type": "Person", name: post.author || "Prasadam" },
+                publisher: { "@type": "Organization", name: "Prasadam" },
                 mainEntityOfPage: {
                   "@type": "WebPage",
                   "@id": post.canonical_url || `${window.location.origin}/blog/${post.slug}`,
