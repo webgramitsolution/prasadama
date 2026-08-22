@@ -8,7 +8,7 @@ interface AuthLayoutProps {
 
 export function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <div className="h-screen flex flex-col bg-background overflow-hidden">
+    <div className="h-screen flex flex-col bg-white overflow-hidden">
       <Header />
       <div className="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-2">
         {/* Left — form (centered) */}

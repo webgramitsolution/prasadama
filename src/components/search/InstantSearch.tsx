@@ -241,7 +241,7 @@ export function InstantSearch({ className, placeholder = "Search products...", o
           aria-controls="instant-search-listbox"
           aria-autocomplete="list"
           aria-activedescendant={activeIndex >= 0 ? options[activeIndex]?.id : undefined}
-          className="pl-10 pr-20 h-11 bg-background border-border focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-ring"
+          className="pl-10 pr-20 h-11 bg-[#f5f5f5] border-border focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-ring"
           autoFocus={false}
           tabIndex={0}
           onBlur={() => {

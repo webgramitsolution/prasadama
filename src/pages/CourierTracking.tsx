@@ -275,7 +275,7 @@ export default function CourierTracking() {
       <main className="pb-20">
         {/* Hero */}
         <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-accent/5 to-primary/10 border-b border-border">
-          <div className="container mx-auto px-4 pl-[20px] py-10 sm:py-14">
+          <div className="w-full px-[40px] py-10 sm:py-14">
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div className="flex md:hidden justify-center items-center order-first">
                 <motion.img
@@ -351,7 +351,7 @@ export default function CourierTracking() {
           </div>
         </section>
 
-        <div className="container mx-auto px-4 py-8 space-y-6">
+        <div className="w-full px-[40px] py-8 space-y-6">
           {orderLoading && (
             <div className="bg-card border border-border rounded-2xl p-6 flex items-center gap-3">
               <Loader2 className="h-5 w-5 animate-spin text-accent" />

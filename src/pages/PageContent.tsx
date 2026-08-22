@@ -173,7 +173,7 @@ export default function PageContent({ pageKey, title, description }: PageContent
       <main className="pb-12">
         {/* Premium hero */}
         <section className="bg-gradient-to-br from-primary/5 via-background to-accent/5 border-b border-border/60">
-          <div className="container mx-auto px-4 sm:px-6 max-w-6xl py-6 md:py-8">
+          <div className="w-full px-[40px] py-6 md:py-8">
             <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 text-primary px-3 py-1 text-[11px] font-medium mb-2">
               <ShieldCheck className="h-3.5 w-3.5" />
               Prasadam Legal
@@ -187,7 +187,7 @@ export default function PageContent({ pageKey, title, description }: PageContent
           </div>
         </section>
 
-        <div className="container mx-auto px-4 sm:px-6 max-w-6xl py-6 md:py-8">
+        <div className="w-full px-[40px] py-6 md:py-8">
           <article className="bg-card border border-border/60 rounded-xl shadow-sm p-5 md:p-8 lg:p-10">
             {loading ? (
               <div className="space-y-3">

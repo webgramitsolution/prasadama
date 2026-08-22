@@ -15,6 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 const mobileMenuBanner = { url: "/products-hero-banner.jpg", asset_id: "v2" };
 const DEFAULT_LOGO_URL = "/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
+import { LocationPicker } from "@/components/layout/LocationPicker";
 import { SignedImage } from "@/components/common/SignedImage";
 import {
   DropdownMenu,
@@ -201,13 +202,8 @@ export function Header() {
               </SheetContent>
             </Sheet>
 
-            {/* Search Bar - Desktop (left side, equal width to actions) */}
-            <div className="hidden md:block flex-1 min-w-0 max-w-xl">
-              <InstantSearch placeholder="Search products..." />
-            </div>
-
-            {/* Logo - centered */}
-            <Link to="/" className="flex items-center justify-center gap-1.5 sm:gap-2 flex-shrink-0">
+            {/* Logo - left */}
+            <Link to="/" className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
               {/* Mobile (phone) — Prasadam logo */}
               <SignedImage
                 src={logoUrl || DEFAULT_LOGO_URL}
@@ -222,11 +218,23 @@ export function Header() {
               />
             </Link>
 
+            {/* Location picker — right of the logo */}
+            <div className="hidden md:block flex-shrink-0">
+              <LocationPicker />
+            </div>
+
+            {/* Search Bar - Desktop (center) */}
+            <div className="hidden md:flex flex-1 min-w-0 justify-center">
+              <div className="w-full max-w-xl">
+                <InstantSearch placeholder="Search products..." />
+              </div>
+            </div>
+
             {/* Spacer for mobile */}
             <div className="md:hidden flex-1" />
 
             {/* Action Buttons - Icon on top, text below */}
-              <div className="hidden md:flex flex-1 min-w-0 items-center justify-end gap-1">
+              <div className="hidden md:flex flex-shrink-0 items-center justify-end gap-1">
               <Link to="/courier-tracking" className="flex flex-col items-center justify-center w-14 h-14 hover:bg-secondary/50 rounded-md transition-colors">
                 <Truck className="h-4.5 w-4.5 text-foreground mb-0.5" />
                 <span className="text-[10px] text-foreground font-medium">Track Order</span>
