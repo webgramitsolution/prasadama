@@ -163,7 +163,7 @@ export function HeroSection({ onFetchStatus }: HeroSectionProps) {
                       alt={heroImageAlt}
                       loading={currentSlide === 0 ? "eager" : "lazy"}
                       {...(currentSlide === 0 ? { fetchPriority: "high" } : {})}
-                      className="block md:hidden absolute inset-0 w-full h-full bg-muted object-cover"
+                      className="block md:hidden absolute top-5 inset-x-0 bottom-0 w-full h-full bg-muted object-cover object-top"
                     />
                   )}
 
