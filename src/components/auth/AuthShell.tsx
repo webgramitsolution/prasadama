@@ -114,7 +114,7 @@ export function AuthShell({ mode, children }: Props) {
   return (
     <div className="fixed inset-0 flex flex-col bg-white overflow-hidden">
       <Header />
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 min-h-0 border-t border-gray-100">
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 min-h-0">
         {/* Left — tabbed form */}
         <div className="flex items-center justify-center px-5 sm:px-5 md:px-5 lg:px-5 py-6 md:py-8 bg-white overflow-y-auto [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           <div className="w-full max-w-2xl">
