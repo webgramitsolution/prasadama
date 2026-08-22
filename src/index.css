@@ -425,7 +425,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .badge-premium-gold::after,
+    .badge-premium-inner::after,
     .btn-premium-shine::after {
       animation: none;
       transform: translateX(-120%);
