@@ -22,7 +22,7 @@ export function AboutUsSection() {
               src="https://ik.imagekit.io/Prasadam/Product%20B/Product%20B%20(6).png?updatedAt=1787383431347"
               alt="Prasadam blessed temple offerings"
               loading="lazy"
-              className="w-full h-full min-h-[200px] sm:min-h-[260px] max-h-[340px] lg:max-h-[380px] object-contain md:object-contain lg:object-cover bg-white"
+              className="w-full h-full min-h-[200px] sm:min-h-[260px] max-h-[340px] lg:max-h-[380px] object-cover bg-white"
             />
           </div>
 
