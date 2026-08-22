@@ -346,40 +346,37 @@
 @layer utilities {
   /* Premium red festive ribbon badge with metallic gold contour following the wave */
   .badge-premium-gold {
-    position: relative;
+    display: inline-block;
+    padding: 1.5px;
     background: linear-gradient(135deg, #FFF1A8 0%, #D4AF37 32%, #FFF4B0 58%, #C89B2C 100%);
-    background-color: transparent !important;
     -webkit-mask: var(--ribbon-shape) center / 100% 100% no-repeat;
     mask: var(--ribbon-shape) center / 100% 100% no-repeat;
     filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.22));
-    isolation: isolate;
   }
-  .badge-premium-gold::before {
-    content: "";
-    position: absolute;
-    inset: 1.5px;
+  .badge-premium-inner {
+    position: relative;
+    display: block;
     background: #AE1E2A;
     -webkit-mask: var(--ribbon-shape) center / 100% 100% no-repeat;
     mask: var(--ribbon-shape) center / 100% 100% no-repeat;
-    z-index: -2;
-    pointer-events: none;
+    overflow: hidden;
   }
-  .badge-premium-gold::after {
+  .badge-premium-inner::after {
     content: "";
     position: absolute;
     inset: 0;
     background: linear-gradient(
       115deg,
       transparent 40%,
-      rgba(255, 241, 168, 0.45) 48%,
-      rgba(255, 250, 226, 0.7) 52%,
+      rgba(255, 241, 168, 0.35) 48%,
+      rgba(255, 250, 226, 0.6) 52%,
       transparent 62%
     );
     transform: translateX(-120%);
     animation: gold-sweep 4.5s ease-in-out infinite;
-    z-index: -1;
     pointer-events: none;
   }
+
 
 
   /* Soft diagonal shine sweep inside CTA buttons */
