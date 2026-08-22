@@ -29,7 +29,17 @@
 
   :root {
     /* Festive ribbon silhouette: flush square left (card corner), straight top, curved wave bottom-right */
-    --ribbon-shape: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M0,0 L83,0 C92,0.6 99.5,5 98.5,13 C97.5,21.5 91,27 80,31 C57,39 28,41 3.5,39.6 C1.4,39.4 0,37.6 0,35.4 Z' fill='black'/></svg>");
+    /* --- Save ribbon tunables (change these only; nothing else needed) --- */
+    --ribbon-shape: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M0,0 L80,0 C90.5,0.4 99.2,4.6 99,11.6 C98.8,19.8 91.5,25.4 80,29.6 C56,38.6 27,41 3.4,39.4 C1.4,39.2 0,37.4 0,35.2 Z' fill='black'/></svg>");
+    --ribbon-top: 8px;            /* vertical offset from the card image top */
+    --ribbon-left: 0px;           /* horizontal offset from the card left edge */
+    --ribbon-gold-thickness: 2px; /* metallic gold contour thickness */
+    --ribbon-fill: #AE1E2A;       /* red ribbon fill */
+    --ribbon-gold: linear-gradient(135deg, #FFF1A8 0%, #D4AF37 32%, #FFF4B0 58%, #C89B2C 100%);
+    /* --- BUY NOW gold frame tunables --- */
+    --cta-gold-thickness: 2px;
+    --cta-gold-angle: 115deg;
+    --cta-gold-duration: 3s;
 
 
     /* B2B Professional Color Palette */
@@ -348,8 +358,8 @@
   /* Premium red festive ribbon badge with metallic gold contour following the wave */
   .badge-premium-gold {
     display: inline-block;
-    padding: 2px;
-    background: linear-gradient(135deg, #FFF1A8 0%, #D4AF37 32%, #FFF4B0 58%, #C89B2C 100%);
+    padding: var(--ribbon-gold-thickness);
+    background: var(--ribbon-gold);
     -webkit-mask: var(--ribbon-shape) center / 100% 100% no-repeat;
     mask: var(--ribbon-shape) center / 100% 100% no-repeat;
     filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.22));
@@ -357,7 +367,7 @@
   .badge-premium-inner {
     position: relative;
     display: block;
-    background: #AE1E2A;
+    background: var(--ribbon-fill);
     -webkit-mask: var(--ribbon-shape) center / 100% 100% no-repeat;
     mask: var(--ribbon-shape) center / 100% 100% no-repeat;
     overflow: hidden;
@@ -405,12 +415,12 @@
 
   /* Complete metallic-gold perimeter frame with a running gold shimmer */
   .btn-gold-frame {
-    border: 2px solid transparent;
+    border: var(--cta-gold-thickness) solid transparent;
     border-radius: 6px;
     background:
       linear-gradient(180deg, #C22230 0%, #AE1E2A 55%, #8E1520 100%) padding-box,
       linear-gradient(
-          115deg,
+          var(--cta-gold-angle),
           #C89B2C 0%,
           #D4AF37 18%,
           #FFF4B0 32%,
@@ -423,7 +433,7 @@
         border-box;
     background-size: 100% 100%, 300% 100%;
     background-position: 0 0, 0% 50%;
-    animation: gold-border-run 3s linear infinite;
+    animation: gold-border-run var(--cta-gold-duration) linear infinite;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.18);
     color: #fff;
   }
