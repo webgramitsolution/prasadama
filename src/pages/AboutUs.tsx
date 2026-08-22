@@ -186,7 +186,7 @@ export default function AboutUs() {
         {/* '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            sir tab device se login form ko aapr fullwdith karo jo pahle tha bus left and right side se 20px ka padding rakho bas */}
+                                            ye screenshot dekho kaha kiya for logoin  sighup ki widht bada kar tune kharab kar diya */}
         <section className="container mx-auto px-4 pb-14 md:pb-20">
           <div className="text-center mb-10">
             <h2 className="font-display text-2xl font-bold text-brand-navy md:text-3xl">WHY CHOOSE PRASADAM?</h2>
