@@ -93,8 +93,8 @@ export function AuthShell({ mode, children }: Props) {
 
         {/* White sheet with form */}
         <div
-          className={`flex-1 bg-white rounded-t-[32px] px-5 pt-6 ${mode === "signup" ? "pb-9" : "pb-24"} shadow-[0_-8px_30px_rgba(0,0,0,0.15)] overflow-y-auto`}
-          style={{ minHeight: 500 }}
+          className={`flex-1 bg-white rounded-t-[32px] px-5 pt-6 ${mode === "signup" ? "pb-9" : "pb-24"} shadow-[0_-8px_30px_rgba(0,0,0,0.15)] overflow-y-auto [&::-webkit-scrollbar]:hidden`}
+          style={{ minHeight: 500, scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           <Tabs mode={mode} />
           <div className="bg-white rounded-2xl p-4">{children}</div>
@@ -116,7 +116,7 @@ export function AuthShell({ mode, children }: Props) {
       <Header />
       <div className="flex-1 grid grid-cols-1 md:grid-cols-2 min-h-0 border-t border-gray-100">
         {/* Left — tabbed form */}
-        <div className="flex items-center justify-center px-5 sm:px-5 md:px-5 lg:px-5 py-6 md:py-8 bg-white overflow-y-auto">
+        <div className="flex items-center justify-center px-5 sm:px-5 md:px-5 lg:px-5 py-6 md:py-8 bg-white overflow-y-auto [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           <div className="w-full max-w-2xl">
             <Tabs mode={mode} />
             <div className="bg-white rounded-2xl px-4 pb-4">{children}</div>
