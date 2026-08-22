@@ -138,7 +138,7 @@ export function HeroSection({ onFetchStatus }: HeroSectionProps) {
       {/* Hero Slider - fixed height on mobile, responsive aspect ratio on desktop */}
       {heroSlides.length > 0 && (
       <div
-        className="relative w-full overflow-hidden h-[500px] md:h-auto md:[aspect-ratio:2171/724] mt-5 md:mt-0"
+        className="relative w-full overflow-hidden h-[500px] md:h-auto md:[aspect-ratio:2171/724] pt-5 md:pt-0"
       >
         <AnimatePresence>
 
