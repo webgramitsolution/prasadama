@@ -7,7 +7,6 @@ import { HeroMarquee } from "@/components/home/HeroMarquee";
 import { PromoBanners } from "@/components/home/PromoBanners";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
 import { TaggedProductSection } from "@/components/home/TaggedProductSection";
-import { TestimonialsSection } from "@/components/home/TestimonialsSection";
 import { AboutUsSection } from "@/components/home/AboutUsSection";
 import { WhyChoosePrasadam } from "@/components/home/WhyChoosePrasadam";
 
@@ -62,7 +61,6 @@ const Index = () => {
         <AboutUsSection />
         <WhyChoosePrasadam />
         <ReelsSection title="Festive Reels" />
-        <TestimonialsSection />
 
         
         <BlogSection />
