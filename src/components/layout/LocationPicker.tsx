@@ -1,0 +1,140 @@
+import { useEffect, useState } from "react";
+import { MapPin, Loader2, LocateFixed } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+const STORAGE_KEY = "prasadam_delivery_location";
+
+interface StoredLocation {
+  label: string;
+  pincode?: string;
+}
+
+async function reverseGeocode(lat: number, lon: number): Promise<StoredLocation | null> {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`,
+      { headers: { Accept: "application/json" } }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    const a = data?.address ?? {};
+    const city = a.city || a.town || a.village || a.suburb || a.county || "";
+    const pincode = a.postcode || "";
+    const label = [city, pincode].filter(Boolean).join(" ") || data?.display_name?.split(",")[0];
+    return label ? { label, pincode } : null;
+  } catch {
+    return null;
+  }
+}
+
+export function LocationPicker({ className }: { className?: string }) {
+  const [location, setLocation] = useState<StoredLocation | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [pin, setPin] = useState("");
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      try {
+        setLocation(JSON.parse(raw));
+        return;
+      } catch {
+        /* ignore */
+      }
+    }
+    // Auto-detect only if permission was already granted (no popup spam).
+    if (!navigator.permissions?.query) return;
+    navigator.permissions
+      .query({ name: "geolocation" as PermissionName })
+      .then((status) => {
+        if (status.state === "granted") detect();
+      })
+      .catch(() => undefined);
+  }, []);
+
+  const save = (loc: StoredLocation) => {
+    setLocation(loc);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(loc));
+  };
+
+  const detect = () => {
+    if (!navigator.geolocation) return;
+    setLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const loc = await reverseGeocode(pos.coords.latitude, pos.coords.longitude);
+        if (loc) save(loc);
+        setLoading(false);
+        setOpen(false);
+      },
+      () => setLoading(false),
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
+    );
+  };
+
+  const applyPin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!/^\d{6}$/.test(pin)) return;
+    save({ label: pin, pincode: pin });
+    setPin("");
+    setOpen(false);
+  };
+
+  return (
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
+          aria-label="Set delivery location"
+          className={`flex items-center gap-1.5 px-2 py-1.5 rounded-md hover:bg-secondary/60 transition-colors text-left ${className ?? ""}`}
+        >
+          {loading ? (
+            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+          ) : (
+            <MapPin className="h-4 w-4 text-primary" />
+          )}
+          <span className="flex flex-col leading-tight">
+            <span className="text-[10px] text-muted-foreground">Deliver to</span>
+            <span className="text-[12px] font-medium text-foreground max-w-[110px] truncate">
+              {location?.label || "Select location"}
+            </span>
+          </span>
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-64 p-3 space-y-3">
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full justify-start gap-2 h-9 text-sm"
+          onClick={detect}
+          disabled={loading}
+        >
+          <LocateFixed className="h-4 w-4" />
+          {loading ? "Detecting..." : "Use my current location"}
+        </Button>
+        <form onSubmit={applyPin} className="space-y-2">
+          <p className="text-xs text-muted-foreground">Or enter a 6-digit pincode</p>
+          <div className="flex gap-2">
+            <Input
+              value={pin}
+              onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
+              placeholder="e.g. 110001"
+              inputMode="numeric"
+              className="h-9"
+            />
+            <Button type="submit" className="h-9" disabled={pin.length !== 6}>
+              Set
+            </Button>
+          </div>
+        </form>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
