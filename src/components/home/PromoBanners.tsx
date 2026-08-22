@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SignedImage } from "@/components/common/SignedImage";
 
@@ -18,7 +19,7 @@ interface PromoBannersProps {
   onFetchStatus?: (status: string) => void;
 }
 
-function CircleLink({
+function CardLink({
   to,
   className,
   children,
@@ -44,18 +45,26 @@ function CircleLink({
   );
 }
 
+function Ornament({ flip }: { flip?: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 120 24"
+      className={`h-4 w-[70px] sm:w-[110px] text-accent/70 ${flip ? "scale-x-[-1]" : ""}`}
+      fill="none"
+      aria-hidden="true"
+    >
+      <path d="M0 12 H70" stroke="currentColor" strokeWidth="1" />
+      <path d="M70 12 C80 4, 90 4, 96 12 C90 20, 80 20, 70 12 Z" stroke="currentColor" strokeWidth="1" />
+      <circle cx="104" cy="7" r="2" fill="currentColor" />
+      <circle cx="104" cy="17" r="2" fill="currentColor" />
+      <circle cx="112" cy="12" r="2.5" fill="currentColor" />
+      <circle cx="96" cy="12" r="2" fill="currentColor" />
+    </svg>
+  );
+}
+
 export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
   const [banners, setBanners] = useState<PromoBanner[]>([]);
-  const [isDesktop, setIsDesktop] = useState(false);
-
-  useEffect(() => {
-    const checkDesktop = () => {
-      setIsDesktop(window.innerWidth >= 1024);
-    };
-    checkDesktop();
-    window.addEventListener("resize", checkDesktop);
-    return () => window.removeEventListener("resize", checkDesktop);
-  }, []);
 
   useEffect(() => {
     (async () => {
@@ -76,9 +85,8 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
 
   if (banners.length === 0) return null;
 
-  // Ensure "Shop All" is always first in the list
   const sortedBanners = [...banners];
-  const shopAllIndex = sortedBanners.findIndex(b => b.title.toLowerCase().trim() === 'shop all');
+  const shopAllIndex = sortedBanners.findIndex((b) => b.title.toLowerCase().trim() === "shop all");
   if (shopAllIndex > 0) {
     const shopAll = sortedBanners[shopAllIndex];
     if (shopAll) {
@@ -86,93 +94,50 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
       sortedBanners.unshift(shopAll);
     }
   }
-  
-  // Use loop for mobile/tablet marquee, but static list for desktop
-  const loop = sortedBanners.length >= 4 ? [...sortedBanners, ...sortedBanners] : [...sortedBanners, ...sortedBanners, ...sortedBanners, ...sortedBanners];
-  
-  const itemWidth = "w-[85px] sm:w-[110px] lg:w-[130px]";
-
-  const Item = ({ banner, className }: { banner: PromoBanner; className?: string }) => (
-    <CircleLink
-      to={banner.link}
-      ariaLabel={banner.title}
-      className={`group flex flex-col items-center flex-shrink-0 ${itemWidth} ${className || ""}`}
-    >
-      <div className="relative w-full aspect-square transition-transform duration-300 group-hover:scale-105">
-        {/* Circular Image Wrapper - Ensured 100% circle */}
-        <div className="w-full h-full rounded-full overflow-hidden ring-2 ring-accent/30 bg-secondary relative z-0">
-          {banner.mobile_image_url && (
-            <SignedImage
-              src={banner.mobile_image_url}
-              alt={banner.title}
-              className="block sm:hidden w-full h-full object-cover object-center"
-            />
-          )}
-          <SignedImage
-            src={banner.image_url || banner.mobile_image_url || null}
-            alt={banner.title}
-            className={`${banner.mobile_image_url ? "hidden sm:block" : "block"} w-full h-full object-cover object-center`}
-          />
-        </div>
-        
-        {/* Banner Title overlay at the center */}
-        <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-          <div className="relative w-full flex items-center justify-center">
-            {/* The Ribbon Wrapper: A straight ribbon with V-notches at both ends */}
-            <div className="relative w-[105%] flex items-center justify-center pointer-events-none">
-              <svg 
-                viewBox="0 0 100 24" 
-                className="w-full drop-shadow-lg overflow-visible"
-                preserveAspectRatio="none"
-              >
-                {/* Main Ribbon Body: Straight with Inward V-Notches (Fish-tail ends) */}
-                <path 
-                  d="M 6 12 L 0 0 L 100 0 L 94 12 L 100 24 L 0 24 Z" 
-                  fill="#ad1e2a" 
-                />
-                
-                {/* Top Border Line (White, Straight) */}
-                <line 
-                  x1="8" y1="4" x2="92" y2="4" 
-                  stroke="white" 
-                  strokeWidth="0.8"
-                  strokeOpacity="0.8"
-                />
-
-                {/* Bottom Border Line (White, Straight) */}
-                <line 
-                  x1="8" y1="20" x2="92" y2="20" 
-                  stroke="white" 
-                  strokeWidth="0.8"
-                  strokeOpacity="0.8"
-                />
-              </svg>
-
-              {/* Centered Text Overlay */}
-              <div className="absolute inset-0 flex items-center justify-center px-4">
-                <p className="text-[7px] sm:text-[9px] lg:text-[10px] font-bold text-white text-center leading-none uppercase tracking-tight line-clamp-1">
-                  {banner.title}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {banner.offer_text && (
-        <p className="hidden sm:block text-[10px] lg:text-[11px] font-medium text-accent text-center leading-tight line-clamp-1 mt-1">
-          {banner.offer_text}
-        </p>
-      )}
-    </CircleLink>
-  );
 
   return (
-    <section className="w-full mb-[-30px] bg-[#f7f6f4] overflow-hidden pb-[30px]">
-      <div className="w-full overflow-hidden py-2 marquee-track">
-        <div className={`flex w-max gap-4 sm:gap-6 px-4 py-4 overflow-visible ${!isDesktop ? 'animate-marquee-slow' : 'justify-center mx-auto'}`}>
-          {(!isDesktop ? loop : sortedBanners.slice(0, 8)).map((banner, i) => (
-            <Item key={`${banner.id}-${i}`} banner={banner} />
+    <section className="w-full bg-background py-8 sm:py-12">
+      <div className="w-full px-4 sm:px-8 lg:px-10">
+        <div className="flex items-center justify-center gap-3 sm:gap-5 mb-6 sm:mb-10">
+          <Ornament />
+          <h2 className="font-display text-2xl sm:text-3xl lg:text-[34px] font-semibold text-foreground whitespace-nowrap">
+            Shop By Category
+          </h2>
+          <Ornament flip />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+          {sortedBanners.slice(0, 9).map((banner) => (
+            <CardLink
+              key={banner.id}
+              to={banner.link}
+              ariaLabel={banner.title}
+              className="group block rounded-[18px] border border-accent/25 bg-card/60 p-2 sm:p-2.5 shadow-[0_2px_16px_rgba(102,23,20,0.06)] transition-shadow duration-300 hover:shadow-[0_8px_28px_rgba(102,23,20,0.14)]"
+            >
+              <div className="overflow-hidden rounded-[14px]">
+                <SignedImage
+                  src={banner.image_url || banner.mobile_image_url || null}
+                  alt={banner.title}
+                  className="w-full aspect-[16/9] object-cover object-center transition-transform duration-500 group-hover:scale-[1.04]"
+                />
+              </div>
+
+              <div className="flex items-center justify-between gap-3 px-3 sm:px-4 py-4 sm:py-5">
+                <div className="min-w-0">
+                  <h3 className="font-display text-lg sm:text-xl font-semibold text-foreground leading-tight">
+                    {banner.title}
+                  </h3>
+                  {banner.offer_text && (
+                    <p className="mt-1.5 text-[13px] sm:text-sm text-muted-foreground leading-snug line-clamp-2">
+                      {banner.offer_text}
+                    </p>
+                  )}
+                </div>
+                <span className="shrink-0 grid place-items-center h-9 w-9 sm:h-11 sm:w-11 rounded-full bg-accent text-accent-foreground transition-transform duration-300 group-hover:translate-x-1">
+                  <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
+                </span>
+              </div>
+            </CardLink>
           ))}
         </div>
       </div>
