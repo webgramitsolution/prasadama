@@ -14,7 +14,7 @@ const highlights = [
 
 export function AboutUsSection() {
   return (
-    <section className="py-8 sm:py-10">
+    <section className="py-8 sm:py-10 bg-white">
       <div className="container mx-auto px-3 sm:px-4">
         <div className="grid gap-6 lg:grid-cols-2 items-stretch">
           <div className="overflow-hidden rounded-xl border border-border h-full max-h-[340px] lg:max-h-[380px]">
@@ -22,7 +22,7 @@ export function AboutUsSection() {
               src="https://ik.imagekit.io/Prasadam/Product%20B/Product%20B%20(6).png?updatedAt=1787383431347"
               alt="Prasadam blessed temple offerings"
               loading="lazy"
-              className="w-full h-full min-h-[200px] sm:min-h-[260px] max-h-[340px] lg:max-h-[380px] object-cover"
+              className="w-full h-full min-h-[200px] sm:min-h-[260px] max-h-[340px] lg:max-h-[380px] object-contain md:object-contain lg:object-cover bg-white"
             />
           </div>
 

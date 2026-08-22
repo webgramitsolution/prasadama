@@ -100,7 +100,7 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
       <div className="w-full px-4 sm:px-6 lg:px-10">
         <div className="flex items-center justify-center gap-2 sm:gap-4 lg:gap-5 mb-5 sm:mb-8 lg:mb-10">
           <Ornament />
-          <h2 className="font-display text-xl sm:text-[28px] lg:text-[34px] font-semibold text-foreground whitespace-nowrap">
+          <h2 className="font-display text-lg sm:text-2xl lg:text-[28px] font-medium text-foreground whitespace-nowrap">
             Shop By Category
           </h2>
           <Ornament flip />
