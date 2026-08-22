@@ -50,7 +50,7 @@ export function TestimonialsSection() {
   return (
     <section className="py-8 sm:py-10 bg-[#ffffff]">
       <div className="container mx-auto px-3 sm:px-4">
-        <SectionHeading title="Product Reviews" />
+        <SectionHeading title="What Our Customers Say" />
 
         {loading ? (
           <div className="flex gap-3 sm:gap-4 overflow-hidden">
