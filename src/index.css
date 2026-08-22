@@ -348,11 +348,13 @@
   /* Premium red festive ribbon badge with metallic gold contour following the wave */
   .badge-premium-gold {
     display: inline-block;
-    padding: 1.5px;
-    background: linear-gradient(135deg, #FFF1A8 0%, #D4AF37 32%, #FFF4B0 58%, #C89B2C 100%);
+    padding: 2px;
+    background: linear-gradient(115deg, #C89B2C 0%, #FFF1A8 18%, #D4AF37 38%, #FFFDE8 52%, #D4AF37 70%, #FFF4B0 86%, #C89B2C 100%);
+    background-size: 300% 100%;
+    animation: gold-border-run 3.5s linear infinite;
     -webkit-mask: var(--ribbon-shape) center / 100% 100% no-repeat;
     mask: var(--ribbon-shape) center / 100% 100% no-repeat;
-    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.22));
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.25));
   }
   .badge-premium-inner {
     position: relative;
