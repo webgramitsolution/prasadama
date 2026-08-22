@@ -456,6 +456,7 @@
       animation: none;
       transform: translateX(-120%);
     }
-    .btn-gold-frame { animation: none; }
+    .btn-gold-frame,
+    .badge-premium-gold { animation: none; }
   }
 }
