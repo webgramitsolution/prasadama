@@ -109,7 +109,7 @@ export default function Login() {
             <Label htmlFor="email">Email Address</Label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input id="email" type="email" placeholder="you@example.com" className="pl-10 h-11"
+              <Input id="email" type="email" placeholder="you@example.com" className="pl-10 h-11 bg-[#F5F5F5] border-transparent"
                 value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
           </div>
@@ -122,7 +122,7 @@ export default function Login() {
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input id="password" type={showPassword ? "text" : "password"} placeholder="Your password"
-                className="pl-10 pr-10 h-11" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                className="pl-10 pr-10 h-11 bg-[#F5F5F5] border-transparent" value={password} onChange={(e) => setPassword(e.target.value)} required />
               <button type="button" onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}

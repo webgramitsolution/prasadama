@@ -120,7 +120,7 @@ export default function ForgotPassword() {
                   id="email" 
                   type="email" 
                   placeholder="you@example.com" 
-                  className="pl-10 h-11"
+                  className="pl-10 h-11 bg-[#F5F5F5] border-transparent"
                   value={email} 
                   onChange={(e) => setEmail(e.target.value)} 
                   required 
@@ -152,7 +152,7 @@ export default function ForgotPassword() {
                   type="text" 
                   placeholder="123456" 
                   maxLength={6}
-                  className="pl-10 h-11 text-center tracking-widest font-mono text-lg"
+                  className="pl-10 h-11 text-center tracking-widest font-mono text-lg bg-[#F5F5F5] border-transparent"
                   value={otp} 
                   onChange={(e) => setOtp(e.target.value)} 
                   required 
@@ -187,7 +187,7 @@ export default function ForgotPassword() {
                   id="newPassword" 
                   type={showPassword ? "text" : "password"} 
                   placeholder="Min 8 characters"
-                  className="pl-10 pr-10 h-11" 
+                  className="pl-10 pr-10 h-11 bg-[#F5F5F5] border-transparent" 
                   value={newPassword} 
                   onChange={(e) => setNewPassword(e.target.value)} 
                   required 
@@ -208,7 +208,7 @@ export default function ForgotPassword() {
                   id="confirmPassword" 
                   type="password" 
                   placeholder="Repeat new password"
-                  className="pl-10 h-11" 
+                  className="pl-10 h-11 bg-[#F5F5F5] border-transparent" 
                   value={confirmPassword} 
                   onChange={(e) => setConfirmPassword(e.target.value)} 
                   required 
