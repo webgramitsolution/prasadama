@@ -51,7 +51,7 @@ export function WhyChoosePrasadam() {
               ))}
             </div>
 
-            <div className="overflow-hidden rounded-xl border border-accent/30 min-h-[180px]">
+            <div className="overflow-hidden rounded-xl border border-accent/30 h-[180px] lg:h-[220px]">
               <img
                 src="/auth-pooja.jpg"
                 alt="Prasadam festive gift box with diyas"
