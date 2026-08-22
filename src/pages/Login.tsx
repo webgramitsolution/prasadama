@@ -103,8 +103,8 @@ export default function Login() {
   return (
     <AuthShell mode="login">
       <style dangerouslySetInnerHTML={{ __html: `
-        .auth-grid-row { display: grid; gap: 1rem; }
-        @media (min-width: 640px) {
+        .auth-grid-row { display: grid; gap: 1rem; width: 100%; }
+        @media (min-width: 768px) {
           .auth-grid-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
       `}} />
@@ -136,9 +136,18 @@ export default function Login() {
             </div>
           </div>
 
-          <Button type="submit" className="w-full h-12 text-base font-semibold text-white hover:opacity-90 shadow-md transition-all active:scale-[0.98]" style={{ backgroundColor: "#AD1E2A" }} disabled={isLoading}>
-            {isLoading ? "Signing In..." : "Login"}
-          </Button>
+          <div className="flex flex-col items-center space-y-6">
+            <Button type="submit" className="w-full h-12 text-base font-semibold text-white hover:opacity-90 shadow-md transition-all active:scale-[0.98]" style={{ backgroundColor: "#AD1E2A" }} disabled={isLoading}>
+              {isLoading ? "Signing In..." : "Login"}
+            </Button>
+            <img
+              src="https://ik.imagekit.io/Prasadam/Status-scaled.jpg?updatedAt=1787405014112"
+              alt="Prasadam divine offerings"
+              loading="lazy"
+              decoding="async"
+              className="mt-6 w-full max-w-sm rounded-xl object-cover"
+            />
+          </div>
         </form>
       </motion.div>
     </AuthShell>
