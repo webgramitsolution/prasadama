@@ -201,13 +201,8 @@ export function Header() {
               </SheetContent>
             </Sheet>
 
-            {/* Search Bar - Desktop (left side, equal width to actions) */}
-            <div className="hidden md:block flex-1 min-w-0 max-w-xl">
-              <InstantSearch placeholder="Search products..." />
-            </div>
-
-            {/* Logo - centered */}
-            <Link to="/" className="flex items-center justify-center gap-1.5 sm:gap-2 flex-shrink-0">
+            {/* Logo - left */}
+            <Link to="/" className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
               {/* Mobile (phone) — Prasadam logo */}
               <SignedImage
                 src={logoUrl || DEFAULT_LOGO_URL}
@@ -221,6 +216,18 @@ export function Header() {
                 className="hidden h-12 w-auto object-contain sm:block"
               />
             </Link>
+
+            {/* Location picker — right of the logo */}
+            <div className="hidden md:block flex-shrink-0">
+              <LocationPicker />
+            </div>
+
+            {/* Search Bar - Desktop (center) */}
+            <div className="hidden md:flex flex-1 min-w-0 justify-center">
+              <div className="w-full max-w-xl">
+                <InstantSearch placeholder="Search products..." />
+              </div>
+            </div>
 
             {/* Spacer for mobile */}
             <div className="md:hidden flex-1" />
