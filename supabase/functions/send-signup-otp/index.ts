@@ -97,6 +97,9 @@ export async function derivePassword(password: string, saltHex?: string) {
   return `pbkdf2$210000$${hex(salt)}$${hex(new Uint8Array(bits))}`;
 }
 
+const escapeHtml = (value: unknown) => String(value ?? '')
+  .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -183,7 +186,7 @@ serve(async (req) => {
               <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" width="35" style="opacity:0.6">
             </div>
             <h1 class="status-title">Account Verification</h1>
-            <p class="greeting">Hi <strong>${fullName}</strong>,</p>
+            <p class="greeting">Hi <strong>${escapeHtml(fullName)}</strong>,</p>
             <p style="color: #666; font-size: 16px;">Thank you for choosing Prasadam. Use the verification code below to complete your registration:</p>
             <div class="otp-code">${otp}</div>
             <p style="color: #999; font-size: 14px;">This code will expire in 10 minutes. If you did not request this, please ignore this email.</p>

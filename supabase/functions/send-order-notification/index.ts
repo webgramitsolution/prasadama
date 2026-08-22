@@ -77,6 +77,12 @@ Deno.serve(async (req) => {
     const { data: authData } = token ? await admin.auth.getUser(token) : { data: { user: null } }
     if (!authData.user) return json({ success: false, error: 'Unauthorized' }, 401)
 
+    const { data: adminRole } = await admin.from('user_roles').select('role').eq('user_id', authData.user.id).eq('role', 'admin').maybeSingle()
+    const isAdmin = Boolean(adminRole)
+
+    // Only admins may redirect an order email to an arbitrary address.
+    if (parsed.data.to_override && !isAdmin) return json({ success: false, error: 'Forbidden' }, 403)
+
     let order: any = null;
     let items: any[] = [];
     
@@ -94,8 +100,7 @@ Deno.serve(async (req) => {
       const { data: orderData } = await admin.from('orders').select('*').eq('id', parsed.data.order_id!).maybeSingle()
       order = orderData;
       if (!order) return json({ success: false, error: 'Order not found' }, 404)
-      const { data: role } = await admin.from('user_roles').select('role').eq('user_id', authData.user.id).eq('role', 'admin').maybeSingle()
-      if (order.user_id !== authData.user.id && !role) return json({ success: false, error: 'Forbidden' }, 403)
+      if (order.user_id !== authData.user.id && !isAdmin) return json({ success: false, error: 'Forbidden' }, 403)
       const { data: itemsData } = await admin.from('order_items').select('product_name, variation_details, quantity, unit_price, total_price').eq('order_id', order.id)
       items = itemsData || [];
     }
@@ -103,7 +108,7 @@ Deno.serve(async (req) => {
     const billing = (order.billing_address ?? {}) as Record<string, unknown>
     const shipping = (order.shipping_address ?? {}) as Record<string, unknown>
     
-    let recipient = parsed.data.to_override || String(billing.email || '');
+    let recipient = (isAdmin ? parsed.data.to_override : '') || String(billing.email || '');
     if (!recipient && !parsed.data.preview_only) {
       const { data: owner } = await admin.auth.admin.getUserById(order.user_id)
       recipient = owner.user?.email || '';

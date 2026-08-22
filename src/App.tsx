@@ -141,8 +141,6 @@ const App = () => (
               <Route path="/connect" element={<Connect />} />
               <Route path="/track-order" element={<CourierTracking />} />
               <Route path="/track-order/:orderNumber" element={<CourierTracking />} />
-              <Route path="/dev/invoice-preview" element={<InvoicePreview />} />
-              <Route path="/dev/email-preview-internal" element={<EmailPreview />} />
               <Route path="/privacy-policy" element={<PageContent pageKey="privacy_policy" title="Privacy Policy" description="How Prasadam collects, uses, stores, and protects your personal data — including cookies, order history, and marketing preferences." />} />
               <Route path="/terms-of-service" element={<PageContent pageKey="terms_of_service" title="Terms of Service" description="The terms governing your use of Prasadam — accounts, orders, payments, cancellations, and acceptable use of the marketplace." />} />
               <Route path="/payment-terms" element={<PageContent pageKey="payment_terms" title="Payment Terms" description="Accepted payment methods, invoicing rules, taxes, and refund timing for retail and wholesale orders on Prasadam." />} />
@@ -187,6 +185,8 @@ const App = () => (
                  <Route path="security-logs" element={<AdminSecurityLogs />} />
                  <Route path="sms-logs" element={<AdminSmsLogs />} />
                  <Route path="email-settings" element={<AdminEmailSettings />} />
+                 <Route path="dev/invoice-preview" element={<InvoicePreview />} />
+                 <Route path="dev/email-preview-internal" element={<EmailPreview />} />
                  
               </Route>
 
