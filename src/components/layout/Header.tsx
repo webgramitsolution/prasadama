@@ -15,6 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 const mobileMenuBanner = { url: "/products-hero-banner.jpg", asset_id: "v2" };
 const DEFAULT_LOGO_URL = "/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
+import { LocationPicker } from "@/components/layout/LocationPicker";
 import { SignedImage } from "@/components/common/SignedImage";
 import {
   DropdownMenu,
