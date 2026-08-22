@@ -87,24 +87,24 @@ export function TaggedProductSection({
     return (
       <section className={`py-8 sm:py-10 ${className}`}>
         <div className="container mx-auto px-3 sm:px-4">
-          <div className="rounded-2xl bg-primary p-3 sm:p-4 flex flex-col sm:flex-row gap-3 sm:gap-4">
+          <div className="rounded-2xl bg-[#661714] p-3 sm:p-4 flex flex-col sm:flex-row gap-3 sm:gap-4">
             {/* Sunburst label panel - Back to fixed width on mobile/tablet rail layout */}
             <div
-              className="relative shrink-0 w-full sm:w-[26%] lg:w-[21%] rounded-xl overflow-hidden flex items-center justify-center bg-primary"
+              className="relative shrink-0 w-full sm:w-[26%] lg:w-[21%] rounded-xl overflow-hidden flex items-center justify-center bg-[#661714]"
               aria-hidden="true"
             >
               <div
                 className="absolute inset-0 opacity-70"
                 style={{
                   background:
-                    "repeating-conic-gradient(from 0deg at 50% 50%, hsl(var(--primary-foreground) / 0.14) 0deg 9deg, transparent 9deg 18deg)",
+                    "repeating-conic-gradient(from 0deg at 50% 50%, hsl(0 0% 100% / 0.14) 0deg 9deg, transparent 9deg 18deg)",
                 }}
               />
               <div className="relative text-center px-3 py-6 sm:py-10 lg:py-14">
-                <p className="font-display font-extrabold leading-none tracking-tight text-primary-foreground text-2xl sm:text-4xl lg:text-5xl animate-[pulse_2.6s_ease-in-out_infinite]">
+                <p className="font-display font-extrabold leading-none tracking-tight text-white text-2xl sm:text-4xl lg:text-5xl animate-[pulse_2.6s_ease-in-out_infinite]">
                   {panelLabelTop}
                 </p>
-                <p className="font-display font-bold italic text-primary-foreground/90 text-lg sm:text-2xl lg:text-3xl -mt-1 animate-[bounce_2.6s_ease-in-out_infinite]">
+                <p className="font-display font-bold italic text-white/90 text-lg sm:text-2xl lg:text-3xl -mt-1 animate-[bounce_2.6s_ease-in-out_infinite]">
                   {panelLabelBottom}
                 </p>
               </div>

@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { BottomNavigation } from "@/components/layout/BottomNavigation";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -564,7 +563,6 @@ export default function ProductDetail() {
           </div>
         </main>
       <Footer />
-      <BottomNavigation />
     </div>
     );
   }

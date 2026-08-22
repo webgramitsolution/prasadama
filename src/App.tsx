@@ -8,6 +8,7 @@ import { CartProvider } from "@/contexts/CartContext";
 
 import { SecurityHeaders } from "@/components/SecurityHeaders";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { BottomNavigation } from "@/components/layout/BottomNavigation";
 import { PWAInstallPrompt } from "@/pwa/PWAInstallPrompt";
 
 import { lazy, Suspense } from "react";
@@ -194,6 +195,7 @@ const App = () => (
             </Routes>
           </Suspense>
           
+          <BottomNavigation />
           <PWAInstallPrompt />
           <VoiceAssistant />
         </BrowserRouter>

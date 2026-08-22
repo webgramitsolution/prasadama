@@ -15,12 +15,12 @@ export function AboutUsSection() {
     <section className="py-8 sm:py-10">
       <div className="container mx-auto px-3 sm:px-4">
         <div className="grid gap-6 lg:grid-cols-2 items-stretch">
-          <div className="overflow-hidden rounded-xl border border-border min-h-[320px] sm:min-h-[420px] lg:min-h-full">
+          <div className="overflow-hidden rounded-xl border border-border h-full max-h-[420px] lg:max-h-none">
             <img
               src="/auth-pooja.jpg"
               alt="Prasadam blessed temple offerings"
               loading="lazy"
-              className="w-full h-full min-h-[320px] sm:min-h-[420px] object-cover"
+              className="w-full h-full min-h-[220px] sm:min-h-[300px] object-cover"
             />
           </div>
 

@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SocialRail } from "@/components/layout/SocialRail";
-import { BottomNavigation } from "@/components/layout/BottomNavigation";
 import { HeroSection } from "@/components/home/HeroSection";
 import { HeroMarquee } from "@/components/home/HeroMarquee";
 import { PromoBanners } from "@/components/home/PromoBanners";
@@ -72,7 +71,6 @@ const Index = () => {
       <TrustSection />
       <AvailableOnBanner />
       <Footer />
-      <BottomNavigation />
       <VoiceAssistant />
     </div>
   );

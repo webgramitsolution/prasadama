@@ -98,6 +98,13 @@ export function AuthShell({ mode, children }: Props) {
         >
           <Tabs mode={mode} />
           {children}
+          <img
+            src="https://ik.imagekit.io/Prasadam/Status-scaled.jpg"
+            alt="Prasadam divine offerings"
+            loading="lazy"
+            decoding="async"
+            className="mt-6 w-full rounded-xl object-cover"
+          />
         </div>
       </div>
     );

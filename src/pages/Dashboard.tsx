@@ -26,7 +26,6 @@ import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link, Navigate } from "react-router-dom";
-import { BottomNavigation } from "@/components/layout/BottomNavigation";
 import { Header } from "@/components/layout/Header";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -1014,7 +1013,6 @@ export default function Dashboard() {
           </div>
         </main>
       </div>
-      <BottomNavigation />
     </div>
   );
 }
