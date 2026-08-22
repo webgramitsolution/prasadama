@@ -924,6 +924,14 @@ export default function Checkout() {
                     <p className="text-xs text-muted-foreground text-center">
                       By placing an order, you agree to our Terms of Service.
                     </p>
+
+                    <img
+                      src="https://ik.imagekit.io/Prasadam/Status-scaled.jpg"
+                      alt="Prasadam divine offerings"
+                      loading="lazy"
+                      decoding="async"
+                      className="mt-4 w-full rounded-md object-cover"
+                    />
                   </CardContent>
                 </Card>
               </div>
