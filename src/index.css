@@ -401,6 +401,23 @@
     pointer-events: none;
   }
 
+  /* Complete metallic-gold perimeter frame around the red CTA button */
+  .btn-gold-frame {
+    border: 1.5px solid transparent;
+    background:
+      linear-gradient(#AE1E2A, #AE1E2A) padding-box,
+      linear-gradient(135deg, #FFF1A8 0%, #D4AF37 32%, #FFF4B0 58%, #C89B2C 100%) border-box;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    color: #fff;
+  }
+  .btn-gold-frame:hover {
+    background:
+      linear-gradient(#971a24, #971a24) padding-box,
+      linear-gradient(135deg, #FFF4B0 0%, #E3C24A 32%, #FFF7C8 58%, #D4AF37 100%) border-box;
+  }
+
+
+
   @keyframes gold-sweep {
     0% { transform: translateX(-120%); }
     45% { transform: translateX(120%); }
