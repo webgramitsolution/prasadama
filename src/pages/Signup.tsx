@@ -301,8 +301,8 @@ export default function Signup() {
   return (
     <AuthShell mode="signup">
       <style dangerouslySetInnerHTML={{ __html: `
-        .auth-grid-row { display: grid; gap: 1rem; }
-        @media (min-width: 640px) {
+        .auth-grid-row { display: grid; gap: 1rem; width: 100%; }
+        @media (min-width: 768px) {
           .auth-grid-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
       `}} />
