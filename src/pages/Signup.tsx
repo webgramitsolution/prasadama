@@ -300,12 +300,18 @@ export default function Signup() {
 
   return (
     <AuthShell mode="signup">
+      <style dangerouslySetInnerHTML={{ __html: `
+        .auth-grid-row { display: grid; gap: 1rem; }
+        @media (min-width: 640px) {
+          .auth-grid-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+      `}} />
       <SEOHead title="Create Account" description="Create your Prasadam account to start shopping premium devotional offerings." />
       <AnimatePresence mode="wait">
         {step === "form" && (
           <motion.div key="form" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}>
             <form onSubmit={handleSendOtp} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="auth-grid-row">
                 <div className="space-y-2">
                   <Label htmlFor="fullName">Full Name</Label>
                   <div className="relative">
@@ -324,7 +330,7 @@ export default function Signup() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="auth-grid-row">
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>
                   <div className="relative">
