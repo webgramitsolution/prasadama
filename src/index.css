@@ -459,6 +459,10 @@
       animation: none;
       transform: translateX(-120%);
     }
-    .btn-gold-frame { animation: none; }
+    .btn-gold-frame {
+      animation: none;
+      /* keep the identical gold frame appearance, just frozen mid-gradient */
+      background-position: 0 0, 50% 50%;
+    }
   }
 }
