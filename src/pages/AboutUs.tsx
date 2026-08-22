@@ -186,9 +186,7 @@ export default function AboutUs() {
         {/* '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            Verify the authentication pages have zero vertical scrolling on both mobile and desktop.
-
-Remove the vertical divider and ensure the split layout stays perfectly aligned across breakpoints. */}
+                                            ye screenshot dekho bhai - /signup and /login ke form ke upper 20px top margin do computer device par */}
         <section className="container mx-auto px-4 pb-14 md:pb-20">
           <div className="text-center mb-10">
             <h2 className="font-display text-2xl font-bold text-brand-navy md:text-3xl">WHY CHOOSE PRASADAM?</h2>
