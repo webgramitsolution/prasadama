@@ -186,7 +186,9 @@ export default function AboutUs() {
         {/* '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            ye screenshot dekho bhai - /signup and /login ke form ke upper 20px top margin do computer device par */}
+                                            Verify that the /login and /signup forms have the correct 20px top margin on desktop without introducing any vertical scrolling.
+
+Refactor the AuthShell spacing so the top margin and alignment stay consistent across all breakpoints for both login and signup views. */}
         <section className="container mx-auto px-4 pb-14 md:pb-20">
           <div className="text-center mb-10">
             <h2 className="font-display text-2xl font-bold text-brand-navy md:text-3xl">WHY CHOOSE PRASADAM?</h2>
