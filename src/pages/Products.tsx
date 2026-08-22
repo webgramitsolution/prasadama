@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { BottomNavigation } from "@/components/layout/BottomNavigation";
 import { ReelsSection } from "@/components/reels/ReelsSection";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -566,7 +565,6 @@ export default function Products() {
 
       <ReelsSection title="Trending Reels" placement="home" />
       <Footer />
-      <BottomNavigation />
     </div>
   );
 }
