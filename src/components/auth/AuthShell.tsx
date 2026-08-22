@@ -97,7 +97,7 @@ export function AuthShell({ mode, children }: Props) {
           style={{ minHeight: 500 }}
         >
           <Tabs mode={mode} />
-          <div className="bg-[#f5f5f5] rounded-2xl p-4">{children}</div>
+          <div className="bg-white rounded-2xl p-4">{children}</div>
           <img
             src="https://ik.imagekit.io/Prasadam/Status-scaled.jpg?updatedAt=1787405014112"
             alt="Prasadam divine offerings"
@@ -119,7 +119,7 @@ export function AuthShell({ mode, children }: Props) {
         <div className="flex items-center justify-center px-4 sm:px-8 md:px-14 lg:px-20 py-8 md:py-12 bg-white overflow-y-auto">
           <div className="w-full max-w-xl">
             <Tabs mode={mode} />
-            <div className="bg-[#f5f5f5] rounded-2xl p-6">{children}</div>
+            <div className="bg-white rounded-2xl p-6">{children}</div>
 
           </div>
         </div>

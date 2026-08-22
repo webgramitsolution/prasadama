@@ -186,7 +186,7 @@ export default function AboutUs() {
         {/* '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            please make me admin sheepikagupta@gmail.com */}
+                                            ye screenshot dekho sir aap form ke backound ye ye color remove karo #f5f5f5 keep white but   like Full name , Email Address, Password  - jon inter in input box ka backound color main f5f5f5 karne ko bola tha please sahi karo sabhi form se pahle */}
         <section className="container mx-auto px-4 pb-14 md:pb-20">
           <div className="text-center mb-10">
             <h2 className="font-display text-2xl font-bold text-brand-navy md:text-3xl">WHY CHOOSE PRASADAM?</h2>
