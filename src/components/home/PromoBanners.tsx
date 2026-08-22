@@ -96,45 +96,48 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
   }
 
   return (
-    <section className="w-full bg-background py-8 sm:py-12">
-      <div className="w-full px-4 sm:px-8 lg:px-10">
-        <div className="flex items-center justify-center gap-3 sm:gap-5 mb-6 sm:mb-10">
+    <section className="w-full bg-background py-6 sm:py-10 lg:py-12">
+      <div className="w-full px-4 sm:px-6 lg:px-10">
+        <div className="flex items-center justify-center gap-2 sm:gap-4 lg:gap-5 mb-5 sm:mb-8 lg:mb-10">
           <Ornament />
-          <h2 className="font-display text-2xl sm:text-3xl lg:text-[34px] font-semibold text-foreground whitespace-nowrap">
+          <h2 className="font-display text-xl sm:text-[28px] lg:text-[34px] font-semibold text-foreground whitespace-nowrap">
             Shop By Category
           </h2>
           <Ornament flip />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
-          {sortedBanners.slice(0, 9).map((banner) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-8">
+          {sortedBanners.slice(0, 9).map((banner, i) => (
             <CardLink
               key={banner.id}
               to={banner.link}
               ariaLabel={banner.title}
-              className="group block rounded-[18px] border border-accent/25 bg-card/60 p-2 sm:p-2.5 shadow-[0_2px_16px_rgba(102,23,20,0.06)] transition-shadow duration-300 hover:shadow-[0_8px_28px_rgba(102,23,20,0.14)]"
+              className="group block rounded-[16px] sm:rounded-[18px] border border-accent/25 bg-card/60 p-2 sm:p-2.5 shadow-[0_2px_16px_rgba(102,23,20,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-[0_10px_30px_rgba(102,23,20,0.16)]"
             >
-              <div className="overflow-hidden rounded-[14px]">
+              <div className="overflow-hidden rounded-[12px] sm:rounded-[14px] bg-muted/40">
                 <SignedImage
                   src={banner.image_url || banner.mobile_image_url || null}
                   alt={banner.title}
+                  loading={i < 2 ? "eager" : "lazy"}
+                  decoding="async"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="w-full aspect-[16/9] object-cover object-center transition-transform duration-500 group-hover:scale-[1.04]"
                 />
               </div>
 
-              <div className="flex items-center justify-between gap-3 px-3 sm:px-4 py-4 sm:py-5">
+              <div className="flex items-center justify-between gap-3 px-3 sm:px-4 py-3.5 sm:py-5">
                 <div className="min-w-0">
-                  <h3 className="font-display text-lg sm:text-xl font-semibold text-foreground leading-tight">
+                  <h3 className="font-display text-base sm:text-lg lg:text-xl font-semibold text-foreground leading-tight">
                     {banner.title}
                   </h3>
                   {banner.offer_text && (
-                    <p className="mt-1.5 text-[13px] sm:text-sm text-muted-foreground leading-snug line-clamp-2">
+                    <p className="mt-1 sm:mt-1.5 text-[12px] sm:text-[13px] lg:text-sm text-muted-foreground leading-snug line-clamp-2">
                       {banner.offer_text}
                     </p>
                   )}
                 </div>
-                <span className="shrink-0 grid place-items-center h-9 w-9 sm:h-11 sm:w-11 rounded-full bg-accent text-accent-foreground transition-transform duration-300 group-hover:translate-x-1">
-                  <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="shrink-0 grid place-items-center h-9 w-9 sm:h-10 sm:w-10 lg:h-11 lg:w-11 rounded-full bg-accent text-accent-foreground transition-transform duration-300 group-hover:translate-x-1 group-hover:scale-105">
+                  <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:translate-x-0.5" />
                 </span>
               </div>
             </CardLink>
