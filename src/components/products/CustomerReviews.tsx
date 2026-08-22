@@ -386,7 +386,7 @@ export function CustomerReviews({
 
       {/* Write / edit review modal */}
       <Dialog open={showForm} onOpenChange={(o) => (o ? setShowForm(true) : resetForm())}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg bg-white">
           <DialogHeader>
             <DialogTitle>{editingId ? "Edit your review" : "Write a review"}</DialogTitle>
             <DialogDescription>
