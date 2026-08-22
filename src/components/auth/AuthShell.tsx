@@ -93,7 +93,7 @@ export function AuthShell({ mode, children }: Props) {
 
         {/* White sheet with form */}
         <div
-          className={`flex-1 bg-background rounded-t-[32px] px-5 pt-6 ${mode === "signup" ? "pb-9" : "pb-24"} shadow-[0_-8px_30px_rgba(0,0,0,0.15)] overflow-y-auto`}
+          className={`flex-1 bg-white rounded-t-[32px] px-5 pt-6 ${mode === "signup" ? "pb-9" : "pb-24"} shadow-[0_-8px_30px_rgba(0,0,0,0.15)] overflow-y-auto`}
           style={{ minHeight: 500 }}
         >
           <Tabs mode={mode} />
@@ -104,11 +104,11 @@ export function AuthShell({ mode, children }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 flex flex-col bg-background overflow-hidden">
+    <div className="fixed inset-0 flex flex-col bg-white overflow-hidden">
       <Header />
       <div className="flex-1 grid grid-cols-1 md:grid-cols-2 min-h-0">
         {/* Left — tabbed form */}
-        <div className="flex items-center justify-center px-4 sm:px-8 md:px-14 lg:px-20 py-8 md:py-12 bg-background overflow-y-auto">
+        <div className="flex items-center justify-center px-4 sm:px-8 md:px-14 lg:px-20 py-8 md:py-12 bg-white overflow-y-auto">
           <div className="w-full max-w-xl">
             <Tabs mode={mode} />
             {children}

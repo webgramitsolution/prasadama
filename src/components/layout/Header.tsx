@@ -234,7 +234,7 @@ export function Header() {
             <div className="md:hidden flex-1" />
 
             {/* Action Buttons - Icon on top, text below */}
-              <div className="hidden md:flex flex-1 min-w-0 items-center justify-end gap-1">
+              <div className="hidden md:flex flex-shrink-0 items-center justify-end gap-1">
               <Link to="/courier-tracking" className="flex flex-col items-center justify-center w-14 h-14 hover:bg-secondary/50 rounded-md transition-colors">
                 <Truck className="h-4.5 w-4.5 text-foreground mb-0.5" />
                 <span className="text-[10px] text-foreground font-medium">Track Order</span>
