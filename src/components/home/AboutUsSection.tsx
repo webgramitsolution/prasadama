@@ -27,15 +27,8 @@ export function AboutUsSection() {
 
 
           <div className="flex flex-col justify-center">
-            <div className="flex items-center gap-3 sm:gap-4 mb-3">
-              <span className="h-px flex-1 bg-gradient-to-r from-transparent to-accent/60" />
-              <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-display font-bold text-foreground whitespace-nowrap">
-                About Us
-              </h2>
-              <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-              <span className="h-px flex-1 bg-gradient-to-l from-transparent to-accent/60" />
-            </div>
+            <SectionHeading title="About Us" />
+
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
 
               Prasadam is an Indian devotional brand bringing you thoughtfully prepared temple prasad, mithai,
