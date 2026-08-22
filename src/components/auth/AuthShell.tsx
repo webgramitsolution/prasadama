@@ -116,8 +116,8 @@ export function AuthShell({ mode, children }: Props) {
       <Header />
       <div className="flex-1 grid grid-cols-1 md:grid-cols-2 min-h-0">
         {/* Left — tabbed form */}
-        <div className="flex items-center justify-center px-4 sm:px-8 md:px-14 lg:px-20 py-8 md:py-12 bg-white overflow-y-auto">
-          <div className="w-full max-w-xl">
+        <div className="flex items-center justify-center px-5 sm:px-5 md:px-5 lg:px-5 py-8 md:py-12 bg-white overflow-y-auto">
+          <div className="w-full max-w-2xl">
             <Tabs mode={mode} />
             <div className="bg-white rounded-2xl p-6">{children}</div>
 
