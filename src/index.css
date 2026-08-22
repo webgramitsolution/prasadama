@@ -28,6 +28,9 @@
   }
 
   :root {
+    /* Festive ribbon silhouette: straight top, tapered right end, curved bottom wave */
+    --ribbon-shape: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M6,0 L88,0 C96,0 100,5 99,13 C98,21 95,26 87,29 C61,38 33,40 6,38 C2,37.8 0,35 0,31 L0,6 C0,2.4 2.4,0 6,0 Z' fill='black'/></svg>");
+
     /* B2B Professional Color Palette */
     --background: 31 84% 95%;
     --foreground: 215 25% 15%;
