@@ -926,7 +926,7 @@ export default function Checkout() {
                     </p>
 
                     <img
-                      src="https://ik.imagekit.io/Prasadam/Status-scaled.jpg"
+                      src="https://ik.imagekit.io/Prasadam/Status-scaled.jpg?updatedAt=1787405014112"
                       alt="Prasadam divine offerings"
                       loading="lazy"
                       decoding="async"

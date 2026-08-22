@@ -148,10 +148,13 @@ export function ProductCard({ product, index = 0, className = "" }: ProductCardP
         <div className="bg-white rounded-[5px] border border-border overflow-hidden hover:shadow-[0_4px_20px_rgba(0,0,0,0.12)] transition-all duration-300 h-full flex flex-col relative">
           <div className="relative aspect-square overflow-hidden bg-[#f5f5f5]">
             {mrp > price && (
-              <span className="badge-premium-gold absolute top-0 left-0 z-10 text-white text-[12px] sm:text-[14px] font-bold px-3 py-1 rounded-br-full shadow-md">
-                Save ₹{(mrp - price).toLocaleString("en-IN")}
+              <span className="badge-premium-gold absolute top-0 left-0 z-10">
+                <span className="badge-premium-inner text-white text-[12px] sm:text-[14px] font-bold pl-3 pr-4 pt-1 pb-2">
+                  Save ₹{(mrp - price).toLocaleString("en-IN")}
+                </span>
               </span>
             )}
+
             {images.map((src, i) => (
               <SignedImage
                 key={i}
@@ -230,7 +233,7 @@ export function ProductCard({ product, index = 0, className = "" }: ProductCardP
               <button
                 onClick={handleBuyNow}
                 disabled={isAdding || isBuying}
-                className="btn-premium-shine flex-1 min-w-0 h-9 bg-accent hover:bg-accent-hover text-accent-foreground text-[11px] sm:text-xs font-bold rounded transition-colors uppercase tracking-wide disabled:opacity-70 disabled:cursor-not-allowed inline-flex items-center justify-center gap-1.5"
+                className="btn-premium-shine btn-gold-frame flex-1 min-w-0 h-9 text-[11px] sm:text-xs font-bold rounded transition-colors uppercase tracking-wide disabled:opacity-70 disabled:cursor-not-allowed inline-flex items-center justify-center gap-1.5"
               >
                 {isBuying && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                 {isBuying ? "Processing..." : "Buy Now"}
