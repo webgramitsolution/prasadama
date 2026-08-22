@@ -389,9 +389,18 @@ export default function Signup() {
                 </div>
               )}
 
-              <Button type="submit" className="w-full h-12 text-base font-semibold text-white hover:opacity-90 shadow-md transition-all active:scale-[0.98]" style={{ backgroundColor: BRAND }} disabled={isLoading}>
-                {isLoading ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating Account…</>) : "Create Account"}
-              </Button>
+              <div className="flex flex-col items-center">
+                <Button type="submit" className="w-full h-12 text-base font-semibold text-white hover:opacity-90 shadow-md transition-all active:scale-[0.98]" style={{ backgroundColor: BRAND }} disabled={isLoading}>
+                  {isLoading ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating Account…</>) : "Create Account"}
+                </Button>
+                <img
+                  src="https://ik.imagekit.io/Prasadam/Status-scaled.jpg?updatedAt=1787405014112"
+                  alt="Prasadam divine offerings"
+                  loading="lazy"
+                  decoding="async"
+                  className="mt-6 w-full max-w-sm rounded-xl object-cover"
+                />
+              </div>
             </form>
 
 
