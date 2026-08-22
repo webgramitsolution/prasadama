@@ -449,5 +449,6 @@
       animation: none;
       transform: translateX(-120%);
     }
+    .btn-gold-frame { animation: none; }
   }
 }
