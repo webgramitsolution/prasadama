@@ -9,6 +9,8 @@ import { FeaturedProducts } from "@/components/home/FeaturedProducts";
 import { TaggedProductSection } from "@/components/home/TaggedProductSection";
 import { TestimonialsSection } from "@/components/home/TestimonialsSection";
 import { AboutUsSection } from "@/components/home/AboutUsSection";
+import { WhyChoosePrasadam } from "@/components/home/WhyChoosePrasadam";
+
 import { BlogSection } from "@/components/home/BlogSection";
 import { TrustedFamilies } from "@/components/home/TrustedFamilies";
 import { ReelsSection } from "@/components/reels/ReelsSection";
@@ -57,8 +59,11 @@ const Index = () => {
           panelLabelBottom="Sellers"
         />
 
-        <ReelsSection title="Products Reels" />
         <AboutUsSection />
+        <WhyChoosePrasadam />
+        <ReelsSection title="Festive Reels" />
+        <TestimonialsSection />
+
         
         <BlogSection />
         <TrustedFamilies />
