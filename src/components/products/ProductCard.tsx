@@ -148,7 +148,7 @@ export function ProductCard({ product, index = 0, className = "" }: ProductCardP
         <div className="bg-white rounded-[5px] border border-border overflow-hidden hover:shadow-[0_4px_20px_rgba(0,0,0,0.12)] transition-all duration-300 h-full flex flex-col relative">
           <div className="relative aspect-square overflow-hidden bg-[#f5f5f5]">
             {mrp > price && (
-              <span className="badge-premium-gold absolute top-0 left-0 z-10 text-white text-[12px] sm:text-[14px] font-bold px-3 py-1 rounded-br-full shadow-md">
+              <span className="badge-premium-gold absolute top-0 left-0 z-10 text-white text-[12px] sm:text-[14px] font-bold pl-3 pr-4 pt-1 pb-2">
                 Save ₹{(mrp - price).toLocaleString("en-IN")}
               </span>
             )}
