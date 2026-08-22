@@ -392,38 +392,56 @@
     inset: 0;
     background: linear-gradient(
       115deg,
-      transparent 38%,
-      rgba(255, 255, 255, 0.28) 48%,
-      rgba(255, 240, 205, 0.42) 53%,
+      transparent 36%,
+      rgba(255, 255, 255, 0.35) 46%,
+      rgba(255, 244, 214, 0.75) 50%,
+      rgba(255, 255, 255, 0.35) 54%,
       transparent 64%
     );
     transform: translateX(-120%);
-    animation: gold-sweep 5s ease-in-out infinite;
+    animation: gold-sweep 2.8s linear infinite;
     pointer-events: none;
   }
 
-  /* Complete metallic-gold perimeter frame around the red CTA button */
+  /* Complete metallic-gold perimeter frame with a running gold shimmer */
   .btn-gold-frame {
-    border: 1.5px solid transparent;
+    border: 2px solid transparent;
+    border-radius: 6px;
     background:
-      linear-gradient(#AE1E2A, #AE1E2A) padding-box,
-      linear-gradient(135deg, #FFF1A8 0%, #D4AF37 32%, #FFF4B0 58%, #C89B2C 100%) border-box;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+      linear-gradient(180deg, #C22230 0%, #AE1E2A 55%, #8E1520 100%) padding-box,
+      linear-gradient(
+          115deg,
+          #C89B2C 0%,
+          #D4AF37 18%,
+          #FFF4B0 32%,
+          #FFFDE8 40%,
+          #D4AF37 52%,
+          #C89B2C 68%,
+          #FFF1A8 84%,
+          #D4AF37 100%
+        )
+        border-box;
+    background-size: 100% 100%, 300% 100%;
+    background-position: 0 0, 0% 50%;
+    animation: gold-border-run 3s linear infinite;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.18);
     color: #fff;
   }
   .btn-gold-frame:hover {
-    background:
-      linear-gradient(#971a24, #971a24) padding-box,
-      linear-gradient(135deg, #FFF4B0 0%, #E3C24A 32%, #FFF7C8 58%, #D4AF37 100%) border-box;
+    box-shadow: 0 2px 9px rgba(174, 30, 42, 0.35);
   }
 
-
+  @keyframes gold-border-run {
+    0% { background-position: 0 0, 0% 50%; }
+    100% { background-position: 0 0, 300% 50%; }
+  }
 
   @keyframes gold-sweep {
     0% { transform: translateX(-120%); }
-    45% { transform: translateX(120%); }
+    55% { transform: translateX(120%); }
     100% { transform: translateX(120%); }
   }
+
 
   @media (prefers-reduced-motion: reduce) {
     .badge-premium-inner::after,
