@@ -32,9 +32,9 @@ if (typeof window !== "undefined") {
         const img = target as HTMLImageElement;
         // Brand/logo images opt out of the placeholder swap and retry once instead,
         // so a transient network hiccup never leaves a permanent placeholder.
-        if (img.dataset.keepSrc === "true") {
-          if (img.dataset.retried !== "true") {
-            img.dataset.retried = "true";
+        if (img.dataset['keepSrc'] === "true") {
+          if (img.dataset['retried'] !== "true") {
+            img.dataset['retried'] = "true";
             const url = img.src.split("?")[0];
             img.src = `${url}?retry=${Date.now()}`;
           }
