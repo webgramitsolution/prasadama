@@ -2,7 +2,7 @@ import { ImgHTMLAttributes, useEffect, useState } from "react";
 import { getSignedImageUrl, isProductBucketUrl } from "@/lib/signedImageUrls";
 
 type SignedImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "src"> & {
-  src?: string | null;
+  src?: string | null | undefined;
   fallbackSrc?: string;
 };
 
