@@ -73,15 +73,15 @@ const normalizeName = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/
 function editDistance(a: string, b: string) {
   const row = Array.from({ length: b.length + 1 }, (_, index) => index);
   for (let i = 1; i <= a.length; i += 1) {
-    let previous = row[0];
+    let previous = row[0] ?? 0;
     row[0] = i;
     for (let j = 1; j <= b.length; j += 1) {
-      const current = row[j];
-      row[j] = Math.min(row[j] + 1, row[j - 1] + 1, previous + (a[i - 1] === b[j - 1] ? 0 : 1));
+      const current = row[j] ?? j;
+      row[j] = Math.min(current + 1, (row[j - 1] ?? i) + 1, previous + (a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1));
       previous = current;
     }
   }
-  return row[b.length];
+  return row[b.length] ?? Math.max(a.length, b.length);
 }
 
 function getCategoryHref(banner: PromoBanner, categories: CategoryLink[]) {
