@@ -160,7 +160,7 @@ export default function Products() {
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get("category") || "");
   const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
   const [isLoading, setIsLoading] = useState(true);
-  const [categoryBanner, setCategoryBanner] = useState<{ name: string; banner_image: string | null } | null>(null);
+  const [categoryBanner, setCategoryBanner] = useState<{ name: string; banner_image: string | null; image_url?: string | null } | null>(null);
   const [subCategories, setSubCategories] = useState<Category[]>([]);
 
   const buyerType: "guest" | "shop" | "retail" = !user ? "guest" : role === "shop" ? "shop" : role === "retail" ? "retail" : "guest";
@@ -236,7 +236,7 @@ export default function Products() {
       if (match) {
         const { data: catData } = await supabase
           .from("categories")
-          .select("name, banner_image")
+          .select("name, banner_image, image_url")
           .eq("id", match.id)
           .single();
         setCategoryBanner(catData as any);
@@ -350,9 +350,9 @@ export default function Products() {
       <main className="pt-4 pb-20 overflow-x-hidden">
         <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 overflow-x-hidden">
           {/* Category Banner */}
-          {categoryBanner?.banner_image && selectedCategory ? (
+          {(categoryBanner?.banner_image || categoryBanner?.image_url) && selectedCategory ? (
             <div className="relative h-[150px] sm:h-[200px] md:h-[250px] rounded-lg overflow-hidden mb-6">
-              <SignedImage src={categoryBanner.banner_image} alt={categoryBanner.name} className="w-full h-full object-cover" />
+              <SignedImage src={categoryBanner.banner_image || categoryBanner.image_url} alt={categoryBanner.name} className="w-full h-full object-cover" />
             </div>
           ) : !selectedCategory ? (
             <motion.div
