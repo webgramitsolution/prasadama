@@ -48,7 +48,7 @@ export function CartSheet() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <button aria-label={`Open cart (${itemCount} ${itemCount === 1 ? "item" : "items"})`} className="relative flex flex-col items-center justify-center hover:bg-secondary/50 rounded-md transition-colors">
+        <button aria-label={`Open cart (${itemCount} ${itemCount === 1 ? "item" : "items"})`} className="group relative flex flex-col items-center justify-center hover:bg-secondary/60 rounded-md transition-colors">
           <div className="relative">
             <div className="w-7 h-7 rounded-full bg-[#661714]/8 ring-1 ring-[#661714]/20 flex items-center justify-center transition-colors group-hover:bg-[#661714]">
               <ShoppingBag className="h-4 w-4 text-[#661714] transition-colors group-hover:text-white" strokeWidth={1.75} />
