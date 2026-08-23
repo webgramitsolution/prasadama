@@ -34,7 +34,7 @@ export default function AdminSettings() {
   const [storeSettings, setStoreSettings] = useState({
     storeName: "VendorHub Commerce",
     storeEmail: "sales@houskase.com",
-    storePhone: "+91 92661 29195",
+    storePhone: "+91 98512 95129",
     storeAddress: "123 Business Street, City, Country",
     storeGSTIN: "",
     ekartClientId: "",
@@ -150,7 +150,7 @@ export default function AdminSettings() {
       setStoreSettings({
         storeName: v.storeName || "VendorHub Commerce",
         storeEmail: v.storeEmail || "sales@houskase.com",
-        storePhone: v.storePhone || "+91 92661 29195",
+        storePhone: v.storePhone || "+91 98512 95129",
         storeAddress: v.storeAddress || "",
         storeGSTIN: v.storeGSTIN || "",
         ekartClientId: v.ekartClientId || "",

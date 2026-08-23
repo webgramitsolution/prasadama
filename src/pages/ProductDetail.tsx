@@ -509,7 +509,7 @@ export default function ProductDetail() {
     const message = encodeURIComponent(
       `Hi, I'm interested in:\n\n*${product.name}*\nQuantity: ${quantity}\n${selectedVariation ? `Variation: ${selectedSize || ""} ${selectedColor || ""}` : ""}\n\n${url}\n\nPlease provide pricing and availability.`
     );
-    window.open(`https://wa.me/919266129195?text=${message}`, "_blank");
+    window.open(`https://wa.me/919851295129?text=${message}`, "_blank");
   };
 
   const handleVariantSelect = (variantId: string) => {
@@ -980,7 +980,7 @@ export default function ProductDetail() {
                     </button>
                   </div>
                   <Button
-                    className="flex-1 min-w-0 bg-accent hover:bg-accent-hover text-[11px] sm:text-sm font-bold h-11 uppercase tracking-tight sm:tracking-wide rounded-lg px-2 inline-flex items-center justify-center gap-1 sm:gap-1.5"
+                    className="btn-gold-frame flex-1 min-w-0 bg-accent hover:bg-accent-hover text-[11px] sm:text-sm font-bold h-11 uppercase tracking-tight sm:tracking-wide rounded-[5px] px-2 inline-flex items-center justify-center gap-1 sm:gap-1.5"
                     onClick={handleAddToCartClick}
                     disabled={isAddingToCart || isBuyingNow || !moqValid}
                   >
@@ -988,7 +988,7 @@ export default function ProductDetail() {
                     {isAddingToCart ? "Adding..." : "ADD TO CART"}
                   </Button>
                   <Button
-                    className="hidden lg:inline-flex flex-1 min-w-0 bg-primary hover:bg-primary/90 text-[11px] sm:text-sm font-bold h-11 uppercase tracking-tight sm:tracking-wide rounded-lg px-2 items-center justify-center gap-1 sm:gap-1.5"
+                    className="btn-gold-frame hidden lg:inline-flex flex-1 min-w-0 bg-primary hover:bg-primary/90 text-[11px] sm:text-sm font-bold h-11 uppercase tracking-tight sm:tracking-wide rounded-[5px] px-2 items-center justify-center gap-1 sm:gap-1.5"
                     onClick={handleBuyNow}
                     disabled={isAddingToCart || isBuyingNow || !moqValid}
                   >
@@ -999,7 +999,7 @@ export default function ProductDetail() {
 
                 {/* Tablet only: Full width Buy Now below the row */}
                 <Button
-                  className="hidden md:flex lg:hidden w-full bg-primary hover:bg-primary/90 text-sm font-bold h-11 uppercase tracking-wide rounded-lg items-center justify-center gap-1.5 mt-2"
+                  className="btn-gold-frame hidden md:flex lg:hidden w-full bg-primary hover:bg-primary/90 text-sm font-bold h-11 uppercase tracking-wide rounded-[5px] items-center justify-center gap-1.5 mt-2"
                   onClick={handleBuyNow}
                   disabled={isAddingToCart || isBuyingNow || !moqValid}
                 >
@@ -1010,7 +1010,7 @@ export default function ProductDetail() {
                 {/* Mobile: Buy Now button inside the page content, not fixed */}
                 <div className="md:hidden pt-2">
                   <Button
-                    className="w-full bg-primary hover:bg-primary/90 text-sm font-bold h-11 uppercase tracking-wide rounded-lg inline-flex items-center justify-center gap-1.5"
+                    className="btn-gold-frame w-full bg-primary hover:bg-primary/90 text-sm font-bold h-11 uppercase tracking-wide rounded-[5px] inline-flex items-center justify-center gap-1.5"
                     onClick={handleBuyNow}
                     disabled={isAddingToCart || isBuyingNow || !moqValid}
                   >
@@ -1038,12 +1038,12 @@ export default function ProductDetail() {
                 {/* Quick Actions Row */}
                 <div className="grid grid-cols-3 divide-x divide-border border border-border rounded-lg">
                   <button
-                    onClick={() => window.open("tel:+919266129195")}
+                    onClick={() => window.open("tel:+919851295129")}
                     className="flex flex-col items-center gap-1.5 py-3 hover:bg-secondary/50 transition-colors"
                   >
                     <Phone className="h-5 w-5 text-primary" />
                     <span className="text-[10px] text-center text-muted-foreground leading-tight">
-                      Call us at<br />+91 92661 29195
+                      Call us at<br />+91 98512 95129
                     </span>
                   </button>
                   <button

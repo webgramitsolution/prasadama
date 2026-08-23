@@ -46,7 +46,7 @@ interface ProductLite {
 
 const HERO_BG = "https://ik.imagekit.io/prasadam1/about%20us%20banner.png";
 const WHO_IMAGE = "/auth-pooja.jpg";
-const ECO_IMAGE = "/auth-mithai.jpg";
+const ECO_IMAGE = "https://ik.imagekit.io/Prasadam/Product%20B/Product%20B%20(6).png?updatedAt=1787383431347";
 
 /** Small festive flourish: tapered rule + diamond + curls */
 function Ornament({ flip }: { flip?: boolean }) {
@@ -143,25 +143,15 @@ export default function AboutUs() {
       />
       <Header />
       <main>
-        {/* BREADCRUMB */}
-        <div className="border-b border-border bg-white">
-          <div className="container mx-auto flex items-center gap-2 px-4 py-3 text-sm">
-            <Link to="/" className="flex items-center gap-1.5 text-muted-foreground hover:text-brand-red">
-              <Home className="h-4 w-4" /> Home
-            </Link>
-            <ChevronRight className="h-4 w-4 text-muted-foreground/60" />
-            <span className="font-medium text-foreground">About Us</span>
-          </div>
-        </div>
-
         {/* HERO BANNER */}
         <section
-          className="relative overflow-hidden bg-[#fbf5ec] bg-cover bg-center md:min-h-[430px]"
+          className="relative overflow-hidden bg-[#fbf5ec] bg-cover bg-center md:min-h-[380px]"
           style={{ backgroundImage: `url(${HERO_BG})` }}
         >
           <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-3/5 bg-gradient-to-r from-[#fbf5ec] via-[#fbf5ec]/80 to-transparent md:block" />
           <div className="pointer-events-none absolute inset-0 bg-[#fbf5ec]/85 md:hidden" />
-          <div className="container relative mx-auto px-4 py-12 md:py-20">
+          <div className="container relative mx-auto px-4 py-6 md:py-10">
+
             <div className="max-w-[560px]">
               <div className="mb-4 flex items-center gap-3">
                 <span className="text-xs font-bold uppercase tracking-[0.28em] text-brand-red/80">Our Story</span>
@@ -221,12 +211,13 @@ export default function AboutUs() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-y-8 border-t border-border pt-8 lg:grid-cols-4 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
+            <div className="grid grid-cols-2 gap-y-8 border-t border-border pt-8 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
               {[
-                { Icon: Users, num: "50,000+", label: "Happy Customers", sub: "Trust & love from thousands of families" },
-                { Icon: Gift, num: "1,00,000+", label: "Orders Delivered", sub: "Successfully delivered across India" },
                 { Icon: MapPin, num: "500+", label: "Cities Covered", sub: "From metros to small towns" },
                 { Icon: Star, num: "4.8/5", label: "Customer Rating", sub: "For quality, taste & service" },
+                { Icon: Users, num: "50,000+", label: "Happy Customers", sub: "Trust & love from thousands of families" },
+                { Icon: Gift, num: "1,00,000+", label: "Orders Delivered", sub: "Successfully delivered across India" },
+
               ].map(({ Icon, num, label, sub }) => (
                 <div key={label} className="flex flex-col items-center px-3 text-center lg:border-r lg:border-border last:lg:border-r-0">
                   <span className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-[#fbf1e6]">
@@ -249,7 +240,7 @@ export default function AboutUs() {
               <h2 className="font-display text-2xl text-foreground md:text-[28px]">What Makes Us Special</h2>
               <Ornament />
             </div>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
               {[
                 { Icon: Leaf, title: "Premium Ingredients", body: "We use only the finest quality nuts, dry fruits and natural ingredients." },
                 { Icon: ShieldCheck, title: "Hygienically Prepared", body: "Made in a clean, hygienic environment with strict quality standards." },
@@ -269,93 +260,7 @@ export default function AboutUs() {
         </section>
 
 
-        {/* OUR OFFERINGS (from DB) */}
-        <section className="container mx-auto px-4 pb-14 md:pb-20">
-          <div className="text-center mb-8">
-            <h2 className="font-display text-2xl font-bold text-brand-navy md:text-3xl">OUR OFFERINGS</h2>
-            <div className="mx-auto mt-2 h-1 w-16 rounded-full bg-brand-navy" />
-          </div>
-          {products.length === 0 ? (
-            <p className="text-center text-sm text-muted-foreground">No products yet. Add products in the admin dashboard.</p>
-          ) : (
-            <>
-              <div
-                ref={sliderRef}
-                className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth [&::-webkit-scrollbar]:hidden"
-                style={{ scrollbarWidth: "none" }}
-                onMouseEnter={() => setIsPaused(true)}
-                onMouseLeave={() => setIsPaused(false)}
-                onFocus={() => setIsPaused(true)}
-                onBlur={() => setIsPaused(false)}
-                onTouchStart={() => setIsPaused(true)}
-                onTouchEnd={() => setIsPaused(false)}
-                onScroll={(e) => {
-                  const el = e.currentTarget;
-                  const idx = Math.round(el.scrollLeft / el.clientWidth);
-                  if (idx !== activeSlide) setActiveSlide(idx);
-                }}
-              >
-                {Array.from({ length: slideCount }).map((_, pageIdx) => {
-                  const pageItems = products.slice(0, 10).slice(pageIdx * perView, pageIdx * perView + perView);
-                  const cols = Math.min(perView, pageItems.length);
-                  return (
-                  <div key={pageIdx} className="flex-shrink-0 w-full snap-start">
-                    <div
-                      className="grid gap-3 sm:gap-4 items-stretch mx-auto"
-                      style={{
-                        gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
-                        maxWidth: `${(cols / perView) * 100}%`,
-                      }}
-                    >
-                      {pageItems.map((p) => (
-                        <button
-                          key={p.id}
-                          type="button"
-                          onClick={() => setQuickView(p)}
-                          className="group flex h-full flex-col overflow-hidden rounded-lg border bg-card text-left transition-shadow hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-navy"
-                        >
-                          <div className="aspect-square bg-secondary/30 flex items-center justify-center overflow-hidden">
-                            {p.images?.[0] ? (
-                              <SignedImage src={p.images[0]} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                            ) : (
-                              <Package className="h-10 w-10 text-muted-foreground" />
-                            )}
-                          </div>
-                          <div className="flex flex-1 flex-col p-3 sm:p-4">
-                            <h4 className="mb-1 line-clamp-2 min-h-[2.5rem] text-sm font-bold text-brand-navy">{p.name}</h4>
-                            <p className="mb-3 line-clamp-2 min-h-[2rem] text-xs text-muted-foreground">
-                              {p.short_description || ""}
-                            </p>
-                            <span className="mt-auto flex h-9 w-full items-center justify-center rounded bg-brand-navy px-3 text-center text-[11px] font-bold tracking-wider text-primary-foreground">
-                              VIEW PRODUCT
-                            </span>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  );
-                })}
-              </div>
-              {slideCount > 1 && (
-                <div className="mt-6 flex items-center justify-center gap-2">
-                  {Array.from({ length: slideCount }).map((_, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => goToSlide(i)}
-                      aria-label={`Go to slide ${i + 1}`}
-                      aria-current={i === activeSlide}
-                      className={`h-2.5 cursor-pointer rounded-full transition-all ${
-                        i === activeSlide ? "w-6 bg-brand-navy" : "w-2.5 bg-brand-navy/30 hover:bg-brand-navy/50"
-                      }`}
-                    />
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-        </section>
+
 
         {/* WHY CUSTOMERS LOVE (badges strip) */}
         <section className="bg-brand-red py-10 text-primary-foreground">
@@ -371,17 +276,25 @@ export default function AboutUs() {
                 { Icon: WandSparkles, label: "For Every Occasion" },
               ].map(({ Icon, label }) => (
                 <div key={label} className="flex flex-col items-center gap-3 border-l border-r border-primary-foreground/25 px-3 py-3 first:border-l-0 last:border-r-0">
-                  <div className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-brand-red ring-2 ring-primary-foreground/40 shadow-md md:h-20 md:w-20">
-                    <Icon className="h-10 w-10 text-primary-foreground md:h-12 md:w-12" aria-hidden="true" />
+                  <div
+                    className="flex h-[72px] w-[72px] items-center justify-center rounded-full shadow-md md:h-20 md:w-20"
+                    style={{
+                      background: "linear-gradient(135deg,#fdf3d4 0%,#e6c176 28%,#b8862f 55%,#f4e3ad 78%,#c9993f 100%)",
+                      boxShadow: "0 4px 14px rgba(0,0,0,0.25), inset 0 1px 2px rgba(255,255,255,0.6)",
+                    }}
+                  >
+                    <Icon className="h-10 w-10 text-[#6b4a12] md:h-12 md:w-12" aria-hidden="true" />
                   </div>
                   <span className="text-xs font-semibold tracking-wide md:text-sm">{label}</span>
                 </div>
+
+
               ))}
             </div>
           </div>
         </section>
 
-        {/* ECO INNOVATION + STATS */}
+        {/* ECO INNOVATION */}
         <section className="container mx-auto px-4 py-14 md:py-20">
           <div className="grid md:grid-cols-2 gap-10 items-center">
             <div className="aspect-[4/3] overflow-hidden rounded-lg bg-brand-green-soft">
@@ -389,8 +302,8 @@ export default function AboutUs() {
             </div>
             <div>
               <div className="inline-flex items-center gap-2 mb-3">
-                <Leaf className="h-5 w-5 text-brand-green" />
-                <h2 className="font-display text-2xl font-bold text-brand-green md:text-3xl">SUSTAINABLE & MINDFUL PACKAGING</h2>
+                <Leaf className="h-5 w-5 text-[#661714]" />
+                <h2 className="font-display text-lg font-medium text-[#661714] md:text-xl">SUSTAINABLE & MINDFUL PACKAGING</h2>
               </div>
               <p className="text-base text-muted-foreground leading-relaxed mb-6 md:text-lg">
                 Our eco-friendly packaging uses <b>recyclable and biodegradable materials</b>, significantly reducing single-use waste while keeping every offering fresh. Every Prasadam box is designed to bring blessings to your home with mindful, sustainable care.
@@ -402,57 +315,17 @@ export default function AboutUs() {
                   { Icon: Sparkles, label: "Bless More." },
                 ].map(({ Icon, label }) => (
                   <div key={label} className="flex flex-col items-center gap-3 border-x border-border/70 px-2">
-                    <span className="flex h-14 w-14 items-center justify-center rounded-full bg-brand-green text-primary-foreground shadow-sm md:h-16 md:w-16">
+                    <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#661714] text-primary-foreground shadow-sm md:h-16 md:w-16">
                       <Icon className="h-8 w-8 md:h-10 md:w-10" aria-hidden="true" />
                     </span>
-                    <span className="text-sm font-semibold text-brand-green">{label}</span>
+                    <span className="text-sm font-semibold text-[#661714]">{label}</span>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-
-          <div className="mt-12 grid grid-cols-2 rounded-lg border bg-brand-navy-soft p-4 md:grid-cols-4">
-              {[
-                { Icon: Smile, num: "50,000+", label: "Happy Devotees" },
-                { Icon: Building2, num: "100+", label: "Cities Served" },
-                { Icon: ShoppingBag, num: "10+", label: "Devotional Offerings" },
-                { Icon: BadgeCheck, num: "100%", label: "Purity Assured" },
-              ].map(({ Icon, num, label }) => (
-              <div key={label} className="flex items-center gap-3 border-x border-background/90 px-3 py-3">
-                <Icon className="h-10 w-10 shrink-0 text-brand-navy md:h-11 md:w-11" aria-hidden="true" />
-                <div>
-                  <div className="text-lg font-bold leading-tight text-brand-navy">{num}</div>
-                  <div className="text-xs text-muted-foreground">{label}</div>
-                </div>
-              </div>
-            ))}
-          </div>
         </section>
 
-        {/* OUR PROMISE */}
-        <section className="container mx-auto px-4 pb-16">
-          <div className="grid gap-8 md:grid-cols-2 md:items-center">
-            <div className="order-2 md:order-1">
-              <img
-                src="/auth-pooja.jpg"
-                alt="Our Promise – Pure & Blessed Offerings"
-                className="mx-auto h-[220px] w-[220px] rounded-lg object-contain"
-                loading="lazy"
-              />
-            </div>
-            <div className="order-1 md:order-2">
-              <h2 className="mb-4 font-display text-2xl font-bold text-brand-navy md:text-3xl">OUR PROMISE</h2>
-              <p className="text-muted-foreground leading-relaxed mb-3">
-                We are committed to purity and devotion, delivering prasad and pooja essentials that save your time while keeping traditions alive.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                With Prasadam, you're not just ordering offerings — you are choosing{" "}
-                <b className="text-brand-navy">a divine taste, delivered with care to your doorstep.</b>
-              </p>
-            </div>
-          </div>
-        </section>
 
         {/* CTA FOOTER STRIP */}
         <section className="relative overflow-hidden py-10 text-primary-foreground" style={{ backgroundColor: "#AD1E2A" }}>
