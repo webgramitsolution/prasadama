@@ -143,25 +143,15 @@ export default function AboutUs() {
       />
       <Header />
       <main>
-        {/* BREADCRUMB */}
-        <div className="border-b border-border bg-white">
-          <div className="container mx-auto flex items-center gap-2 px-4 py-3 text-sm">
-            <Link to="/" className="flex items-center gap-1.5 text-muted-foreground hover:text-brand-red">
-              <Home className="h-4 w-4" /> Home
-            </Link>
-            <ChevronRight className="h-4 w-4 text-muted-foreground/60" />
-            <span className="font-medium text-foreground">About Us</span>
-          </div>
-        </div>
-
         {/* HERO BANNER */}
         <section
-          className="relative overflow-hidden bg-[#fbf5ec] bg-cover bg-center md:min-h-[430px]"
+          className="relative overflow-hidden bg-[#fbf5ec] bg-cover bg-center md:min-h-[380px]"
           style={{ backgroundImage: `url(${HERO_BG})` }}
         >
           <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-3/5 bg-gradient-to-r from-[#fbf5ec] via-[#fbf5ec]/80 to-transparent md:block" />
           <div className="pointer-events-none absolute inset-0 bg-[#fbf5ec]/85 md:hidden" />
-          <div className="container relative mx-auto px-4 py-12 md:py-20">
+          <div className="container relative mx-auto px-4 py-6 md:py-10">
+
             <div className="max-w-[560px]">
               <div className="mb-4 flex items-center gap-3">
                 <span className="text-xs font-bold uppercase tracking-[0.28em] text-brand-red/80">Our Story</span>
