@@ -15,6 +15,11 @@ interface PromoBanner {
   link: string | null;
 }
 
+interface CategoryLink {
+  name: string;
+  slug: string;
+}
+
 interface PromoBannersProps {
   onFetchStatus?: (status: string) => void;
 }
@@ -63,22 +68,60 @@ function Ornament({ flip }: { flip?: boolean }) {
   );
 }
 
+const normalizeName = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+function editDistance(a: string, b: string) {
+  const row = Array.from({ length: b.length + 1 }, (_, index) => index);
+  for (let i = 1; i <= a.length; i += 1) {
+    let previous = row[0] ?? 0;
+    row[0] = i;
+    for (let j = 1; j <= b.length; j += 1) {
+      const current = row[j] ?? j;
+      row[j] = Math.min(current + 1, (row[j - 1] ?? i) + 1, previous + (a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1));
+      previous = current;
+    }
+  }
+  return row[b.length] ?? Math.max(a.length, b.length);
+}
+
+function getCategoryHref(banner: PromoBanner, categories: CategoryLink[]) {
+  const title = normalizeName(banner.title);
+  const closest = categories
+    .map((category) => ({ category, distance: editDistance(title, normalizeName(category.name)) }))
+    .sort((a, b) => a.distance - b.distance)[0];
+
+  // Category titles occasionally contain a small spelling difference in the promo manager.
+  if (closest && closest.distance <= 2) {
+    return `/products?category=${encodeURIComponent(closest.category.slug)}`;
+  }
+  return banner.link;
+}
+
 export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
   const [banners, setBanners] = useState<PromoBanner[]>([]);
+  const [categories, setCategories] = useState<CategoryLink[]>([]);
 
   useEffect(() => {
     (async () => {
       onFetchStatus?.("loading");
-      const { data, error } = await supabase
-        .from("promo_banners")
-        .select("*")
-        .eq("is_active", true)
-        .order("sort_order", { ascending: true });
-      if (error) {
+      const [bannerResult, categoryResult] = await Promise.all([
+        supabase
+          .from("promo_banners")
+          .select("*")
+          .eq("is_active", true)
+          .order("sort_order", { ascending: true }),
+        supabase
+          .from("categories")
+          .select("name, slug")
+          .eq("is_active", true)
+          .is("parent_id", null),
+      ]);
+      if (bannerResult.error || categoryResult.error) {
         onFetchStatus?.("error");
         return;
       }
-      setBanners((data || []) as PromoBanner[]);
+      setBanners((bannerResult.data || []) as PromoBanner[]);
+      setCategories((categoryResult.data || []) as CategoryLink[]);
       onFetchStatus?.("success");
     })();
   }, [onFetchStatus]);
@@ -110,7 +153,7 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
           {sortedBanners.slice(0, 9).map((banner, i) => (
             <CardLink
               key={banner.id}
-              to={banner.link}
+              to={getCategoryHref(banner, categories)}
               ariaLabel={banner.title}
               className="group block snap-start flex-shrink-0 w-[78vw] sm:w-[300px] lg:w-[320px] rounded-[16px] sm:rounded-[18px] border border-accent/25 bg-card/60 p-2 sm:p-2.5 shadow-[0_2px_16px_rgba(102,23,20,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-[0_10px_30px_rgba(102,23,20,0.16)]"
             >

@@ -39,6 +39,8 @@ interface Category {
   id: string;
   name: string;
   slug: string;
+  banner_image: string | null;
+  image_url: string | null;
 }
 
 function FilterSidebar({
@@ -190,8 +192,8 @@ export default function Products() {
   useEffect(() => {
     const cat = searchParams.get("category");
     const search = searchParams.get("search");
-    if (cat) setSelectedCategory(cat);
-    if (search) setSearchQuery(search);
+    setSelectedCategory(cat || "");
+    setSearchQuery(search || "");
   }, [searchParams]);
 
   // Removed handleAddToRFQ - not needed for B2C cards
@@ -214,7 +216,7 @@ export default function Products() {
     const fetchCategories = async () => {
       const { data } = await supabase
         .from("categories")
-        .select("id, name, slug")
+        .select("id, name, slug, banner_image, image_url")
         .eq("is_active", true)
         .is("parent_id", null)
         .order("sort_order");
@@ -234,12 +236,11 @@ export default function Products() {
       }
       const match = categories.find(c => c.slug === selectedCategory || c.id === selectedCategory);
       if (match) {
-        const { data: catData } = await supabase
-          .from("categories")
-          .select("name, banner_image, image_url")
-          .eq("id", match.id)
-          .single();
-        setCategoryBanner(catData as any);
+        setCategoryBanner({
+          name: match.name,
+          banner_image: match.banner_image,
+          image_url: match.image_url,
+        });
 
         const { data: subCats } = await supabase
           .from("categories")
