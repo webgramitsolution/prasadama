@@ -621,7 +621,7 @@ export default function RFQ() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Phone className="h-4 w-4" />
-                      <span>+91 92661 29195</span>
+                      <span>+91 98512 95129</span>
                     </div>
                   </div>
                 </div>

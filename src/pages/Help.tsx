@@ -92,7 +92,7 @@ const faqCategories = [
 
 const contactOptions = [
   { icon: MessageSquare, title: "Live Chat", description: "Chat with our support team in real-time", action: "/chat", buttonText: "Start Chat", isLink: true },
-  { icon: Phone, title: "Call Us", description: "Mon-Sat, 9:00 AM - 6:00 PM IST", action: "tel:+919266129195", buttonText: "+91 92661 29195", isLink: false },
+  { icon: Phone, title: "Call Us", description: "Mon-Sat, 9:00 AM - 6:00 PM IST", action: "tel:+919851295129", buttonText: "+91 98512 95129", isLink: false },
   { icon: Mail, title: "Email Support", description: "We respond within 24 hours", action: "mailto:sales@houskase.com", buttonText: "sales@houskase.com", isLink: false },
 ];
 
@@ -275,14 +275,14 @@ export default function Help() {
                   <Link to="/chat"><MessageSquare className="mr-2 h-5 w-5" />Start Chat</Link>
                 </Button>
                 <Button asChild size="lg" className="rounded border border-primary-foreground/25 bg-primary-foreground/10 px-5 text-primary-foreground hover:bg-primary-foreground/18">
-                  <a href="tel:+919266129195"><Phone className="mr-2 h-5 w-5" />Call Support</a>
+                  <a href="tel:+919851295129"><Phone className="mr-2 h-5 w-5" />Call Support</a>
                 </Button>
               </div>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="grid gap-3 rounded-lg border border-primary-foreground/18 bg-primary-foreground/10 p-4 backdrop-blur">
               {[
                 { icon: Clock, label: "Support Hours", value: "Mon–Sat, 9 AM–6 PM" },
-                { icon: Phone, label: "Phone", value: "+91 92661 29195" },
+                { icon: Phone, label: "Phone", value: "+91 98512 95129" },
                 { icon: Mail, label: "Email", value: "sales@houskase.com" },
               ].map((item) => (
                 <div key={item.label} className="flex items-center gap-3 rounded-md bg-primary-foreground/10 p-3">

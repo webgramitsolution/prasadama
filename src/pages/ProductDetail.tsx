@@ -509,7 +509,7 @@ export default function ProductDetail() {
     const message = encodeURIComponent(
       `Hi, I'm interested in:\n\n*${product.name}*\nQuantity: ${quantity}\n${selectedVariation ? `Variation: ${selectedSize || ""} ${selectedColor || ""}` : ""}\n\n${url}\n\nPlease provide pricing and availability.`
     );
-    window.open(`https://wa.me/919266129195?text=${message}`, "_blank");
+    window.open(`https://wa.me/919851295129?text=${message}`, "_blank");
   };
 
   const handleVariantSelect = (variantId: string) => {
@@ -1038,12 +1038,12 @@ export default function ProductDetail() {
                 {/* Quick Actions Row */}
                 <div className="grid grid-cols-3 divide-x divide-border border border-border rounded-lg">
                   <button
-                    onClick={() => window.open("tel:+919266129195")}
+                    onClick={() => window.open("tel:+919851295129")}
                     className="flex flex-col items-center gap-1.5 py-3 hover:bg-secondary/50 transition-colors"
                   >
                     <Phone className="h-5 w-5 text-primary" />
                     <span className="text-[10px] text-center text-muted-foreground leading-tight">
-                      Call us at<br />+91 92661 29195
+                      Call us at<br />+91 98512 95129
                     </span>
                   </button>
                   <button

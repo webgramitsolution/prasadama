@@ -82,7 +82,7 @@ export function Footer() {
     { key: "X", icon: XIcon, url: social.twitter || "#" },
   ];
 
-  const displayPhone = store.storePhone || "+91 92661 29195";
+  const displayPhone = store.storePhone || "+91 98512 95129";
   const displayEmail = store.storeEmail || "sales@houskase.com";
 
   return (
