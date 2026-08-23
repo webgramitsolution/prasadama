@@ -14,7 +14,7 @@ import { CartSheet } from "@/components/cart/CartSheet";
 import { Badge } from "@/components/ui/badge";
 import { InstantSearch } from "@/components/search/InstantSearch";
 import { supabase } from "@/integrations/supabase/client";
-const mobileMenuBanner = { url: "/products-hero-banner.jpg", asset_id: "v2" };
+const mobileMenuBanner = { url: "https://ik.imagekit.io/Prasadam/Banner/ChatGPT%20Image%20Aug%2021,%202026,%2012_41_03%20AM.png?updatedAt=1787331579833", asset_id: "v3" };
 const DEFAULT_LOGO_URL = "/prasadam-logo.png";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { LocationPicker } from "@/components/layout/LocationPicker";
@@ -282,7 +282,7 @@ export function Header() {
                 aria-label="Track Order"
                 className="md:hidden flex items-center justify-center h-10 w-10 hover:bg-secondary/50 rounded-md transition-colors"
               >
-                <div className="w-7 h-7 rounded-full bg-[#661714]/8 ring-1 ring-[#661714]/20 flex items-center justify-center">
+                <div className="w-7 h-7 rounded-full bg-[#661714]/8 ring-1 ring-[#661714]/20 flex items-center justify-center transition-colors group-hover:bg-[#661714]">
                   <Truck className="h-4 w-4 text-[#661714]" strokeWidth={1.75} />
                 </div>
               </Link>
@@ -297,12 +297,12 @@ export function Header() {
                 user ? (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                  <button className="flex flex-col items-center justify-center h-10 w-10 sm:h-14 sm:w-14 hover:bg-secondary/50 rounded-md transition-colors">
+                  <button className="group flex flex-col items-center justify-center h-10 w-10 sm:h-14 sm:w-14 hover:bg-secondary/60 rounded-md transition-colors">
                         <div className={cn(
                           "w-7 h-7 rounded-full ring-1 flex items-center justify-center",
-                          role === "shop" ? "ring-shop bg-shop/10" : role === "retail" ? "ring-retail bg-retail/10" : "ring-[#661714]/20 bg-[#661714]/8"
+                          role === "shop" ? "ring-shop bg-shop/10" : role === "retail" ? "ring-retail bg-retail/10" : "ring-[#661714]/20 bg-[#661714]/8 transition-colors group-hover:bg-[#661714] group-hover:text-white"
                         )}>
-                          <UserRound className="h-4 w-4 text-[#661714]" strokeWidth={1.75} />
+                          <UserRound className="h-4 w-4 text-[#661714] transition-colors group-hover:text-white" strokeWidth={1.75} />
                         </div>
                         <div className="hidden sm:flex items-center gap-0.5">
                           <span className="text-[10px] font-medium text-foreground truncate max-w-[50px]">
@@ -348,9 +348,9 @@ export function Header() {
                   </DropdownMenu>
                 ) : (
                   <Link to="/signup">
-                    <button className="flex flex-col items-center justify-center h-10 w-10 sm:h-14 sm:w-14 hover:bg-secondary/50 rounded-md transition-colors">
-                      <div className="w-7 h-7 rounded-full bg-[#661714]/8 ring-1 ring-[#661714]/20 flex items-center justify-center">
-                        <UserRound className="h-4 w-4 text-[#661714]" strokeWidth={1.75} />
+                    <button className="group flex flex-col items-center justify-center h-10 w-10 sm:h-14 sm:w-14 hover:bg-secondary/60 rounded-md transition-colors">
+                      <div className="w-7 h-7 rounded-full bg-[#661714]/8 ring-1 ring-[#661714]/20 flex items-center justify-center transition-colors group-hover:bg-[#661714]">
+                        <UserRound className="h-4 w-4 text-[#661714] transition-colors group-hover:text-white" strokeWidth={1.75} />
                       </div>
                       <div className="hidden sm:flex items-center gap-0.5">
                         <span className="text-[10px] font-medium text-foreground">Account</span>

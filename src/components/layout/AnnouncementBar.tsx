@@ -75,7 +75,7 @@ export function AnnouncementBar() {
           {loop.map((s, i) => (
             <span
               key={`${s.id}-${i}`}
-              className="inline-flex items-center gap-2 px-6 text-[12px] sm:text-[13px] font-medium"
+              className="inline-flex items-center gap-2 px-6 text-[12px] sm:text-[13px] font-medium text-[#661714]"
             >
               <Gift className="h-3.5 w-3.5 shrink-0" />
               <span>{s.text}</span>

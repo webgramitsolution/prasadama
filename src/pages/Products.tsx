@@ -16,7 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { SEOHead, SchemaGenerators } from "@/components/SEOHead";
 import { SignedImage } from "@/components/common/SignedImage";
-const mobileMenuBanner = { url: "/products-hero-banner.jpg", asset_id: "v2" };
+const mobileMenuBanner = { url: "https://ik.imagekit.io/Prasadam/Banner/ChatGPT%20Image%20Aug%2021,%202026,%2012_41_03%20AM.png?updatedAt=1787331579833", asset_id: "v3" };
 
 interface Product {
   id: string;

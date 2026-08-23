@@ -398,7 +398,7 @@ export default function Signup() {
                   alt="Prasadam divine offerings"
                   loading="lazy"
                   decoding="async"
-                  className="mt-6 w-full max-w-sm rounded-xl object-cover"
+                  className="hidden md:block mt-6 w-full max-w-sm rounded-xl object-cover"
                 />
               </div>
             </form>

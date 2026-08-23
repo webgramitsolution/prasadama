@@ -87,7 +87,7 @@ export function RelatedProducts({ currentProductId, categoryId }: RelatedProduct
   if (products.length === 0) return null;
 
   return (
-    <section className="mt-8 px-4 md:px-6 lg:px-8" aria-labelledby="related-products-heading">
+    <section className="mt-8" aria-labelledby="related-products-heading">
       <div className="flex items-center justify-center gap-3 sm:gap-4 mb-5">
         <span aria-hidden className="hidden sm:block h-px w-12 sm:w-24 bg-gradient-to-r from-transparent to-border" />
         <h2 id="related-products-heading" className="text-lg sm:text-xl font-display font-bold text-foreground text-center">
