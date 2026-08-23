@@ -175,7 +175,22 @@ export function Header() {
                         </Link>
                       ))}
                     </div>
+
+                    <p className="px-3 mt-4 text-xs font-semibold text-muted-foreground uppercase mb-2">Support</p>
+                    <div className="divide-y divide-border border-y border-border">
+                      <Link
+                        to="/help"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center justify-between px-3 py-3 text-sm text-foreground hover:bg-secondary"
+                      >
+                        <span className="flex items-center gap-2">
+                          <LifeBuoy className="h-4 w-4 text-[#661714]" /> Help &amp; FAQ
+                        </span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                    </div>
                   </nav>
+
 
                   {/* Mobile Footer */}
                   <div className="p-3 border-t border-border bg-secondary/30">
