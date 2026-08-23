@@ -331,7 +331,7 @@ export function CustomerReviews({
   return (
     <section className="mt-10" aria-labelledby="customer-reviews-heading">
       {/* Summary card */}
-      <div className="rounded-lg border border-border bg-card px-4 py-8 sm:px-12">
+      <div className="rounded-lg border border-border bg-[#f7e4c8] px-4 py-8 sm:px-12">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-0">
           {/* Main Score and Stars */}
           <div className="flex flex-col items-center gap-3 md:w-1/3 md:border-r md:border-border/60 pr-4">
@@ -511,7 +511,7 @@ export function CustomerReviews({
 
       {/* Sort bar */}
       {total > 0 && (
-      <div className="mt-3 rounded-lg border border-border bg-card px-4 py-3">
+      <div className="mt-3 rounded-lg border border-border bg-[#f7e4c8] px-4 py-3">
         <Select
           value={sort}
           onValueChange={(v) => {
@@ -559,7 +559,7 @@ export function CustomerReviews({
             const isOwner = !!user && r.is_owner === true;
             return (
               <div key={r.id} className={cn(
-                "flex h-full flex-col rounded-lg border border-border bg-card p-4 transition-colors",
+                "flex h-full flex-col rounded-lg border border-border bg-[#f7e4c8] p-4 transition-colors",
                 r.is_approved === false && "border-warning/30 bg-warning/5 opacity-80"
               )}>
                 <div className="flex items-start justify-between gap-2">

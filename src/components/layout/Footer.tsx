@@ -86,7 +86,7 @@ export function Footer() {
   const displayEmail = store.storeEmail || "sales@houskase.com";
 
   return (
-    <footer className="bg-black text-white">
+    <footer className="bg-[#45040A] text-white">
       <div className="container mx-auto px-4 pt-10 md:pt-14 pb-[5px]">
         {/* Company col is wider (2fr); remaining 4 cols equal */}
         <div className="grid grid-cols-2 md:[grid-template-columns:2fr_1fr_1fr_1fr_1fr] gap-8 md:gap-0 md:divide-x md:divide-white/20">

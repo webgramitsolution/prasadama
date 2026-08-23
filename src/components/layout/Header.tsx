@@ -3,9 +3,11 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { 
-  Menu, User, MessageSquare, LogOut, 
-  LayoutDashboard, ChevronDown, HelpCircle, Store, ChevronRight, Truck
+  Menu, MessageSquare, LogOut, 
+  LayoutDashboard, ChevronDown, ChevronRight,
+  PackageSearch, Boxes, LifeBuoy, UserRound
 } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { CartSheet } from "@/components/cart/CartSheet";
@@ -236,20 +238,27 @@ export function Header() {
             <div className="md:hidden flex-1" />
 
             {/* Action Buttons - Icon on top, text below */}
-              <div className="hidden md:flex flex-shrink-0 items-center justify-end gap-1">
-              <Link to="/courier-tracking" className="flex flex-col items-center justify-center w-14 h-14 hover:bg-secondary/50 rounded-md transition-colors">
-                <Truck className="h-4.5 w-4.5 text-foreground mb-0.5" />
-                <span className="text-[10px] text-foreground font-medium">Track Order</span>
+              <div className="hidden md:flex flex-shrink-0 items-center justify-end gap-1.5">
+              <Link to="/courier-tracking" className="group flex flex-col items-center justify-center w-16 h-14 rounded-lg transition-colors hover:bg-secondary/60">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#661714]/8 ring-1 ring-[#661714]/20 text-[#661714] transition-colors group-hover:bg-[#661714] group-hover:text-white">
+                  <PackageSearch className="h-4 w-4" strokeWidth={1.75} />
+                </span>
+                <span className="mt-0.5 text-[10px] text-foreground font-medium">Track Order</span>
               </Link>
-              <Link to="/rfq" className="flex flex-col items-center justify-center w-14 h-14 hover:bg-secondary/50 rounded-md transition-colors">
-                <Store className="h-4.5 w-4.5 text-foreground mb-0.5" />
-                <span className="text-[10px] text-foreground font-medium">Bulk Order</span>
+              <Link to="/rfq" className="group flex flex-col items-center justify-center w-16 h-14 rounded-lg transition-colors hover:bg-secondary/60">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#661714]/8 ring-1 ring-[#661714]/20 text-[#661714] transition-colors group-hover:bg-[#661714] group-hover:text-white">
+                  <Boxes className="h-4 w-4" strokeWidth={1.75} />
+                </span>
+                <span className="mt-0.5 text-[10px] text-foreground font-medium">Bulk Order</span>
               </Link>
-              <Link to="/help" className="flex flex-col items-center justify-center w-14 h-14 hover:bg-secondary/50 rounded-md transition-colors">
-                <HelpCircle className="h-4.5 w-4.5 text-foreground mb-0.5" />
-                <span className="text-[10px] text-foreground font-medium">Help</span>
+              <Link to="/help" className="group flex flex-col items-center justify-center w-16 h-14 rounded-lg transition-colors hover:bg-secondary/60">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#661714]/8 ring-1 ring-[#661714]/20 text-[#661714] transition-colors group-hover:bg-[#661714] group-hover:text-white">
+                  <LifeBuoy className="h-4 w-4" strokeWidth={1.75} />
+                </span>
+                <span className="mt-0.5 text-[10px] text-foreground font-medium">Help</span>
               </Link>
             </div>
+
 
             {/* Cart & User Menu */}
             <div className="flex items-center gap-1">
@@ -258,8 +267,8 @@ export function Header() {
                 aria-label="Track Order"
                 className="md:hidden flex items-center justify-center h-10 w-10 hover:bg-secondary/50 rounded-md transition-colors"
               >
-                <div className="w-6 h-6 rounded-full border-2 border-foreground flex items-center justify-center">
-                  <Truck className="h-3.5 w-3.5 text-foreground" />
+                <div className="w-7 h-7 rounded-full bg-[#661714]/8 ring-1 ring-[#661714]/20 flex items-center justify-center">
+                  <PackageSearch className="h-4 w-4 text-[#661714]" strokeWidth={1.75} />
                 </div>
               </Link>
 
@@ -275,10 +284,10 @@ export function Header() {
                     <DropdownMenuTrigger asChild>
                   <button className="flex flex-col items-center justify-center h-10 w-10 sm:h-14 sm:w-14 hover:bg-secondary/50 rounded-md transition-colors">
                         <div className={cn(
-                          "w-6 h-6 rounded-full border-2 flex items-center justify-center",
-                          role === "shop" ? "border-shop bg-shop/10" : role === "retail" ? "border-retail bg-retail/10" : "border-primary bg-primary/10"
+                          "w-7 h-7 rounded-full ring-1 flex items-center justify-center",
+                          role === "shop" ? "ring-shop bg-shop/10" : role === "retail" ? "ring-retail bg-retail/10" : "ring-[#661714]/20 bg-[#661714]/8"
                         )}>
-                          <User className="h-3.5 w-3.5 text-foreground" />
+                          <UserRound className="h-4 w-4 text-[#661714]" strokeWidth={1.75} />
                         </div>
                         <div className="hidden sm:flex items-center gap-0.5">
                           <span className="text-[10px] font-medium text-foreground truncate max-w-[50px]">
@@ -325,8 +334,8 @@ export function Header() {
                 ) : (
                   <Link to="/signup">
                     <button className="flex flex-col items-center justify-center h-10 w-10 sm:h-14 sm:w-14 hover:bg-secondary/50 rounded-md transition-colors">
-                      <div className="w-6 h-6 rounded-full border-2 border-foreground flex items-center justify-center">
-                        <User className="h-3.5 w-3.5 text-foreground" />
+                      <div className="w-7 h-7 rounded-full bg-[#661714]/8 ring-1 ring-[#661714]/20 flex items-center justify-center">
+                        <UserRound className="h-4 w-4 text-[#661714]" strokeWidth={1.75} />
                       </div>
                       <div className="hidden sm:flex items-center gap-0.5">
                         <span className="text-[10px] font-medium text-foreground">Account</span>

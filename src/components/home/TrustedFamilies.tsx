@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { Star } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SignedImage } from "@/components/common/SignedImage";
+import { SectionHeading } from "@/components/home/SectionHeading";
+
 
 interface FamilyTestimonial {
   id: string;
@@ -58,11 +60,10 @@ export function TrustedFamilies() {
   if (items.length === 0) return null;
 
   return (
-    <section className="py-10 sm:py-14 bg-foreground">
+    <section className="py-10 sm:py-14 bg-[#661714]">
       <div className="container mx-auto px-3 sm:px-4">
-        <h2 className="text-center text-2xl sm:text-4xl font-display font-bold text-background mb-6 sm:mb-10">
-          Trusted by Families
-        </h2>
+        <SectionHeading title="Trusted by Families" tone="onDark" />
+
 
         <div
           ref={railRef}
