@@ -44,9 +44,28 @@ interface ProductLite {
   images: string[] | null;
 }
 
-const HERO_BG = "/products-hero-banner.jpg";
+const HERO_BG = "https://ik.imagekit.io/prasadam1/about%20us%20banner.png";
 const WHO_IMAGE = "/auth-pooja.jpg";
 const ECO_IMAGE = "/auth-mithai.jpg";
+
+/** Small festive flourish: tapered rule + diamond + curls */
+function Ornament({ flip }: { flip?: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 96 14"
+      className={`h-3.5 w-[70px] shrink-0 text-brand-red ${flip ? "-scale-x-100" : ""}`}
+      fill="none"
+      aria-hidden="true"
+    >
+      <path d="M2 7h44" stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity="0.5" />
+      <path d="M50 7l4-4 4 4-4 4z" stroke="currentColor" strokeWidth="1" strokeLinejoin="round" />
+      <path d="M62 7c3-5 8-5 10 0" stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity="0.8" />
+      <path d="M62 7c3 5 8 5 10 0" stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity="0.8" />
+      <circle cx="78" cy="7" r="1.3" fill="currentColor" />
+    </svg>
+  );
+}
+
 
 export default function AboutUs() {
   const [products, setProducts] = useState<ProductLite[]>([]);
