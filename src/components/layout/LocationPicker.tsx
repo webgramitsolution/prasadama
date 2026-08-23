@@ -15,16 +15,33 @@ interface StoredLocation {
   pincode?: string;
 }
 
+// Free, key-less reverse geocoding. BigDataCloud is primary (fast, CORS-friendly,
+// accurate locality + postcode for India); Nominatim is the fallback.
 async function reverseGeocode(lat: number, lon: number): Promise<StoredLocation | null> {
   try {
     const res = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`,
+      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`
+    );
+    if (res.ok) {
+      const d = await res.json();
+      const city = d.locality || d.city || d.principalSubdivision || "";
+      const pincode = d.postcode || "";
+      const label = [city, pincode].filter(Boolean).join(" ");
+      if (label.trim()) return { label: label.trim(), pincode };
+    }
+  } catch {
+    /* fall through to Nominatim */
+  }
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&addressdetails=1&lat=${lat}&lon=${lon}`,
       { headers: { Accept: "application/json" } }
     );
     if (!res.ok) return null;
     const data = await res.json();
     const a = data?.address ?? {};
-    const city = a.city || a.town || a.village || a.suburb || a.county || "";
+    const city =
+      a.suburb || a.neighbourhood || a.village || a.town || a.city_district || a.city || a.county || "";
     const pincode = a.postcode || "";
     const label = [city, pincode].filter(Boolean).join(" ") || data?.display_name?.split(",")[0];
     return label ? { label, pincode } : null;
@@ -32,52 +49,6 @@ async function reverseGeocode(lat: number, lon: number): Promise<StoredLocation 
     return null;
   }
 }
-
-export function LocationPicker({ className }: { className?: string }) {
-  const [location, setLocation] = useState<StoredLocation | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [pin, setPin] = useState("");
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      try {
-        setLocation(JSON.parse(raw));
-        return;
-      } catch {
-        /* ignore */
-      }
-    }
-    // Auto-detect only if permission was already granted (no popup spam).
-    if (!navigator.permissions?.query) return;
-    navigator.permissions
-      .query({ name: "geolocation" as PermissionName })
-      .then((status) => {
-        if (status.state === "granted") detect();
-      })
-      .catch(() => undefined);
-  }, []);
-
-  const save = (loc: StoredLocation) => {
-    setLocation(loc);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(loc));
-  };
-
-  const detect = () => {
-    if (!navigator.geolocation) return;
-    setLoading(true);
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const loc = await reverseGeocode(pos.coords.latitude, pos.coords.longitude);
-        if (loc) save(loc);
-        setLoading(false);
-        setOpen(false);
-      },
-      () => setLoading(false),
-      { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
-    );
-  };
 
   const applyPin = (e: React.FormEvent) => {
     e.preventDefault();
