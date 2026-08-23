@@ -221,12 +221,13 @@ export default function AboutUs() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-y-8 border-t border-border pt-8 lg:grid-cols-4 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
+            <div className="grid grid-cols-2 gap-y-8 border-t border-border pt-8 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
               {[
-                { Icon: Users, num: "50,000+", label: "Happy Customers", sub: "Trust & love from thousands of families" },
-                { Icon: Gift, num: "1,00,000+", label: "Orders Delivered", sub: "Successfully delivered across India" },
                 { Icon: MapPin, num: "500+", label: "Cities Covered", sub: "From metros to small towns" },
                 { Icon: Star, num: "4.8/5", label: "Customer Rating", sub: "For quality, taste & service" },
+                { Icon: Users, num: "50,000+", label: "Happy Customers", sub: "Trust & love from thousands of families" },
+                { Icon: Gift, num: "1,00,000+", label: "Orders Delivered", sub: "Successfully delivered across India" },
+
               ].map(({ Icon, num, label, sub }) => (
                 <div key={label} className="flex flex-col items-center px-3 text-center lg:border-r lg:border-border last:lg:border-r-0">
                   <span className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-[#fbf1e6]">
