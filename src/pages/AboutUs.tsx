@@ -114,103 +114,131 @@ export default function AboutUs() {
       />
       <Header />
       <main>
+        {/* BREADCRUMB */}
+        <div className="border-b border-border bg-white">
+          <div className="container mx-auto flex items-center gap-2 px-4 py-3 text-sm">
+            <Link to="/" className="flex items-center gap-1.5 text-muted-foreground hover:text-brand-red">
+              <Home className="h-4 w-4" /> Home
+            </Link>
+            <ChevronRight className="h-4 w-4 text-muted-foreground/60" />
+            <span className="font-medium text-foreground">About Us</span>
+          </div>
+        </div>
+
         {/* HERO BANNER */}
-        <section className="relative -mt-5 overflow-hidden bg-background md:min-h-[430px] md:bg-brand-navy-soft">
-          <div className="hidden md:block absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${HERO_BG})` }} />
-          <div className="md:hidden h-[245px] bg-brand-navy-soft">
-            <img src={HERO_BG} alt="Prasadam devotional offerings collection" className="h-full w-full object-cover object-center" />
-          </div>
-          {/* Gradient limited to the left half so the product art on the right stays clean */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-3/5 bg-gradient-to-r from-background via-background/70 to-transparent md:block" />
-          <div className="container relative mx-auto px-4 py-7 md:py-16">
-            <div className="max-w-[520px]">
-                <h1 className="font-display text-[2.25rem] font-extrabold leading-[0.98] text-brand-navy md:text-[3.9rem]">
-                  ABOUT<br />PRASADAM<sup className="text-xl md:text-2xl align-super">™</sup>
-                </h1>
-                <p className="mt-4 text-lg md:text-xl font-semibold leading-tight text-foreground">
-                  A Divine Taste, Delivered<br />From Temple to Your Home.
-                </p>
-                <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">
-                  We prepare and pack blessed temple prasad, mithai, dry fruit prasad and pooja samagri with purity and devotion, for every home and every occasion.
-                </p>
-                <div className="mt-7 flex flex-nowrap gap-2 sm:gap-3">
-                  <Button asChild size="lg" className="rounded px-4 text-xs bg-brand-navy text-primary-foreground hover:bg-primary-dark sm:px-6 sm:text-sm">
-                    <Link to="/products">SHOP NOW <ArrowRight className="ml-2 h-4 w-4" /></Link>
-                  </Button>
-                  <Button asChild size="lg" variant="outline" className="rounded border-2 border-brand-navy px-4 text-xs text-brand-navy hover:bg-brand-navy-soft sm:px-6 sm:text-sm">
-                    <Link to="/products">EXPLORE PRODUCTS</Link>
-                  </Button>
-                </div>
+        <section
+          className="relative overflow-hidden bg-[#fbf5ec] bg-cover bg-center md:min-h-[430px]"
+          style={{ backgroundImage: `url(${HERO_BG})` }}
+        >
+          <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-3/5 bg-gradient-to-r from-[#fbf5ec] via-[#fbf5ec]/80 to-transparent md:block" />
+          <div className="pointer-events-none absolute inset-0 bg-[#fbf5ec]/85 md:hidden" />
+          <div className="container relative mx-auto px-4 py-12 md:py-20">
+            <div className="max-w-[560px]">
+              <div className="mb-4 flex items-center gap-3">
+                <span className="text-xs font-bold uppercase tracking-[0.28em] text-brand-red/80">Our Story</span>
+                <Ornament />
+              </div>
+              <h1 className="font-display text-[2rem] leading-[1.12] text-foreground md:text-[3rem]">
+                Rooted in Tradition,
+                <br />
+                <span className="text-brand-red">Crafted with Devotion</span>
+              </h1>
+              <p className="mt-5 max-w-lg text-sm leading-relaxed text-muted-foreground md:text-[15px]">
+                Prasadam was born out of a simple belief — that every celebration deserves to be made special with pure,
+                authentic and delicious sweets. From traditional recipes passed down for generations to modern hygienic
+                packaging, we bring you the perfect blend of taste, purity and love.
+              </p>
+              <Button asChild size="lg" className="mt-7 rounded bg-brand-red px-6 text-sm text-white hover:bg-brand-red/90">
+                <Link to="/products">Our Journey <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              </Button>
             </div>
           </div>
         </section>
 
-        {/* WHO WE ARE */}
-        <section className="bg-background py-0">
-          <div className="grid md:grid-cols-2">
-            <div className="min-h-[320px] bg-secondary/40 md:min-h-[430px]">
-              <img src={WHO_IMAGE} alt="Prasadam devotional offerings prepared with devotion" className="h-full w-full object-cover" />
-            </div>
-            <div className="flex items-center px-4 py-10 md:px-14 lg:px-20">
-              <div className="max-w-xl">
-              <p className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground">Who We Are</p>
-              <div className="mb-4 h-1 w-14 rounded-full bg-brand-navy" />
-              <h2 className="mb-5 font-display text-3xl font-bold text-brand-navy md:text-4xl">
-                Welcome to PRASADAM<sup className="text-lg">™</sup>
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                Welcome to Prasadam, where devotion meets everyday convenience. We are dedicated to bringing pure, hygienically prepared temple prasad and devotional offerings straight to your doorstep, so faith and tradition stay effortless.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                From our signature <b className="text-brand-navy">Temple Prasad Boxes</b> to blessed <b className="text-brand-navy">Mithai & Sweets</b>, wholesome <b className="text-brand-navy">Dry Fruit Prasad</b> and complete <b className="text-brand-navy">Pooja Samagri Kits</b> — every offering is prepared to make your Bhog and celebrations completely effortless.
-              </p>
+        {/* SINCE 2015 + STATS */}
+        <section className="bg-white py-12 md:py-16">
+          <div className="container mx-auto grid gap-8 px-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] lg:gap-10">
+            <div className="grid gap-8 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] sm:items-center">
+              <div className="overflow-hidden rounded-xl shadow-card">
+                <img src={WHO_IMAGE} alt="Prasadam store front" className="h-full max-h-[260px] w-full object-cover" loading="lazy" />
+              </div>
+              <div>
+                <div className="mb-3 flex items-center gap-3">
+                  <span className="text-xs font-bold uppercase tracking-[0.28em] text-brand-red/80">Since 2015</span>
+                  <Ornament />
+                </div>
+                <h2 className="font-display text-2xl leading-snug text-foreground md:text-[26px]">
+                  Creating Moments
+                  <br />
+                  <span className="text-brand-red">of Happiness</span>
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  What started as a small home kitchen with a passion for authentic sweets has now become a trusted name
+                  in thousands of homes across India.
+                </p>
+                <ul className="mt-4 space-y-2">
+                  {[
+                    "Traditional recipes & authentic taste",
+                    "Carefully selected premium ingredients",
+                    "Hygienic preparation & packaging",
+                    "Delivered with love across India",
+                  ].map((line) => (
+                    <li key={line} className="flex items-start gap-2 text-sm text-foreground/90">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-red" />
+                      {line}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
-          </div>
 
-          {/* PHILOSOPHY CARD */}
-          <div className="container mx-auto px-4 py-10">
-          <div className="relative mx-auto max-w-5xl rounded-xl border bg-brand-navy-soft p-7 text-center shadow-card md:p-9">
-            <div className="absolute left-1/2 top-0 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-brand-navy text-primary-foreground shadow-lg">
-              <Home className="h-7 w-7" />
-            </div>
-            <h3 className="mt-3 mb-3 font-display text-2xl font-bold text-brand-navy md:text-3xl">OUR PHILOSOPHY</h3>
-            <p className="max-w-3xl mx-auto text-muted-foreground leading-relaxed">
-              At Prasadam, we believe every offering carries devotion — and receiving prasad should feel as sacred as the temple visit itself. That's why we craft every box with{" "}
-              <b className="text-brand-navy">Purity of Ingredients</b>, <b className="text-brand-navy">Hygienic Preparation</b> and <b className="text-brand-navy">Timely Delivery</b> — so blessings reach you fresh, wherever you are.
-            </p>
-          </div>
-          </div>
-        </section>
-
-        {/* '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
-                                        
-                                            
-                                            Verify that the /login and /signup forms have the correct 20px top margin on desktop without introducing any vertical scrolling.
-
-Refactor the AuthShell spacing so the top margin and alignment stay consistent across all breakpoints for both login and signup views. */}
-        <section className="container mx-auto px-4 pb-14 md:pb-20">
-          <div className="text-center mb-10">
-            <h2 className="font-display text-2xl font-bold text-brand-navy md:text-3xl">WHY CHOOSE PRASADAM?</h2>
-            <div className="mx-auto mt-2 h-1 w-16 rounded-full bg-brand-navy" />
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-5">
+            <div className="grid grid-cols-2 gap-y-8 border-t border-border pt-8 lg:grid-cols-4 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
               {[
-               { Icon: Award, title: "PREMIUM QUALITY", body: "Pure, sattvik ingredients with careful preparation and hygienic packing for every offering." },
-               { Icon: Leaf, title: "SATTVIK & PURE", body: "Prepared with devotion using natural, sattvik ingredients free from adulteration." },
-               { Icon: WandSparkles, title: "FOR EVERY OCCASION", body: "Perfect for daily Bhog, festivals, poojas, weddings and every sacred celebration." },
-               { Icon: Sparkles, title: "BLESSED DELIVERY", body: "Thoughtfully packed devotional offerings delivered with care from temple to your home." },
-             ].map(({ Icon, title, body }) => (
-              <div key={title} className="rounded-lg border bg-card p-6 text-center shadow-sm transition-shadow hover:shadow-md">
-                <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-brand-red">
-                   <Icon className="h-11 w-11 text-primary-foreground" aria-hidden="true" />
+                { Icon: Users, num: "50,000+", label: "Happy Customers", sub: "Trust & love from thousands of families" },
+                { Icon: Gift, num: "1,00,000+", label: "Orders Delivered", sub: "Successfully delivered across India" },
+                { Icon: MapPin, num: "500+", label: "Cities Covered", sub: "From metros to small towns" },
+                { Icon: Star, num: "4.8/5", label: "Customer Rating", sub: "For quality, taste & service" },
+              ].map(({ Icon, num, label, sub }) => (
+                <div key={label} className="flex flex-col items-center px-3 text-center lg:border-r lg:border-border last:lg:border-r-0">
+                  <span className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-[#fbf1e6]">
+                    <Icon className="h-6 w-6 text-brand-red" strokeWidth={1.6} />
+                  </span>
+                  <span className="font-display text-2xl font-semibold text-brand-red">{num}</span>
+                  <span className="mt-1 text-sm font-medium text-foreground">{label}</span>
+                  <span className="mt-1 text-xs leading-snug text-muted-foreground">{sub}</span>
                 </div>
-                <h4 className="mb-2 text-sm font-bold text-brand-navy">{title}</h4>
-                <p className="text-xs text-muted-foreground leading-relaxed">{body}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
+
+        {/* WHAT MAKES US SPECIAL */}
+        <section className="bg-white pb-14 md:pb-20">
+          <div className="container mx-auto px-4">
+            <div className="mb-8 flex items-center justify-center gap-4">
+              <Ornament flip />
+              <h2 className="font-display text-2xl text-foreground md:text-[28px]">What Makes Us Special</h2>
+              <Ornament />
+            </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+              {[
+                { Icon: Leaf, title: "Premium Ingredients", body: "We use only the finest quality nuts, dry fruits and natural ingredients." },
+                { Icon: ShieldCheck, title: "Hygienically Prepared", body: "Made in a clean, hygienic environment with strict quality standards." },
+                { Icon: Heart, title: "Made with Devotion", body: "Every sweet is crafted with love, care and traditional techniques." },
+                { Icon: Gift, title: "Beautifully Packaged", body: "Elegant packaging to make your gifts even more special." },
+                { Icon: Truck, title: "Pan India Delivery", body: "Timely and safe delivery to every corner of India." },
+                { Icon: Headphones, title: "Customer First", body: "We are always here to make your experience delightful." },
+              ].map(({ Icon, title, body }) => (
+                <div key={title} className="rounded-lg border border-[#eadfd0] bg-white p-4">
+                  <Icon className="mb-3 h-7 w-7 text-brand-red" strokeWidth={1.4} />
+                  <h4 className="mb-1.5 text-sm font-bold text-foreground">{title}</h4>
+                  <p className="text-xs leading-relaxed text-muted-foreground">{body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
 
         {/* OUR OFFERINGS (from DB) */}
         <section className="container mx-auto px-4 pb-14 md:pb-20">
