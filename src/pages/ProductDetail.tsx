@@ -980,7 +980,7 @@ export default function ProductDetail() {
                     </button>
                   </div>
                   <Button
-                    className="flex-1 min-w-0 bg-accent hover:bg-accent-hover text-[11px] sm:text-sm font-bold h-11 uppercase tracking-tight sm:tracking-wide rounded-lg px-2 inline-flex items-center justify-center gap-1 sm:gap-1.5"
+                    className="btn-gold-frame flex-1 min-w-0 bg-accent hover:bg-accent-hover text-[11px] sm:text-sm font-bold h-11 uppercase tracking-tight sm:tracking-wide rounded-[5px] px-2 inline-flex items-center justify-center gap-1 sm:gap-1.5"
                     onClick={handleAddToCartClick}
                     disabled={isAddingToCart || isBuyingNow || !moqValid}
                   >
@@ -988,7 +988,7 @@ export default function ProductDetail() {
                     {isAddingToCart ? "Adding..." : "ADD TO CART"}
                   </Button>
                   <Button
-                    className="hidden lg:inline-flex flex-1 min-w-0 bg-primary hover:bg-primary/90 text-[11px] sm:text-sm font-bold h-11 uppercase tracking-tight sm:tracking-wide rounded-lg px-2 items-center justify-center gap-1 sm:gap-1.5"
+                    className="btn-gold-frame hidden lg:inline-flex flex-1 min-w-0 bg-primary hover:bg-primary/90 text-[11px] sm:text-sm font-bold h-11 uppercase tracking-tight sm:tracking-wide rounded-[5px] px-2 items-center justify-center gap-1 sm:gap-1.5"
                     onClick={handleBuyNow}
                     disabled={isAddingToCart || isBuyingNow || !moqValid}
                   >
@@ -999,7 +999,7 @@ export default function ProductDetail() {
 
                 {/* Tablet only: Full width Buy Now below the row */}
                 <Button
-                  className="hidden md:flex lg:hidden w-full bg-primary hover:bg-primary/90 text-sm font-bold h-11 uppercase tracking-wide rounded-lg items-center justify-center gap-1.5 mt-2"
+                  className="btn-gold-frame hidden md:flex lg:hidden w-full bg-primary hover:bg-primary/90 text-sm font-bold h-11 uppercase tracking-wide rounded-[5px] items-center justify-center gap-1.5 mt-2"
                   onClick={handleBuyNow}
                   disabled={isAddingToCart || isBuyingNow || !moqValid}
                 >
@@ -1010,7 +1010,7 @@ export default function ProductDetail() {
                 {/* Mobile: Buy Now button inside the page content, not fixed */}
                 <div className="md:hidden pt-2">
                   <Button
-                    className="w-full bg-primary hover:bg-primary/90 text-sm font-bold h-11 uppercase tracking-wide rounded-lg inline-flex items-center justify-center gap-1.5"
+                    className="btn-gold-frame w-full bg-primary hover:bg-primary/90 text-sm font-bold h-11 uppercase tracking-wide rounded-[5px] inline-flex items-center justify-center gap-1.5"
                     onClick={handleBuyNow}
                     disabled={isAddingToCart || isBuyingNow || !moqValid}
                   >
