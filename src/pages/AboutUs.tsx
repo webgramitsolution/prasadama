@@ -4,9 +4,15 @@ import {
   Award,
   BadgeCheck,
   Building2,
+  CheckCircle2,
+  ChevronRight,
   Droplets,
+  Gift,
+  Headphones,
+  Heart,
   Home,
   ArrowRight,
+  MapPin,
   Sparkles,
   Package,
   Leaf,
@@ -14,10 +20,14 @@ import {
   ShieldCheck,
   ShoppingBag,
   Smile,
+  Star,
+  Truck,
+  Users,
   WandSparkles,
   WashingMachine,
   Wind,
 } from "lucide-react";
+
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SEOHead } from "@/components/SEOHead";
