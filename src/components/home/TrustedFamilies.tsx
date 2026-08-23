@@ -72,7 +72,7 @@ export function TrustedFamilies() {
           {items.map((item) => (
             <article
               key={item.id}
-              className="shrink-0 snap-start w-[85%] sm:w-[calc(40%-0.6rem)] rounded-xl overflow-hidden bg-muted/10 flex flex-col sm:flex-row"
+              className="shrink-0 snap-start w-[85%] sm:w-[calc(40%-0.6rem)] rounded-xl overflow-hidden bg-white flex flex-col sm:flex-row"
             >
               {item.image_url && (
                 <div className="sm:w-2/5 aspect-[4/3] sm:aspect-auto bg-secondary/20">
