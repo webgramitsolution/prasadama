@@ -5,9 +5,9 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 
 const SLIDES = [
-  "/products-hero-banner.jpg",
-  "/auth-mithai.jpg",
-  "/auth-pooja.jpg",
+  "https://ik.imagekit.io/Prasadam/Testimonial/Testimonial%202.png?updatedAt=1787421749821",
+  "https://ik.imagekit.io/Prasadam/Testimonial/testimonial.png?updatedAt=1787421001373",
+  "https://ik.imagekit.io/Prasadam/Testimonial/testimonial%201?updatedAt=1787420142981",
 ];
 
 const BRAND = "#AD1E2A";
