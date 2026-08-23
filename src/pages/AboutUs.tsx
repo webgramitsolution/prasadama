@@ -374,13 +374,15 @@ export default function AboutUs() {
                   <div
                     className="flex h-[72px] w-[72px] items-center justify-center rounded-full shadow-md md:h-20 md:w-20"
                     style={{
-                      background: "linear-gradient(135deg,#f6dfa0 0%,#d4a busy 0%)",
+                      background: "linear-gradient(135deg,#fdf3d4 0%,#e6c176 28%,#b8862f 55%,#f4e3ad 78%,#c9993f 100%)",
+                      boxShadow: "0 4px 14px rgba(0,0,0,0.25), inset 0 1px 2px rgba(255,255,255,0.6)",
                     }}
                   >
-                    <Icon className="h-10 w-10 md:h-12 md:w-12" aria-hidden="true" />
+                    <Icon className="h-10 w-10 text-[#6b4a12] md:h-12 md:w-12" aria-hidden="true" />
                   </div>
                   <span className="text-xs font-semibold tracking-wide md:text-sm">{label}</span>
                 </div>
+
 
               ))}
             </div>
