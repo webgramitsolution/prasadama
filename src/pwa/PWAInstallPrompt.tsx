@@ -132,7 +132,7 @@ export const PWAInstallPrompt = () => {
   return (
     <>
       <div className="fixed top-1 left-1/2 -translate-x-1/2 z-[100] w-[calc(100%-1rem)] max-w-md">
-        <div className="flex items-center gap-3 rounded-xl border border-border bg-white shadow-lg p-3">
+        <div className="flex items-center gap-3 rounded-xl border border-border shadow-lg p-3" style={{ backgroundColor: "#f9fafb" }}>
           <img src="/favicon.png" alt="Prasadam" className="h-10 w-10 rounded-[5px] bg-white object-contain p-0.5" />
 
           <div className="flex-1 min-w-0">
