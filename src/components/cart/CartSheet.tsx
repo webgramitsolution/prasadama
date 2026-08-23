@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingCart, Trash2, Plus, Minus, AlertTriangle, Ticket, ChevronRight, Settings } from "lucide-react";
+import { ShoppingCart, ShoppingBag, Trash2, Plus, Minus, AlertTriangle, Ticket, ChevronRight, Settings } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { cn } from "@/lib/utils";
 import { SignedImage } from "@/components/common/SignedImage";
@@ -50,8 +50,8 @@ export function CartSheet() {
       <SheetTrigger asChild>
         <button aria-label={`Open cart (${itemCount} ${itemCount === 1 ? "item" : "items"})`} className="relative flex flex-col items-center justify-center hover:bg-secondary/50 rounded-md transition-colors">
           <div className="relative">
-            <div className="w-6 h-6 rounded-full border-2 border-foreground flex items-center justify-center">
-              <ShoppingCart className="h-3.5 w-3.5 text-foreground" />
+            <div className="w-7 h-7 rounded-full bg-[#661714]/8 ring-1 ring-[#661714]/20 flex items-center justify-center">
+              <ShoppingBag className="h-4 w-4 text-[#661714]" strokeWidth={1.75} />
             </div>
             {itemCount > 0 && (
               <Badge className="absolute -top-2 -right-2 h-4 w-4 flex items-center justify-center p-0 text-[9px] bg-accent">
