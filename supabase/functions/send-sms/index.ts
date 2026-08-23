@@ -34,16 +34,28 @@ async function sendSms(number: string, message: string) {
   }
 
 
-  const url = new URL("http://app.mydreamstechnology.in/vb/apikey.php");
-  url.searchParams.set("apikey", apiKey);
-  url.searchParams.set("senderid", senderId);
-  url.searchParams.set("number", number);
-  url.searchParams.set("message", message);
+  // Always use HTTPS so the OTP code, phone number and API key are encrypted in transit.
+  const endpoint = Deno.env.get("MDT_SMS_ENDPOINT") || "https://app.mydreamstechnology.in/vb/apikey.php";
+  const url = new URL(endpoint);
+  if (url.protocol !== "https:") {
+    throw new Error("SMS endpoint must use HTTPS");
+  }
+  const params = new URLSearchParams({
+    apikey: apiKey,
+    senderid: senderId,
+    number,
+    message,
+  });
 
   console.log(`Sending SMS to ${number}...`);
-  
+
   try {
-    const response = await fetch(url.toString());
+    // Sensitive values go in the encrypted request body instead of the URL.
+    const response = await fetch(url.toString(), {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: params.toString(),
+    });
     const result = await response.text();
     console.log("SMS API Response:", result);
     return result;
