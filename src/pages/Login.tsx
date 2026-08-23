@@ -140,12 +140,13 @@ export default function Login() {
             <Button type="submit" className="w-full h-12 text-base font-semibold text-white hover:opacity-90 shadow-md transition-all active:scale-[0.98]" style={{ backgroundColor: "#AD1E2A" }} disabled={isLoading}>
               {isLoading ? "Signing In..." : "Login"}
             </Button>
+            {/* Promo image is rendered once by AuthShell on mobile; show it here only on desktop. */}
             <img
               src="https://ik.imagekit.io/Prasadam/Status-scaled.jpg?updatedAt=1787405014112"
               alt="Prasadam divine offerings"
               loading="lazy"
               decoding="async"
-              className="mt-6 w-full max-w-sm rounded-xl object-cover"
+              className="hidden md:block mt-6 w-full max-w-sm rounded-xl object-cover"
             />
           </div>
         </form>
