@@ -381,7 +381,7 @@ export default function AboutUs() {
           </div>
         </section>
 
-        {/* ECO INNOVATION + STATS */}
+        {/* ECO INNOVATION */}
         <section className="container mx-auto px-4 py-14 md:py-20">
           <div className="grid md:grid-cols-2 gap-10 items-center">
             <div className="aspect-[4/3] overflow-hidden rounded-lg bg-brand-green-soft">
@@ -389,8 +389,8 @@ export default function AboutUs() {
             </div>
             <div>
               <div className="inline-flex items-center gap-2 mb-3">
-                <Leaf className="h-5 w-5 text-brand-green" />
-                <h2 className="font-display text-2xl font-bold text-brand-green md:text-3xl">SUSTAINABLE & MINDFUL PACKAGING</h2>
+                <Leaf className="h-5 w-5 text-[#661714]" />
+                <h2 className="font-display text-lg font-medium text-[#661714] md:text-xl">SUSTAINABLE & MINDFUL PACKAGING</h2>
               </div>
               <p className="text-base text-muted-foreground leading-relaxed mb-6 md:text-lg">
                 Our eco-friendly packaging uses <b>recyclable and biodegradable materials</b>, significantly reducing single-use waste while keeping every offering fresh. Every Prasadam box is designed to bring blessings to your home with mindful, sustainable care.
@@ -402,57 +402,17 @@ export default function AboutUs() {
                   { Icon: Sparkles, label: "Bless More." },
                 ].map(({ Icon, label }) => (
                   <div key={label} className="flex flex-col items-center gap-3 border-x border-border/70 px-2">
-                    <span className="flex h-14 w-14 items-center justify-center rounded-full bg-brand-green text-primary-foreground shadow-sm md:h-16 md:w-16">
+                    <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#661714] text-primary-foreground shadow-sm md:h-16 md:w-16">
                       <Icon className="h-8 w-8 md:h-10 md:w-10" aria-hidden="true" />
                     </span>
-                    <span className="text-sm font-semibold text-brand-green">{label}</span>
+                    <span className="text-sm font-semibold text-[#661714]">{label}</span>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-
-          <div className="mt-12 grid grid-cols-2 rounded-lg border bg-brand-navy-soft p-4 md:grid-cols-4">
-              {[
-                { Icon: Smile, num: "50,000+", label: "Happy Devotees" },
-                { Icon: Building2, num: "100+", label: "Cities Served" },
-                { Icon: ShoppingBag, num: "10+", label: "Devotional Offerings" },
-                { Icon: BadgeCheck, num: "100%", label: "Purity Assured" },
-              ].map(({ Icon, num, label }) => (
-              <div key={label} className="flex items-center gap-3 border-x border-background/90 px-3 py-3">
-                <Icon className="h-10 w-10 shrink-0 text-brand-navy md:h-11 md:w-11" aria-hidden="true" />
-                <div>
-                  <div className="text-lg font-bold leading-tight text-brand-navy">{num}</div>
-                  <div className="text-xs text-muted-foreground">{label}</div>
-                </div>
-              </div>
-            ))}
-          </div>
         </section>
 
-        {/* OUR PROMISE */}
-        <section className="container mx-auto px-4 pb-16">
-          <div className="grid gap-8 md:grid-cols-2 md:items-center">
-            <div className="order-2 md:order-1">
-              <img
-                src="/auth-pooja.jpg"
-                alt="Our Promise – Pure & Blessed Offerings"
-                className="mx-auto h-[220px] w-[220px] rounded-lg object-contain"
-                loading="lazy"
-              />
-            </div>
-            <div className="order-1 md:order-2">
-              <h2 className="mb-4 font-display text-2xl font-bold text-brand-navy md:text-3xl">OUR PROMISE</h2>
-              <p className="text-muted-foreground leading-relaxed mb-3">
-                We are committed to purity and devotion, delivering prasad and pooja essentials that save your time while keeping traditions alive.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                With Prasadam, you're not just ordering offerings — you are choosing{" "}
-                <b className="text-brand-navy">a divine taste, delivered with care to your doorstep.</b>
-              </p>
-            </div>
-          </div>
-        </section>
 
         {/* CTA FOOTER STRIP */}
         <section className="relative overflow-hidden py-10 text-primary-foreground" style={{ backgroundColor: "#AD1E2A" }}>
