@@ -80,9 +80,9 @@ export function TrustedFamilies() {
                 </div>
               )}
               <div className="flex-1 p-4 sm:p-5">
-                <h3 className="text-background font-bold text-sm sm:text-base">{item.heading}</h3>
-                <p className="mt-2 text-background/80 text-sm leading-relaxed line-clamp-6">{item.message}</p>
-                <p className="mt-3 text-background font-bold text-sm">
+                <h3 className="text-foreground font-bold text-sm sm:text-base">{item.heading}</h3>
+                <p className="mt-2 text-foreground/80 text-sm leading-relaxed line-clamp-6">{item.message}</p>
+                <p className="mt-3 text-foreground font-bold text-sm">
                   {item.name}
                   {item.age ? `, ${item.age}` : ""}
                 </p>
@@ -90,10 +90,11 @@ export function TrustedFamilies() {
                   {[1, 2, 3, 4, 5].map((n) => (
                     <Star
                       key={n}
-                      className={`h-4 w-4 ${n <= item.rating ? "fill-accent text-accent" : "text-accent"}`}
+                      className={`h-4 w-4 ${n <= item.rating ? "fill-[#ffa41c] text-[#ffa41c]" : "text-[#ffa41c]"}`}
                     />
                   ))}
                 </div>
+
               </div>
             </article>
           ))}
