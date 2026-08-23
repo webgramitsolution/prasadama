@@ -71,7 +71,7 @@ export function ReelsSection({ title = "Featured Videos", excludeProductId, limi
 
   if (loading) {
     return (
-      <section className="py-8 sm:py-10 bg-white -mt-10">
+      <section className="py-8 sm:py-10 bg-[#f9edc8] -mt-10">
         <div className="container mx-auto px-3 sm:px-4">
           <SectionHeading title={title} />
           <div className="flex gap-3 sm:gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -90,7 +90,7 @@ export function ReelsSection({ title = "Featured Videos", excludeProductId, limi
   if (reels.length === 0) return null;
 
   return (
-    <section className="pt-8 sm:pt-10 pb-4 sm:pb-5 bg-white -mt-10">
+    <section className="pt-8 sm:pt-10 pb-5 bg-[#f9edc8] -mt-10">
       <div className="container mx-auto px-3 sm:px-4 relative">
         <SectionHeading title={title} />
         <div className="relative">
