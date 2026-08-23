@@ -249,7 +249,7 @@ export default function AboutUs() {
               <h2 className="font-display text-2xl text-foreground md:text-[28px]">What Makes Us Special</h2>
               <Ornament />
             </div>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
               {[
                 { Icon: Leaf, title: "Premium Ingredients", body: "We use only the finest quality nuts, dry fruits and natural ingredients." },
                 { Icon: ShieldCheck, title: "Hygienically Prepared", body: "Made in a clean, hygienic environment with strict quality standards." },
