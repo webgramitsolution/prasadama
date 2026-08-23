@@ -371,11 +371,17 @@ export default function AboutUs() {
                 { Icon: WandSparkles, label: "For Every Occasion" },
               ].map(({ Icon, label }) => (
                 <div key={label} className="flex flex-col items-center gap-3 border-l border-r border-primary-foreground/25 px-3 py-3 first:border-l-0 last:border-r-0">
-                  <div className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-brand-red ring-2 ring-primary-foreground/40 shadow-md md:h-20 md:w-20">
-                    <Icon className="h-10 w-10 text-primary-foreground md:h-12 md:w-12" aria-hidden="true" />
+                  <div
+                    className="flex h-[72px] w-[72px] items-center justify-center rounded-full shadow-md md:h-20 md:w-20"
+                    style={{
+                      background: "linear-gradient(135deg,#f6dfa0 0%,#d4a busy 0%)",
+                    }}
+                  >
+                    <Icon className="h-10 w-10 md:h-12 md:w-12" aria-hidden="true" />
                   </div>
                   <span className="text-xs font-semibold tracking-wide md:text-sm">{label}</span>
                 </div>
+
               ))}
             </div>
           </div>
