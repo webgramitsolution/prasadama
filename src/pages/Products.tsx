@@ -418,25 +418,15 @@ export default function Products() {
             </div>
           )}
 
-          {/* Active Filters */}
-          {(searchQuery || selectedCategory) && (
+          {/* Active Filters (search only — category badge hidden) */}
+          {searchQuery && (
             <div className="flex flex-wrap gap-2 mb-4">
-              {searchQuery && (
-                <Badge variant="secondary" className="gap-1 pr-1">
-                  Search: {searchQuery}
-                  <button onClick={clearSearch} className="ml-1 hover:bg-muted rounded p-0.5">
-                    <X className="h-3 w-3" />
-                  </button>
-                </Badge>
-              )}
-              {selectedCategory && (
-                <Badge variant="secondary" className="gap-1 pr-1">
-                  Category: {categories.find(c => c.id === selectedCategory || c.slug === selectedCategory)?.name || selectedCategory}
-                  <button onClick={clearCategory} className="ml-1 hover:bg-muted rounded p-0.5">
-                    <X className="h-3 w-3" />
-                  </button>
-                </Badge>
-              )}
+              <Badge variant="secondary" className="gap-1 pr-1">
+                Search: {searchQuery}
+                <button onClick={clearSearch} className="ml-1 hover:bg-muted rounded p-0.5">
+                  <X className="h-3 w-3" />
+                </button>
+              </Badge>
             </div>
           )}
 
