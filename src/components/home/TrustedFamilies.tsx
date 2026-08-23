@@ -60,7 +60,7 @@ export function TrustedFamilies() {
   if (items.length === 0) return null;
 
   return (
-    <section className="py-10 sm:py-14 bg-[#661714]">
+    <section className="py-0 bg-[#661714]">
       <div className="container mx-auto px-3 sm:px-4">
         <SectionHeading title="Trusted by Families" tone="onDark" />
 
