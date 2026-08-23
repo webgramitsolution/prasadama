@@ -256,42 +256,42 @@ export default function Help() {
       <Header />
 
       <main className="pb-20">
-        <section className="relative overflow-hidden bg-gradient-primary text-primary-foreground">
-          <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(135deg,hsl(var(--primary-foreground)/0.16)_1px,transparent_1px)] [background-size:28px_28px]" />
+        <section className="relative overflow-hidden bg-[#f5f5f5] text-foreground">
+          <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(135deg,hsl(var(--foreground)/0.08)_1px,transparent_1px)] [background-size:28px_28px]" />
           <div className="container relative mx-auto grid gap-8 px-4 py-12 md:grid-cols-[1.15fr_0.85fr] md:items-center md:py-16">
             <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#661714]/25 bg-[#661714]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#661714]">
                 <Headphones className="h-4 w-4" />
                 Prasadam Care
               </div>
-              <h1 className="max-w-2xl font-display text-3xl font-extrabold leading-tight md:text-5xl">
+              <h1 className="max-w-2xl font-display text-3xl font-extrabold leading-tight md:text-5xl text-[#661714]">
                 Help, support and order guidance
               </h1>
-              <p className="mt-4 max-w-xl text-sm leading-relaxed text-primary-foreground/82 md:text-base">
+              <p className="mt-4 max-w-xl text-sm leading-relaxed text-foreground/80 md:text-base">
                 Quick answers for orders, shipping, payments, returns and bulk requirements — with direct access to the Prasadam support team.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Button asChild size="lg" variant="secondary" className="rounded px-5">
                   <Link to="/chat"><MessageSquare className="mr-2 h-5 w-5" />Start Chat</Link>
                 </Button>
-                <Button asChild size="lg" className="rounded border border-primary-foreground/25 bg-primary-foreground/10 px-5 text-primary-foreground hover:bg-primary-foreground/18">
+                <Button asChild size="lg" className="rounded border border-[#661714]/25 bg-[#661714]/10 px-5 text-[#661714] hover:bg-[#661714]/20">
                   <a href="tel:+919851295129"><Phone className="mr-2 h-5 w-5" />Call Support</a>
                 </Button>
               </div>
             </motion.div>
-            <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="grid gap-3 rounded-lg border border-primary-foreground/18 bg-primary-foreground/10 p-4 backdrop-blur">
+            <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="grid gap-3 rounded-lg border border-[#661714]/15 bg-white p-4">
               {[
                 { icon: Clock, label: "Support Hours", value: "Mon–Sat, 9 AM–6 PM" },
                 { icon: Phone, label: "Phone", value: "+91 98512 95129" },
                 { icon: Mail, label: "Email", value: "sales@houskase.com" },
               ].map((item) => (
-                <div key={item.label} className="flex items-center gap-3 rounded-md bg-primary-foreground/10 p-3">
+                <div key={item.label} className="flex items-center gap-3 rounded-md bg-[#f5f5f5] p-3">
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
                     <item.icon className="h-5 w-5" />
                   </span>
                   <div>
-                    <p className="text-xs text-primary-foreground/70">{item.label}</p>
-                    <p className="font-semibold">{item.value}</p>
+                    <p className="text-xs text-foreground/60">{item.label}</p>
+                    <p className="font-semibold text-foreground">{item.value}</p>
                   </div>
                 </div>
               ))}
