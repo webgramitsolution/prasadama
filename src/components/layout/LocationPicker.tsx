@@ -50,6 +50,58 @@ async function reverseGeocode(lat: number, lon: number): Promise<StoredLocation 
   }
 }
 
+export function LocationPicker({ className }: { className?: string }) {
+  const [location, setLocation] = useState<StoredLocation | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [pin, setPin] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const save = (loc: StoredLocation) => {
+    setLocation(loc);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(loc));
+  };
+
+  const detect = () => {
+    if (!navigator.geolocation) return;
+    setLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const loc = await reverseGeocode(pos.coords.latitude, pos.coords.longitude);
+        if (loc) save(loc);
+        setLoading(false);
+        setOpen(false);
+      },
+      () => setLoading(false),
+      // High accuracy so the detected area matches the user's actual position.
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+    );
+  };
+
+  useEffect(() => {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      try {
+        setLocation(JSON.parse(raw));
+        return;
+      } catch {
+        /* ignore */
+      }
+    }
+    // Auto-detect on first visit; if permission is already granted this is silent,
+    // otherwise the browser shows its standard one-time prompt.
+    if (navigator.permissions?.query) {
+      navigator.permissions
+        .query({ name: "geolocation" as PermissionName })
+        .then((status) => {
+          if (status.state !== "denied") detect();
+        })
+        .catch(() => detect());
+    } else {
+      detect();
+    }
+  }, []);
+
+
   const applyPin = (e: React.FormEvent) => {
     e.preventDefault();
     if (!/^\d{6}$/.test(pin)) return;
