@@ -408,29 +408,45 @@
   /* Complete metallic-gold perimeter frame with a running gold shimmer */
   .btn-gold-frame {
     border: 2px solid transparent;
-    border-radius: 6px;
+    border-radius: 5px;
     background:
-      linear-gradient(180deg, #C22230 0%, #AE1E2A 55%, #8E1520 100%) padding-box,
+      linear-gradient(0deg, #ad1e2a 0%, #ad1e2a 100%) padding-box,
       linear-gradient(
           115deg,
-          #C89B2C 0%,
-          #D4AF37 18%,
-          #FFF4B0 32%,
-          #FFFDE8 40%,
-          #D4AF37 52%,
-          #C89B2C 68%,
-          #FFF1A8 84%,
-          #D4AF37 100%
+          #8a6410 0%,
+          #b8860b 16%,
+          #e6c15c 30%,
+          #f6e08a 38%,
+          #b8860b 52%,
+          #8a6410 70%,
+          #d4af37 86%,
+          #b8860b 100%
         )
         border-box;
     background-size: 100% 100%, 300% 100%;
     background-position: 0 0, 0% 50%;
     animation: gold-border-run 3s linear infinite;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 241, 168, 0.35), inset 0 0 12px rgba(255, 220, 130, 0.25);
+    box-shadow: none;
     color: #fff;
   }
   .btn-gold-frame:hover {
-    box-shadow: 0 2px 12px rgba(174, 30, 42, 0.4), 0 0 0 1px rgba(255, 244, 176, 0.55), inset 0 0 16px rgba(255, 220, 130, 0.35);
+    background:
+      linear-gradient(0deg, #9c1a25 0%, #9c1a25 100%) padding-box,
+      linear-gradient(
+          115deg,
+          #8a6410 0%,
+          #b8860b 16%,
+          #e6c15c 30%,
+          #f6e08a 38%,
+          #b8860b 52%,
+          #8a6410 70%,
+          #d4af37 86%,
+          #b8860b 100%
+        )
+        border-box;
+    background-size: 100% 100%, 300% 100%;
+    animation: gold-border-run 3s linear infinite;
+    box-shadow: none;
   }
 
   @keyframes gold-border-run {

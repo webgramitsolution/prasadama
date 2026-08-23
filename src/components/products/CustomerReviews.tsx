@@ -331,7 +331,7 @@ export function CustomerReviews({
   return (
     <section className="mt-10" aria-labelledby="customer-reviews-heading">
       {/* Summary card */}
-      <div className="rounded-lg border border-border bg-[#f7e4c8] px-4 py-8 sm:px-12">
+      <div className="rounded-lg border border-border bg-white px-4 py-8 sm:px-12">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-0">
           {/* Main Score and Stars */}
           <div className="flex flex-col items-center gap-3 md:w-1/3 md:border-r md:border-border/60 pr-4">

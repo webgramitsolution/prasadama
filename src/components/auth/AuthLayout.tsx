@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Header } from "@/components/layout/Header";
-const authBg = "/auth-pooja.jpg";
+const authBg = "https://ik.imagekit.io/Prasadam/Testimonial/Testimonial%202.png?updatedAt=1787421749821";
 
 interface AuthLayoutProps {
   children: ReactNode;
