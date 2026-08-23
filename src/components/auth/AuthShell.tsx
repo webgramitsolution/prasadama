@@ -56,14 +56,16 @@ export function AuthShell({ mode, children }: Props) {
     return () => clearInterval(t);
   }, []);
 
-  // Login stays app-like and fixed; signup can scroll on small phones so CTA remains visible.
+  // Login stays app-like and fixed; signup can scroll on small phones so the
+  // "Create Account" CTA is always reachable.
   useEffect(() => {
+    if (mode === "signup") return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = prev;
     };
-  }, []);
+  }, [mode]);
 
   if (isMobile) {
     return (
