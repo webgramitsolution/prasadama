@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { InstantSearch } from "@/components/search/InstantSearch";
 import { supabase } from "@/integrations/supabase/client";
 const mobileMenuBanner = { url: "/products-hero-banner.jpg", asset_id: "v2" };
-const DEFAULT_LOGO_URL = "/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
+const DEFAULT_LOGO_URL = "/prasadam-logo.png";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { LocationPicker } from "@/components/layout/LocationPicker";
 import { SignedImage } from "@/components/common/SignedImage";
@@ -208,12 +208,14 @@ export function Header() {
               <SignedImage
                 src={logoUrl || DEFAULT_LOGO_URL}
                 alt="Prasadam"
+                data-keep-src="true"
                 className="h-9 w-auto object-contain sm:hidden"
               />
               {/* Desktop & tablet — Prasadam logo */}
               <img
                 src={DEFAULT_LOGO_URL}
                 alt="Prasadam"
+                data-keep-src="true"
                 className="hidden h-12 w-auto object-contain sm:block"
               />
             </Link>
