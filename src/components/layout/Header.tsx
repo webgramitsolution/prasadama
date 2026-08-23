@@ -5,7 +5,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { 
   Menu, MessageSquare, LogOut, 
   LayoutDashboard, ChevronDown, ChevronRight,
-  PackageSearch, Boxes, LifeBuoy, UserRound
+  Truck, Warehouse, LifeBuoy, UserRound
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -241,13 +241,13 @@ export function Header() {
               <div className="hidden md:flex flex-shrink-0 items-center justify-end gap-1.5">
               <Link to="/courier-tracking" className="group flex flex-col items-center justify-center w-16 h-14 rounded-lg transition-colors hover:bg-secondary/60">
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#661714]/8 ring-1 ring-[#661714]/20 text-[#661714] transition-colors group-hover:bg-[#661714] group-hover:text-white">
-                  <PackageSearch className="h-4 w-4" strokeWidth={1.75} />
+                  <Truck className="h-4 w-4" strokeWidth={1.75} />
                 </span>
                 <span className="mt-0.5 text-[10px] text-foreground font-medium">Track Order</span>
               </Link>
               <Link to="/rfq" className="group flex flex-col items-center justify-center w-16 h-14 rounded-lg transition-colors hover:bg-secondary/60">
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#661714]/8 ring-1 ring-[#661714]/20 text-[#661714] transition-colors group-hover:bg-[#661714] group-hover:text-white">
-                  <Boxes className="h-4 w-4" strokeWidth={1.75} />
+                  <Warehouse className="h-4 w-4" strokeWidth={1.75} />
                 </span>
                 <span className="mt-0.5 text-[10px] text-foreground font-medium">Bulk Order</span>
               </Link>
@@ -268,7 +268,7 @@ export function Header() {
                 className="md:hidden flex items-center justify-center h-10 w-10 hover:bg-secondary/50 rounded-md transition-colors"
               >
                 <div className="w-7 h-7 rounded-full bg-[#661714]/8 ring-1 ring-[#661714]/20 flex items-center justify-center">
-                  <PackageSearch className="h-4 w-4 text-[#661714]" strokeWidth={1.75} />
+                  <Truck className="h-4 w-4 text-[#661714]" strokeWidth={1.75} />
                 </div>
               </Link>
 
