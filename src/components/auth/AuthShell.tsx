@@ -79,7 +79,7 @@ export function AuthShell({ mode, children }: Props) {
             className="group h-24 w-24 min-h-11 min-w-11 rounded-full bg-white flex items-center justify-center ring-2 ring-white/40 overflow-hidden shadow-lg transition-all duration-200 hover:ring-white/80 hover:shadow-2xl hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white"
           >
             <img
-              src="/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png"
+              src="/prasadam-logo.png"
               alt="Prasadam"
               width={80}
               height={80}
