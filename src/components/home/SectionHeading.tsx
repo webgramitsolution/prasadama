@@ -9,30 +9,44 @@ interface SectionHeadingProps {
   tone?: "default" | "onDark";
 }
 
-/** Ornamental flourish: tapered line + diamond + small curls (festive Indian motif) */
+/** Premium ornament: tapered rule, faceted lozenge, paisley curl and beads */
 function Flourish({ flip, tone }: { flip?: boolean; tone: "default" | "onDark" }) {
   const stroke = tone === "onDark" ? "hsl(45 80% 70%)" : "hsl(var(--accent))";
+  const id = `orn-${flip ? "b" : "a"}-${tone}`;
   return (
     <svg
-      viewBox="0 0 120 16"
-      className={`h-4 w-[70px] sm:w-[120px] shrink-0 ${flip ? "-scale-x-100" : ""}`}
+      viewBox="0 0 140 18"
+      className={`h-[18px] w-[80px] sm:w-[140px] shrink-0 ${flip ? "-scale-x-100" : ""}`}
       fill="none"
       aria-hidden="true"
     >
       <defs>
-        <linearGradient id={`fl-${flip ? "b" : "a"}-${tone}`} x1="0" x2="1">
+        <linearGradient id={id} x1="0" x2="1">
           <stop offset="0" stopColor={stroke} stopOpacity="0" />
-          <stop offset="1" stopColor={stroke} stopOpacity="0.9" />
+          <stop offset="0.55" stopColor={stroke} stopOpacity="0.55" />
+          <stop offset="1" stopColor={stroke} stopOpacity="1" />
         </linearGradient>
       </defs>
-      <path d="M2 8H82" stroke={`url(#fl-${flip ? "b" : "a"}-${tone})`} strokeWidth="1.2" strokeLinecap="round" />
-      <path d="M86 8l5-4.5 5 4.5-5 4.5z" stroke={stroke} strokeWidth="1.1" strokeLinejoin="round" />
-      <path d="M100 8c4-6 10-6 12 0" stroke={stroke} strokeWidth="1.1" strokeLinecap="round" opacity="0.85" />
-      <path d="M100 8c4 6 10 6 12 0" stroke={stroke} strokeWidth="1.1" strokeLinecap="round" opacity="0.85" />
-      <circle cx="118" cy="8" r="1.4" fill={stroke} />
+      {/* double tapered rule */}
+      <path d="M2 9H74" stroke={`url(#${id})`} strokeWidth="1.3" strokeLinecap="round" />
+      <path d="M18 12.6H74" stroke={`url(#${id})`} strokeWidth="0.7" strokeLinecap="round" opacity="0.55" />
+      <path d="M18 5.4H74" stroke={`url(#${id})`} strokeWidth="0.7" strokeLinecap="round" opacity="0.55" />
+      {/* beads */}
+      <circle cx="79" cy="9" r="1.1" fill={stroke} opacity="0.8" />
+      {/* faceted lozenge */}
+      <path d="M84 9l7-5.5 7 5.5-7 5.5z" stroke={stroke} strokeWidth="1.1" strokeLinejoin="round" />
+      <path d="M84 9h14M91 3.5v11" stroke={stroke} strokeWidth="0.6" opacity="0.5" />
+      {/* paisley curls */}
+      <path d="M102 9c3.6-6.4 9.6-6.4 11.6-1.2 1 2.6-1.4 4.4-2.9 3-1.2-1.1-.3-3 1.5-3" stroke={stroke} strokeWidth="1.05" strokeLinecap="round" />
+      <path d="M102 9c3.6 6.4 9.6 6.4 11.6 1.2" stroke={stroke} strokeWidth="1.05" strokeLinecap="round" opacity="0.8" />
+      {/* trailing beads */}
+      <circle cx="121" cy="9" r="1.6" fill={stroke} opacity="0.9" />
+      <circle cx="128" cy="9" r="1.1" fill={stroke} opacity="0.6" />
+      <circle cx="134" cy="9" r="0.8" fill={stroke} opacity="0.4" />
     </svg>
   );
 }
+
 
 export function SectionHeading({ title, subtitle, action, tone = "default" }: SectionHeadingProps) {
   return (
