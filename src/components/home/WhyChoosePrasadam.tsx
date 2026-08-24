@@ -41,7 +41,7 @@ function Flourish({ flip }: { flip?: boolean }) {
 export function WhyChoosePrasadam() {
   return (
     <section
-      className="relative w-full bg-no-repeat bg-cover bg-center mb-5"
+      className="relative w-full bg-no-repeat bg-cover bg-center mb-5 overflow-hidden rounded-[10px]"
       style={{ backgroundImage: `url("${BG}")` }}
       aria-label="Why Choose Prasadaim"
     >
