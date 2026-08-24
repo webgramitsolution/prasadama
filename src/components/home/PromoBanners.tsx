@@ -139,7 +139,7 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
   }
 
   return (
-    <section className="w-full bg-background py-6 sm:py-10 lg:py-12">
+    <section className="w-full bg-white py-6 sm:py-10 lg:py-12">
       <div className="w-full px-4 sm:px-6 lg:px-10">
         <div className="flex items-center justify-center gap-2 sm:gap-4 lg:gap-5 mb-5 sm:mb-8 lg:mb-10">
           <Ornament />
@@ -149,21 +149,21 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
           <Ornament flip />
         </div>
 
-        <div className="flex gap-4 sm:gap-5 lg:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex flex-wrap justify-center gap-4 sm:gap-5 lg:gap-6">
           {sortedBanners.slice(0, 9).map((banner, i) => (
             <CardLink
               key={banner.id}
               to={getCategoryHref(banner, categories)}
               ariaLabel={banner.title}
-              className="group block snap-start flex-shrink-0 w-[78vw] sm:w-[300px] lg:w-[320px] rounded-[16px] sm:rounded-[18px] border border-accent/25 bg-card/60 p-2 sm:p-2.5 shadow-[0_2px_16px_rgba(102,23,20,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-[0_10px_30px_rgba(102,23,20,0.16)]"
+              className="group block w-[80vw] sm:w-[300px] lg:w-[320px] rounded-[16px] sm:rounded-[18px] border border-accent/25 bg-card/60 overflow-hidden shadow-[0_2px_16px_rgba(102,23,20,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-[0_10px_30px_rgba(102,23,20,0.16)]"
             >
-              <div className="overflow-hidden rounded-[12px] sm:rounded-[14px] bg-muted/40">
+              <div className="overflow-hidden bg-muted/40">
                 <SignedImage
                   src={banner.image_url || banner.mobile_image_url || null}
                   alt={banner.title}
                   loading={i < 2 ? "eager" : "lazy"}
                   decoding="async"
-                  sizes="(max-width: 640px) 78vw, 320px"
+                  sizes="(max-width: 640px) 80vw, 320px"
                   className="w-full aspect-[16/9] object-cover object-center transition-transform duration-500 group-hover:scale-[1.04]"
                 />
               </div>
