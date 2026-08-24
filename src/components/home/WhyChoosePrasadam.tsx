@@ -21,11 +21,6 @@ const items = [
     title: "Prefrect for\nEvery Occasion",
     text: "Festive Specials,\nGift Hampers",
   },
-  {
-    icon: "https://ik.imagekit.io/4hcna271xz/Icon/Hygienic%20&%20Safe%20Packging.png?updatedAt=1787553430486",
-    title: "Hygienic & Safe\nPackging",
-    text: "Freshness & Purity\nGuaranteed",
-  },
 ];
 
 function Flourish({ flip }: { flip?: boolean }) {
@@ -46,7 +41,7 @@ function Flourish({ flip }: { flip?: boolean }) {
 export function WhyChoosePrasadam() {
   return (
     <section
-      className="relative w-full bg-no-repeat bg-cover bg-center"
+      className="relative w-full bg-no-repeat bg-cover bg-center mb-5"
       style={{ backgroundImage: `url("${BG}")` }}
       aria-label="Why Choose Prasadaim"
     >
@@ -62,7 +57,7 @@ export function WhyChoosePrasadam() {
           </p>
         </div>
 
-        <div className="mt-4 sm:mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-2 gap-y-5">
+        <div className="mt-4 sm:mt-6 grid grid-cols-2 sm:grid-cols-4 gap-x-2 gap-y-5">
           {items.map((item, i) => (
             <div
               key={item.title}
