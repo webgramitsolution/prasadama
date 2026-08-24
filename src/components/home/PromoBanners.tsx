@@ -149,13 +149,13 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
           <Ornament flip />
         </div>
 
-        <div className="flex flex-wrap justify-center gap-4 sm:gap-5 lg:gap-6">
+        <div className="flex overflow-x-auto gap-3 sm:gap-5 lg:gap-6 snap-x snap-mandatory pb-2 -mx-1 px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {sortedBanners.slice(0, 9).map((banner, i) => (
             <CardLink
               key={banner.id}
               to={getCategoryHref(banner, categories)}
               ariaLabel={banner.title}
-              className="group block w-[80vw] sm:w-[300px] lg:w-[320px] rounded-[16px] sm:rounded-[18px] border border-accent/25 bg-card/60 overflow-hidden shadow-[0_2px_16px_rgba(102,23,20,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-[0_10px_30px_rgba(102,23,20,0.16)]"
+              className="group block shrink-0 snap-start w-[calc(50%-0.375rem)] sm:w-[calc(33.333%-0.66rem)] lg:w-[calc(25%-0.75rem)] rounded-[16px] sm:rounded-[18px] border border-accent/25 bg-card/60 overflow-hidden shadow-[0_2px_16px_rgba(102,23,20,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-[0_10px_30px_rgba(102,23,20,0.16)]"
             >
               <div className="overflow-hidden bg-muted/40">
                 <SignedImage
