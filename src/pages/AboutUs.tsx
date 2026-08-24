@@ -164,12 +164,12 @@ export default function AboutUs() {
                 <span className="text-xs font-bold uppercase tracking-[0.28em] text-brand-red/80">Our Story</span>
                 <Ornament />
               </div>
-              <h1 className="font-display text-[2rem] leading-[1.12] text-foreground md:text-[3rem]">
+              <h1 className="font-display text-[1.65rem] leading-[1.12] text-foreground font-medium md:text-[2.4rem]">
                 Rooted in Tradition,
                 <br />
                 <span className="text-brand-red">Crafted with Devotion</span>
               </h1>
-              <p className="mt-5 max-w-lg text-sm leading-relaxed text-muted-foreground md:text-[15px]">
+              <p className="mt-5 max-w-lg text-sm leading-relaxed text-foreground md:text-[15px]">
                 Prasadam was born out of a simple belief — that every celebration deserves to be made special with pure,
                 authentic and delicious sweets. From traditional recipes passed down for generations to modern hygienic
                 packaging, we bring you the perfect blend of taste, purity and love.
