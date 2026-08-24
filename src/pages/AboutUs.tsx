@@ -176,7 +176,7 @@ export default function AboutUs() {
 
         {/* SINCE 2015 + STATS */}
         <section className="bg-white py-12 md:py-16">
-          <div className="container mx-auto grid gap-8 px-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] lg:gap-10">
+          <div className="container mx-auto grid gap-8 px-4 lg:grid-cols-[65%_35%] lg:gap-10">
             <div className="grid gap-8 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] sm:items-center">
               <div className="overflow-hidden rounded-xl shadow-card">
                 <img src={WHO_IMAGE} alt="Prasadam store front" className="h-full max-h-[260px] w-full object-cover" loading="lazy" />
@@ -279,11 +279,11 @@ export default function AboutUs() {
                   <div
                     className="flex h-[72px] w-[72px] items-center justify-center rounded-full shadow-md md:h-20 md:w-20"
                     style={{
-                      background: "linear-gradient(135deg,#fdf3d4 0%,#e6c176 28%,#b8862f 55%,#f4e3ad 78%,#c9993f 100%)",
-                      boxShadow: "0 4px 14px rgba(0,0,0,0.25), inset 0 1px 2px rgba(255,255,255,0.6)",
+                      background: "rgba(255,255,255,0.08)",
+                      boxShadow: "inset 0 0 0 1.5px rgba(255,255,255,0.55)",
                     }}
                   >
-                    <Icon className="h-10 w-10 text-[#6b4a12] md:h-12 md:w-12" aria-hidden="true" />
+                    <Icon className="h-10 w-10 text-white md:h-12 md:w-12" strokeWidth={1.5} aria-hidden="true" />
                   </div>
                   <span className="text-xs font-semibold tracking-wide md:text-sm">{label}</span>
                 </div>

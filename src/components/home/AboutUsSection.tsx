@@ -19,7 +19,7 @@ export function AboutUsSection() {
         <div className="grid gap-6 lg:grid-cols-2 items-stretch">
           <div className="overflow-hidden rounded-xl border border-border h-full max-h-[340px] lg:max-h-[380px]">
             <img
-              src="https://ik.imagekit.io/Prasadam/Product%20B/Product%20B%20(6).png?updatedAt=1787383431347"
+              src="https://ik.imagekit.io/4hcna271xz/about%20us.png"
               alt="Prasadam blessed temple offerings"
               loading="lazy"
               className="w-full h-full min-h-[200px] sm:min-h-[260px] max-h-[340px] lg:max-h-[380px] object-cover bg-white"

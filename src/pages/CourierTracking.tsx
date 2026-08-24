@@ -272,7 +272,7 @@ export default function CourierTracking() {
       />
       <Header />
 
-      <main className="pb-20">
+      <main className="pb-0 bg-white">
         {/* Hero */}
         <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-accent/5 to-primary/10 border-b border-border">
           <div className="w-full px-[40px] py-10 sm:py-14">
@@ -351,7 +351,7 @@ export default function CourierTracking() {
           </div>
         </section>
 
-        <div className="w-full px-[40px] py-8 space-y-6">
+        <div className="w-full px-[40px] pt-8 pb-[25px] space-y-6 bg-white">
           {orderLoading && (
             <div className="bg-card border border-border rounded-2xl p-6 flex items-center gap-3">
               <Loader2 className="h-5 w-5 animate-spin text-accent" />

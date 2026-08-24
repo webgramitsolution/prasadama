@@ -917,7 +917,7 @@ export default function Checkout() {
                         src="https://ik.imagekit.io/4hcna271xz/upi-icons.svg?updatedAt=1787541720375"
                         alt=""
                         aria-hidden="true"
-                        className="h-9 w-9 object-contain flex-shrink-0"
+                        className="h-12 w-12 object-contain flex-shrink-0"
                       />
                     </button>
 
