@@ -32,10 +32,12 @@ export function SocialRail() {
     })();
   }, []);
 
+  const brandStyle = { background: "#A03225", color: "#fff" } as const;
+
   const items = [
-    { key: "Facebook", icon: Facebook, url: social.facebook, style: { background: "#1877F2", color: "#fff" } },
-    { key: "Instagram", icon: Instagram, url: social.instagram, style: { background: "linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%)", color: "#fff" } },
-    { key: "WhatsApp", icon: MessageCircle, url: social.whatsapp, style: { background: "#25D366", color: "#fff" } },
+    { key: "Facebook", icon: Facebook, url: social.facebook, style: brandStyle },
+    { key: "Instagram", icon: Instagram, url: social.instagram, style: brandStyle },
+    { key: "WhatsApp", icon: MessageCircle, url: social.whatsapp, style: brandStyle },
   ].filter((i) => i.url && i.url !== "#");
 
   if (items.length === 0) return null;
