@@ -30,7 +30,7 @@ const items = [
 
 export function WhyChoosePrasadam() {
   return (
-    <section className="py-6 sm:py-8">
+    <section className="py-6 sm:py-8 bg-white">
       <div className="container mx-auto px-3 sm:px-4">
         <div className="overflow-hidden rounded-2xl border border-accent/25 bg-[#f6eae0] shadow-sm">
           <div className="grid md:grid-cols-[1fr_300px] lg:grid-cols-[1fr_360px] items-stretch">
@@ -44,7 +44,7 @@ export function WhyChoosePrasadam() {
                       src={item.icon}
                       alt={item.title}
                       loading="lazy"
-                      className="h-14 w-14 sm:h-16 sm:w-16 md:h-[68px] md:w-[68px] object-contain"
+                      className="h-14 w-14 sm:h-16 sm:w-16 md:h-[88px] md:w-[88px] lg:h-[104px] lg:w-[104px] object-contain"
                     />
                     <p className="mt-2 font-display text-[12px] sm:text-[13px] md:text-sm font-semibold text-primary leading-tight">
                       {item.title}
@@ -57,12 +57,12 @@ export function WhyChoosePrasadam() {
               </div>
             </div>
 
-            <div className="h-[180px] md:h-auto">
+            <div className="h-[180px] md:h-auto flex items-center justify-center">
               <img
                 src="https://ik.imagekit.io/Prasadam/Why%20Choose%20/why.png"
                 alt="Prasadam festive gift box with diyas and sweets"
                 loading="lazy"
-                className="h-full w-full object-cover"
+                className="h-full w-full object-cover md:object-contain"
               />
             </div>
           </div>
