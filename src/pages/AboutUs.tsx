@@ -52,17 +52,24 @@ const ECO_IMAGE = "https://ik.imagekit.io/Prasadam/Product%20B/Product%20B%20(6)
 function Ornament({ flip }: { flip?: boolean }) {
   return (
     <svg
-      viewBox="0 0 96 14"
-      className={`h-3.5 w-[70px] shrink-0 text-brand-red ${flip ? "-scale-x-100" : ""}`}
+      viewBox="0 0 140 18"
+      className={`h-[18px] w-[90px] shrink-0 text-brand-red ${flip ? "-scale-x-100" : ""}`}
       fill="none"
       aria-hidden="true"
     >
-      <path d="M2 7h44" stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity="0.5" />
-      <path d="M50 7l4-4 4 4-4 4z" stroke="currentColor" strokeWidth="1" strokeLinejoin="round" />
-      <path d="M62 7c3-5 8-5 10 0" stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity="0.8" />
-      <path d="M62 7c3 5 8 5 10 0" stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity="0.8" />
-      <circle cx="78" cy="7" r="1.3" fill="currentColor" />
+      <path d="M2 9H74" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" opacity="0.55" />
+      <path d="M18 12.6H74" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" opacity="0.3" />
+      <path d="M18 5.4H74" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" opacity="0.3" />
+      <circle cx="79" cy="9" r="1.1" fill="currentColor" opacity="0.8" />
+      <path d="M84 9l7-5.5 7 5.5-7 5.5z" stroke="currentColor" strokeWidth="1.1" strokeLinejoin="round" />
+      <path d="M84 9h14M91 3.5v11" stroke="currentColor" strokeWidth="0.6" opacity="0.5" />
+      <path d="M102 9c3.6-6.4 9.6-6.4 11.6-1.2 1 2.6-1.4 4.4-2.9 3-1.2-1.1-.3-3 1.5-3" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" />
+      <path d="M102 9c3.6 6.4 9.6 6.4 11.6 1.2" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" opacity="0.8" />
+      <circle cx="121" cy="9" r="1.6" fill="currentColor" opacity="0.9" />
+      <circle cx="128" cy="9" r="1.1" fill="currentColor" opacity="0.6" />
+      <circle cx="134" cy="9" r="0.8" fill="currentColor" opacity="0.4" />
     </svg>
+
   );
 }
 
