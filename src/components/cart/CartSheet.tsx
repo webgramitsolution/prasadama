@@ -251,7 +251,7 @@ export function CartSheet() {
                 disabled={!allMoqValid || isLoading}
               >
                 <span className="text-sm font-bold tracking-wide">{isLoading ? "Loading..." : "PLACE ORDER"}</span>
-                <img src={CHECKOUT_ICON_URL} alt="" aria-hidden="true" className="h-8 w-8 object-contain" />
+                <img src={CHECKOUT_ICON_URL} alt="" aria-hidden="true" className="h-11 w-11 object-contain" />
               </Button>
             </Link>
           </SheetFooter>
