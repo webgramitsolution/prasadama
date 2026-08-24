@@ -44,7 +44,7 @@ interface ProductLite {
   images: string[] | null;
 }
 
-const HERO_BG = "https://ik.imagekit.io/prasadam1/about%20us%20banner.png";
+const HERO_BG = "https://ik.imagekit.io/4hcna271xz/about.png";
 const WHO_IMAGE = "/auth-pooja.jpg";
 const ECO_IMAGE = "https://ik.imagekit.io/Prasadam/Product%20B/Product%20B%20(6).png?updatedAt=1787383431347";
 

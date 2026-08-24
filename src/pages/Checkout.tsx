@@ -914,7 +914,7 @@ export default function Checkout() {
                             : "PLACE ORDER"}
                       </span>
                       <img
-                        src="https://ik.imagekit.io/houskase/checkout-btn-icon.svg"
+                        src="https://ik.imagekit.io/4hcna271xz/upi-icons.svg?updatedAt=1787541720375"
                         alt=""
                         aria-hidden="true"
                         className="h-9 w-9 object-contain flex-shrink-0"
