@@ -279,7 +279,7 @@ export default function CourierTracking() {
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div className="flex md:hidden justify-center items-center order-first">
                 <motion.img
-                  src="/products-hero-banner.jpg"
+                  src="https://ik.imagekit.io/4hcna271xz/shipping_van.png"
                   alt="Courier delivery tracking illustration"
                   animate={{ y: [0, -8, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -340,7 +340,7 @@ export default function CourierTracking() {
 
               <div className="hidden md:flex justify-center items-center">
                 <motion.img
-                  src="/products-hero-banner.jpg"
+                  src="https://ik.imagekit.io/4hcna271xz/shipping_van.png"
                   alt="Courier delivery tracking illustration"
                   animate={{ y: [0, -8, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}

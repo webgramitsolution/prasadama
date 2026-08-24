@@ -8,7 +8,7 @@ import { useCart } from "@/contexts/CartContext";
 import { cn } from "@/lib/utils";
 import { SignedImage } from "@/components/common/SignedImage";
 import { supabase } from "@/integrations/supabase/client";
-const CHECKOUT_ICON_URL = "https://ik.imagekit.io/houskase/checkout-btn-icon.svg";
+const CHECKOUT_ICON_URL = "https://ik.imagekit.io/4hcna271xz/upi-icons.svg?updatedAt=1787541720375";
 
 export function CartSheet() {
   const {
