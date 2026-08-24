@@ -1,71 +1,89 @@
-import { SectionHeading } from "./SectionHeading";
+const BG = "https://ik.imagekit.io/4hcna271xz/banner%201%20about%20us.png?updatedAt=1787551782146";
 
 const items = [
   {
-    icon: "https://ik.imagekit.io/Prasadam/Why%20Choose%20/Authentic%20Ingredient.png",
-    title: "Authentic Ingredients",
-    text: "Carefully selected\nfor pure & rich taste.",
+    icon: "https://ik.imagekit.io/4hcna271xz/Icon/100_%20Pure%20&%20Premium%20Ingredients.png?updatedAt=1787553430578",
+    title: "100% Pure &\nPremium Ingredients",
+    text: "No Preservatives,\nOnly Goodness",
   },
   {
-    icon: "https://ik.imagekit.io/Prasadam/Why%20Choose%20/Premium%20Quality.png",
-    title: "Premium Quality",
-    text: "Finest quality sweets\n& snacks, always.",
+    icon: "https://ik.imagekit.io/4hcna271xz/Icon/Traditional%20Recipes.png?updatedAt=1787553430297",
+    title: "Traditional\nRecipes",
+    text: "Timeless Taste,\nAuthentic Flavours",
   },
   {
-    icon: "https://ik.imagekit.io/Prasadam/Why%20Choose%20/Make%20with%20Devotion.png",
-    title: "Made with Devotion",
-    text: "Crafted with love,\ntradition & purity.",
+    icon: "https://ik.imagekit.io/4hcna271xz/Icon/Made%20with%20Devotion.png?updatedAt=1787553430398",
+    title: "Made with\nDevotion",
+    text: "Prasad Quality,\nBlessed with Love",
   },
   {
-    icon: "https://ik.imagekit.io/Prasadam/Why%20Choose%20/Perfect%20for%20Gifting.png",
-    title: "Perfect for Gifting",
-    text: "Beautifully packed\nfor every occasion.",
+    icon: "https://ik.imagekit.io/4hcna271xz/Icon/Prefrect%20for%20Every%20Occasion.png?updatedAt=1787553430561",
+    title: "Prefrect for\nEvery Occasion",
+    text: "Festive Specials,\nGift Hampers",
   },
   {
-    icon: "https://ik.imagekit.io/Prasadam/Why%20Choose%20/Hygienic%20&%20SAfe.png",
-    title: "Hygienic & Safe",
-    text: "Prepared & packed\nwith utmost care.",
+    icon: "https://ik.imagekit.io/4hcna271xz/Icon/Hygienic%20&%20Safe%20Packging.png?updatedAt=1787553430486",
+    title: "Hygienic & Safe\nPackging",
+    text: "Freshness & Purity\nGuaranteed",
   },
 ];
 
+function Flourish({ flip }: { flip?: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 60 16"
+      className={`h-4 w-10 sm:w-14 shrink-0 ${flip ? "-scale-x-100" : ""}`}
+      fill="none"
+      aria-hidden="true"
+    >
+      <path d="M2 8h34" stroke="#8a2b1f" strokeWidth="1" strokeLinecap="round" opacity="0.7" />
+      <path d="M40 8l6-4.5 6 4.5-6 4.5z" stroke="#8a2b1f" strokeWidth="1" strokeLinejoin="round" />
+      <circle cx="56" cy="8" r="1.2" fill="#8a2b1f" />
+    </svg>
+  );
+}
+
 export function WhyChoosePrasadam() {
   return (
-    <section className="py-6 sm:py-8 bg-white">
-      <div className="container mx-auto px-3 sm:px-4">
-        <div className="overflow-hidden rounded-2xl border border-accent/25 bg-[#f6eae0] shadow-sm">
-          <div className="grid md:grid-cols-[1fr_300px] lg:grid-cols-[1fr_360px] items-stretch">
-            <div className="p-4 sm:p-6">
-              <SectionHeading title="Why Choose Prasadam?" />
+    <section
+      className="relative w-full bg-no-repeat bg-cover bg-center"
+      style={{ backgroundImage: `url("${BG}")` }}
+      aria-label="Why Choose Prasadaim"
+    >
+      <div className="mx-auto w-full max-w-[1100px] px-4 py-6 sm:py-8 md:py-10 md:pr-[26%]">
+        <div className="text-center">
+          <h2 className="font-display text-xl sm:text-2xl md:text-[30px] font-medium text-[#6b1d16] flex items-center justify-center gap-2 sm:gap-3">
+            <Flourish flip />
+            <span>Why Choose Prasadaim?</span>
+            <Flourish />
+          </h2>
+          <p className="mt-1 text-[11px] sm:text-xs md:text-sm tracking-wide text-[#8a4a2f]">
+            Pure • Traditional • Divine
+          </p>
+        </div>
 
-              <div className="grid grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
-                {items.map((item) => (
-                  <div key={item.title} className="flex flex-col items-center text-center">
-                    <img
-                      src={item.icon}
-                      alt={item.title}
-                      loading="lazy"
-                      className="h-14 w-14 sm:h-16 sm:w-16 md:h-[88px] md:w-[88px] lg:h-[104px] lg:w-[104px] object-contain"
-                    />
-                    <p className="mt-2 font-display text-[12px] sm:text-[13px] md:text-sm font-semibold text-primary leading-tight">
-                      {item.title}
-                    </p>
-                    <p className="mt-1 text-[10px] sm:text-[11px] md:text-xs text-muted-foreground leading-snug whitespace-pre-line">
-                      {item.text}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="h-[180px] md:h-auto flex items-center justify-center">
+        <div className="mt-4 sm:mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-2 gap-y-5">
+          {items.map((item, i) => (
+            <div
+              key={item.title}
+              className={`flex flex-col items-center text-center px-1 md:px-2 ${
+                i > 0 ? "md:border-l md:border-[#c9a06a]/40" : ""
+              }`}
+            >
               <img
-                src="https://ik.imagekit.io/Prasadam/Why%20Choose%20/why.png"
-                alt="Prasadam festive gift box with diyas and sweets"
+                src={item.icon}
+                alt={item.title.replace(/\n/g, " ")}
                 loading="lazy"
-                className="h-full w-full object-cover md:object-contain"
+                className="h-9 w-9 sm:h-10 sm:w-10 md:h-11 md:w-11 object-contain"
               />
+              <p className="mt-2 font-semibold text-[11px] sm:text-xs md:text-[13px] leading-tight text-[#6b1d16] whitespace-pre-line">
+                {item.title}
+              </p>
+              <p className="mt-1 text-[10px] sm:text-[11px] leading-snug text-[#96552f] whitespace-pre-line">
+                {item.text}
+              </p>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

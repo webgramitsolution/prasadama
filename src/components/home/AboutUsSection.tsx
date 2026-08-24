@@ -17,12 +17,12 @@ export function AboutUsSection() {
     <section className="py-8 sm:py-10 bg-white">
       <div className="container mx-auto px-3 sm:px-4">
         <div className="grid gap-6 lg:grid-cols-2 items-stretch">
-          <div className="overflow-hidden rounded-xl border border-border h-full max-h-[340px] lg:max-h-[380px]">
+          <div className="overflow-hidden rounded-xl border border-border h-full">
             <img
               src="https://ik.imagekit.io/4hcna271xz/about%20us.png"
               alt="Prasadam blessed temple offerings"
               loading="lazy"
-              className="w-full h-full min-h-[200px] sm:min-h-[260px] max-h-[340px] lg:max-h-[380px] object-cover bg-white"
+              className="w-full h-full min-h-[240px] sm:min-h-[320px] lg:min-h-[480px] object-cover bg-white"
             />
           </div>
 
