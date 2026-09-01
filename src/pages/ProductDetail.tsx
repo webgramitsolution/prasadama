@@ -19,7 +19,6 @@ import { useCart } from "@/contexts/CartContext";
 import { RelatedProducts } from "@/components/products/RelatedProducts";
 import { ReviewsSummary } from "@/components/products/ReviewsSummary";
 import { ReelsSection } from "@/components/reels/ReelsSection";
-import { ProductOffers } from "@/components/products/ProductOffers";
 import { ProductCoupons } from "@/components/products/ProductCoupons";
 import { CustomerReviews, type ReviewStats } from "@/components/products/CustomerReviews";
 import { Input } from "@/components/ui/input";
@@ -403,9 +402,9 @@ export default function ProductDetail() {
       return a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
     };
 
-    // Respect admin ordering when it is configured, else fall back to natural order
-    const hasSortOrder = variations.some((v: any) => v.sort_order !== null && v.sort_order !== undefined);
-    const orderValues = (vals: string[]) => (hasSortOrder ? vals : [...vals].sort(naturalSort));
+    // Customer-facing variation order is always natural, even when an admin
+    // accidentally saves an incorrect sort_order value.
+    const orderValues = (vals: string[]) => [...vals].sort(naturalSort);
 
     // 1. Get all attributes used for variations from variationAttributes (fetched from assignments)
     // We strictly filter for standard naming conventions
@@ -966,9 +965,6 @@ export default function ProductDetail() {
                   ))}
                 </div>
               )}
-
-              {/* Available Offers */}
-              <ProductOffers categoryId={product.category_id} />
 
               {/* Available Coupons */}
               <ProductCoupons categoryId={product.category_id} />

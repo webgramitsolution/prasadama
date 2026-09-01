@@ -76,7 +76,6 @@ export function ProductCard({ product, index = 0, className = "" }: ProductCardP
       .select("id, size, guest_price, retail_price, regular_price")
       .eq("product_id", product.id)
       .eq("is_active", true)
-      .order("created_at", { ascending: true })
       .then(({ data }) => {
         if (cancelled || !data) return;
         const rows = (data as any[])
@@ -87,7 +86,18 @@ export function ProductCard({ product, index = 0, className = "" }: ProductCardP
             guest_price: Number(v.guest_price || 0),
             retail_price: Number(v.retail_price || 0),
             regular_price: Number(v.regular_price || 0)
-          }));
+          }))
+          .sort((a, b) => {
+            const toBaseUnit = (raw: string) => {
+              const match = raw.toLowerCase().trim().match(/([\d.]+)\s*(kg|g|gm|gram|l|ltr|litre|ml|pcs|piece|pc)?/);
+              if (!match) return Number.MAX_SAFE_INTEGER;
+              const value = Number.parseFloat(match[1] ?? "");
+              const unit = match[2] ?? "";
+              return value * (["kg", "l", "ltr", "litre"].includes(unit) ? 1000 : 1);
+            };
+            const difference = toBaseUnit(a.size) - toBaseUnit(b.size);
+            return difference || a.size.localeCompare(b.size, undefined, { numeric: true, sensitivity: "base" });
+          });
         setSizes(rows);
         if (rows.length > 0) setSelectedSizeId(rows[0]?.id || null);
       });
