@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Copy, Check } from "lucide-react";
+import { BadgePercent, Copy, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -17,7 +17,7 @@ interface ProductCouponsProps {
   categoryId?: string | null;
 }
 
-// Fixed-size ticket voucher inspired by the uploaded coupon reference.
+// Dashed-border green coupon strip.
 export function ProductCoupons({ categoryId }: ProductCouponsProps) {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -44,65 +44,42 @@ export function ProductCoupons({ categoryId }: ProductCouponsProps) {
   };
 
   return (
-    <div className="space-y-3">
-      <p className="text-[12px] font-extrabold tracking-[0.18em] text-foreground uppercase">
-        Active Offers
-      </p>
-      <div className="flex flex-wrap gap-3">
-        {coupons.map((c) => {
-          const isCopied = copiedId === c.id;
-          const headline =
-            c.title || (c.discount_type === "percentage"
-              ? `FLAT ${c.discount_value}% OFF`
-              : `FLAT ₹${c.discount_value} OFF`);
-          const subline =
-            c.description ||
-            (c.min_order_amount && c.min_order_amount > 0
-              ? `Min order ₹${c.min_order_amount}`
-              : "+ 5% off on Prepaid orders");
-          return (
+    <div className="space-y-2.5">
+      {coupons.map((c) => {
+        const isCopied = copiedId === c.id;
+        const label =
+          c.title ||
+          c.description ||
+          (c.discount_type === "percentage"
+            ? `Get flat ${c.discount_value}% Discount.`
+            : `Get flat ₹${c.discount_value} Discount.`);
+        return (
+          <div
+            key={c.id}
+            className="flex items-center gap-3 rounded-xl border border-dashed border-[#1e7a3c]/50 bg-[#f1f8f2] px-3 py-2.5 sm:px-4 sm:py-3"
+          >
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#1e7a3c] text-white">
+              <BadgePercent className="h-4 w-4" />
+            </span>
+
+            <p className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1 text-[13px] sm:text-[14px] font-medium text-[#1b5e33]">
+              <span className="truncate">{label} Use code</span>
+              <span className="rounded-md bg-[#e2efe4] px-2 py-0.5 text-[13px] sm:text-[14px] font-semibold tracking-wide text-[#14532d]">
+                {c.code}
+              </span>
+            </p>
+
             <button
-              key={c.id}
               type="button"
               onClick={() => handleCopy(c)}
-              className="group relative h-[88px] w-[172px] md:h-[95px] md:w-[190px] md:scale-90 lg:scale-100 shrink-0 text-left transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-[#1e7a3c]/40 bg-white px-2.5 py-1.5 sm:px-3.5 sm:py-2 text-[12px] sm:text-[13px] font-medium text-[#1b5e33] transition-colors hover:bg-[#e9f4ea]"
             >
-              <div className="relative h-full w-full overflow-hidden rounded-[12px] md:rounded-[13px] border-[1.5px] border-coupon-ink bg-coupon-surface px-[13px] py-[10px] md:px-[15px] md:py-[11px] shadow-sm">
-                <div className="text-[13px] md:text-[14px] leading-none font-bold text-coupon-ink truncate">
-                  {headline}
-                </div>
-                <div className="mt-1 text-[10px] md:text-[11px] leading-tight font-semibold text-coupon-description truncate">
-                  {subline}
-                </div>
-
-                <div className="relative mt-[9px] md:mt-[10px]">
-                  <div
-                    aria-hidden
-                    className="absolute -left-[8px] top-1/2 z-10 h-4 w-4 -translate-y-1/2 rounded-full border-[1.5px] border-coupon-ink bg-coupon-surface"
-                  />
-                  <div
-                    aria-hidden
-                    className="absolute -right-[8px] top-1/2 z-10 h-4 w-4 -translate-y-1/2 rounded-full border-[1.5px] border-coupon-ink bg-coupon-surface"
-                  />
-                  <div className="flex h-[28px] md:h-[30px] items-center justify-center gap-1.5 md:gap-2 rounded-[8px] md:rounded-[9px] border-[1.5px] border-dashed border-coupon-ink bg-coupon-code px-4 md:px-5">
-                    <span className="relative inline-block h-[15px] w-[15px] md:h-[16px] md:w-[16px] shrink-0">
-                      {isCopied ? (
-                        <Check className="h-[15px] w-[15px] md:h-[16px] md:w-[16px] text-coupon-ink" />
-                      ) : (
-                        <>
-                          <span className="absolute left-[5px] top-0 h-[12px] w-[9px] md:left-[5px] md:h-[13px] md:w-[9px] rounded-[2px] border-[1.5px] border-coupon-ink bg-coupon-code" />
-                          <span className="absolute left-0 top-[3px] md:top-[3px] h-[12px] w-[9px] md:h-[13px] md:w-[9px] rounded-[2px] border-[1.5px] border-coupon-ink bg-coupon-code" />
-                        </>
-                      )}
-                    </span>
-                    <span className="min-w-0 truncate text-[16px] md:text-[17px] font-bold leading-none text-coupon-ink">{c.code}</span>
-                  </div>
-                </div>
-              </div>
+              {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              <span>{isCopied ? "Copied" : "Copy Code"}</span>
             </button>
-          );
-        })}
-      </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
