@@ -352,7 +352,9 @@ export default function ProductDetail() {
           .from("product_variations")
           .select("*")
           .eq("product_id", productData.id)
-          .eq("is_active", true);
+          .eq("is_active", true)
+          .order("sort_order", { ascending: true, nullsFirst: false })
+          .order("created_at", { ascending: true });
         setVariations(vars || []);
 
         const { data: assignments } = await supabase
