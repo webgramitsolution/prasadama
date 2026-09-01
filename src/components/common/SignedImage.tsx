@@ -6,22 +6,23 @@ type SignedImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "src"> & {
   fallbackSrc?: string;
 };
 
-export function SignedImage({ src, fallbackSrc = "/placeholder.svg", onError, ...props }: SignedImageProps) {
-  const [currentSrc, setCurrentSrc] = useState(src || fallbackSrc);
+export function SignedImage({ src, fallbackSrc = "/placeholder.svg", onError, style, ...props }: SignedImageProps) {
+  const needsSigning = isProductBucketUrl(src);
+  const [currentSrc, setCurrentSrc] = useState(needsSigning ? "" : src || fallbackSrc);
   const [triedSignedFallback, setTriedSignedFallback] = useState(false);
 
   useEffect(() => {
     let active = true;
-    setCurrentSrc(src || fallbackSrc);
-    setTriedSignedFallback(false);
+    const signing = isProductBucketUrl(src);
+    // Avoid rendering the unsigned (always-broken) private-bucket URL first —
+    // that causes a broken-image flash on first paint (e.g. hero slider).
+    setCurrentSrc(signing ? "" : src || fallbackSrc);
+    setTriedSignedFallback(signing);
 
-    // The product bucket is private, so a stored "public" URL never loads directly.
-    // Sign it up-front instead of waiting for an onError round-trip (avoids broken
-    // image flashes in the admin image library and on product pages).
-    if (isProductBucketUrl(src)) {
-      setTriedSignedFallback(true);
+    if (signing) {
       getSignedImageUrl(src).then((signed) => {
-        if (active && signed) setCurrentSrc(signed);
+        if (!active) return;
+        setCurrentSrc(signed || fallbackSrc);
       });
     }
 
@@ -34,8 +35,10 @@ export function SignedImage({ src, fallbackSrc = "/placeholder.svg", onError, ..
     <img
       {...props}
       data-signed-image="true"
-      src={currentSrc}
+      {...(currentSrc ? { src: currentSrc } : {})}
+      style={currentSrc ? style : { ...style, opacity: 0 }}
       decoding={props.decoding || "async"}
+
       onError={async (event) => {
         if (!triedSignedFallback && isProductBucketUrl(src)) {
           setTriedSignedFallback(true);
