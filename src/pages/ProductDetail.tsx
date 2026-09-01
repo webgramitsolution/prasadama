@@ -390,7 +390,7 @@ export default function ProductDetail() {
       const s = (raw || "").toLowerCase().trim();
       const m = s.match(/([\d.]+)\s*(kg|g|gm|gram|l|ltr|litre|ml|pcs|piece|pc)?/);
       if (!m) return Number.MAX_SAFE_INTEGER;
-      const n = parseFloat(m[1]);
+      const n = parseFloat(m[1] ?? "");
       if (isNaN(n)) return Number.MAX_SAFE_INTEGER;
       const unit = m[2] || "";
       const mult = unit === "kg" || unit === "l" || unit === "ltr" || unit === "litre" ? 1000 : 1;
