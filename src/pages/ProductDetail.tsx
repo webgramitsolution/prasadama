@@ -385,16 +385,40 @@ export default function ProductDetail() {
   }, [id]);
 
   const { uniqueSizes, uniqueColors, colorImageMap, otherAttributes } = useMemo(() => {
+    // Natural, unit-aware ordering: 500g < 1kg < 2kg < 5kg
+    const sizeRank = (raw: string) => {
+      const s = (raw || "").toLowerCase().trim();
+      const m = s.match(/([\d.]+)\s*(kg|g|gm|gram|l|ltr|litre|ml|pcs|piece|pc)?/);
+      if (!m) return Number.MAX_SAFE_INTEGER;
+      const n = parseFloat(m[1]);
+      if (isNaN(n)) return Number.MAX_SAFE_INTEGER;
+      const unit = m[2] || "";
+      const mult = unit === "kg" || unit === "l" || unit === "ltr" || unit === "litre" ? 1000 : 1;
+      return n * mult;
+    };
+    const naturalSort = (a: string, b: string) => {
+      const ra = sizeRank(a);
+      const rb = sizeRank(b);
+      if (ra !== rb) return ra - rb;
+      return a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
+    };
+
+    // Respect admin ordering when it is configured, else fall back to natural order
+    const hasSortOrder = variations.some((v: any) => v.sort_order !== null && v.sort_order !== undefined);
+    const orderValues = (vals: string[]) => (hasSortOrder ? vals : [...vals].sort(naturalSort));
+
     // 1. Get all attributes used for variations from variationAttributes (fetched from assignments)
     // We strictly filter for standard naming conventions
-    const others = variationAttributes.filter(a => {
-      const n = a.name.toLowerCase().trim();
-      return n !== "size" && n !== "color" && n !== "colour";
-    });
+    const others = variationAttributes
+      .filter(a => {
+        const n = a.name.toLowerCase().trim();
+        return n !== "size" && n !== "color" && n !== "colour";
+      })
+      .map(a => ({ ...a, values: orderValues(a.values) }));
 
     // 2. Identify if ANY variations actually use standard size/color fields
     // This handles how the database structure maps variation values
-    const sizes = [...new Set(variations.map(v => v.size).filter(Boolean))] as string[];
+    const sizes = orderValues([...new Set(variations.map(v => v.size).filter(Boolean))] as string[]);
     const colors = [...new Set(variations.map(v => v.color).filter(Boolean))] as string[];
     const imageMap: Record<string, string> = {};
     
