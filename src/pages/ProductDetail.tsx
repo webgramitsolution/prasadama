@@ -430,6 +430,29 @@ export default function ProductDetail() {
     return { uniqueSizes: sizes, uniqueColors: colors, colorImageMap: imageMap, otherAttributes: others };
   }, [variations, variationAttributes]);
 
+  // Unified, always natural-ordered variation list used by the card selector
+  const sortedVariations = useMemo(() => {
+    const rank = (raw: string) => {
+      const s = (raw || "").toLowerCase().trim();
+      const m = s.match(/([\d.]+)\s*(kg|g|gm|gram|l|ltr|litre|ml|pcs|piece|pc)?/);
+      if (!m) return Number.MAX_SAFE_INTEGER;
+      const n = parseFloat(m[1] ?? "");
+      if (isNaN(n)) return Number.MAX_SAFE_INTEGER;
+      const unit = m[2] || "";
+      const mult = unit === "kg" || unit === "l" || unit === "ltr" || unit === "litre" ? 1000 : 1;
+      return n * mult;
+    };
+    const label = (v: any) => [v.size, v.color].filter(Boolean).join(" ") || v.sku || "";
+    return [...variations].sort((a, b) => {
+      const la = label(a);
+      const lb = label(b);
+      const d = rank(la) - rank(lb);
+      if (d) return d;
+      return la.localeCompare(lb, undefined, { numeric: true, sensitivity: "base" });
+    });
+  }, [variations]);
+
+
   const selectedVariation = useMemo(() => {
     if (!product?.has_variations || variations.length === 0) return null;
     if (selectedVariationId) {
