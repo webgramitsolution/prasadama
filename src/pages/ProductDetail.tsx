@@ -430,6 +430,29 @@ export default function ProductDetail() {
     return { uniqueSizes: sizes, uniqueColors: colors, colorImageMap: imageMap, otherAttributes: others };
   }, [variations, variationAttributes]);
 
+  // Unified, always natural-ordered variation list used by the card selector
+  const sortedVariations = useMemo(() => {
+    const rank = (raw: string) => {
+      const s = (raw || "").toLowerCase().trim();
+      const m = s.match(/([\d.]+)\s*(kg|g|gm|gram|l|ltr|litre|ml|pcs|piece|pc)?/);
+      if (!m) return Number.MAX_SAFE_INTEGER;
+      const n = parseFloat(m[1] ?? "");
+      if (isNaN(n)) return Number.MAX_SAFE_INTEGER;
+      const unit = m[2] || "";
+      const mult = unit === "kg" || unit === "l" || unit === "ltr" || unit === "litre" ? 1000 : 1;
+      return n * mult;
+    };
+    const label = (v: any) => [v.size, v.color].filter(Boolean).join(" ") || v.sku || "";
+    return [...variations].sort((a, b) => {
+      const la = label(a);
+      const lb = label(b);
+      const d = rank(la) - rank(lb);
+      if (d) return d;
+      return la.localeCompare(lb, undefined, { numeric: true, sensitivity: "base" });
+    });
+  }, [variations]);
+
+
   const selectedVariation = useMemo(() => {
     if (!product?.has_variations || variations.length === 0) return null;
     if (selectedVariationId) {
@@ -513,6 +536,15 @@ export default function ProductDetail() {
       }
     });
   }, [uniqueSizes, uniqueColors, selectedSize, selectedColor, otherAttributes, selectedOtherValues]);
+
+  // Default to the first variation in natural order
+  useEffect(() => {
+    if (sortedVariations.length > 0 && !selectedVariationId) {
+      setSelectedVariationId(sortedVariations[0]?.id ?? null);
+    }
+  }, [sortedVariations, selectedVariationId]);
+
+
 
   // Update quantity when buyerType or MOQ changes (e.g., after auth loads)
   useEffect(() => {
@@ -802,169 +834,65 @@ export default function ProductDetail() {
                 </div>
               </div>
 
-              {/* Variant Selection */}
-              {variations.length > 0 && (uniqueSizes.length > 0 || uniqueColors.length > 0 || otherAttributes.length > 0) && (
-                <div className="space-y-5">
-                  {/* Standard Size Variations - Only if 'Size' attribute exists explicitly */}
-                  {uniqueSizes.length > 0 && variationAttributes.some(a => a.name.toLowerCase().trim() === 'size') && (
-                    <div>
-                      <p className="text-sm font-bold text-foreground mb-2.5">
-                        {uniqueColors.length > 0 || otherAttributes.length > 0 ? "Product Variation" : "Size Attribute"}: <span className="font-normal">{selectedSize || "Select"}</span>
-                      </p>
-                      <div className="grid grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-2">
-                        {uniqueSizes.map((size) => {
-                          const sizeVariation = variations.find(v => 
-                            v.size?.toLowerCase().trim() === size?.toLowerCase().trim() && 
-                            (!selectedColor || v.color?.toLowerCase().trim() === selectedColor?.toLowerCase().trim())
-                          );
-                          const sizePrice = sizeVariation ? getRolePrice(product, sizeVariation) : 0;
-                          const sizeMrp = sizeVariation ? getMrp(product, sizeVariation) : 0;
-                          const isSelected = selectedSize === size;
-                          return (
-                            <button
-                              key={size}
-                              onClick={() => {
-                                setSelectedSize(size);
-                                if (sizeVariation) handleVariantSelect(sizeVariation.id);
-                              }}
-                              className={cn(
-                                "rounded-lg border-2 text-left transition-all overflow-hidden w-full min-w-0",
-                                isSelected
-                                  ? "border-[#007185] shadow-md ring-1 ring-[#007185]"
-                                  : "border-border hover:border-[#007185]/50 hover:shadow-sm"
+              {/* Variant Selection — unified card grid */}
+              {sortedVariations.length > 0 && (
+                <div>
+                  <p className="text-sm font-bold text-foreground mb-2.5">
+                    Select Variant:{" "}
+                    <span className="font-normal">
+                      {[selectedVariation?.size, selectedVariation?.color].filter(Boolean).join(" ") || "Select"}
+                    </span>
+                  </p>
+                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-3">
+                    {sortedVariations.map((v: any) => {
+                      const label = [v.size, v.color].filter(Boolean).join(" ") || v.sku || "Variant";
+                      const vPrice = getRolePrice(product, v);
+                      const vMrp = getMrp(product, v);
+                      const img = v.color_image || v.gallery_images?.[0] || product.images?.[0] || "/placeholder.svg";
+                      const isSelected = selectedVariation?.id === v.id;
+                      return (
+                        <button
+                          key={v.id}
+                          onClick={() => handleVariantSelect(v.id)}
+                          className={cn(
+                            "relative rounded-[10px] border-2 bg-white overflow-hidden transition-all text-center w-full min-w-0",
+                            isSelected
+                              ? "border-[#e8a33d] shadow-md"
+                              : "border-border hover:border-[#e8a33d]/60 hover:shadow-sm"
+                          )}
+                        >
+                          {isSelected && (
+                            <span className="absolute top-1.5 right-1.5 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-[#e8a33d] text-white">
+                              <Check className="h-3 w-3" strokeWidth={3} />
+                            </span>
+                          )}
+                          <SignedImage
+                            src={img}
+                            alt={label}
+                            className="w-full aspect-square object-contain bg-white"
+                          />
+                          <div className="px-1.5 pb-2 pt-1">
+                            <p className="text-[11px] sm:text-[13px] font-semibold text-foreground leading-tight line-clamp-2 min-h-[2.2em]">
+                              {label}
+                            </p>
+                            <div className="mt-1 flex items-baseline justify-center gap-1.5">
+                              <span className="text-[13px] sm:text-[15px] font-extrabold text-foreground">
+                                ₹{(vPrice || 0).toLocaleString("en-IN")}
+                              </span>
+                              {vMrp > 0 && vMrp > vPrice && (
+                                <span className="text-[10px] sm:text-[12px] font-normal text-muted-foreground line-through">
+                                  ₹{vMrp.toLocaleString("en-IN")}
+                                </span>
                               )}
-                            >
-                              <div className={cn(
-                                "px-1.5 py-1.5 sm:px-3 sm:py-2 md:py-1.5",
-                                isSelected ? "bg-[#edfdff]" : "bg-[#f3f9f2]"
-                              )}>
-                                <p className="text-[11px] sm:text-[14px] font-bold text-foreground leading-tight truncate">{size}</p>
-                              </div>
-                              {sizePrice > 0 && (
-                                <div className="px-1.5 py-1.5 sm:px-3 sm:py-2 md:py-1.5 border-t border-border bg-white">
-                                  <p className="text-[11px] sm:text-[13px] font-bold text-foreground leading-none truncate">₹{sizePrice.toLocaleString("en-IN")}</p>
-                                  {sizeMrp > 0 && sizeMrp !== sizePrice && (
-                                    <p className="text-[9px] sm:text-[11px] text-muted-foreground line-through leading-none mt-1 truncate">₹{sizeMrp.toLocaleString("en-IN")}</p>
-                                  )}
-                                </div>
-                              )}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {uniqueColors.length > 0 && (
-                    <div>
-                      <p className="text-sm font-bold text-foreground mb-2.5">
-                        Colour/Style: <span className="font-normal">{selectedColor || "Select"}</span>
-                      </p>
-                      <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                        {uniqueColors.map((color) => {
-                          const shouldFilterBySize = uniqueSizes.length > 0 && selectedSize;
-                          const colorVariation = variations.find(v => 
-                            v.color?.toLowerCase().trim() === color?.toLowerCase().trim() && 
-                            (!shouldFilterBySize || v.size?.toLowerCase().trim() === selectedSize?.toLowerCase().trim())
-                          );
-                          const colorPrice = colorVariation ? getRolePrice(product, colorVariation) : 0;
-                          const colorMrp = colorVariation ? getMrp(product, colorVariation) : 0;
-                          const hasImage = colorImageMap[color];
-                          const hasSizes = uniqueSizes.length > 0;
-                          return (
-                            <button
-                              key={color}
-                              onClick={() => {
-                                setSelectedColor(color);
-                                if (colorVariation) handleVariantSelect(colorVariation.id);
-                              }}
-                              className={cn(
-                                "rounded-lg border-2 overflow-hidden transition-all",
-                                selectedColor === color
-                                  ? "border-[#007185] shadow-sm"
-                                  : "border-border hover:border-[#007185]/50"
-                              )}
-                            >
-                              {hasImage ? (
-                                <SignedImage src={hasImage} alt={color} className="w-full aspect-square object-cover" />
-                              ) : (
-                                <div className="w-full aspect-square bg-secondary flex items-center justify-center">
-                                  <span className="text-[10px] text-muted-foreground font-medium">{color}</span>
-                                </div>
-                              )}
-                              {!hasSizes && (
-                                <div className="p-1.5 border-t border-border bg-white">
-                                  {colorPrice > 0 && (
-                                    <p className="text-[11px] sm:text-[13px] font-bold text-foreground leading-none">₹{colorPrice.toLocaleString("en-IN")}</p>
-                                  )}
-                                  {colorMrp > 0 && colorMrp > colorPrice && (
-                                    <p className="text-[9px] sm:text-[11px] text-muted-foreground line-through leading-none mt-1">₹{colorMrp.toLocaleString("en-IN")}</p>
-                                  )}
-                                </div>
-                              )}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {otherAttributes.length > 0 && otherAttributes.map((attr) => (
-                    <div key={attr.name}>
-                      <p className="text-sm font-bold text-foreground mb-2.5">
-                        {attr.name}: <span className="font-normal">{selectedOtherValues[attr.name] || "Select"}</span>
-                      </p>
-                      <div className="grid grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-2">
-                        {attr.values.map((val) => {
-                          const isSelected = selectedOtherValues[attr.name] === val;
-                          
-                          // We need to find the variation that matches this attribute value.
-                          // Match variation values with the 'size' or 'color' field mapping
-                          const matchingVar = variations.find(v => 
-                            (v.size && v.size.toLowerCase().trim() === val.toLowerCase().trim()) || 
-                            (v.color && v.color.toLowerCase().trim() === val.toLowerCase().trim())
-                          );
-                          const varPrice = matchingVar ? getRolePrice(product, matchingVar) : 0;
-                          const varMrp = matchingVar ? getMrp(product, matchingVar) : 0;
-
-                          return (
-                            <button
-                              key={val}
-                              onClick={() => {
-                                setSelectedOtherValues(prev => ({ ...prev, [attr.name]: val }));
-                                if (matchingVar) handleVariantSelect(matchingVar.id);
-                              }}
-                              className={cn(
-                                "rounded-lg border-2 text-left transition-all overflow-hidden w-full min-w-0",
-                                isSelected
-                                  ? "border-[#007185] shadow-md ring-1 ring-[#007185]"
-                                  : "border-border hover:border-[#007185]/50 hover:shadow-sm"
-                              )}
-                            >
-                              <div className={cn(
-                                "px-1.5 py-1.5 sm:px-3 sm:py-2 md:py-1.5",
-                                isSelected ? "bg-[#edfdff]" : "bg-[#f3f9f2]"
-                              )}>
-                                <p className="text-[11px] sm:text-[14px] font-bold text-foreground leading-tight truncate">{val}</p>
-                              </div>
-                              <div className="px-1.5 py-1.5 sm:px-3 sm:py-2 md:py-1.5 border-t border-border bg-white">
-                                <p className="text-[11px] sm:text-[13px] font-bold text-foreground leading-none truncate">
-                                  ₹{(varPrice || 0).toLocaleString("en-IN")}
-                                </p>
-                                {varMrp > 0 && varMrp !== varPrice && (
-                                  <p className="text-[9px] sm:text-[11px] text-muted-foreground line-through leading-none mt-1 truncate">
-                                    ₹{varMrp.toLocaleString("en-IN")}
-                                  </p>
-                                )}
-                              </div>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ))}
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
+
 
               {/* Available Coupons */}
               <ProductCoupons categoryId={product.category_id} />
