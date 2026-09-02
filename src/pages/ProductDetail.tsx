@@ -537,6 +537,15 @@ export default function ProductDetail() {
     });
   }, [uniqueSizes, uniqueColors, selectedSize, selectedColor, otherAttributes, selectedOtherValues]);
 
+  // Default to the first variation in natural order
+  useEffect(() => {
+    if (sortedVariations.length > 0 && !selectedVariationId) {
+      setSelectedVariationId(sortedVariations[0]?.id ?? null);
+    }
+  }, [sortedVariations, selectedVariationId]);
+
+
+
   // Update quantity when buyerType or MOQ changes (e.g., after auth loads)
   useEffect(() => {
     if (product && currentMoq > 0) {
