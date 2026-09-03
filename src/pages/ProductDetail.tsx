@@ -8,7 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { 
   FileText, Truck, Shield, Minus, Plus, Check, 
   Package, Clock, Phone, MessageCircle, Factory, 
-  Award, ChevronRight, ShoppingCart, Star, Zap, CheckCircle2, MapPin, X, ChevronLeft, Loader2
+  Award, ChevronRight, ShoppingCart, Star, Zap, CheckCircle2, MapPin, X, ChevronLeft, Loader2,
+  ArrowLeft, Droplets, Leaf, Heart, ListChecks, RotateCcw, BadgeCheck
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
@@ -25,6 +26,8 @@ import { Input } from "@/components/ui/input";
 import { SEOHead, SchemaGenerators } from "@/components/SEOHead";
 import { SignedImage } from "@/components/common/SignedImage";
 import { FormattedProductText } from "@/components/products/FormattedProductText";
+import { FrequentlyBoughtTogether } from "@/components/products/FrequentlyBoughtTogether";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 
 interface Attribute {
@@ -452,6 +455,54 @@ export default function ProductDetail() {
     });
   }, [variations]);
 
+  const variationAttributeLabel = useMemo(() => {
+    const names = variationAttributes.map((attribute) => attribute.name.trim()).filter(Boolean);
+    if (names.length === 0) return "Option";
+    if (names.length === 1) return names[0] as string;
+    return names.join(" / ");
+  }, [variationAttributes]);
+
+  const selectedVariationLabel = useMemo(() => {
+    if (!selectedVariation) return "Select";
+    return [selectedVariation.size, selectedVariation.color].filter(Boolean).join(" ") || selectedVariation.sku || "Select";
+  }, [selectedVariation]);
+
+  const specificationRows = useMemo(() => {
+    const grouped: Record<string, string[]> = {};
+    productAttributes.forEach((attribute) => {
+      if (!attribute.name || !attribute.value) return;
+      if (!grouped[attribute.name]) grouped[attribute.name] = [];
+      if (!grouped[attribute.name]?.includes(attribute.value)) grouped[attribute.name]?.push(attribute.value);
+    });
+    const rows = Object.entries(grouped).map(([label, values]) => {
+      const normalized = label.toLowerCase();
+      const displayValues = normalized === "size" && selectedSize
+        ? [selectedSize]
+        : (normalized === "color" || normalized === "colour") && selectedColor
+          ? [selectedColor]
+          : values;
+      return { label, value: displayValues.join(", ") };
+    });
+    if (product?.category) rows.push({ label: "Category", value: product.category.name });
+    if (hasExplicitMoq) rows.push({ label: "MOQ", value: `${currentMoq} units` });
+    return rows;
+  }, [productAttributes, selectedSize, selectedColor, product?.category, hasExplicitMoq, currentMoq]);
+
+  const mobileBenefits = useMemo(() => {
+    const icons = [Droplets, Leaf, BadgeCheck, Heart, Award, Star];
+    const configured = (product?.features || []).filter(Boolean).slice(0, 6).map((feature, index) => {
+      const [title, ...detailParts] = feature.split(/[:–—-]/);
+      return { title: title?.trim() || feature, detail: detailParts.join(" ").trim(), Icon: icons[index % icons.length] };
+    });
+    if (configured.length > 0) return configured;
+    return [
+      { title: "Authentic Quality", detail: "Carefully selected", Icon: BadgeCheck },
+      { title: "Fresh & Pure", detail: "Prepared with care", Icon: Leaf },
+      { title: "Made in India", detail: "Traditional quality", Icon: Award },
+      { title: "Trusted Choice", detail: "Loved by families", Icon: Heart },
+    ];
+  }, [product?.features]);
+
 
   const selectedVariation = useMemo(() => {
     if (!product?.has_variations || variations.length === 0) return null;
@@ -686,8 +737,15 @@ export default function ProductDetail() {
         ]}
       />
       <Header />
+
+      <div className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background px-3 md:hidden">
+        <Button type="button" size="icon" variant="ghost" className="h-10 w-10 rounded-full bg-primary text-primary-foreground hover:bg-primary/90" onClick={() => navigate(-1)} aria-label="Go back">
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <p className="text-base font-bold text-foreground">Product Details</p>
+      </div>
       
-      <main className="pt-0">
+      <main className="pt-0 pb-24 md:pb-0">
         <div className="container mx-auto px-3 sm:px-4 py-2 max-w-full">
 
 
@@ -838,9 +896,9 @@ export default function ProductDetail() {
               {sortedVariations.length > 0 && (
                 <div>
                   <p className="text-sm font-bold text-foreground mb-2.5">
-                    Select Variant:{" "}
+                    Select {variationAttributeLabel}:{" "}
                     <span className="font-normal">
-                      {[selectedVariation?.size, selectedVariation?.color].filter(Boolean).join(" ") || "Select"}
+                      {selectedVariationLabel}
                     </span>
                   </p>
                   <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-3">
@@ -910,7 +968,7 @@ export default function ProductDetail() {
                 )}
 
                 {/* Quantity + CTA Buttons in one row */}
-                <div className="flex items-stretch gap-2.5">
+                <div className="hidden items-stretch gap-2.5 md:flex">
                   <div className="flex items-center border border-border rounded-lg shrink-0 h-11">
                     <button
                       aria-label="Decrease quantity"
@@ -956,18 +1014,6 @@ export default function ProductDetail() {
                   {isBuyingNow ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
                   {isBuyingNow ? "PROCESSING..." : "BUY NOW"}
                 </Button>
-
-                {/* Mobile: Buy Now button inside the page content, not fixed */}
-                <div className="md:hidden pt-2">
-                  <Button
-                    className="btn-gold-frame w-full text-sm font-bold h-11 uppercase tracking-wide rounded-[5px] inline-flex items-center justify-center gap-1.5"
-                    onClick={handleBuyNow}
-                    disabled={isAddingToCart || isBuyingNow || !moqValid}
-                  >
-                    {isBuyingNow ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
-                    {isBuyingNow ? "PROCESSING..." : "BUY NOW"}
-                  </Button>
-                </div>
 
                 {/* Payment methods + secure payment badges */}
                 <div className="space-y-2">
@@ -1044,46 +1090,13 @@ export default function ProductDetail() {
 
               {/* Specifications Table */}
               {(productAttributes.length > 0 || product.category || hasExplicitMoq) && (
-                <div>
+                <div className="hidden md:block">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-sm font-semibold text-foreground uppercase tracking-wider">SPECIFICATIONS</p>
                   </div>
                   <div className="rounded-lg overflow-hidden text-xs">
                     {(() => {
-                      const rows: Array<{ label: string; value: string }> = [];
-
-                      // Add product attributes
-                      const grouped: Record<string, string[]> = {};
-                      (productAttributes || []).forEach(attr => {
-                        if (attr?.name && attr?.value) {
-                          const key = attr.name;
-                          if (!grouped[key]) grouped[key] = [];
-                          if (!grouped[key].includes(attr.value)) {
-                            grouped[key].push(attr.value);
-                          }
-                        }
-                      });
-
-                      Object.entries(grouped).forEach(([name, values]) => {
-                        let displayValues = values;
-                        const nameLower = name.toLowerCase();
-                        if (nameLower === "color" || nameLower === "colour") {
-                          displayValues = selectedColor ? [selectedColor] : values;
-                        } else if (nameLower === "size") {
-                          displayValues = selectedSize ? [selectedSize] : values;
-                        }
-                        rows.push({ label: name, value: displayValues.join(", ") });
-                      });
-
-                      // Add static fields
-                      if (product.category) {
-                        rows.push({ label: "Category", value: product.category.name });
-                      }
-                      if (hasExplicitMoq) {
-                        rows.push({ label: "MOQ", value: `${currentMoq} units` });
-                      }
-
-                      return rows.map((row, idx) => (
+                      return specificationRows.map((row, idx) => (
                         <div
                           key={`${row.label}-${idx}`}
                           className={cn(
@@ -1106,7 +1119,7 @@ export default function ProductDetail() {
 
               {/* Overview */}
               {(product.short_description || product.description) && (
-                <div>
+                <div className="hidden md:block">
                   <p className="text-sm font-semibold text-foreground mb-2">OVERVIEW</p>
                   <div 
                     className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap
@@ -1125,6 +1138,68 @@ export default function ProductDetail() {
             </div>
 
           </div>
+
+          <section className="mt-3 border-y border-border bg-background px-1 py-4 md:hidden" aria-label="Product benefits">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-4">
+              {mobileBenefits.map(({ title, detail, Icon }) => (
+                <div key={`${title}-${detail}`} className="flex min-w-0 items-center gap-2.5">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <span className="min-w-0">
+                    <strong className="block text-xs font-bold leading-tight text-foreground">{title}</strong>
+                    {detail && <span className="mt-0.5 block text-[11px] leading-tight text-muted-foreground">{detail}</span>}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="md:hidden" aria-label="Product information">
+            <Accordion type="single" collapsible defaultValue="details" className="space-y-1.5 py-3">
+              <AccordionItem value="details" className="rounded-md border-0 bg-secondary/70 px-3">
+                <AccordionTrigger className="py-3 text-sm font-bold hover:no-underline"><span className="flex items-center gap-3"><FileText className="h-5 w-5 text-primary" />Product Details</span></AccordionTrigger>
+                <AccordionContent className="space-y-2 text-xs text-foreground">
+                  {specificationRows.map((row) => <p key={row.label}><strong>{row.label}:</strong> {row.value}</p>)}
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="made-of" className="rounded-md border-0 bg-secondary/70 px-3">
+                <AccordionTrigger className="py-3 text-sm hover:no-underline"><span className="flex items-center gap-3"><ListChecks className="h-5 w-5 text-primary" />What Is It Made Of?</span></AccordionTrigger>
+                <AccordionContent className="text-xs leading-relaxed text-muted-foreground">
+                  <FormattedProductText text={product.short_description || product.description || "Product composition details are listed in the specifications above."} />
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="shipping" className="rounded-md border-0 bg-secondary/70 px-3">
+                <AccordionTrigger className="py-3 text-sm hover:no-underline"><span className="flex items-center gap-3"><Truck className="h-5 w-5 text-primary" />Shipping Information</span></AccordionTrigger>
+                <AccordionContent className="text-xs leading-relaxed text-muted-foreground">Secure delivery across India through trusted courier partners. Enter your pincode above for an estimated delivery date.</AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="returns" className="rounded-md border-0 bg-secondary/70 px-3">
+                <AccordionTrigger className="py-3 text-sm hover:no-underline"><span className="flex items-center gap-3"><RotateCcw className="h-5 w-5 text-primary" />Returns &amp; Warranty</span></AccordionTrigger>
+                <AccordionContent className="text-xs leading-relaxed text-muted-foreground">Returns are accepted as per the product and brand policy. Contact support within 7 days if your order arrives damaged or incorrect.</AccordionContent>
+              </AccordionItem>
+            </Accordion>
+
+            <div className="grid grid-cols-4 divide-x divide-border border-y border-border py-4">
+              {[
+                { label: "100%", detail: "Satisfaction", Icon: Award },
+                { label: "Certified", detail: "Product", Icon: BadgeCheck },
+                { label: "Natural", detail: "Ingredients", Icon: Leaf },
+                { label: "Trusted", detail: "By Families", Icon: Heart },
+              ].map(({ label, detail, Icon }) => (
+                <div key={label} className="flex min-w-0 flex-col items-center px-1 text-center">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full border border-primary/50 text-primary"><Icon className="h-5 w-5" /></span>
+                  <strong className="mt-1.5 text-[11px] text-foreground">{label}</strong>
+                  <span className="text-[10px] leading-tight text-muted-foreground">{detail}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <FrequentlyBoughtTogether
+            currentProduct={product}
+            categoryId={product.category_id}
+            onAdd={(productId) => addToCart(productId, 1, null)}
+          />
 
 
           {/* Promotional banner (admin-uploadable per product) */}
@@ -1183,6 +1258,26 @@ export default function ProductDetail() {
       </main>
 
       <Footer />
+
+      <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-2 border-t border-border bg-background p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-lg md:hidden">
+        <Button
+          variant="outline"
+          className="h-12 rounded-[5px] border-primary text-sm font-bold text-primary"
+          onClick={handleAddToCartClick}
+          disabled={isAddingToCart || isBuyingNow || !moqValid}
+        >
+          {isAddingToCart ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ShoppingCart className="mr-2 h-5 w-5" />}
+          {isAddingToCart ? "Adding..." : "Add to cart"}
+        </Button>
+        <Button
+          className="h-12 rounded-[5px] bg-primary text-sm font-bold text-primary-foreground hover:bg-primary/90"
+          onClick={handleBuyNow}
+          disabled={isAddingToCart || isBuyingNow || !moqValid}
+        >
+          {isBuyingNow ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Zap className="mr-2 h-5 w-5" />}
+          {isBuyingNow ? "Processing..." : "Buy it now"}
+        </Button>
+      </div>
 
       {/* Image Zoom Modal - Amazon Style */}
       {zoomOpen && (
