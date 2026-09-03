@@ -109,7 +109,7 @@ export function BottomNavigation() {
     [openCategoryItem, subCategories],
   );
 
-  if (location.pathname.startsWith("/admin")) return null;
+  if (location.pathname.startsWith("/admin") || location.pathname.startsWith("/product/")) return null;
 
   return (
     <>
