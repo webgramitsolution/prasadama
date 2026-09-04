@@ -738,7 +738,7 @@ export default function ProductDetail() {
       <Header />
 
       <div className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background px-3 md:hidden">
-        <Button type="button" size="icon" variant="ghost" className="h-10 w-10 rounded-full bg-primary text-primary-foreground hover:bg-primary/90" onClick={() => navigate(-1)} aria-label="Go back">
+        <Button type="button" size="icon" variant="ghost" className="h-10 w-10 rounded-full bg-accent text-accent-foreground hover:bg-accent/90" onClick={() => navigate(-1)} aria-label="Go back">
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <p className="text-base font-bold text-foreground">Product Details</p>
@@ -1142,7 +1142,7 @@ export default function ProductDetail() {
             <div className="grid grid-cols-2 gap-x-4 gap-y-4">
               {mobileBenefits.map(({ title, detail, Icon }) => (
                 <div key={`${title}-${detail}`} className="flex min-w-0 items-center gap-2.5">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground">
                     <Icon className="h-5 w-5" />
                   </span>
                   <span className="min-w-0">
@@ -1157,23 +1157,23 @@ export default function ProductDetail() {
           <section className="md:hidden" aria-label="Product information">
             <Accordion type="single" collapsible defaultValue="details" className="space-y-1.5 py-3">
               <AccordionItem value="details" className="rounded-md border-0 bg-secondary/70 px-3">
-                <AccordionTrigger className="py-3 text-sm font-bold hover:no-underline"><span className="flex items-center gap-3"><FileText className="h-5 w-5 text-primary" />Product Details</span></AccordionTrigger>
+                <AccordionTrigger className="py-3 text-sm font-bold hover:no-underline"><span className="flex items-center gap-3"><FileText className="h-5 w-5 text-accent" />Product Details</span></AccordionTrigger>
                 <AccordionContent className="space-y-2 text-xs text-foreground">
                   {specificationRows.map((row) => <p key={row.label}><strong>{row.label}:</strong> {row.value}</p>)}
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="made-of" className="rounded-md border-0 bg-secondary/70 px-3">
-                <AccordionTrigger className="py-3 text-sm hover:no-underline"><span className="flex items-center gap-3"><ListChecks className="h-5 w-5 text-primary" />What Is It Made Of?</span></AccordionTrigger>
+                <AccordionTrigger className="py-3 text-sm hover:no-underline"><span className="flex items-center gap-3"><ListChecks className="h-5 w-5 text-accent" />What Is It Made Of?</span></AccordionTrigger>
                 <AccordionContent className="text-xs leading-relaxed text-muted-foreground">
                   <FormattedProductText text={product.short_description || product.description || "Product composition details are listed in the specifications above."} />
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="shipping" className="rounded-md border-0 bg-secondary/70 px-3">
-                <AccordionTrigger className="py-3 text-sm hover:no-underline"><span className="flex items-center gap-3"><Truck className="h-5 w-5 text-primary" />Shipping Information</span></AccordionTrigger>
+                <AccordionTrigger className="py-3 text-sm hover:no-underline"><span className="flex items-center gap-3"><Truck className="h-5 w-5 text-accent" />Shipping Information</span></AccordionTrigger>
                 <AccordionContent className="text-xs leading-relaxed text-muted-foreground">Secure delivery across India through trusted courier partners. Enter your pincode above for an estimated delivery date.</AccordionContent>
               </AccordionItem>
               <AccordionItem value="returns" className="rounded-md border-0 bg-secondary/70 px-3">
-                <AccordionTrigger className="py-3 text-sm hover:no-underline"><span className="flex items-center gap-3"><RotateCcw className="h-5 w-5 text-primary" />Returns &amp; Warranty</span></AccordionTrigger>
+                <AccordionTrigger className="py-3 text-sm hover:no-underline"><span className="flex items-center gap-3"><RotateCcw className="h-5 w-5 text-accent" />Returns &amp; Warranty</span></AccordionTrigger>
                 <AccordionContent className="text-xs leading-relaxed text-muted-foreground">Returns are accepted as per the product and brand policy. Contact support within 7 days if your order arrives damaged or incorrect.</AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -1186,7 +1186,7 @@ export default function ProductDetail() {
                 { label: "Trusted", detail: "By Families", Icon: Heart },
               ].map(({ label, detail, Icon }) => (
                 <div key={label} className="flex min-w-0 flex-col items-center px-1 text-center">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full border border-primary/50 text-primary"><Icon className="h-5 w-5" /></span>
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full border border-accent/50 text-accent"><Icon className="h-5 w-5" /></span>
                   <strong className="mt-1.5 text-[11px] text-foreground">{label}</strong>
                   <span className="text-[10px] leading-tight text-muted-foreground">{detail}</span>
                 </div>
@@ -1261,7 +1261,7 @@ export default function ProductDetail() {
       <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-2 border-t border-border bg-background p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-lg md:hidden">
         <Button
           variant="outline"
-          className="h-12 rounded-[5px] border-primary text-sm font-bold text-primary"
+          className="h-12 rounded-[5px] border-accent text-sm font-bold text-accent"
           onClick={handleAddToCartClick}
           disabled={isAddingToCart || isBuyingNow || !moqValid}
         >
@@ -1269,7 +1269,7 @@ export default function ProductDetail() {
           {isAddingToCart ? "Adding..." : "Add to cart"}
         </Button>
         <Button
-          className="h-12 rounded-[5px] bg-primary text-sm font-bold text-primary-foreground hover:bg-primary/90"
+          className="h-12 rounded-[5px] bg-accent text-sm font-bold text-accent-foreground hover:bg-accent/90"
           onClick={handleBuyNow}
           disabled={isAddingToCart || isBuyingNow || !moqValid}
         >
