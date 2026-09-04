@@ -70,7 +70,7 @@ export function FrequentlyBoughtTogether({ currentProduct, categoryId, onAdd }: 
           return (
             <article
               key={item.id}
-              className={isCurrent ? "flex min-h-24 items-center gap-3 rounded-md border border-primary/30 p-2" : "flex min-h-24 items-center gap-3 rounded-md border border-border p-2"}
+              className={isCurrent ? "flex min-h-24 items-center gap-3 rounded-md border border-accent/30 p-2" : "flex min-h-24 items-center gap-3 rounded-md border border-border p-2"}
             >
               <SignedImage
                 src={item.images?.[0] || "/placeholder.svg"}
@@ -80,7 +80,7 @@ export function FrequentlyBoughtTogether({ currentProduct, categoryId, onAdd }: 
               <div className="min-w-0 flex-1">
                 <h3 className="line-clamp-2 text-sm font-bold leading-tight text-foreground">{item.name}</h3>
                 <div className="mt-2 flex items-center gap-2">
-                  <span className={isSelected ? "flex h-5 w-5 items-center justify-center rounded border border-primary bg-primary text-primary-foreground" : "flex h-5 w-5 items-center justify-center rounded border border-muted-foreground"}>
+                  <span className={isSelected ? "flex h-5 w-5 items-center justify-center rounded border border-accent bg-accent text-accent-foreground" : "flex h-5 w-5 items-center justify-center rounded border border-muted-foreground"}>
                     {isSelected && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
                   </span>
                   <span className="text-xs text-muted-foreground">{isCurrent ? "Current product" : isSelected ? "Added" : "Add this item"}</span>
