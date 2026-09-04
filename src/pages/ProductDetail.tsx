@@ -462,37 +462,11 @@ export default function ProductDetail() {
     return names.join(" / ");
   }, [variationAttributes]);
 
-  const selectedVariationLabel = useMemo(() => {
-    if (!selectedVariation) return "Select";
-    return [selectedVariation.size, selectedVariation.color].filter(Boolean).join(" ") || selectedVariation.sku || "Select";
-  }, [selectedVariation]);
-
-  const specificationRows = useMemo(() => {
-    const grouped: Record<string, string[]> = {};
-    productAttributes.forEach((attribute) => {
-      if (!attribute.name || !attribute.value) return;
-      if (!grouped[attribute.name]) grouped[attribute.name] = [];
-      if (!grouped[attribute.name]?.includes(attribute.value)) grouped[attribute.name]?.push(attribute.value);
-    });
-    const rows = Object.entries(grouped).map(([label, values]) => {
-      const normalized = label.toLowerCase();
-      const displayValues = normalized === "size" && selectedSize
-        ? [selectedSize]
-        : (normalized === "color" || normalized === "colour") && selectedColor
-          ? [selectedColor]
-          : values;
-      return { label, value: displayValues.join(", ") };
-    });
-    if (product?.category) rows.push({ label: "Category", value: product.category.name });
-    if (hasExplicitMoq) rows.push({ label: "MOQ", value: `${currentMoq} units` });
-    return rows;
-  }, [productAttributes, selectedSize, selectedColor, product?.category, hasExplicitMoq, currentMoq]);
-
   const mobileBenefits = useMemo(() => {
     const icons = [Droplets, Leaf, BadgeCheck, Heart, Award, Star];
     const configured = (product?.features || []).filter(Boolean).slice(0, 6).map((feature, index) => {
       const [title, ...detailParts] = feature.split(/[:–—-]/);
-      return { title: title?.trim() || feature, detail: detailParts.join(" ").trim(), Icon: icons[index % icons.length] };
+      return { title: title?.trim() || feature, detail: detailParts.join(" ").trim(), Icon: icons[index % icons.length] ?? BadgeCheck };
     });
     if (configured.length > 0) return configured;
     return [
@@ -525,6 +499,31 @@ export default function ProductDetail() {
     (product?.shop_moq && product.shop_moq > 1) ||
     (product?.retail_moq && product.retail_moq > 1)
   );
+  const selectedVariationLabel = useMemo(() => {
+    if (!selectedVariation) return "Select";
+    return [selectedVariation.size, selectedVariation.color].filter(Boolean).join(" ") || selectedVariation.sku || "Select";
+  }, [selectedVariation]);
+
+  const specificationRows = useMemo(() => {
+    const grouped: Record<string, string[]> = {};
+    productAttributes.forEach((attribute) => {
+      if (!attribute.name || !attribute.value) return;
+      if (!grouped[attribute.name]) grouped[attribute.name] = [];
+      if (!grouped[attribute.name]?.includes(attribute.value)) grouped[attribute.name]?.push(attribute.value);
+    });
+    const rows = Object.entries(grouped).map(([label, values]) => {
+      const normalized = label.toLowerCase();
+      const displayValues = normalized === "size" && selectedSize
+        ? [selectedSize]
+        : (normalized === "color" || normalized === "colour") && selectedColor
+          ? [selectedColor]
+          : values;
+      return { label, value: displayValues.join(", ") };
+    });
+    if (product?.category) rows.push({ label: "Category", value: product.category.name });
+    if (hasExplicitMoq) rows.push({ label: "MOQ", value: `${currentMoq} units` });
+    return rows;
+  }, [productAttributes, selectedSize, selectedColor, product?.category, hasExplicitMoq, currentMoq]);
   const currentPrice = getRolePrice(product, selectedVariation);
   const currentMrp = getMrp(product, selectedVariation);
   const gstPercent = Number(product?.gst_percentage ?? 0);
