@@ -741,7 +741,7 @@ export default function ProductDetail() {
         <Button type="button" size="icon" variant="ghost" className="h-10 w-10 rounded-full bg-accent text-accent-foreground hover:bg-accent/90" onClick={() => navigate(-1)} aria-label="Go back">
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <p className="text-base font-bold text-foreground">Product Details</p>
+        
       </div>
       
       <main className="bg-card pt-0 pb-24 md:bg-transparent md:pb-0">
@@ -900,7 +900,7 @@ export default function ProductDetail() {
                       {selectedVariationLabel}
                     </span>
                   </p>
-                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-3">
+                  <div className="-mx-3 flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:mx-0 lg:grid lg:grid-cols-4 lg:gap-3 lg:overflow-visible lg:px-0">
                     {sortedVariations.map((v: any) => {
                       const label = [v.size, v.color].filter(Boolean).join(" ") || v.sku || "Variant";
                       const vPrice = getRolePrice(product, v);
@@ -912,7 +912,7 @@ export default function ProductDetail() {
                           key={v.id}
                           onClick={() => handleVariantSelect(v.id)}
                           className={cn(
-                            "relative rounded-[10px] border-2 bg-white overflow-hidden transition-all text-center w-full min-w-0",
+                            "relative shrink-0 basis-[calc((100%-1rem)/3)] snap-start rounded-[10px] border-2 bg-white overflow-hidden transition-all text-center min-w-0 lg:w-full lg:basis-auto lg:shrink",
                             isSelected
                               ? "border-[#e8a33d] shadow-md"
                               : "border-border hover:border-[#e8a33d]/60 hover:shadow-sm"
@@ -928,21 +928,22 @@ export default function ProductDetail() {
                             alt={label}
                             className="w-full aspect-square object-contain bg-white"
                           />
-                          <div className="px-1.5 pb-2 pt-1">
-                            <p className="text-[11px] sm:text-[13px] font-semibold text-foreground leading-tight line-clamp-2 min-h-[2.2em]">
+                          <div className="px-1 pb-1.5 pt-0.5">
+                            <p className="text-[11px] sm:text-[12px] font-semibold text-foreground leading-snug truncate">
                               {label}
                             </p>
-                            <div className="mt-1 flex items-baseline justify-center gap-1.5">
-                              <span className="text-[13px] sm:text-[15px] font-extrabold text-foreground">
+                            <div className="flex items-baseline justify-center gap-1 flex-wrap">
+                              <span className="text-[12px] sm:text-[14px] font-extrabold text-foreground">
                                 ₹{(vPrice || 0).toLocaleString("en-IN")}
                               </span>
                               {vMrp > 0 && vMrp > vPrice && (
-                                <span className="text-[10px] sm:text-[12px] font-normal text-muted-foreground line-through">
+                                <span className="text-[10px] sm:text-[11px] font-normal text-muted-foreground line-through">
                                   ₹{vMrp.toLocaleString("en-IN")}
                                 </span>
                               )}
                             </div>
                           </div>
+
                         </button>
                       );
                     })}
@@ -965,6 +966,36 @@ export default function ProductDetail() {
                     Minimum order quantity for this product is {currentMoq} units
                   </p>
                 )}
+
+                {/* Mobile: Quantity + Add to cart */}
+                <div className="flex items-stretch gap-2 md:hidden">
+                  <div className="flex items-center border border-border rounded-lg shrink-0 h-11">
+                    <button
+                      aria-label="Decrease quantity"
+                      onClick={() => handleQuantityChange(-1)}
+                      disabled={quantity <= currentMoq}
+                      className="px-2.5 h-full rounded-l-lg disabled:opacity-40"
+                    >
+                      <Minus className="h-4 w-4" />
+                    </button>
+                    <span className="w-8 text-center text-sm font-semibold">{quantity}</span>
+                    <button
+                      aria-label="Increase quantity"
+                      onClick={() => handleQuantityChange(1)}
+                      className="px-2.5 h-full rounded-r-lg"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <Button
+                    className="btn-gold-frame flex-1 min-w-0 h-11 rounded-[5px] text-xs font-bold uppercase inline-flex items-center justify-center gap-1.5"
+                    onClick={handleAddToCartClick}
+                    disabled={isAddingToCart || isBuyingNow || !moqValid}
+                  >
+                    {isAddingToCart ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShoppingCart className="h-4 w-4" />}
+                    {isAddingToCart ? "Adding..." : "Add to cart"}
+                  </Button>
+                </div>
 
                 {/* Quantity + CTA Buttons in one row */}
                 <div className="hidden items-stretch gap-2.5 md:flex">
@@ -1258,18 +1289,9 @@ export default function ProductDetail() {
 
       <Footer />
 
-      <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-2 border-t border-border bg-card p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-lg md:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-card p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-lg md:hidden">
         <Button
-          variant="outline"
-          className="h-12 rounded-[5px] border-accent text-sm font-bold text-accent"
-          onClick={handleAddToCartClick}
-          disabled={isAddingToCart || isBuyingNow || !moqValid}
-        >
-          {isAddingToCart ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ShoppingCart className="mr-2 h-5 w-5" />}
-          {isAddingToCart ? "Adding..." : "Add to cart"}
-        </Button>
-        <Button
-          className="h-12 rounded-[5px] bg-accent text-sm font-bold text-accent-foreground hover:bg-accent/90"
+          className="h-12 w-full rounded-[5px] bg-accent text-sm font-bold text-accent-foreground hover:bg-accent/90"
           onClick={handleBuyNow}
           disabled={isAddingToCart || isBuyingNow || !moqValid}
         >
@@ -1277,6 +1299,7 @@ export default function ProductDetail() {
           {isBuyingNow ? "Processing..." : "Buy it now"}
         </Button>
       </div>
+
 
       {/* Image Zoom Modal - Amazon Style */}
       {zoomOpen && (
