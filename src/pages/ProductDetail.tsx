@@ -741,7 +741,7 @@ export default function ProductDetail() {
         <Button type="button" size="icon" variant="ghost" className="h-10 w-10 rounded-full bg-accent text-accent-foreground hover:bg-accent/90" onClick={() => navigate(-1)} aria-label="Go back">
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <p className="text-base font-bold text-foreground">Product Details</p>
+        
       </div>
       
       <main className="bg-card pt-0 pb-24 md:bg-transparent md:pb-0">
@@ -1258,18 +1258,9 @@ export default function ProductDetail() {
 
       <Footer />
 
-      <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-2 border-t border-border bg-card p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-lg md:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-card p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-lg md:hidden">
         <Button
-          variant="outline"
-          className="h-12 rounded-[5px] border-accent text-sm font-bold text-accent"
-          onClick={handleAddToCartClick}
-          disabled={isAddingToCart || isBuyingNow || !moqValid}
-        >
-          {isAddingToCart ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ShoppingCart className="mr-2 h-5 w-5" />}
-          {isAddingToCart ? "Adding..." : "Add to cart"}
-        </Button>
-        <Button
-          className="h-12 rounded-[5px] bg-accent text-sm font-bold text-accent-foreground hover:bg-accent/90"
+          className="h-12 w-full rounded-[5px] bg-accent text-sm font-bold text-accent-foreground hover:bg-accent/90"
           onClick={handleBuyNow}
           disabled={isAddingToCart || isBuyingNow || !moqValid}
         >
@@ -1277,6 +1268,7 @@ export default function ProductDetail() {
           {isBuyingNow ? "Processing..." : "Buy it now"}
         </Button>
       </div>
+
 
       {/* Image Zoom Modal - Amazon Style */}
       {zoomOpen && (
