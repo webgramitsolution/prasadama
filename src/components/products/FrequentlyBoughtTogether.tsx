@@ -57,7 +57,7 @@ export function FrequentlyBoughtTogether({ currentProduct, categoryId, onAdd }: 
   };
 
   return (
-    <section className="md:hidden border-t border-border bg-background px-3 py-4" aria-labelledby="frequently-bought-heading">
+    <section className="md:hidden border-t border-border bg-card px-3 py-4" aria-labelledby="frequently-bought-heading">
       <h2 id="frequently-bought-heading" className="text-xl font-bold text-foreground">Frequently Bought Together</h2>
       <p className="mt-0.5 text-sm text-muted-foreground">These products are usually bought together</p>
 
