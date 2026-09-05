@@ -967,6 +967,36 @@ export default function ProductDetail() {
                   </p>
                 )}
 
+                {/* Mobile: Quantity + Add to cart */}
+                <div className="flex items-stretch gap-2 md:hidden">
+                  <div className="flex items-center border border-border rounded-lg shrink-0 h-11">
+                    <button
+                      aria-label="Decrease quantity"
+                      onClick={() => handleQuantityChange(-1)}
+                      disabled={quantity <= currentMoq}
+                      className="px-2.5 h-full rounded-l-lg disabled:opacity-40"
+                    >
+                      <Minus className="h-4 w-4" />
+                    </button>
+                    <span className="w-8 text-center text-sm font-semibold">{quantity}</span>
+                    <button
+                      aria-label="Increase quantity"
+                      onClick={() => handleQuantityChange(1)}
+                      className="px-2.5 h-full rounded-r-lg"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <Button
+                    className="btn-gold-frame flex-1 min-w-0 h-11 rounded-[5px] text-xs font-bold uppercase inline-flex items-center justify-center gap-1.5"
+                    onClick={handleAddToCartClick}
+                    disabled={isAddingToCart || isBuyingNow || !moqValid}
+                  >
+                    {isAddingToCart ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShoppingCart className="h-4 w-4" />}
+                    {isAddingToCart ? "Adding..." : "Add to cart"}
+                  </Button>
+                </div>
+
                 {/* Quantity + CTA Buttons in one row */}
                 <div className="hidden items-stretch gap-2.5 md:flex">
                   <div className="flex items-center border border-border rounded-lg shrink-0 h-11">
