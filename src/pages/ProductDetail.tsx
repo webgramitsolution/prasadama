@@ -686,7 +686,7 @@ export default function ProductDetail() {
   galleryRef.current = productImages;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-card md:bg-background">
       <SEOHead
         title={`${product.name}${product.category?.name ? ` — ${product.category.name}` : ""} | Prasadam`}
         description={product.short_description?.slice(0, 160) || product.description?.replace(/<[^>]*>/g, "").substring(0, 160) || `Buy ${product.name} at Prasadam. Premium quality, ₹${currentPrice} only. Fast shipping across India.`}
@@ -737,14 +737,14 @@ export default function ProductDetail() {
       />
       <Header />
 
-      <div className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background px-3 md:hidden">
+      <div className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-card px-3 md:hidden">
         <Button type="button" size="icon" variant="ghost" className="h-10 w-10 rounded-full bg-accent text-accent-foreground hover:bg-accent/90" onClick={() => navigate(-1)} aria-label="Go back">
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <p className="text-base font-bold text-foreground">Product Details</p>
       </div>
       
-      <main className="pt-0 pb-24 md:pb-0">
+      <main className="bg-card pt-0 pb-24 md:bg-transparent md:pb-0">
         <div className="container mx-auto px-3 sm:px-4 py-2 max-w-full">
 
 
@@ -1138,7 +1138,7 @@ export default function ProductDetail() {
 
           </div>
 
-          <section className="mt-3 border-y border-border bg-background px-1 py-4 md:hidden" aria-label="Product benefits">
+          <section className="mt-3 border-y border-border bg-card px-1 py-4 md:hidden" aria-label="Product benefits">
             <div className="grid grid-cols-2 gap-x-4 gap-y-4">
               {mobileBenefits.map(({ title, detail, Icon }) => (
                 <div key={`${title}-${detail}`} className="flex min-w-0 items-center gap-2.5">
@@ -1258,7 +1258,7 @@ export default function ProductDetail() {
 
       <Footer />
 
-      <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-2 border-t border-border bg-background p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-lg md:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-2 border-t border-border bg-card p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-lg md:hidden">
         <Button
           variant="outline"
           className="h-12 rounded-[5px] border-accent text-sm font-bold text-accent"
