@@ -900,7 +900,7 @@ export default function ProductDetail() {
                       {selectedVariationLabel}
                     </span>
                   </p>
-                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-3">
+                  <div className="-mx-3 flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:mx-0 lg:grid lg:grid-cols-4 lg:gap-3 lg:overflow-visible lg:px-0">
                     {sortedVariations.map((v: any) => {
                       const label = [v.size, v.color].filter(Boolean).join(" ") || v.sku || "Variant";
                       const vPrice = getRolePrice(product, v);
@@ -912,7 +912,7 @@ export default function ProductDetail() {
                           key={v.id}
                           onClick={() => handleVariantSelect(v.id)}
                           className={cn(
-                            "relative rounded-[10px] border-2 bg-white overflow-hidden transition-all text-center w-full min-w-0",
+                            "relative shrink-0 basis-[calc((100%-1rem)/3)] snap-start rounded-[10px] border-2 bg-white overflow-hidden transition-all text-center min-w-0 lg:w-full lg:basis-auto lg:shrink",
                             isSelected
                               ? "border-[#e8a33d] shadow-md"
                               : "border-border hover:border-[#e8a33d]/60 hover:shadow-sm"
@@ -928,21 +928,22 @@ export default function ProductDetail() {
                             alt={label}
                             className="w-full aspect-square object-contain bg-white"
                           />
-                          <div className="px-1.5 pb-2 pt-1">
-                            <p className="text-[11px] sm:text-[13px] font-semibold text-foreground leading-tight line-clamp-2 min-h-[2.2em]">
+                          <div className="px-1 pb-1.5 pt-0.5">
+                            <p className="text-[11px] sm:text-[12px] font-semibold text-foreground leading-snug truncate">
                               {label}
                             </p>
-                            <div className="mt-1 flex items-baseline justify-center gap-1.5">
-                              <span className="text-[13px] sm:text-[15px] font-extrabold text-foreground">
+                            <div className="flex items-baseline justify-center gap-1 flex-wrap">
+                              <span className="text-[12px] sm:text-[14px] font-extrabold text-foreground">
                                 ₹{(vPrice || 0).toLocaleString("en-IN")}
                               </span>
                               {vMrp > 0 && vMrp > vPrice && (
-                                <span className="text-[10px] sm:text-[12px] font-normal text-muted-foreground line-through">
+                                <span className="text-[10px] sm:text-[11px] font-normal text-muted-foreground line-through">
                                   ₹{vMrp.toLocaleString("en-IN")}
                                 </span>
                               )}
                             </div>
                           </div>
+
                         </button>
                       );
                     })}
