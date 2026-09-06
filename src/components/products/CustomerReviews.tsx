@@ -330,59 +330,38 @@ export function CustomerReviews({
 
   return (
     <section className="mt-10" aria-labelledby="customer-reviews-heading">
-      {/* Summary card */}
-      <div className="rounded-lg border border-border bg-white px-4 py-8 sm:px-12">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-0">
+      {/* Summary */}
+      <div className="rounded-xl border border-border bg-white px-4 py-6 sm:px-8">
+        <div className="flex flex-col gap-6 md:flex-row md:items-center">
           {/* Main Score and Stars */}
-          <div className="flex flex-col items-center gap-3 md:w-1/3 md:border-r md:border-border/60 pr-4">
-            <span className="text-[64px] font-display font-medium leading-none text-foreground tracking-tighter">
+          <div className="flex flex-col items-center gap-1.5 md:w-[220px] md:shrink-0 md:border-r md:border-border/60 md:pr-8">
+            <span className="font-display text-[44px] font-bold leading-none tracking-tight text-foreground">
               {avg ? avg.toFixed(1) : "0.0"}
             </span>
-            <div className="flex flex-col items-center gap-2">
-              <Stars value={avg} size="h-6 w-6" />
-              <span className="sr-only">{`Average rating ${avg ? avg.toFixed(1) : "0.0"} out of 5 from ${total} reviews`}</span>
-              <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">
-                {total} Reviews
-              </span>
-            </div>
+            <Stars value={avg} size="h-5 w-5" />
+            <span className="sr-only">{`Average rating ${avg ? avg.toFixed(1) : "0.0"} out of 5 from ${total} reviews`}</span>
+            <span className="text-sm text-muted-foreground">out of 5</span>
+            <span className="text-sm text-muted-foreground">({total} Reviews)</span>
           </div>
 
           {/* Star Bars */}
-          <div className="flex-1 w-full max-w-[400px] space-y-2 md:px-12 md:border-r md:border-border/60">
+          <div className="flex-1 space-y-2 md:pl-8">
             {buckets.map((b) => (
               <div key={b.star} className="flex items-center gap-3">
-                <div className="flex items-center gap-0.5 w-[85px]">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <Star
-                      key={s}
-                      className={`h-3 w-3 ${
-                        s <= b.star ? "fill-[#ffa41c] text-[#ffa41c]" : "text-muted-foreground/20"
-                      }`}
-                    />
-                  ))}
-                </div>
-                <div className="h-[10px] flex-1 overflow-hidden rounded-full bg-secondary">
+                <span className="w-12 shrink-0 text-xs text-muted-foreground">{b.star} Star</span>
+                <div className="h-[7px] flex-1 overflow-hidden rounded-full bg-primary/10">
                   <div
-                    className="h-full bg-[#ffa41c]"
+                    className="h-full rounded-full bg-primary"
                     style={{ width: total ? `${(b.count / total) * 100}%` : "0%" }}
                   />
                 </div>
-                <span className="w-4 text-right text-xs font-medium text-muted-foreground/60">{b.count}</span>
+                <span className="w-7 text-right text-xs text-muted-foreground">{b.count}</span>
               </div>
             ))}
           </div>
-
-          {/* Action Button */}
-          <div className="flex flex-col justify-center items-center md:w-1/3 pl-4">
-            <Button
-              className="px-8 bg-foreground text-background hover:bg-foreground/90 rounded-[10px] h-11"
-              onClick={openNew}
-            >
-              {editingId ? "Edit your review" : "Write a review"}
-            </Button>
-          </div>
         </div>
       </div>
+
 
       {/* Write / edit review modal */}
       <Dialog open={showForm} onOpenChange={(o) => (o ? setShowForm(true) : resetForm())}>
