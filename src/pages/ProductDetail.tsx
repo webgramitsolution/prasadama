@@ -9,7 +9,7 @@ import {
   FileText, Truck, Shield, Minus, Plus, Check, 
   Package, Clock, Phone, MessageCircle, Factory, 
   Award, ChevronRight, ShoppingCart, Star, Zap, CheckCircle2, MapPin, X, ChevronLeft, Loader2,
-  ArrowLeft, Droplets, Leaf, Heart, ListChecks, RotateCcw, BadgeCheck
+  Droplets, Leaf, Heart, ListChecks, RotateCcw, BadgeCheck
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
