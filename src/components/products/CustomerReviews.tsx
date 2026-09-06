@@ -488,150 +488,172 @@ export function CustomerReviews({
         </DialogContent>
       </Dialog>
 
-      {/* Sort bar */}
-      {total > 0 && (
-      <div className="mt-3 rounded-lg border border-border bg-[#f7e4c8] px-4 py-3">
-        <Select
-          value={sort}
-          onValueChange={(v) => {
-            setSort(v);
-            setPage(1);
-          }}
-        >
-          <SelectTrigger className="h-8 w-[170px] border-0 bg-transparent px-0 text-sm shadow-none focus:ring-0">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="recent">Most Recent</SelectItem>
-            <SelectItem value="oldest">Oldest</SelectItem>
-            <SelectItem value="highest">Highest Rating</SelectItem>
-            <SelectItem value="lowest">Lowest Rating</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      )}
+      {/* Reviews list */}
+      <div className="mt-3 rounded-xl border border-border bg-white px-4 py-5 sm:px-8">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h3 id="customer-reviews-heading" className="text-lg font-bold text-foreground">Customer Reviews</h3>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {total > 0
+                ? `Showing ${(page - 1) * PER_PAGE + 1}-${Math.min(page * PER_PAGE, sorted.length)} of ${total} reviews`
+                : "No reviews yet"}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground">Sort by:</span>
+            <Select
+              value={sort}
+              onValueChange={(v) => {
+                setSort(v);
+                setPage(1);
+              }}
+            >
+              <SelectTrigger className="h-9 w-[140px] rounded-full border-border bg-white text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="recent">Newest</SelectItem>
+                <SelectItem value="oldest">Oldest</SelectItem>
+                <SelectItem value="highest">Highest Rating</SelectItem>
+                <SelectItem value="lowest">Lowest Rating</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button
+              className="h-9 rounded-full bg-primary px-4 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+              onClick={openNew}
+            >
+              {editingId ? "Edit review" : "Write a review"}
+            </Button>
+          </div>
+        </div>
 
-      {/* Review cards */}
-      {loading || pending ? (
-        <div className="mt-3 grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true" aria-label="Loading reviews">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="flex h-full flex-col gap-3 rounded-lg border border-border bg-card p-4">
-              <div className="h-3.5 w-24 animate-pulse rounded bg-muted" />
-              <div className="h-5 w-32 animate-pulse rounded bg-muted" />
-              <div className="h-3 w-full animate-pulse rounded bg-muted" />
-              <div className="h-3 w-4/5 animate-pulse rounded bg-muted" />
-              <div className="h-3 w-2/3 animate-pulse rounded bg-muted" />
-            </div>
-          ))}
-        </div>
-      ) : total === 0 ? (
-        <div className="mt-3 flex flex-col items-center gap-3 rounded-lg border border-dashed border-border bg-card px-4 py-12 text-center">
-          <MessageSquarePlus className="h-8 w-8 text-muted-foreground/60" />
-          <p className="text-sm font-medium text-foreground">No reviews yet</p>
-          <p className="max-w-sm text-sm text-muted-foreground">
-            Be the first to share your experience with this product and help other shoppers decide.
-          </p>
-        </div>
-      ) : (
-        <div className="mt-3 grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {current.map((r) => {
-            const isOwner = !!user && r.is_owner === true;
-            return (
-              <div key={r.id} className={cn(
-                "flex h-full flex-col rounded-lg border border-border bg-[#f7e4c8] p-4 transition-colors",
-                r.is_approved === false && "border-warning/30 bg-warning/5 opacity-80"
-              )}>
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex flex-col gap-1">
-                    {r.is_approved === false && (
-                      <Badge variant="outline" className="w-fit text-[9px] h-4 bg-warning/10 text-warning border-warning/20 mb-1">
-                        Pending Moderation
-                      </Badge>
-                    )}
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-0.5">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            style={{ width: '18px', height: '18px' }}
-                            className={star <= r.rating ? "fill-[#ffa41c] text-[#ffa41c]" : "text-muted-foreground/40"}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-lg font-bold text-[#ffa41c]">{r.rating}/5</span>
-                    </div>
-                    <span className="text-xs text-muted-foreground">
-                      {new Date(r.created_at).toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" })}
-                    </span>
-                  </div>
+        {loading || pending ? (
+          <div className="mt-5 space-y-5" aria-busy="true" aria-label="Loading reviews">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="flex gap-4 border-t border-border/60 pt-5">
+                <div className="h-11 w-11 shrink-0 animate-pulse rounded-full bg-muted" />
+                <div className="flex-1 space-y-2">
+                  <div className="h-3.5 w-28 animate-pulse rounded bg-muted" />
+                  <div className="h-3 w-full animate-pulse rounded bg-muted" />
+                  <div className="h-3 w-3/5 animate-pulse rounded bg-muted" />
                 </div>
-                <div className="mt-3 flex items-center gap-2">
-                  <span className="flex h-6 w-6 items-center justify-center rounded bg-secondary text-[10px] font-semibold text-muted-foreground">
+              </div>
+            ))}
+          </div>
+        ) : total === 0 ? (
+          <div className="mt-5 flex flex-col items-center gap-3 rounded-lg border border-dashed border-border px-4 py-12 text-center">
+            <MessageSquarePlus className="h-8 w-8 text-muted-foreground/60" />
+            <p className="text-sm font-medium text-foreground">No reviews yet</p>
+            <p className="max-w-sm text-sm text-muted-foreground">
+              Be the first to share your experience with this product and help other shoppers decide.
+            </p>
+          </div>
+        ) : (
+          <div className="mt-4">
+            {current.map((r) => {
+              const isOwner = !!user && r.is_owner === true;
+              return (
+                <div key={r.id} className="flex gap-3 border-t border-border/60 py-5 sm:gap-4">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
                     {r.reviewer_name?.[0]?.toUpperCase() || "U"}
                   </span>
-                  <span className="text-sm font-medium text-foreground">{r.reviewer_name}</span>
-                  {r.is_verified && (
-                    <span className="rounded bg-success/10 px-1.5 py-0.5 text-[10px] text-success">Verified</span>
-                  )}
-                  {/* Since all reviews are now public by default, we hide the "Pending approval" badge for the owner */}
-                  {isOwner && (
-                    <span className="ml-auto flex items-center gap-1">
-                      <button onClick={() => openEdit(r)} aria-label="Edit review" className="rounded p-1 hover:bg-secondary">
-                        <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
-                      </button>
-                      <button onClick={() => handleDelete(r.id)} aria-label="Delete review" className="rounded p-1 hover:bg-secondary">
-                        <Trash2 className="h-3.5 w-3.5 text-destructive" />
-                      </button>
-                    </span>
-                  )}
-                </div>
-                {r.review_title && (
-                  <p className="mt-2 text-base font-semibold text-foreground">{r.review_title}</p>
-                )}
-                {r.review_text && (
-                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{r.review_text}</p>
-                )}
-                {!!r.photos?.length && (
-                  <div className="mt-auto flex flex-wrap gap-2 pt-3">
-                    {r.photos.map((p) => (
-                      <a key={p} href={p} target="_blank" rel="noreferrer" className="h-14 w-14 overflow-hidden rounded border border-border">
-                        <SignedImage src={p} alt={`Photo from ${r.reviewer_name}`} className="h-full w-full object-cover" loading="lazy" />
-                      </a>
-                    ))}
+                  <div className="w-[130px] shrink-0 max-sm:hidden">
+                    <p className="text-sm font-semibold text-foreground">{r.reviewer_name}</p>
+                    {r.is_verified && (
+                      <Badge variant="outline" className="mt-1 h-5 rounded-md border-primary/20 bg-primary/10 text-[10px] font-medium text-primary">
+                        Verified Buyer
+                      </Badge>
+                    )}
+                    {r.is_approved === false && (
+                      <Badge variant="outline" className="mt-1 h-5 border-warning/20 bg-warning/10 text-[10px] text-warning">
+                        Pending
+                      </Badge>
+                    )}
                   </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="text-sm font-semibold text-foreground sm:hidden">{r.reviewer_name}</p>
+                      <Stars value={r.rating} size="h-4 w-4" />
+                      <span className="text-sm font-medium text-foreground">{r.rating.toFixed(1)}</span>
+                      <span className="ml-auto text-xs text-muted-foreground">
+                        {new Date(r.created_at).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
+                      </span>
+                      {isOwner && (
+                        <span className="flex items-center gap-1">
+                          <button onClick={() => openEdit(r)} aria-label="Edit review" className="rounded p-1 hover:bg-secondary">
+                            <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
+                          </button>
+                          <button onClick={() => handleDelete(r.id)} aria-label="Delete review" className="rounded p-1 hover:bg-secondary">
+                            <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                          </button>
+                        </span>
+                      )}
+                    </div>
+                    {r.is_verified && (
+                      <Badge variant="outline" className="mt-1.5 h-5 rounded-md border-primary/20 bg-primary/10 text-[10px] font-medium text-primary sm:hidden">
+                        Verified Buyer
+                      </Badge>
+                    )}
+                    {r.review_title && (
+                      <p className="mt-1.5 text-sm font-semibold text-foreground">{r.review_title}</p>
+                    )}
+                    {r.review_text && (
+                      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{r.review_text}</p>
+                    )}
+                    {!!r.photos?.length && (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {r.photos.map((p) => (
+                          <a key={p} href={p} target="_blank" rel="noreferrer" className="h-16 w-16 overflow-hidden rounded-md border border-border">
+                            <SignedImage src={p} alt={`Photo from ${r.reviewer_name}`} className="h-full w-full object-cover" loading="lazy" />
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
 
-      {/* Pagination */}
-      {pageCount > 1 && (
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-1.5 text-sm sm:gap-2">
-          <button onClick={() => setPage(1)} disabled={page === 1} aria-label="First page" className="p-1 disabled:opacity-30">
-            <ChevronsLeft className="h-4 w-4" />
-          </button>
-          <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} aria-label="Previous page" className="p-1 disabled:opacity-30">
-            <ChevronLeft className="h-4 w-4" />
-          </button>
-          {Array.from({ length: pageCount }, (_, i) => i + 1).map((p) => (
-            <button
-              key={p}
-              onClick={() => setPage(p)}
-              className={`h-7 w-7 rounded ${p === page ? "font-bold text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-            >
-              {p}
-            </button>
-          ))}
-          <button onClick={() => setPage((p) => Math.min(pageCount, p + 1))} disabled={page === pageCount} aria-label="Next page" className="p-1 disabled:opacity-30">
-            <ChevronRight className="h-4 w-4" />
-          </button>
-          <button onClick={() => setPage(pageCount)} disabled={page === pageCount} aria-label="Last page" className="p-1 disabled:opacity-30">
-            <ChevronsRight className="h-4 w-4" />
-          </button>
-        </div>
-      )}
+        {/* Pagination */}
+        {pageCount > 1 && (
+          <div className="mt-2 flex flex-col items-center gap-3 border-t border-border/60 pt-5">
+            {page < pageCount && (
+              <Button
+                onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+                className="h-11 rounded-md bg-primary px-10 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+              >
+                View All Reviews
+              </Button>
+            )}
+            <div className="flex flex-wrap items-center justify-center gap-1.5 text-sm sm:gap-2">
+              <button onClick={() => setPage(1)} disabled={page === 1} aria-label="First page" className="p-1 disabled:opacity-30">
+                <ChevronsLeft className="h-4 w-4" />
+              </button>
+              <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} aria-label="Previous page" className="p-1 disabled:opacity-30">
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              {Array.from({ length: pageCount }, (_, i) => i + 1).map((p) => (
+                <button
+                  key={p}
+                  onClick={() => setPage(p)}
+                  className={`h-7 w-7 rounded ${p === page ? "font-bold text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                >
+                  {p}
+                </button>
+              ))}
+              <button onClick={() => setPage((p) => Math.min(pageCount, p + 1))} disabled={page === pageCount} aria-label="Next page" className="p-1 disabled:opacity-30">
+                <ChevronRight className="h-4 w-4" />
+              </button>
+              <button onClick={() => setPage(pageCount)} disabled={page === pageCount} aria-label="Last page" className="p-1 disabled:opacity-30">
+                <ChevronsRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
     </section>
   );
 }
