@@ -737,13 +737,6 @@ export default function ProductDetail() {
       />
       <Header />
 
-      <div className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-card px-3 md:hidden">
-        <Button type="button" size="icon" variant="ghost" className="h-10 w-10 rounded-full bg-accent text-accent-foreground hover:bg-accent/90" onClick={() => navigate(-1)} aria-label="Go back">
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-        
-      </div>
-      
       <main className="bg-card pt-0 pb-24 md:bg-transparent md:pb-0">
         <div className="container mx-auto px-3 sm:px-4 py-2 max-w-full">
 
@@ -1026,7 +1019,7 @@ export default function ProductDetail() {
                     {isAddingToCart ? "Adding..." : "ADD TO CART"}
                   </Button>
                   <Button
-                    className="btn-gold-frame hidden lg:inline-flex flex-1 min-w-0 text-[11px] sm:text-sm font-bold h-11 uppercase tracking-tight sm:tracking-wide rounded-[5px] px-2 items-center justify-center gap-1 sm:gap-1.5"
+                    className="btn-gold-frame btn-premium-shine hidden lg:inline-flex flex-1 min-w-0 text-[11px] sm:text-sm font-bold h-11 uppercase tracking-tight sm:tracking-wide rounded-[5px] px-2 items-center justify-center gap-1 sm:gap-1.5"
                     onClick={handleBuyNow}
                     disabled={isAddingToCart || isBuyingNow || !moqValid}
                   >
@@ -1037,7 +1030,7 @@ export default function ProductDetail() {
 
                 {/* Tablet only: Full width Buy Now below the row */}
                 <Button
-                  className="btn-gold-frame hidden md:flex lg:hidden w-full text-sm font-bold h-11 uppercase tracking-wide rounded-[5px] items-center justify-center gap-1.5 mt-2"
+                  className="btn-gold-frame btn-premium-shine hidden md:flex lg:hidden w-full text-sm font-bold h-11 uppercase tracking-wide rounded-[5px] items-center justify-center gap-1.5 mt-2"
                   onClick={handleBuyNow}
                   disabled={isAddingToCart || isBuyingNow || !moqValid}
                 >
@@ -1291,7 +1284,7 @@ export default function ProductDetail() {
 
       <div className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-card p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-lg md:hidden">
         <Button
-          className="h-12 w-full rounded-[5px] bg-accent text-sm font-bold text-accent-foreground hover:bg-accent/90"
+          className="btn-gold-frame btn-premium-shine h-12 w-full rounded-[5px] text-sm font-bold"
           onClick={handleBuyNow}
           disabled={isAddingToCart || isBuyingNow || !moqValid}
         >
