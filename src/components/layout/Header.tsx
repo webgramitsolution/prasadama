@@ -131,7 +131,7 @@ export function Header() {
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[280px] p-0">
+              <SheetContent side="left" className="w-[280px] bg-card p-0 text-foreground">
                 <div className="flex flex-col h-full">
                   {/* Mobile Menu Banner (replaces greeting bar) */}
                   <Link
@@ -155,38 +155,38 @@ export function Header() {
                   </Link>
 
                 {/* Mobile Search */}
-                   <div className="p-3 border-b border-border">
-                     <InstantSearch onClose={() => setIsOpen(false)} autoFocus={false} mobileMenuOpen={isOpen} />
+                   <div className="p-3 border-b border-border bg-card">
+                     <InstantSearch className="[&_input]:bg-card [&_input]:text-foreground [&_input::placeholder]:text-muted-foreground" onClose={() => setIsOpen(false)} autoFocus={false} mobileMenuOpen={isOpen} />
                    </div>
 
                   {/* Mobile Nav — only Categories per request */}
                   <nav className="flex-1 p-3 overflow-y-auto">
-                    <p className="px-3 text-xs font-semibold text-muted-foreground uppercase mb-2">Categories</p>
+                     <p className="px-3 text-xs font-semibold text-foreground uppercase mb-2">Categories</p>
                     <div className="divide-y divide-border border-y border-border">
                       {categories.map((cat) => (
                         <Link
                           key={cat.id}
                           to={`/products?category=${cat.slug}`}
                           onClick={() => setIsOpen(false)}
-                          className="flex items-center justify-between px-3 py-3 text-sm text-foreground hover:bg-secondary"
+                           className="group flex items-center justify-between px-3 py-3 text-sm text-foreground transition-colors hover:bg-accent hover:text-accent-foreground active:bg-accent active:text-accent-foreground"
                         >
                           {cat.name}
-                          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                           <ChevronRight className="h-4 w-4 text-foreground transition-colors group-hover:text-accent-foreground group-active:text-accent-foreground" />
                         </Link>
                       ))}
                     </div>
 
-                    <p className="px-3 mt-4 text-xs font-semibold text-muted-foreground uppercase mb-2">Support</p>
+                     <p className="px-3 mt-4 text-xs font-semibold text-foreground uppercase mb-2">Support</p>
                     <div className="divide-y divide-border border-y border-border">
                       <Link
                         to="/help"
                         onClick={() => setIsOpen(false)}
-                        className="flex items-center justify-between px-3 py-3 text-sm text-foreground hover:bg-secondary"
+                         className="group flex items-center justify-between px-3 py-3 text-sm text-foreground transition-colors hover:bg-accent hover:text-accent-foreground active:bg-accent active:text-accent-foreground"
                       >
                         <span className="flex items-center gap-2">
-                          <LifeBuoy className="h-4 w-4 text-[#661714]" /> Help &amp; FAQ
+                           <LifeBuoy className="h-4 w-4 text-accent transition-colors group-hover:text-accent-foreground group-active:text-accent-foreground" /> Help &amp; FAQ
                         </span>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                         <ChevronRight className="h-4 w-4 text-foreground transition-colors group-hover:text-accent-foreground group-active:text-accent-foreground" />
                       </Link>
                     </div>
                   </nav>
