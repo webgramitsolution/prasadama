@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { SignedImage } from "@/components/common/SignedImage";
@@ -99,6 +99,9 @@ function getCategoryHref(banner: PromoBanner, categories: CategoryLink[]) {
 export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
   const [banners, setBanners] = useState<PromoBanner[]>([]);
   const [categories, setCategories] = useState<CategoryLink[]>([]);
+  const [hasOverflow, setHasOverflow] = useState(false);
+  const railRef = useRef<HTMLDivElement>(null);
+  const isInteractingRef = useRef(false);
 
   useEffect(() => {
     (async () => {
@@ -125,6 +128,40 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
     })();
   }, [onFetchStatus]);
 
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+
+    const updateOverflow = () => setHasOverflow(rail.scrollWidth > rail.clientWidth + 2);
+    updateOverflow();
+
+    const resizeObserver = new ResizeObserver(updateOverflow);
+    resizeObserver.observe(rail);
+    Array.from(rail.children).forEach((child) => resizeObserver.observe(child));
+
+    return () => resizeObserver.disconnect();
+  }, [banners.length]);
+
+  useEffect(() => {
+    const rail = railRef.current;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!rail || !hasOverflow || prefersReducedMotion) return;
+
+    const timer = window.setInterval(() => {
+      if (isInteractingRef.current) return;
+      const firstCard = rail.firstElementChild as HTMLElement | null;
+      if (!firstCard) return;
+
+      const gap = Number.parseFloat(window.getComputedStyle(rail).columnGap) || 0;
+      const step = firstCard.offsetWidth + gap;
+      const maxScroll = rail.scrollWidth - rail.clientWidth;
+      const next = rail.scrollLeft + step;
+      rail.scrollTo({ left: next >= maxScroll - 2 ? 0 : next, behavior: "smooth" });
+    }, 3500);
+
+    return () => window.clearInterval(timer);
+  }, [hasOverflow, banners.length]);
+
   if (banners.length === 0) return null;
 
   const sortedBanners = [...banners];
@@ -148,13 +185,23 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
           <Ornament flip />
         </div>
 
-        <div className="flex overflow-x-auto gap-3 sm:gap-5 lg:justify-center lg:gap-6 snap-x snap-mandatory py-2 -mx-1 px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {sortedBanners.slice(0, 9).map((banner, i) => (
+        <div
+          ref={railRef}
+          aria-label="Shop by category"
+          onPointerDown={() => { isInteractingRef.current = true; }}
+          onPointerUp={() => { isInteractingRef.current = false; }}
+          onPointerCancel={() => { isInteractingRef.current = false; }}
+          onPointerLeave={() => { isInteractingRef.current = false; }}
+          onFocusCapture={() => { isInteractingRef.current = true; }}
+          onBlurCapture={() => { isInteractingRef.current = false; }}
+          className={`flex overflow-x-auto gap-3 sm:gap-5 lg:gap-6 snap-x snap-mandatory scroll-smooth py-2 -mx-1 px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${hasOverflow ? "justify-start" : "justify-center"}`}
+        >
+          {sortedBanners.map((banner, i) => (
             <CardLink
               key={banner.id}
               to={getCategoryHref(banner, categories)}
               ariaLabel={banner.title}
-              className="group relative block shrink-0 snap-start w-[calc(50%-0.375rem)] sm:w-[calc(33.333%-0.84rem)] lg:w-[calc(14.285%-1.29rem)] transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4"
+              className="group relative block shrink-0 snap-start w-[calc((100%-1.725rem)/3.3)] sm:w-[calc((100%-6.25rem)/6)] lg:w-[calc((100%-10.5rem)/8)] transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4"
             >
               <div className="relative aspect-square overflow-hidden rounded-full border-2 border-accent/30 bg-muted/40 transition-all duration-300 group-hover:border-accent/60 group-hover:shadow-lg">
                 <SignedImage
@@ -162,13 +209,13 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
                   alt={banner.title}
                   loading={i < 2 ? "eager" : "lazy"}
                   decoding="async"
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 15vw"
+                  sizes="(max-width: 640px) 30vw, (max-width: 1024px) 16vw, 12vw"
                   className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.05]"
                 />
               </div>
 
-              <div className="absolute left-1/2 top-1/2 z-10 flex h-8 w-[106%] -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-accent px-4 [clip-path:polygon(0_0,7%_50%,0_100%,100%_100%,93%_50%,100%_0)] sm:h-9 lg:h-8">
-                <h3 className="max-w-full truncate text-center font-sans text-[11px] font-bold uppercase text-accent-foreground sm:text-xs lg:text-[11px]">
+              <div className="btn-premium-shine absolute left-1/2 top-1/2 z-10 flex h-8 w-[106%] -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-accent px-2 [clip-path:polygon(0_0,7%_50%,0_100%,100%_100%,93%_50%,100%_0)] sm:h-9 sm:px-3 lg:h-8">
+                <h3 className="relative z-10 max-w-full truncate text-center font-sans text-[9px] font-bold uppercase text-accent-foreground sm:text-[10px] lg:text-[11px]">
                   {banner.title}
                 </h3>
               </div>
