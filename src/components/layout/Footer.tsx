@@ -136,7 +136,7 @@ export function Footer() {
                 </ul>
               </AccordionContent>
             </AccordionItem>
-            <AccordionItem value="connect" className="border-white/20">
+            <AccordionItem value="connect" className="border-b-0">
               <AccordionTrigger className="text-base font-display font-semibold hover:no-underline">Connect</AccordionTrigger>
               <AccordionContent>
                 <ul className="space-y-2.5 pb-2">
