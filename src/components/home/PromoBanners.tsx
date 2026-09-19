@@ -148,7 +148,7 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
           <Ornament flip />
         </div>
 
-        <div className="flex overflow-x-auto gap-3 sm:gap-5 lg:gap-6 snap-x snap-mandatory py-2 -mx-1 px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex overflow-x-auto gap-3 sm:gap-5 lg:justify-center lg:gap-6 snap-x snap-mandatory py-2 -mx-1 px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {sortedBanners.slice(0, 9).map((banner, i) => (
             <CardLink
               key={banner.id}
