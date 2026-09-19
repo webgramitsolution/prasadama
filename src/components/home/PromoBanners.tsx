@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SignedImage } from "@/components/common/SignedImage";
 
@@ -149,39 +148,29 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
           <Ornament flip />
         </div>
 
-        <div className="flex overflow-x-auto gap-3 sm:gap-5 lg:gap-6 snap-x snap-mandatory pb-2 -mx-1 px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex overflow-x-auto gap-3 sm:gap-5 lg:justify-center lg:gap-6 snap-x snap-mandatory py-2 -mx-1 px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {sortedBanners.slice(0, 9).map((banner, i) => (
             <CardLink
               key={banner.id}
               to={getCategoryHref(banner, categories)}
               ariaLabel={banner.title}
-              className="group block shrink-0 snap-start w-[calc(50%-0.375rem)] sm:w-[calc(33.333%-0.66rem)] lg:w-[calc(25%-0.75rem)] rounded-[16px] sm:rounded-[18px] border border-accent/25 bg-card/60 overflow-hidden shadow-[0_2px_16px_rgba(102,23,20,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-[0_10px_30px_rgba(102,23,20,0.16)]"
+              className="group relative block shrink-0 snap-start w-[calc(50%-0.375rem)] sm:w-[calc(33.333%-0.84rem)] lg:w-[calc(14.285%-1.29rem)] transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4"
             >
-              <div className="overflow-hidden bg-muted/40">
+              <div className="relative aspect-square overflow-hidden rounded-full border-2 border-accent/30 bg-muted/40 transition-all duration-300 group-hover:border-accent/60 group-hover:shadow-lg">
                 <SignedImage
                   src={banner.image_url || banner.mobile_image_url || null}
                   alt={banner.title}
                   loading={i < 2 ? "eager" : "lazy"}
                   decoding="async"
-                  sizes="(max-width: 640px) 80vw, 320px"
-                  className="w-full aspect-[16/9] object-cover object-center transition-transform duration-500 group-hover:scale-[1.04]"
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 15vw"
+                  className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.05]"
                 />
               </div>
 
-              <div className="flex items-center justify-between gap-3 px-3 sm:px-4 py-3.5 sm:py-5">
-                <div className="min-w-0">
-                  <h3 className="font-display text-base sm:text-lg lg:text-xl font-semibold text-foreground leading-tight">
-                    {banner.title}
-                  </h3>
-                  {banner.offer_text && (
-                    <p className="mt-1 sm:mt-1.5 text-[12px] sm:text-[13px] lg:text-sm text-muted-foreground leading-snug line-clamp-2">
-                      {banner.offer_text}
-                    </p>
-                  )}
-                </div>
-                <span className="shrink-0 grid place-items-center h-9 w-9 sm:h-10 sm:w-10 lg:h-11 lg:w-11 rounded-full bg-accent text-accent-foreground transition-transform duration-300 group-hover:translate-x-1 group-hover:scale-105">
-                  <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:translate-x-0.5" />
-                </span>
+              <div className="absolute left-1/2 top-1/2 z-10 flex h-8 w-[106%] -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-accent px-4 [clip-path:polygon(0_0,7%_50%,0_100%,100%_100%,93%_50%,100%_0)] sm:h-9 lg:h-8">
+                <h3 className="max-w-full truncate text-center font-sans text-[11px] font-bold uppercase text-accent-foreground sm:text-xs lg:text-[11px]">
+                  {banner.title}
+                </h3>
               </div>
             </CardLink>
           ))}
