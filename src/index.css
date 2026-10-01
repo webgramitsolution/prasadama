@@ -84,6 +84,7 @@
     --coupon-code-surface: 0 0% 100%;
     --coupon-description: 55 87% 18%;
     --coupon-ink: 0 0% 3%;
+    --promo-category: 40 16% 96%;
 
     --brand-navy: 213 72% 22%;
     --brand-navy-soft: 208 80% 96%;
@@ -169,6 +170,7 @@
     --coupon-code-surface: 215 25% 12%;
     --coupon-description: 68 80% 82%;
     --coupon-ink: 0 0% 100%;
+    --promo-category: 215 22% 14%;
 
     --brand-navy: 213 60% 55%;
     --brand-navy-soft: 215 25% 14%;
@@ -219,6 +221,24 @@
 }
 
 @layer utilities {
+  .bg-promo-category {
+    background-color: hsl(var(--promo-category));
+  }
+
+  .promo-category-ribbon {
+    @apply pointer-events-none absolute inset-0 z-10 flex items-center justify-center text-accent;
+  }
+
+  .promo-category-ribbon svg {
+    @apply block w-[105%] overflow-visible;
+    filter: drop-shadow(0 4px 6px hsl(var(--foreground) / 0.3));
+  }
+
+  .promo-category-ribbon span {
+    @apply absolute inset-x-[8%] truncate text-center font-sans text-[7px] font-bold uppercase leading-none text-accent-foreground sm:text-[9px] lg:text-[10px];
+    letter-spacing: 0;
+  }
+
   .text-gradient-primary {
     @apply bg-clip-text text-transparent;
     background-image: var(--gradient-primary);

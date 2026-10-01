@@ -893,7 +893,7 @@ export default function ProductDetail() {
                       {selectedVariationLabel}
                     </span>
                   </p>
-                  <div className="-mx-3 flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:mx-0 lg:grid lg:grid-cols-4 lg:gap-3 lg:overflow-visible lg:px-0">
+                  <div className="-mx-3 flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:gap-3 md:px-0">
                     {sortedVariations.map((v: any) => {
                       const label = [v.size, v.color].filter(Boolean).join(" ") || v.sku || "Variant";
                       const vPrice = getRolePrice(product, v);
@@ -905,7 +905,7 @@ export default function ProductDetail() {
                           key={v.id}
                           onClick={() => handleVariantSelect(v.id)}
                           className={cn(
-                            "relative shrink-0 basis-[calc((100%-1rem)/3)] snap-start rounded-[10px] border-2 bg-white overflow-hidden transition-all text-center min-w-0 lg:w-full lg:basis-auto lg:shrink",
+                            "relative shrink-0 basis-[calc((100%-1rem)/3)] snap-start rounded-[10px] border-2 bg-card overflow-hidden transition-all text-center min-w-0 md:basis-[calc((100%-2.25rem)/4)]",
                             isSelected
                               ? "border-[#e8a33d] shadow-md"
                               : "border-border hover:border-[#e8a33d]/60 hover:shadow-sm"
@@ -919,7 +919,7 @@ export default function ProductDetail() {
                           <SignedImage
                             src={img}
                             alt={label}
-                            className="w-full aspect-square object-contain bg-white"
+                            className="w-full aspect-square object-contain bg-card"
                           />
                           <div className="px-1 pb-1.5 pt-0.5">
                             <p className="text-[11px] sm:text-[12px] font-semibold text-foreground leading-snug truncate">
@@ -949,7 +949,7 @@ export default function ProductDetail() {
               <ProductCoupons categoryId={product.category_id} />
 
               {/* Buy Box */}
-              <div className="space-y-3 pt-4 border-t border-border">
+              <div className="space-y-3 pt-4">
                 {hasExplicitMoq && (
                   <p className="text-xs text-muted-foreground">Minimum Order Quantity- {currentMoq}</p>
                 )}
