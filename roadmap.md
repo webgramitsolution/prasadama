@@ -16,3 +16,6 @@
 - [x] Add automatic real Offers & Deals product section
 - [x] Add admin-managed wide Promo Banners section
 - [x] Verify category auto-slide and fish-tail ribbons on phone and tablet
+- [ ] Align product-card reviews right and animate coupon borders
+- [ ] Show promo banners as two complete desktop columns and one auto-sliding phone banner
+- [ ] Rebuild checkout payment choices to match the supplied Razorpay and COD reference

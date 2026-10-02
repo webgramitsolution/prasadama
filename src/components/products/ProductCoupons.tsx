@@ -56,7 +56,7 @@ export function ProductCoupons({ categoryId }: ProductCouponsProps) {
         return (
           <div
             key={c.id}
-            className="flex items-center gap-3 rounded-xl border border-dashed border-[#1e7a3c]/50 bg-[#f1f8f2] px-3 py-2.5 sm:px-4 sm:py-3"
+            className="coupon-running-border flex items-center gap-3 rounded-xl bg-[#f1f8f2] px-3 py-2.5 sm:px-4 sm:py-3"
           >
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#1e7a3c] text-white">
               <BadgePercent className="h-4 w-4" />
