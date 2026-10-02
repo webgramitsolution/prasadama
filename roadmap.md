@@ -10,3 +10,4 @@
 - [x] Product variations: 3 visible on phone and 4 on tablet/desktop in one swipeable row
 - [x] Remove the divider below product coupons
 - [x] Match Promo Banners to the uploaded circular ribbon design
+- [x] Replicate the supplied category-strip screenshot spacing, sizing, ribbon, and background
