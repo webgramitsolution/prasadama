@@ -882,16 +882,23 @@ export default function Checkout() {
                             </span>
                             <span className="hkcp-powered">
                               <span>Powered by</span>
-                              <span className="hkcp-rzp">
-                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 3 5 14.2h5.2L8 21l11-13.6h-5.4L14.5 3Z" fill="#0b2e73"/><path d="M14.5 3 8.3 11.2h4L8 21l6.5-18Z" fill="#3395ff"/></svg>
-                                <em>Razorpay</em>
-                              </span>
+                              <img
+                                src="https://ik.imagekit.io/Prasadam/razor%20pay%20icon/Razorpay_logo.svg"
+                                alt="Razorpay"
+                                className="hkcp-rzp-logo"
+                                loading="lazy"
+                              />
                             </span>
                           </span>
                           <span className="hkcp-body">
                             <span className="hkcp-chips">
                               <span className="hkcp-chip hkcp-chip--upi">
-                                <svg viewBox="0 0 64 22" aria-hidden="true"><text x="0" y="18" fontFamily="Arial Black, Arial, sans-serif" fontWeight="900" fontSize="20" fontStyle="italic" fill="#6b6b6b">UPI</text><path d="M49 2 56 11 49 20Z" fill="#f47f24"/><path d="M53 2 60 11 53 20Z" fill="#2f9e44"/></svg>
+                                <img
+                                  src="https://ik.imagekit.io/Prasadam/razor%20pay%20icon/upi"
+                                  alt="UPI"
+                                  className="hkcp-upi-logo"
+                                  loading="lazy"
+                                />
                               </span>
                               <span className="hkcp-chip">
                                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="3" fill="#2a7de1"/><rect x="2" y="9" width="20" height="3" fill="#fff"/><rect x="5" y="14" width="6" height="2" rx="1" fill="#fff"/></svg>
