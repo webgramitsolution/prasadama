@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Homepage merchandising must use category records for category circles, discounted active products for deals, and promo banner records for wide banners, so admin changes automatically reach the storefront.

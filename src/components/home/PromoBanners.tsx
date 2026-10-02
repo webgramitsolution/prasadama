@@ -5,18 +5,12 @@ import { SignedImage } from "@/components/common/SignedImage";
 
 const isExternalHref = (href: string) => /^(https?:)?\/\//i.test(href) || /^(mailto:|tel:|whatsapp:)/i.test(href);
 
-interface PromoBanner {
+interface HomeCategory {
   id: string;
-  title: string;
-  offer_text: string | null;
-  image_url: string;
-  mobile_image_url?: string | null;
-  link: string | null;
-}
-
-interface CategoryLink {
   name: string;
   slug: string;
+  image_url: string | null;
+  ribbon_label: string | null;
 }
 
 interface PromoBannersProps {
@@ -62,38 +56,8 @@ function CategoryRibbon({ title }: { title: string }) {
   );
 }
 
-const normalizeName = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/g, "");
-
-function editDistance(a: string, b: string) {
-  const row = Array.from({ length: b.length + 1 }, (_, index) => index);
-  for (let i = 1; i <= a.length; i += 1) {
-    let previous = row[0] ?? 0;
-    row[0] = i;
-    for (let j = 1; j <= b.length; j += 1) {
-      const current = row[j] ?? j;
-      row[j] = Math.min(current + 1, (row[j - 1] ?? i) + 1, previous + (a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1));
-      previous = current;
-    }
-  }
-  return row[b.length] ?? Math.max(a.length, b.length);
-}
-
-function getCategoryHref(banner: PromoBanner, categories: CategoryLink[]) {
-  const title = normalizeName(banner.title);
-  const closest = categories
-    .map((category) => ({ category, distance: editDistance(title, normalizeName(category.name)) }))
-    .sort((a, b) => a.distance - b.distance)[0];
-
-  // Category titles occasionally contain a small spelling difference in the promo manager.
-  if (closest && closest.distance <= 2) {
-    return `/products?category=${encodeURIComponent(closest.category.slug)}`;
-  }
-  return banner.link;
-}
-
 export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
-  const [banners, setBanners] = useState<PromoBanner[]>([]);
-  const [categories, setCategories] = useState<CategoryLink[]>([]);
+  const [categories, setCategories] = useState<HomeCategory[]>([]);
   const [hasOverflow, setHasOverflow] = useState(false);
   const railRef = useRef<HTMLDivElement>(null);
   const isInteractingRef = useRef(false);
@@ -101,24 +65,22 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
   useEffect(() => {
     (async () => {
       onFetchStatus?.("loading");
-      const [bannerResult, categoryResult] = await Promise.all([
-        supabase
-          .from("promo_banners")
-          .select("*")
-          .eq("is_active", true)
-          .order("sort_order", { ascending: true }),
-        supabase
+      const categoryResult = await supabase
           .from("categories")
-          .select("name, slug")
+          .select("id, name, slug, image_url, ribbon_label")
           .eq("is_active", true)
-          .is("parent_id", null),
-      ]);
-      if (bannerResult.error || categoryResult.error) {
+          .eq("show_on_home", true)
+          .is("parent_id", null)
+          .order("sort_order", { ascending: true });
+      if (categoryResult.error) {
         onFetchStatus?.("error");
         return;
       }
-      setBanners((bannerResult.data || []) as PromoBanner[]);
-      setCategories((categoryResult.data || []) as CategoryLink[]);
+      const rows = (categoryResult.data || []) as HomeCategory[];
+      setCategories([
+        { id: "shop-all", name: "Shop All", slug: "", image_url: "/prasadam-logo.png", ribbon_label: "Shop All" },
+        ...rows,
+      ]);
       onFetchStatus?.("success");
     })();
   }, [onFetchStatus]);
@@ -135,7 +97,7 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
     Array.from(rail.children).forEach((child) => resizeObserver.observe(child));
 
     return () => resizeObserver.disconnect();
-  }, [banners.length]);
+  }, [categories.length]);
 
   useEffect(() => {
     const rail = railRef.current;
@@ -155,19 +117,9 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
     }, 3500);
 
     return () => window.clearInterval(timer);
-  }, [hasOverflow, banners.length]);
+  }, [hasOverflow, categories.length]);
 
-  if (banners.length === 0) return null;
-
-  const sortedBanners = [...banners];
-  const shopAllIndex = sortedBanners.findIndex((b) => b.title.toLowerCase().trim() === "shop all");
-  if (shopAllIndex > 0) {
-    const shopAll = sortedBanners[shopAllIndex];
-    if (shopAll) {
-      sortedBanners.splice(shopAllIndex, 1);
-      sortedBanners.unshift(shopAll);
-    }
-  }
+  if (categories.length === 0) return null;
 
   return (
     <section className="w-full overflow-hidden bg-promo-category py-[8px] pb-[30px]">
@@ -181,27 +133,27 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
           onPointerLeave={() => { isInteractingRef.current = false; }}
           onFocusCapture={() => { isInteractingRef.current = true; }}
           onBlurCapture={() => { isInteractingRef.current = false; }}
-          className={`flex overflow-x-auto gap-6 snap-x snap-mandatory scroll-smooth px-4 py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${hasOverflow ? "justify-start" : "justify-center"}`}
+          className={`flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:gap-6 ${hasOverflow ? "justify-start" : "justify-center"}`}
         >
-          {sortedBanners.map((banner, i) => (
+          {categories.map((category, i) => (
             <CardLink
-              key={banner.id}
-              to={getCategoryHref(banner, categories)}
-              ariaLabel={banner.title}
-              className="group relative block w-[85px] shrink-0 snap-start no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 sm:w-[110px] lg:w-[130px]"
+              key={category.id}
+              to={category.slug ? `/products?category=${encodeURIComponent(category.slug)}` : "/products"}
+              ariaLabel={category.name}
+              className="group relative block w-[92px] shrink-0 snap-start no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 sm:w-[118px] lg:w-[138px]"
             >
               <div className="relative aspect-square transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none">
                 <div className="h-full w-full overflow-hidden rounded-full border-2 border-accent/30 bg-muted shadow-sm">
                 <SignedImage
-                  src={banner.image_url || banner.mobile_image_url || null}
-                  alt={banner.title}
+                  src={category.image_url}
+                  alt={category.name}
                   loading={i < 2 ? "eager" : "lazy"}
                   decoding="async"
-                  sizes="(max-width: 639px) 85px, (max-width: 1023px) 110px, 130px"
+                  sizes="(max-width: 639px) 92px, (max-width: 1023px) 118px, 138px"
                   className="h-full w-full object-cover object-center"
                 />
                 </div>
-                <CategoryRibbon title={banner.title} />
+                <CategoryRibbon title={category.ribbon_label?.trim() || category.name} />
               </div>
             </CardLink>
           ))}

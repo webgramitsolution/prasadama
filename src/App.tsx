@@ -83,6 +83,7 @@ import InvoicePreview from "./pages/dev/InvoicePreview";
 import AdminSecurityDiagnostics from "./pages/admin/SecurityDiagnostics";
 import AdminSmsLogs from "./pages/admin/SmsLogs";
 import AdminEmailSettings from "./pages/admin/EmailSettings";
+import AdminHomeMerchandising from "./pages/admin/HomeMerchandising";
 
 
 const queryClient = new QueryClient({
@@ -162,6 +163,7 @@ const App = () => (
                 <Route path="brands" element={<AdminBrands />} />
                 <Route path="hero-slides" element={<AdminHeroSlides />} />
                 <Route path="promo-banners" element={<AdminPromoBanners />} />
+                <Route path="home-merchandising" element={<AdminHomeMerchandising />} />
                 <Route path="coupons" element={<AdminCoupons />} />
                 <Route path="pincodes" element={<AdminPincodes />} />
                 <Route path="chat" element={<AdminChat />} />
