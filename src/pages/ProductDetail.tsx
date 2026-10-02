@@ -894,33 +894,47 @@ export default function ProductDetail() {
                     </span>
                   </p>
                   <div className="-mx-3 flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:gap-3 md:px-0">
-                    {sortedVariations.map((v: any) => {
+                    {sortedVariations.map((v: any, vi: number) => {
                       const label = [v.size, v.color].filter(Boolean).join(" ") || v.sku || "Variant";
                       const vPrice = getRolePrice(product, v);
                       const vMrp = getMrp(product, v);
                       const img = v.color_image || v.gallery_images?.[0] || product.images?.[0] || "/placeholder.svg";
                       const isSelected = selectedVariation?.id === v.id;
+                      const total = sortedVariations.length;
+                      const badge =
+                        total >= 4 && vi === 1 ? { text: "★ Most Popular", tone: "var-badge--red" }
+                        : total >= 4 && vi === 2 ? { text: "Best Deal", tone: "var-badge--green" }
+                        : total >= 4 && vi === total - 1 ? { text: "Max Savings", tone: "var-badge--amber" }
+                        : total === 3 && vi === 1 ? { text: "★ Most Popular", tone: "var-badge--red" }
+                        : total === 3 && vi === 2 ? { text: "Best Deal", tone: "var-badge--green" }
+                        : total === 2 && vi === 1 ? { text: "Best Deal", tone: "var-badge--green" }
+                        : null;
                       return (
                         <button
                           key={v.id}
                           onClick={() => handleVariantSelect(v.id)}
                           className={cn(
-                            "relative shrink-0 basis-[calc((100%-1rem)/3)] snap-start rounded-[10px] border-2 bg-card overflow-hidden transition-all text-center min-w-0 md:basis-[calc((100%-2.25rem)/4)]",
+                            "relative shrink-0 basis-[calc((100%-1rem)/3)] snap-start rounded-[10px] border-2 bg-card overflow-visible transition-all text-center min-w-0 md:basis-[calc((100%-2.25rem)/4)]",
                             isSelected
                               ? "border-[#e8a33d] shadow-md"
                               : "border-border hover:border-[#e8a33d]/60 hover:shadow-sm"
                           )}
                         >
+                          {badge && (
+                            <span className={`var-badge ${badge.tone}`}>{badge.text}</span>
+                          )}
                           {isSelected && (
                             <span className="absolute top-1.5 right-1.5 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-[#e8a33d] text-white">
                               <Check className="h-3 w-3" strokeWidth={3} />
                             </span>
                           )}
-                          <SignedImage
-                            src={img}
-                            alt={label}
-                            className="w-full aspect-square object-contain bg-card"
-                          />
+                          <span className="block overflow-hidden rounded-t-[8px]">
+                            <SignedImage
+                              src={img}
+                              alt={label}
+                              className="w-full aspect-square object-contain bg-card"
+                            />
+                          </span>
                           <div className="px-1 pb-1.5 pt-2.5">
                             <p className="text-[11px] sm:text-[12px] font-semibold text-foreground leading-snug truncate">
                               {label}
