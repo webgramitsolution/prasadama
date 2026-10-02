@@ -949,7 +949,7 @@ export default function ProductDetail() {
               <ProductCoupons categoryId={product.category_id} />
 
               {/* Buy Box */}
-              <div className="space-y-3 pt-4">
+              <div className="!mt-1 space-y-3 pt-0">
                 {hasExplicitMoq && (
                   <p className="text-xs text-muted-foreground">Minimum Order Quantity- {currentMoq}</p>
                 )}
@@ -1263,7 +1263,7 @@ export default function ProductDetail() {
             productName={product.name}
             onStats={handleReviewStats}
           />
-          <div className="mt-[30px]">
+          <div className="mt-3">
             <ReelsSection title="Trending Reels" placement="product" />
           </div>
           
