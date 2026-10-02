@@ -893,7 +893,7 @@ export default function ProductDetail() {
                       {selectedVariationLabel}
                     </span>
                   </p>
-                  <div className="-mx-3 flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:gap-3 md:px-0">
+                  <div className="-mx-3 flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 pt-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:gap-3 md:px-0">
                     {sortedVariations.map((v: any, vi: number) => {
                       const label = [v.size, v.color].filter(Boolean).join(" ") || v.sku || "Variant";
                       const vPrice = getRolePrice(product, v);
