@@ -12,7 +12,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { CreditCard, Truck, FileText, AlertTriangle, CheckCircle, Loader2, Banknote } from "lucide-react";
+import { CreditCard, Truck, FileText, AlertTriangle, CheckCircle, Loader2, WalletCards, Landmark, HandCoins, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SEOHead } from "@/components/SEOHead";
 import { CouponInput } from "@/components/checkout/CouponInput";
@@ -861,39 +861,64 @@ export default function Checkout() {
                     <CouponInput subtotal={subtotal} onApply={handleCouponApply} />
 
                     {/* Payment Method */}
-                    <div className="space-y-2 pt-2">
+                    <div className="space-y-3 pt-2">
                       <Label className="text-sm font-semibold">Payment Method</Label>
-                      <div className="grid grid-cols-2 gap-2">
-                        <button
+                      <div className="space-y-3">
+                        <Button
                           type="button"
+                          variant="ghost"
                           onClick={() => setPaymentMethod("razorpay")}
                           className={cn(
-                            "flex items-center justify-center gap-2 h-11 rounded-md border-2 text-sm font-medium transition-colors",
+                            "payment-option payment-option-online relative h-auto min-h-[132px] w-full justify-start overflow-hidden rounded-[8px] px-4 py-4 text-left sm:min-h-[138px] sm:px-6",
                             paymentMethod === "razorpay"
-                              ? "border-[#AD1E2A] bg-[#AD1E2A]/5 text-[#AD1E2A]"
-                              : "border-border text-muted-foreground hover:border-foreground/30"
+                              ? "payment-option-selected"
+                              : "payment-option-idle"
                           )}
                         >
-                          <CreditCard className="h-4 w-4" /> Online
-                        </button>
-                        <button
+                          <span className="payment-radio" aria-hidden="true"><span /></span>
+                          <span className="flex min-w-0 flex-1 flex-col gap-4">
+                            <span className="flex flex-wrap items-start justify-between gap-3">
+                              <span className="flex items-center gap-3">
+                                <span className="payment-main-icon"><WalletCards className="h-7 w-7" /></span>
+                                <span>
+                                  <span className="block text-lg font-extrabold text-foreground sm:text-xl">Pay Online</span>
+                                  <span className="mt-0.5 block text-xs font-medium text-muted-foreground sm:text-sm">UPI, Cards &amp; NetBanking</span>
+                                </span>
+                              </span>
+                              <span className="razorpay-mark"><span>Powered by</span><strong><i>1</i>Razorpay</strong></span>
+                            </span>
+                            <span className="flex flex-wrap items-center gap-2 sm:gap-3">
+                              <span className="payment-mini-tile upi-mark">UPI<span className="upi-arrow" /></span>
+                              <span className="payment-mini-tile"><CreditCard className="h-5 w-5" /><span><b>Cards</b><small>Credit / Debit</small></span></span>
+                              <span className="payment-mini-tile"><Landmark className="h-5 w-5" /><span><b>Net Banking</b></span></span>
+                              <span className="payment-secure"><ShieldCheck className="h-6 w-6" /><span><b>100% Secure Payment</b><small>Your payments are safe</small></span></span>
+                            </span>
+                          </span>
+                        </Button>
+                        <Button
                           type="button"
+                          variant="ghost"
                           onClick={() => setPaymentMethod("cod")}
                           className={cn(
-                            "flex items-center justify-center gap-2 h-11 rounded-md border-2 text-sm font-medium transition-colors",
+                            "payment-option h-auto min-h-[105px] w-full justify-start rounded-[8px] px-4 py-4 text-left sm:px-6",
                             paymentMethod === "cod"
-                              ? "border-[#AD1E2A] bg-[#AD1E2A]/5 text-[#AD1E2A]"
-                              : "border-border text-muted-foreground hover:border-foreground/30"
+                              ? "payment-option-selected"
+                              : "payment-option-idle"
                           )}
                         >
-                          <Banknote className="h-4 w-4" /> Cash on Delivery
-                        </button>
+                          <span className="payment-radio" aria-hidden="true"><span /></span>
+                          <span className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-3">
+                            <span className="flex min-w-0 items-center gap-3">
+                              <span className="payment-main-icon payment-cod-icon"><HandCoins className="h-7 w-7" /></span>
+                              <span className="min-w-0">
+                                <span className="block text-lg font-extrabold text-foreground sm:text-xl">Cash on Delivery</span>
+                                <span className="mt-1 block whitespace-normal text-xs font-medium leading-relaxed text-muted-foreground sm:text-sm">Pay securely when your order is delivered at your doorstep.</span>
+                              </span>
+                            </span>
+                            <span className="payment-availability"><Truck className="h-5 w-5" />Available for your location</span>
+                          </span>
+                        </Button>
                       </div>
-                      <p className="text-[11px] text-muted-foreground">
-                        {paymentMethod === "razorpay"
-                          ? "Pay securely via UPI, cards, netbanking or wallets (Razorpay)."
-                          : "Pay in cash when your order is delivered."}
-                      </p>
                     </div>
 
 

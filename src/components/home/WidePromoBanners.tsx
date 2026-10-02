@@ -33,6 +33,23 @@ export function WidePromoBanners() {
     return () => { mounted = false; };
   }, []);
 
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail || banners.length <= 1) return;
+
+    const phone = window.matchMedia("(max-width: 639px)");
+    const interval = window.setInterval(() => {
+      if (!phone.matches) return;
+      const cards = Array.from(rail.children) as HTMLElement[];
+      if (cards.length < 2) return;
+      const current = cards.findIndex((card) => Math.abs(card.offsetLeft - rail.scrollLeft) < card.offsetWidth / 2);
+      const next = cards[(current + 1) % cards.length];
+      next?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+    }, 3500);
+
+    return () => window.clearInterval(interval);
+  }, [banners.length]);
+
   if (banners.length === 0) return null;
 
   return (
@@ -54,9 +71,9 @@ export function WidePromoBanners() {
               </div>
             );
             return isExternal(href) ? (
-              <a key={banner.id} href={href} target="_blank" rel="noopener noreferrer" className="w-[88%] shrink-0 snap-center sm:w-[72%] lg:w-[62%]">{content}</a>
+              <a key={banner.id} href={href} target="_blank" rel="noopener noreferrer" className="w-full shrink-0 snap-start sm:w-[calc(50%-0.5rem)]">{content}</a>
             ) : (
-              <Link key={banner.id} to={href} className="w-[88%] shrink-0 snap-center sm:w-[72%] lg:w-[62%]">{content}</Link>
+              <Link key={banner.id} to={href} className="w-full shrink-0 snap-start sm:w-[calc(50%-0.5rem)]">{content}</Link>
             );
           })}
         </div>
