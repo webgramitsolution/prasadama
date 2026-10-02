@@ -290,11 +290,12 @@
     color: hsl(var(--foreground));
     box-shadow: var(--shadow-sm);
     white-space: normal;
+    transition: border-color 180ms ease, box-shadow 180ms ease;
   }
 
   .payment-option-online.payment-option-selected {
     border-color: hsl(var(--payment-blue));
-    background: hsl(var(--payment-blue-soft));
+    background: linear-gradient(110deg, hsl(var(--payment-blue-soft)) 0%, hsl(var(--card)) 72%, hsl(var(--payment-blue-soft)) 100%);
     box-shadow: 0 0 0 1px hsl(var(--payment-blue) / 0.3), var(--shadow-sm);
   }
 
@@ -309,21 +310,27 @@
   }
 
   .payment-option-idle:hover {
-    border-color: hsl(var(--foreground) / 0.28);
-    background: hsl(var(--muted) / 0.3) !important;
+    border-color: hsl(var(--border));
+    background: hsl(var(--card)) !important;
     color: hsl(var(--foreground)) !important;
+  }
+
+  .payment-option-selected:not(.payment-option-online) {
+    border-color: hsl(var(--payment-blue));
+    background: linear-gradient(110deg, hsl(var(--payment-blue-soft)) 0%, hsl(var(--card)) 72%, hsl(var(--payment-blue-soft)) 100%);
+    box-shadow: 0 0 0 1px hsl(var(--payment-blue) / 0.3), var(--shadow-sm);
   }
 
   .payment-radio {
     display: inline-flex;
-    width: 20px;
-    height: 20px;
-    flex: 0 0 20px;
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
     align-items: center;
     justify-content: center;
     border: 2px solid hsl(var(--muted-foreground) / 0.55);
     border-radius: 999px;
-    margin-right: 14px;
+    margin-right: 10px;
   }
 
   .payment-option-selected .payment-radio {
@@ -331,17 +338,17 @@
   }
 
   .payment-option-selected .payment-radio span {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 999px;
     background: hsl(var(--payment-blue));
   }
 
   .payment-main-icon {
     display: inline-flex;
-    height: 54px;
-    width: 54px;
-    flex: 0 0 54px;
+    height: 42px;
+    width: 42px;
+    flex: 0 0 42px;
     align-items: center;
     justify-content: center;
     border-radius: 999px;
@@ -356,13 +363,13 @@
 
   .payment-mini-tile {
     display: inline-flex;
-    min-height: 42px;
+    min-height: 34px;
     align-items: center;
-    gap: 7px;
+    gap: 5px;
     border: 1px solid hsl(var(--border));
     border-radius: 7px;
     background: hsl(var(--card));
-    padding: 7px 11px;
+    padding: 5px 8px;
     color: hsl(var(--payment-blue));
   }
 
@@ -375,27 +382,29 @@
     line-height: 1.25;
   }
 
-  .payment-mini-tile b { color: hsl(var(--foreground)); font-size: 12px; }
-  .payment-mini-tile small { color: hsl(var(--muted-foreground)); font-size: 9px; }
-  .upi-mark { color: hsl(var(--foreground)); font-size: 20px; font-weight: 900; font-style: italic; }
-  .upi-arrow { width: 12px; height: 17px; background: linear-gradient(90deg, hsl(var(--payment-gold)) 50%, hsl(var(--payment-green)) 50%); clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%); }
+  .payment-mini-tile b { color: hsl(var(--foreground)); font-size: 10px; }
+  .payment-mini-tile small { color: hsl(var(--muted-foreground)); font-size: 8px; }
+  .upi-mark { color: hsl(var(--foreground)); font-size: 17px; font-weight: 900; font-style: italic; }
+  .upi-arrow { width: 10px; height: 14px; background: linear-gradient(90deg, hsl(var(--payment-gold)) 50%, hsl(var(--payment-green)) 50%); clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%); }
 
-  .razorpay-mark { display: inline-flex; align-items: center; gap: 7px; color: hsl(var(--muted-foreground)); font-size: 10px; }
-  .razorpay-mark strong { color: hsl(var(--primary)); font-size: 17px; font-style: italic; }
-  .razorpay-mark i { color: hsl(var(--payment-blue)); font-size: 23px; margin-right: 2px; }
+  .razorpay-mark { display: inline-flex; align-items: center; gap: 4px; color: hsl(var(--muted-foreground)); font-size: 8px; }
+  .razorpay-mark strong { color: hsl(var(--primary)); font-size: 14px; font-style: italic; }
+  .razorpay-mark i { color: hsl(var(--payment-blue)); font-size: 18px; margin-right: 1px; }
+
+  .payment-method-row { display: flex; min-width: 0; align-items: center; gap: 6px; }
 
   .payment-secure {
     display: inline-flex;
-    min-height: 42px;
+    min-height: 34px;
     align-items: center;
-    gap: 7px;
+    gap: 5px;
     margin-left: auto;
     border-left: 1px solid hsl(var(--border));
-    padding-left: 14px;
+    padding-left: 9px;
     color: hsl(var(--payment-green));
   }
-  .payment-secure b { font-size: 11px; }
-  .payment-secure small { color: hsl(var(--muted-foreground)); font-size: 9px; }
+  .payment-secure b { font-size: 9px; }
+  .payment-secure small { color: hsl(var(--muted-foreground)); font-size: 7px; }
 
   .payment-availability {
     display: inline-flex;
@@ -403,9 +412,9 @@
     gap: 7px;
     border-radius: 7px;
     background: hsl(var(--payment-green-soft));
-    padding: 9px 12px;
+    padding: 8px 10px;
     color: hsl(var(--payment-green));
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 700;
   }
 
@@ -416,12 +425,16 @@
   }
 
   @media (max-width: 639px) {
-    .payment-option { padding-left: 12px; padding-right: 12px; }
-    .payment-radio { margin-right: 9px; }
-    .payment-main-icon { width: 44px; height: 44px; flex-basis: 44px; }
-    .payment-secure { width: 100%; margin-left: 0; border-left: 0; padding-left: 0; }
-    .razorpay-mark { width: 100%; padding-left: 56px; }
-    .payment-availability { margin-left: 53px; }
+    .payment-option { padding-left: 10px; padding-right: 10px; }
+    .payment-radio { margin-right: 8px; }
+    .payment-main-icon { width: 38px; height: 38px; flex-basis: 38px; }
+    .payment-mini-tile { padding-left: 6px; padding-right: 6px; }
+    .payment-secure { margin-left: auto; padding-left: 6px; }
+    .payment-secure small { display: none; }
+    .razorpay-mark { flex-shrink: 0; }
+    .razorpay-mark > span { display: none; }
+    .payment-availability { max-width: 116px; flex-shrink: 0; padding: 7px 6px; font-size: 8px; line-height: 1.2; }
+    .payment-availability svg { width: 14px; height: 14px; flex: 0 0 14px; }
   }
 
   @media (prefers-reduced-motion: reduce) {

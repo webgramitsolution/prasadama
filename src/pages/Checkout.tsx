@@ -515,7 +515,7 @@ export default function Checkout() {
           )}
 
           <form onSubmit={handleSubmit} className="max-w-full overflow-x-hidden">
-            <div className="grid grid-cols-1 md:grid-cols-[7fr_3fr] gap-4 md:gap-6 items-start min-w-0">
+            <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(400px,0.82fr)] gap-4 md:gap-6 items-start min-w-0">
               {/* Shipping & Billing */}
               <div className="space-y-4 sm:space-y-6 min-w-0">
                 {/* Billing Address (Primary) */}
@@ -869,25 +869,25 @@ export default function Checkout() {
                           variant="ghost"
                           onClick={() => setPaymentMethod("razorpay")}
                           className={cn(
-                            "payment-option payment-option-online relative h-auto min-h-[132px] w-full justify-start overflow-hidden rounded-[8px] px-4 py-4 text-left sm:min-h-[138px] sm:px-6",
+                            "payment-option payment-option-online relative h-[118px] w-full justify-start overflow-hidden rounded-[8px] px-3 py-3 text-left sm:h-[126px] sm:px-4",
                             paymentMethod === "razorpay"
                               ? "payment-option-selected"
                               : "payment-option-idle"
                           )}
                         >
                           <span className="payment-radio" aria-hidden="true"><span /></span>
-                          <span className="flex min-w-0 flex-1 flex-col gap-4">
-                            <span className="flex flex-wrap items-start justify-between gap-3">
+                          <span className="flex min-w-0 flex-1 flex-col gap-2.5">
+                            <span className="flex items-start justify-between gap-2">
                               <span className="flex items-center gap-3">
                                 <span className="payment-main-icon"><WalletCards className="h-7 w-7" /></span>
                                 <span>
-                                  <span className="block text-lg font-extrabold text-foreground sm:text-xl">Pay Online</span>
-                                  <span className="mt-0.5 block text-xs font-medium text-muted-foreground sm:text-sm">UPI, Cards &amp; NetBanking</span>
+                                  <span className="block whitespace-nowrap text-[15px] font-extrabold leading-tight text-foreground sm:text-lg">Pay Online</span>
+                                  <span className="mt-0.5 block text-[11px] font-medium leading-tight text-muted-foreground sm:text-xs">UPI, Cards &amp; NetBanking</span>
                                 </span>
                               </span>
                               <span className="razorpay-mark"><span>Powered by</span><strong><i>1</i>Razorpay</strong></span>
                             </span>
-                            <span className="flex flex-wrap items-center gap-2 sm:gap-3">
+                            <span className="payment-method-row">
                               <span className="payment-mini-tile upi-mark">UPI<span className="upi-arrow" /></span>
                               <span className="payment-mini-tile"><CreditCard className="h-5 w-5" /><span><b>Cards</b><small>Credit / Debit</small></span></span>
                               <span className="payment-mini-tile"><Landmark className="h-5 w-5" /><span><b>Net Banking</b></span></span>
@@ -900,19 +900,19 @@ export default function Checkout() {
                           variant="ghost"
                           onClick={() => setPaymentMethod("cod")}
                           className={cn(
-                            "payment-option h-auto min-h-[105px] w-full justify-start rounded-[8px] px-4 py-4 text-left sm:px-6",
+                            "payment-option h-[92px] w-full justify-start overflow-hidden rounded-[8px] px-3 py-3 text-left sm:h-[94px] sm:px-4",
                             paymentMethod === "cod"
                               ? "payment-option-selected"
                               : "payment-option-idle"
                           )}
                         >
                           <span className="payment-radio" aria-hidden="true"><span /></span>
-                          <span className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-3">
-                            <span className="flex min-w-0 items-center gap-3">
+                          <span className="flex min-w-0 flex-1 items-center justify-between gap-2">
+                            <span className="flex min-w-0 items-center gap-2.5">
                               <span className="payment-main-icon payment-cod-icon"><HandCoins className="h-7 w-7" /></span>
                               <span className="min-w-0">
-                                <span className="block text-lg font-extrabold text-foreground sm:text-xl">Cash on Delivery</span>
-                                <span className="mt-1 block whitespace-normal text-xs font-medium leading-relaxed text-muted-foreground sm:text-sm">Pay securely when your order is delivered at your doorstep.</span>
+                                <span className="block whitespace-nowrap text-[13px] font-extrabold leading-tight text-foreground sm:text-lg">Cash on Delivery</span>
+                                <span className="mt-1 block whitespace-normal text-[9px] font-medium leading-snug text-muted-foreground sm:text-xs">Pay securely when your order is delivered at your doorstep.</span>
                               </span>
                             </span>
                             <span className="payment-availability"><Truck className="h-5 w-5" />Available for your location</span>
