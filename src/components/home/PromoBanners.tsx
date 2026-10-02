@@ -49,24 +49,6 @@ function CardLink({
   );
 }
 
-function Ornament({ flip }: { flip?: boolean }) {
-  return (
-    <svg
-      viewBox="0 0 120 24"
-      className={`h-4 w-[70px] sm:w-[110px] text-accent/70 ${flip ? "scale-x-[-1]" : ""}`}
-      fill="none"
-      aria-hidden="true"
-    >
-      <path d="M0 12 H70" stroke="currentColor" strokeWidth="1" />
-      <path d="M70 12 C80 4, 90 4, 96 12 C90 20, 80 20, 70 12 Z" stroke="currentColor" strokeWidth="1" />
-      <circle cx="104" cy="7" r="2" fill="currentColor" />
-      <circle cx="104" cy="17" r="2" fill="currentColor" />
-      <circle cx="112" cy="12" r="2.5" fill="currentColor" />
-      <circle cx="96" cy="12" r="2" fill="currentColor" />
-    </svg>
-  );
-}
-
 function CategoryRibbon({ title }: { title: string }) {
   return (
     <div className="promo-category-ribbon" aria-hidden="true">
@@ -188,16 +170,8 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
   }
 
   return (
-    <section className="w-full bg-promo-category py-6 sm:py-8 lg:py-10">
-      <div className="w-full px-4 sm:px-6 lg:px-10">
-        <div className="flex items-center justify-center gap-2 sm:gap-4 lg:gap-5 mb-5 sm:mb-8 lg:mb-10">
-          <Ornament />
-          <h2 className="font-display text-lg sm:text-2xl lg:text-[28px] font-medium text-foreground whitespace-nowrap">
-            Shop By Category
-          </h2>
-          <Ornament flip />
-        </div>
-
+    <section className="w-full overflow-hidden bg-promo-category py-[8px] pb-[30px]">
+      <div className="w-full py-2">
         <div
           ref={railRef}
           aria-label="Shop by category"
@@ -207,14 +181,14 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
           onPointerLeave={() => { isInteractingRef.current = false; }}
           onFocusCapture={() => { isInteractingRef.current = true; }}
           onBlurCapture={() => { isInteractingRef.current = false; }}
-          className={`flex overflow-x-auto gap-3 sm:gap-5 lg:gap-6 snap-x snap-mandatory scroll-smooth py-2 -mx-1 px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${hasOverflow ? "justify-start" : "justify-center"}`}
+          className={`flex overflow-x-auto gap-6 snap-x snap-mandatory scroll-smooth px-4 py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${hasOverflow ? "justify-start" : "justify-center"}`}
         >
           {sortedBanners.map((banner, i) => (
             <CardLink
               key={banner.id}
               to={getCategoryHref(banner, categories)}
               ariaLabel={banner.title}
-              className="group relative block shrink-0 snap-start w-[calc((100%-1.725rem)/3.3)] sm:w-[calc((100%-6.25rem)/6)] lg:w-[calc((100%-10.5rem)/8)] no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4"
+              className="group relative block w-[85px] shrink-0 snap-start no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 sm:w-[110px] lg:w-[130px]"
             >
               <div className="relative aspect-square transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none">
                 <div className="h-full w-full overflow-hidden rounded-full border-2 border-accent/30 bg-muted shadow-sm">
@@ -223,17 +197,12 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
                   alt={banner.title}
                   loading={i < 2 ? "eager" : "lazy"}
                   decoding="async"
-                  sizes="(max-width: 640px) 30vw, (max-width: 1024px) 16vw, 12vw"
+                  sizes="(max-width: 639px) 85px, (max-width: 1023px) 110px, 130px"
                   className="h-full w-full object-cover object-center"
                 />
                 </div>
                 <CategoryRibbon title={banner.title} />
               </div>
-              {banner.offer_text && (
-                <p className="mt-1 hidden truncate text-center text-[10px] font-medium text-accent sm:block sm:text-[11px]">
-                  {banner.offer_text}
-                </p>
-              )}
             </CardLink>
           ))}
         </div>
