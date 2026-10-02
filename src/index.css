@@ -772,3 +772,48 @@
 .hkcp-available::before { content:""; position:absolute; left:calc(-0.5 * (var(--hkcp-pill-gap) + var(--hkcp-head-gap)) - 0.5px);
   top:clamp(-10px,-1.5385cqi,-20px); bottom:clamp(-10px,-1.5385cqi,-20px); width:1px; background:var(--hkcp-divider); }
 @media (prefers-reduced-motion: reduce) { .hkcp-online { animation:none; } .hkcp-online::after { display:none; } }
+
+/* ===== Variation card labels (Most Popular / Best Deal / Max Savings) with wave shine ===== */
+.var-badge {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  padding: 2.5px 9px;
+  border-radius: 999px;
+  font-size: 9.5px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.2px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+  pointer-events: none;
+}
+.var-badge--red { background: linear-gradient(180deg, #f04438, #d92d20); }
+.var-badge--green { background: linear-gradient(180deg, #22b358, #16803c); }
+.var-badge--amber { background: linear-gradient(180deg, #f7b52c, #e08e0b); }
+.var-badge::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -70%;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent 0%, rgba(255, 255, 255, 0.7) 50%, transparent 100%);
+  transform: skewX(-22deg);
+  animation: var-badge-shine 2.4s ease-in-out infinite;
+}
+@keyframes var-badge-shine {
+  0% { left: -70%; }
+  55% { left: 140%; }
+  100% { left: 140%; }
+}
+
+/* ===== Checkout: ImageKit Razorpay + UPI logos ===== */
+.hkcp-rzp-logo { height: clamp(14px, 2cqi, 26px); width: auto; max-width: 120px; object-fit: contain; display: block; }
+.hkcp-chip--upi .hkcp-upi-logo { width: clamp(32px, 5.5385cqi, 72px); height: clamp(11px, 1.8462cqi, 24px); object-fit: contain; display: block; }
