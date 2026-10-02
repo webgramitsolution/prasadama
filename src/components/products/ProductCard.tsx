@@ -177,7 +177,7 @@ export function ProductCard({ product, index = 0, className = "" }: ProductCardP
 
           <div className="px-2.5 sm:px-3 pb-3 pt-2 flex flex-col flex-grow min-w-0">
             {reviewStats && reviewStats.count > 0 && (
-              <div className="mb-1.5 flex items-center justify-end gap-1.5 text-right">
+              <div className="mb-1.5 flex items-center justify-center gap-1.5 text-center">
                 <span className="flex items-center gap-[1px]">
                   {[1, 2, 3, 4, 5].map((n) => (
                     <Star
