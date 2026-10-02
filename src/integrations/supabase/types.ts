@@ -240,6 +240,8 @@ export type Database = {
           is_active: boolean | null
           name: string
           parent_id: string | null
+          ribbon_label: string | null
+          show_on_home: boolean
           slug: string
           sort_order: number | null
           updated_at: string | null
@@ -253,6 +255,8 @@ export type Database = {
           is_active?: boolean | null
           name: string
           parent_id?: string | null
+          ribbon_label?: string | null
+          show_on_home?: boolean
           slug: string
           sort_order?: number | null
           updated_at?: string | null
@@ -266,6 +270,8 @@ export type Database = {
           is_active?: boolean | null
           name?: string
           parent_id?: string | null
+          ribbon_label?: string | null
+          show_on_home?: boolean
           slug?: string
           sort_order?: number | null
           updated_at?: string | null
