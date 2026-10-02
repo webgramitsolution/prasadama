@@ -863,61 +863,73 @@ export default function Checkout() {
                     {/* Payment Method */}
                     <div className="space-y-3 pt-2">
                       <Label className="text-sm font-semibold">Payment Method</Label>
-                      <div className="space-y-3">
-                        <Button
+                      <div className="hkcp" role="radiogroup" aria-label="Payment method">
+                        <button
                           type="button"
-                          variant="ghost"
+                          role="radio"
+                          aria-checked={paymentMethod === "razorpay"}
                           onClick={() => setPaymentMethod("razorpay")}
-                          className={cn(
-                            "payment-option payment-option-online relative h-[118px] w-full justify-start overflow-hidden rounded-[8px] px-3 py-3 text-left sm:h-[126px] sm:px-4",
-                            paymentMethod === "razorpay"
-                              ? "payment-option-selected"
-                              : "payment-option-idle"
-                          )}
+                          className={cn("hkcp-card hkcp-online", paymentMethod === "razorpay" && "is-checked")}
                         >
-                          <span className="payment-radio" aria-hidden="true"><span /></span>
-                          <span className="flex min-w-0 flex-1 flex-col gap-2.5">
-                            <span className="flex items-start justify-between gap-2">
-                              <span className="flex items-center gap-3">
-                                <span className="payment-main-icon"><WalletCards className="h-7 w-7" /></span>
-                                <span>
-                                  <span className="block whitespace-nowrap text-[15px] font-extrabold leading-tight text-foreground sm:text-lg">Pay Online</span>
-                                  <span className="mt-0.5 block text-[11px] font-medium leading-tight text-muted-foreground sm:text-xs">UPI, Cards &amp; NetBanking</span>
-                                </span>
-                              </span>
-                              <span className="razorpay-mark"><span>Powered by</span><strong><i>1</i>Razorpay</strong></span>
+                          <span className="hkcp-radio" aria-hidden="true" />
+                          <span className="hkcp-head">
+                            <span className="hkcp-avatar hkcp-avatar--blue">
+                              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="3" fill="#2a7de1"/><path d="M3 9.5h18" stroke="#fff" strokeWidth="1.6"/><rect x="14" y="12" width="5" height="3.5" rx="1.2" fill="#fff"/></svg>
                             </span>
-                            <span className="payment-method-row">
-                              <span className="payment-mini-tile upi-mark">UPI<span className="upi-arrow" /></span>
-                              <span className="payment-mini-tile"><CreditCard className="h-5 w-5" /><span><b>Cards</b><small>Credit / Debit</small></span></span>
-                              <span className="payment-mini-tile"><Landmark className="h-5 w-5" /><span><b>Net Banking</b></span></span>
-                              <span className="payment-secure"><ShieldCheck className="h-6 w-6" /><span><b>100% Secure Payment</b><small>Your payments are safe</small></span></span>
+                            <span className="hkcp-titlewrap">
+                              <span className="hkcp-title">Pay Online</span>
+                              <span className="hkcp-sub">UPI, Cards &amp; NetBanking</span>
+                            </span>
+                            <span className="hkcp-powered">
+                              <span>Powered by</span>
+                              <span className="hkcp-rzp">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 3 5 14.2h5.2L8 21l11-13.6h-5.4L14.5 3Z" fill="#0b2e73"/><path d="M14.5 3 8.3 11.2h4L8 21l6.5-18Z" fill="#3395ff"/></svg>
+                                <em>Razorpay</em>
+                              </span>
                             </span>
                           </span>
-                        </Button>
-                        <Button
+                          <span className="hkcp-body">
+                            <span className="hkcp-chips">
+                              <span className="hkcp-chip hkcp-chip--upi">
+                                <svg viewBox="0 0 64 22" aria-hidden="true"><text x="0" y="18" fontFamily="Arial Black, Arial, sans-serif" fontWeight="900" fontSize="20" fontStyle="italic" fill="#6b6b6b">UPI</text><path d="M49 2 56 11 49 20Z" fill="#f47f24"/><path d="M53 2 60 11 53 20Z" fill="#2f9e44"/></svg>
+                              </span>
+                              <span className="hkcp-chip">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="3" fill="#2a7de1"/><rect x="2" y="9" width="20" height="3" fill="#fff"/><rect x="5" y="14" width="6" height="2" rx="1" fill="#fff"/></svg>
+                                <span><b>Cards</b><small>Credit / Debit</small></span>
+                              </span>
+                              <span className="hkcp-chip">
+                                <svg viewBox="0 0 24 24" fill="#2a7de1" aria-hidden="true"><path d="M12 3 2.5 8v1.5h19V8L12 3ZM4.5 11h2v6h-2zM9 11h2v6H9zM13 11h2v6h-2zM17.5 11h2v6h-2z"/><rect x="2.5" y="18.5" width="19" height="2.5" rx="1"/></svg>
+                                <span><b>Net Banking</b></span>
+                              </span>
+                            </span>
+                            <span className="hkcp-trust">
+                              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z" fill="#1f9d55"/><path d="m8.5 12 2.4 2.4L15.8 9.5" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                              <span><b>100% Secure Payment</b><small>Your payments are safe with Razorpay</small></span>
+                            </span>
+                          </span>
+                        </button>
+                        <button
                           type="button"
-                          variant="ghost"
+                          role="radio"
+                          aria-checked={paymentMethod === "cod"}
                           onClick={() => setPaymentMethod("cod")}
-                          className={cn(
-                            "payment-option h-[92px] w-full justify-start overflow-hidden rounded-[8px] px-3 py-3 text-left sm:h-[94px] sm:px-4",
-                            paymentMethod === "cod"
-                              ? "payment-option-selected"
-                              : "payment-option-idle"
-                          )}
+                          className={cn("hkcp-card", paymentMethod === "cod" && "is-checked")}
                         >
-                          <span className="payment-radio" aria-hidden="true"><span /></span>
-                          <span className="flex min-w-0 flex-1 items-center justify-between gap-2">
-                            <span className="flex min-w-0 items-center gap-2.5">
-                              <span className="payment-main-icon payment-cod-icon"><HandCoins className="h-7 w-7" /></span>
-                              <span className="min-w-0">
-                                <span className="block whitespace-nowrap text-[13px] font-extrabold leading-tight text-foreground sm:text-lg">Cash on Delivery</span>
-                                <span className="mt-1 block whitespace-normal text-[9px] font-medium leading-snug text-muted-foreground sm:text-xs">Pay securely when your order is delivered at your doorstep.</span>
-                              </span>
+                          <span className="hkcp-radio" aria-hidden="true" />
+                          <span className="hkcp-head">
+                            <span className="hkcp-avatar hkcp-avatar--orange">
+                              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="9" y="3" width="10" height="8" rx="1.5" fill="#c77a17"/><path d="M12 3v3h4V3" stroke="#fff" strokeWidth="1.4"/><path d="M3 15c2-2 4-2.5 6.5-1.5L13 15c1 .4 1 2-.5 2H9M3 19.5c3 .5 6 .5 9 0l7-3.5c1-.5.4-2-.8-1.6L13 16" stroke="#c77a17" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
                             </span>
-                            <span className="payment-availability"><Truck className="h-5 w-5" />Available for your location</span>
+                            <span className="hkcp-titlewrap">
+                              <span className="hkcp-title">Cash on Delivery</span>
+                              <span className="hkcp-sub">Pay securely when your order is delivered at your doorstep.</span>
+                            </span>
+                            <span className="hkcp-available">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="#1f9d55" strokeWidth="1.8" aria-hidden="true"><path d="M2 6h11v9H2zM13 9h4.5L21 12.5V15h-8z" strokeLinejoin="round"/><circle cx="6" cy="17" r="2" fill="#fff"/><circle cx="17" cy="17" r="2" fill="#fff"/></svg>
+                              <span>Available for your location</span>
+                            </span>
                           </span>
-                        </Button>
+                        </button>
                       </div>
                     </div>
 
