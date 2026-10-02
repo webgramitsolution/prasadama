@@ -751,7 +751,8 @@
 .hkcp-rzp svg { width:clamp(11px,1.8462cqi,24px); height:clamp(11px,1.8462cqi,24px); flex:0 0 auto; }
 .hkcp-rzp em { font-style:italic; font-weight:800; font-size:clamp(11px,1.5385cqi,20px); color:#0b2e73; letter-spacing:-.3px; }
 .hkcp-body { display:flex; align-items:stretch; gap:clamp(4px,1.8462cqi,24px); margin-top:clamp(9px,1.3846cqi,18px); margin-left:calc(var(--hkcp-radio-x) - var(--hkcp-pad-l)); }
-.hkcp-chips { flex:1 1 auto; display:flex; flex-wrap:nowrap; align-items:center; gap:clamp(3px,0.9231cqi,12px); padding-right:clamp(4px,1.8462cqi,24px); }
+.hkcp-chips { flex:1 1 auto; min-width:0; overflow:hidden; display:flex; flex-wrap:nowrap; align-items:center; gap:clamp(3px,0.9231cqi,12px); padding-right:clamp(4px,1.8462cqi,24px); }
+.hkcp-trust { flex-shrink:1; max-width:34%; }
 .hkcp-chip { flex:0 1 auto; display:inline-flex; align-items:center; gap:clamp(4px,0.7692cqi,10px); min-height:clamp(34px,4cqi,52px);
   padding:clamp(3px,0.3077cqi,4px) clamp(5px,1.3846cqi,18px); background:#fff; border:1px solid var(--hkcp-border); border-radius:clamp(7px,0.9231cqi,12px); color:var(--hkcp-navy); box-sizing:border-box; }
 .hkcp-chip svg { width:clamp(14px,2cqi,26px); height:clamp(14px,2cqi,26px); flex:0 0 auto; }
