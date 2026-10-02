@@ -310,7 +310,8 @@
 
   .payment-option-idle:hover {
     border-color: hsl(var(--foreground) / 0.28);
-    background: hsl(var(--muted) / 0.3);
+    background: hsl(var(--muted) / 0.3) !important;
+    color: hsl(var(--foreground)) !important;
   }
 
   .payment-radio {
