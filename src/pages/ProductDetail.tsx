@@ -823,7 +823,7 @@ export default function ProductDetail() {
             </div>
 
             {/* Right: Product Info + Buy Box in one white card */}
-            <div className="min-w-0 space-y-5 bg-card rounded-xl border border-border p-4 sm:p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+            <div className="min-w-0 space-y-4 bg-card rounded-xl border border-border p-4 sm:p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
               {/* Title & Meta */}
               <div>
                 <h1 className="text-lg sm:text-xl md:text-lg lg:text-xl md:font-semibold font-bold text-foreground leading-tight md:leading-none mb-1 md:mb-0.5">
@@ -921,7 +921,7 @@ export default function ProductDetail() {
                             alt={label}
                             className="w-full aspect-square object-contain bg-card"
                           />
-                          <div className="px-1 pb-1.5 pt-0.5">
+                          <div className="px-1 pb-1.5 pt-2.5">
                             <p className="text-[11px] sm:text-[12px] font-semibold text-foreground leading-snug truncate">
                               {label}
                             </p>
