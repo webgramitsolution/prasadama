@@ -847,7 +847,7 @@ export default function ProductDetail() {
                       {getPriceLabel()}
                     </span>
                   )}
-                  <div className="flex items-center flex-wrap gap-x-3 gap-y-2">
+                  <div className="flex items-center flex-wrap gap-x-3 gap-y-2 lg:flex-nowrap">
                     <div className="flex items-center gap-3">
                       <span className="text-2xl sm:text-3xl font-extrabold text-foreground">₹{currentPrice.toLocaleString("en-IN")}</span>
                       {currentMrp > 0 && currentMrp !== currentPrice && (
@@ -862,7 +862,7 @@ export default function ProductDetail() {
                       )}
                     </div>
                     
-                    <div className="flex items-center">
+                    <div className="flex items-center lg:ml-auto">
                       <div className="hidden sm:block">
                         <ReviewsSummary productId={product.id} />
                       </div>
@@ -889,11 +889,11 @@ export default function ProductDetail() {
                 <div>
                   <p className="text-sm font-bold text-foreground mb-2.5">
                     Select {variationAttributeLabel}:{" "}
-                    <span className="font-normal">
+                    <span className="font-bold">
                       {selectedVariationLabel}
                     </span>
                   </p>
-                  <div className="-mx-3 flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 pt-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:gap-3 md:px-0">
+                  <div className="-mx-3 flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:gap-3 md:px-0">
                     {sortedVariations.map((v: any, vi: number) => {
                       const label = [v.size, v.color].filter(Boolean).join(" ") || v.sku || "Variant";
                       const vPrice = getRolePrice(product, v);
@@ -914,7 +914,7 @@ export default function ProductDetail() {
                           key={v.id}
                           onClick={() => handleVariantSelect(v.id)}
                           className={cn(
-                            "relative shrink-0 basis-[calc((100%-1rem)/3)] snap-start rounded-[10px] border-2 bg-card overflow-visible transition-all text-center min-w-0 md:basis-[calc((100%-2.25rem)/4)]",
+                            "relative shrink-0 basis-[calc((100%_-_1rem)/3)] snap-start rounded-[10px] border-2 bg-card overflow-hidden transition-all text-center min-w-0 md:basis-[calc((100%_-_1.5rem)/3)] lg:basis-[calc((100%_-_2.25rem)/4)]",
                             isSelected
                               ? "border-[#e8a33d] shadow-md"
                               : "border-border hover:border-[#e8a33d]/60 hover:shadow-sm"
@@ -936,7 +936,7 @@ export default function ProductDetail() {
                             />
                           </span>
                           <div className="px-1 pb-1.5 pt-2.5">
-                            <p className="text-[11px] sm:text-[12px] font-semibold text-foreground leading-snug truncate">
+                            <p className="text-[11px] sm:text-[12px] font-bold text-foreground leading-snug truncate">
                               {label}
                             </p>
                             <div className="flex items-baseline justify-center gap-1 flex-wrap">
