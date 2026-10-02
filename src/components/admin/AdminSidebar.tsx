@@ -35,6 +35,7 @@ import {
   Truck,
   UserCog,
   Webhook,
+  Store,
 
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -54,11 +55,10 @@ const menuItems = [
   { icon: FileText, label: "RFQ Requests", href: "/admin/rfq" },
 
   { icon: Image, label: "Hero Slides & Banners", href: "/admin/hero-slides" },
-  { icon: Image, label: "Promo Banners", href: "/admin/promo-banners" },
+  { icon: Store, label: "Homepage Merchandising", href: "/admin/home-merchandising" },
   { icon: Video, label: "Product Reels", href: "/admin/reels" },
   { icon: Ticket, label: "Coupons", href: "/admin/coupons" },
   { icon: MapPin, label: "Delivery Pincodes", href: "/admin/pincodes" },
-  { icon: Tag, label: "Offers", href: "/admin/offers" },
   { icon: Star, label: "Reviews", href: "/admin/reviews" },
   { icon: Newspaper, label: "Blog", href: "/admin/blog" },
   { icon: HeartHandshake, label: "Trusted by Families", href: "/admin/family-testimonials" },

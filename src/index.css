@@ -239,6 +239,19 @@
     letter-spacing: 0;
   }
 
+  .promo-category-ribbon::after {
+    content: "";
+    @apply absolute inset-y-[42%] -left-1/2 w-1/3 skew-x-[-24deg];
+    background: linear-gradient(90deg, transparent, hsl(var(--accent-foreground) / 0.62), transparent);
+    animation: category-ribbon-shine 3.2s ease-in-out infinite;
+  }
+
+  @keyframes category-ribbon-shine {
+    0%, 48% { transform: translateX(0) skewX(-24deg); opacity: 0; }
+    58% { opacity: 1; }
+    78%, 100% { transform: translateX(470%) skewX(-24deg); opacity: 0; }
+  }
+
   .text-gradient-primary {
     @apply bg-clip-text text-transparent;
     background-image: var(--gradient-primary);

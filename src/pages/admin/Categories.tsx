@@ -59,6 +59,8 @@ interface CategoryFormData {
   parent_id: string;
   is_active: boolean;
   sort_order: string;
+  ribbon_label: string;
+  show_on_home: boolean;
 }
 
 const defaultFormData: CategoryFormData = {
@@ -70,6 +72,8 @@ const defaultFormData: CategoryFormData = {
   parent_id: "",
   is_active: true,
   sort_order: "0",
+  ribbon_label: "",
+  show_on_home: true,
 };
 
 export default function AdminCategories() {
@@ -118,6 +122,8 @@ export default function AdminCategories() {
         parent_id: category.parent_id || "",
         is_active: category.is_active ?? true,
         sort_order: (category.sort_order || 0).toString(),
+        ribbon_label: category.ribbon_label || "",
+        show_on_home: category.show_on_home ?? true,
       });
     } else {
       setEditingCategory(null);
@@ -150,6 +156,8 @@ export default function AdminCategories() {
         parent_id: formData.parent_id || null,
         is_active: formData.is_active,
         sort_order: parseInt(formData.sort_order) || 0,
+        ribbon_label: formData.ribbon_label.trim() || null,
+        show_on_home: formData.show_on_home,
       };
 
       if (editingCategory) {
@@ -358,6 +366,25 @@ export default function AdminCategories() {
                         value={formData.sort_order}
                         onChange={(e) => setFormData(prev => ({ ...prev, sort_order: e.target.value }))}
                         placeholder="0"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="ribbon_label">Homepage Ribbon Label</Label>
+                      <Input
+                        id="ribbon_label"
+                        value={formData.ribbon_label}
+                        onChange={(e) => setFormData(prev => ({ ...prev, ribbon_label: e.target.value }))}
+                        placeholder="Uses category name when empty"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="show_on_home">Show in Shop By Category</Label>
+                      <Switch
+                        id="show_on_home"
+                        checked={formData.show_on_home}
+                        onCheckedChange={(checked) => setFormData(prev => ({ ...prev, show_on_home: checked }))}
                       />
                     </div>
 

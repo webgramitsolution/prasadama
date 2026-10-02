@@ -89,7 +89,7 @@ export default function AdminPromoBanners() {
                   <div className="space-y-2"><Label>Offer Text</Label><Input value={form.offer_text} onChange={e => setForm(p => ({...p, offer_text: e.target.value}))} placeholder="UPTO 40% OFF" /></div>
                 </div>
                 <div className="space-y-2">
-                  <Label>Banner Image *</Label>
+                  <Label>Desktop Wide Banner *</Label>
                   <ImageUpload 
                     value={form.image_url} 
                     onChange={(url) => setForm(p => ({...p, image_url: url}))} 
@@ -97,7 +97,7 @@ export default function AdminPromoBanners() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Mobile Banner Image (optional, shown at 500px height on phones)</Label>
+                  <Label>Mobile Wide Banner (optional)</Label>
                   <ImageUpload
                     value={form.mobile_image_url}
                     onChange={(url) => setForm(p => ({...p, mobile_image_url: url}))}

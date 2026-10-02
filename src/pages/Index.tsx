@@ -5,6 +5,8 @@ import { SocialRail } from "@/components/layout/SocialRail";
 import { HeroSection } from "@/components/home/HeroSection";
 import { HeroMarquee } from "@/components/home/HeroMarquee";
 import { PromoBanners } from "@/components/home/PromoBanners";
+import { OffersDeals } from "@/components/home/OffersDeals";
+import { WidePromoBanners } from "@/components/home/WidePromoBanners";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
 import { TaggedProductSection } from "@/components/home/TaggedProductSection";
 import { AboutUsSection } from "@/components/home/AboutUsSection";
@@ -48,6 +50,8 @@ const Index = () => {
         <HeroSection onFetchStatus={noop} />
         <HeroMarquee />
         <PromoBanners />
+        <OffersDeals />
+        <WidePromoBanners />
         <FeaturedProducts onFetchStatus={noop} />
         <TaggedProductSection tag="mega saver packs" title="Mega Saver Packs" className="bg-[#ffffff]" limit={12} />
         <TaggedProductSection
