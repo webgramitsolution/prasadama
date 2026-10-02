@@ -881,7 +881,7 @@ export default function Checkout() {
                               <span className="flex items-center gap-3">
                                 <span className="payment-main-icon"><WalletCards className="h-7 w-7" /></span>
                                 <span>
-                                  <span className="block text-[16px] font-extrabold leading-tight text-foreground sm:text-lg">Pay Online</span>
+                                  <span className="block whitespace-nowrap text-[15px] font-extrabold leading-tight text-foreground sm:text-lg">Pay Online</span>
                                   <span className="mt-0.5 block text-[11px] font-medium leading-tight text-muted-foreground sm:text-xs">UPI, Cards &amp; NetBanking</span>
                                 </span>
                               </span>
@@ -900,19 +900,19 @@ export default function Checkout() {
                           variant="ghost"
                           onClick={() => setPaymentMethod("cod")}
                           className={cn(
-                            "payment-option h-[88px] w-full justify-start rounded-[8px] px-3 py-3 text-left sm:h-[94px] sm:px-4",
+                            "payment-option h-[92px] w-full justify-start overflow-hidden rounded-[8px] px-3 py-3 text-left sm:h-[94px] sm:px-4",
                             paymentMethod === "cod"
                               ? "payment-option-selected"
                               : "payment-option-idle"
                           )}
                         >
                           <span className="payment-radio" aria-hidden="true"><span /></span>
-                          <span className="flex min-w-0 flex-1 items-center justify-between gap-3">
-                            <span className="flex min-w-0 items-center gap-3">
+                          <span className="flex min-w-0 flex-1 items-center justify-between gap-2">
+                            <span className="flex min-w-0 items-center gap-2.5">
                               <span className="payment-main-icon payment-cod-icon"><HandCoins className="h-7 w-7" /></span>
                               <span className="min-w-0">
-                                <span className="block text-[16px] font-extrabold leading-tight text-foreground sm:text-lg">Cash on Delivery</span>
-                                <span className="mt-1 block whitespace-normal text-[10px] font-medium leading-snug text-muted-foreground sm:text-xs">Pay securely when your order is delivered at your doorstep.</span>
+                                <span className="block whitespace-nowrap text-[13px] font-extrabold leading-tight text-foreground sm:text-lg">Cash on Delivery</span>
+                                <span className="mt-1 block whitespace-normal text-[9px] font-medium leading-snug text-muted-foreground sm:text-xs">Pay securely when your order is delivered at your doorstep.</span>
                               </span>
                             </span>
                             <span className="payment-availability"><Truck className="h-5 w-5" />Available for your location</span>

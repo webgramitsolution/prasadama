@@ -433,7 +433,8 @@
     .payment-secure small { display: none; }
     .razorpay-mark { flex-shrink: 0; }
     .razorpay-mark > span { display: none; }
-    .payment-availability { flex-shrink: 0; padding-left: 7px; padding-right: 7px; }
+    .payment-availability { max-width: 116px; flex-shrink: 0; padding: 7px 6px; font-size: 8px; line-height: 1.2; }
+    .payment-availability svg { width: 14px; height: 14px; flex: 0 0 14px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
