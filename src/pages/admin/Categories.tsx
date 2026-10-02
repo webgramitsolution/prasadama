@@ -500,6 +500,7 @@ export default function AdminCategories() {
                         <TableHead>Category</TableHead>
                         <TableHead>Parent</TableHead>
                         <TableHead>Order</TableHead>
+                        <TableHead>Homepage</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead className="w-[50px]"></TableHead>
                       </TableRow>
@@ -524,6 +525,9 @@ export default function AdminCategories() {
                           </TableCell>
                           <TableCell>{getParentName(category.parent_id)}</TableCell>
                           <TableCell>{category.sort_order || 0}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline">{category.show_on_home ? (category.ribbon_label || category.name) : "Hidden"}</Badge>
+                          </TableCell>
                           <TableCell>
                             <Badge className={category.is_active ? "bg-success/10 text-success" : "bg-muted text-muted-foreground"}>
                               {category.is_active ? "Active" : "Inactive"}

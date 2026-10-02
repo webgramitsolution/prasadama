@@ -119,7 +119,7 @@ export default function AdminPromoBanners() {
         ) : (
           <motion.div key="list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6">
             <div className="flex items-center justify-between">
-              <Button onClick={() => openForm()} className="bg-gradient-accent gap-2"><Plus className="h-4 w-4" />Add Banner</Button>
+              <Button onClick={() => openForm()} className="bg-gradient-accent gap-2"><Plus className="h-4 w-4" />Add Promo Banner</Button>
             </div>
             <Card className="shadow-card">
               <CardContent className="p-0">

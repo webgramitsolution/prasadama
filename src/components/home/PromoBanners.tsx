@@ -78,7 +78,7 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
       }
       const rows = (categoryResult.data || []) as HomeCategory[];
       setCategories([
-        { id: "shop-all", name: "Shop All", slug: "", image_url: rows[0]?.image_url || null, ribbon_label: "Shop All" },
+        { id: "shop-all", name: "Shop All", slug: "", image_url: "/prasadam-logo.png", ribbon_label: "Shop All" },
         ...rows,
       ]);
       onFetchStatus?.("success");
@@ -133,7 +133,7 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
           onPointerLeave={() => { isInteractingRef.current = false; }}
           onFocusCapture={() => { isInteractingRef.current = true; }}
           onBlurCapture={() => { isInteractingRef.current = false; }}
-          className={`flex overflow-x-auto gap-6 snap-x snap-mandatory scroll-smooth px-4 py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${hasOverflow ? "justify-start" : "justify-center"}`}
+          className={`flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:gap-6 ${hasOverflow ? "justify-start" : "justify-center"}`}
         >
           {categories.map((category, i) => (
             <CardLink
