@@ -11,3 +11,8 @@
 - [x] Remove the divider below product coupons
 - [x] Match Promo Banners to the uploaded circular ribbon design
 - [x] Replicate the supplied category-strip screenshot spacing, sizing, ribbon, and background
+- [ ] Add consolidated Homepage Merchandising admin controls
+- [ ] Drive category circles directly from admin categories
+- [ ] Add automatic real Offers & Deals product section
+- [ ] Add admin-managed wide Promo Banners section
+- [ ] Verify category auto-slide and fish-tail ribbons on phone and tablet
