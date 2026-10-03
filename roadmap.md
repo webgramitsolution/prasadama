@@ -37,3 +37,4 @@
 - [x] Show assistant product matches in a horizontally swipeable card row
 - [x] Add image-only full-banner and two-image product description layouts
 - [x] Remove phone-only gaps around the banner below Frequently Bought Together
+- [x] Refine mobile product borders, coupon spacing, delivery dividers, and Bulk Order menu access

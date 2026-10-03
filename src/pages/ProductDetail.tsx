@@ -187,7 +187,7 @@ function DeliveryChecker({ freeShipping }: { freeShipping: boolean }) {
   });
 
   return (
-    <div className="pt-3 border-t border-border">
+    <div className="pt-3">
       <p className="text-base font-semibold text-foreground mb-2">Choose Delivery Preference</p>
       <p className="text-xs font-medium text-muted-foreground mb-2 flex items-center gap-1.5">
         <MapPin className="h-4 w-4" />
@@ -873,7 +873,7 @@ export default function ProductDetail() {
             </div>
 
             {/* Right: Product Info + Buy Box in one white card */}
-            <div className="min-w-0 space-y-4 bg-card rounded-xl border border-border p-4 sm:p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+            <div className="min-w-0 space-y-4 bg-card p-4 sm:p-5 md:rounded-xl md:border md:border-border md:shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
               {/* Title & Meta */}
               <div>
                 <h1 className="text-lg sm:text-xl md:text-lg lg:text-xl md:font-semibold font-bold text-foreground leading-tight md:leading-none mb-1 md:mb-0.5">
@@ -1015,7 +1015,7 @@ export default function ProductDetail() {
               <ProductCoupons categoryId={product.category_id} />
 
               {/* Buy Box */}
-              <div className="!mt-[10px] space-y-3 pt-0 md:!mt-1">
+              <div className="!mt-5 space-y-3 pt-0 md:!mt-1">
                 {hasExplicitMoq && (
                   <p className="text-xs text-muted-foreground">Minimum Order Quantity- {currentMoq}</p>
                 )}
@@ -1145,7 +1145,7 @@ export default function ProductDetail() {
                 <DeliveryChecker freeShipping={product.shipping_class === "free" || currentPrice >= 499} />
 
                 {/* Returns + Shipping */}
-                <div className="grid grid-cols-2 gap-2 pt-3 border-t border-border">
+                <div className="grid grid-cols-2 gap-2 pt-3">
                   <div className="flex items-center gap-2.5 p-2.5 rounded-lg border border-border bg-secondary/20">
                     <div className="w-9 h-9 rounded-lg bg-success/10 flex items-center justify-center shrink-0">
                       <Shield className="h-4 w-4 text-success" />

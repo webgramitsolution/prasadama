@@ -176,6 +176,19 @@ export function Header() {
                       ))}
                     </div>
 
+                     <div className="mt-4 border-y border-border">
+                       <Link
+                         to="/rfq"
+                         onClick={() => setIsOpen(false)}
+                         className="group flex items-center justify-between px-3 py-3 text-sm text-foreground transition-colors hover:bg-accent hover:text-accent-foreground active:bg-accent active:text-accent-foreground"
+                       >
+                         <span className="flex items-center gap-2">
+                           <Warehouse className="h-4 w-4 text-accent transition-colors group-hover:text-accent-foreground group-active:text-accent-foreground" /> Bulk Order
+                         </span>
+                         <ChevronRight className="h-4 w-4 text-foreground transition-colors group-hover:text-accent-foreground group-active:text-accent-foreground" />
+                       </Link>
+                     </div>
+
                      <p className="px-3 mt-4 text-xs font-semibold text-foreground uppercase mb-2">Support</p>
                     <div className="divide-y divide-border border-y border-border">
                       <Link
