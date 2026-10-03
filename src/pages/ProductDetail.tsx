@@ -120,10 +120,10 @@ function DeliveryChecker({ freeShipping }: { freeShipping: boolean }) {
     fallback: true,
   });
 
-  const handleCheck = async () => {
+  const handleCheck = async (requestedPincode = pincode) => {
     setResult(null);
     setInvalid(false);
-    if (!isValidIndianPincode(pincode)) {
+    if (!isValidIndianPincode(requestedPincode)) {
       setInvalid(true);
       return;
     }
@@ -135,7 +135,7 @@ function DeliveryChecker({ freeShipping }: { freeShipping: boolean }) {
       const { data } = await supabase
         .from("delivery_pincodes")
         .select("delivery_days, city, state, is_cod_available")
-        .eq("pincode", pincode)
+        .eq("pincode", requestedPincode)
         .eq("is_active", true)
         .maybeSingle();
       if (data) {
@@ -157,7 +157,7 @@ function DeliveryChecker({ freeShipping }: { freeShipping: boolean }) {
   useEffect(() => {
     if (!location?.pincode || !isValidIndianPincode(location.pincode)) return;
     setPincode(location.pincode);
-    void handleCheck();
+    void handleCheck(location.pincode);
     // The saved delivery location should trigger one availability lookup when it changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location?.pincode]);
@@ -193,11 +193,11 @@ function DeliveryChecker({ freeShipping }: { freeShipping: boolean }) {
               setInvalid(false);
             }}
             className="h-9 flex-1 border-0 bg-transparent px-0 text-sm shadow-none focus-visible:ring-0"
-            onKeyDown={(e) => e.key === "Enter" && handleCheck()}
+            onKeyDown={(e) => e.key === "Enter" && handleCheck(pincode)}
           />
           <ChevronDown className="h-5 w-5 shrink-0 text-foreground" />
         </div>
-        <Button size="sm" className="h-11 text-xs px-4 bg-accent hover:bg-accent-hover" onClick={handleCheck} disabled={checking}>
+        <Button size="sm" className="h-11 text-xs px-4 bg-accent hover:bg-accent-hover" onClick={() => handleCheck(pincode)} disabled={checking}>
           {checking ? "..." : "Check"}
         </Button>
       </div>
