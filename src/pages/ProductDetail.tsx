@@ -1293,7 +1293,11 @@ export default function ProductDetail() {
           )}
 
           {/* Related products → Description blocks → Reviews → Trending reels */}
-          <RelatedProducts currentProductId={product.id} categoryId={product.category_id} />
+          <RelatedProducts
+            currentProductId={product.id}
+            categoryId={product.category_id}
+            compactTopOnMobile={Boolean(product.banner_image)}
+          />
 
           {Array.isArray((product as any).description_blocks) &&
             (product as any).description_blocks.length > 0 && (

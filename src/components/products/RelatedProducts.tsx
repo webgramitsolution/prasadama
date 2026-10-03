@@ -18,9 +18,10 @@ interface Product {
 interface RelatedProductsProps {
   currentProductId: string;
   categoryId?: string | null;
+  compactTopOnMobile?: boolean;
 }
 
-export function RelatedProducts({ currentProductId, categoryId }: RelatedProductsProps) {
+export function RelatedProducts({ currentProductId, categoryId, compactTopOnMobile = false }: RelatedProductsProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -73,7 +74,7 @@ export function RelatedProducts({ currentProductId, categoryId }: RelatedProduct
 
   if (loading) {
     return (
-      <div className="mt-8">
+      <div className={compactTopOnMobile ? "mt-0 md:mt-8" : "mt-8"}>
         <Skeleton className="h-8 w-48 mb-6 mx-auto" />
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-[10px]">
           {[...Array(5)].map((_, i) => (
@@ -87,7 +88,7 @@ export function RelatedProducts({ currentProductId, categoryId }: RelatedProduct
   if (products.length === 0) return null;
 
   return (
-    <section className="mt-8" aria-labelledby="related-products-heading">
+    <section className={compactTopOnMobile ? "mt-0 md:mt-8" : "mt-8"} aria-labelledby="related-products-heading">
       <div className="flex items-center justify-center gap-3 sm:gap-4 mb-5">
         <span aria-hidden className="hidden sm:block h-px w-12 sm:w-24 bg-gradient-to-r from-transparent to-border" />
         <h2 id="related-products-heading" className="text-lg sm:text-xl font-display font-bold text-foreground text-center">
