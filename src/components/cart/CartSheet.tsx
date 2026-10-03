@@ -29,8 +29,8 @@ export function CartSheet() {
   const firstPrice = items[0] ? getItemPrice(items[0]) : 0;
   const tiers = [
     { count: 1, label: firstPrice ? `₹${firstPrice.toLocaleString("en-IN")}` : "1 Item" },
-    { count: 2, label: firstPrice ? `Buy 2 @ ${Math.round(firstPrice * 2 * 0.9).toLocaleString("en-IN")}` : "10% OFF" },
-    { count: 3, label: firstPrice ? `Buy 3 @ ${Math.round(firstPrice * 3 * 0.8).toLocaleString("en-IN")}` : "20% OFF" },
+    { count: 2, label: firstPrice ? `Buy 2 @ ₹${Math.round(firstPrice * 2 * 0.9).toLocaleString("en-IN")}` : "10% OFF" },
+    { count: 3, label: firstPrice ? `Buy 3 @ ₹${Math.round(firstPrice * 3 * 0.8).toLocaleString("en-IN")}` : "20% OFF" },
   ];
   const nextTier = tiers.find((t) => itemCount < t.count);
   const progressPct = Math.min(100, (itemCount / 3) * 100);

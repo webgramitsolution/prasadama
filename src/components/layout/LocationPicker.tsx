@@ -20,7 +20,14 @@ const PIN_QUERY = /^\d{0,6}$/;
 const VALID_PIN = /^[1-9]\d{5}$/;
 
 function IndiaFlag() {
-  return <span aria-hidden="true" className="text-lg leading-none">🇮🇳</span>;
+  return (
+    <span aria-hidden="true" className="relative inline-flex h-3.5 w-5 shrink-0 overflow-hidden rounded-[1px] border border-border shadow-sm">
+      <span className="absolute inset-x-0 top-0 h-1/3 bg-[#FF9933]" />
+      <span className="absolute inset-x-0 top-1/3 h-1/3 bg-white" />
+      <span className="absolute inset-x-0 bottom-0 h-1/3 bg-[#138808]" />
+      <span className="absolute left-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#000080]" />
+    </span>
+  );
 }
 
 function normalizeRecords(payload: unknown, query: string): PostalRecord[] {
