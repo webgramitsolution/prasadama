@@ -1172,23 +1172,23 @@ export default function ProductDetail() {
 
           <section className="md:hidden" aria-label="Product information">
             <Accordion type="single" collapsible defaultValue="details" className="space-y-1.5 py-3">
-              <AccordionItem value="details" className="rounded-md border-0 bg-[#fdf3e8] px-3">
+              <AccordionItem value="details" className="rounded-md border-0 bg-promo-category px-3">
                 <AccordionTrigger className="py-3 text-sm font-bold hover:no-underline"><span className="flex items-center gap-3"><FileText className="h-5 w-5 text-accent" />Product Details</span></AccordionTrigger>
                 <AccordionContent className="space-y-2 text-xs text-foreground">
                   {specificationRows.map((row) => <p key={row.label}><strong>{row.label}:</strong> {row.value}</p>)}
                 </AccordionContent>
               </AccordionItem>
-              <AccordionItem value="made-of" className="rounded-md border-0 bg-[#fdf3e8] px-3">
+              <AccordionItem value="made-of" className="rounded-md border-0 bg-promo-category px-3">
                 <AccordionTrigger className="py-3 text-sm hover:no-underline"><span className="flex items-center gap-3"><ListChecks className="h-5 w-5 text-accent" />What Is It Made Of?</span></AccordionTrigger>
                 <AccordionContent className="text-xs leading-relaxed text-muted-foreground">
                   <FormattedProductText text={product.short_description || product.description || "Product composition details are listed in the specifications above."} />
                 </AccordionContent>
               </AccordionItem>
-              <AccordionItem value="shipping" className="rounded-md border-0 bg-[#fdf3e8] px-3">
+              <AccordionItem value="shipping" className="rounded-md border-0 bg-promo-category px-3">
                 <AccordionTrigger className="py-3 text-sm hover:no-underline"><span className="flex items-center gap-3"><Truck className="h-5 w-5 text-accent" />Shipping Information</span></AccordionTrigger>
                 <AccordionContent className="text-xs leading-relaxed text-muted-foreground">Secure delivery across India through trusted courier partners. Enter your pincode above for an estimated delivery date.</AccordionContent>
               </AccordionItem>
-              <AccordionItem value="returns" className="rounded-md border-0 bg-[#fdf3e8] px-3">
+              <AccordionItem value="returns" className="rounded-md border-0 bg-promo-category px-3">
                 <AccordionTrigger className="py-3 text-sm hover:no-underline"><span className="flex items-center gap-3"><RotateCcw className="h-5 w-5 text-accent" />Returns &amp; Warranty</span></AccordionTrigger>
                 <AccordionContent className="text-xs leading-relaxed text-muted-foreground">Returns are accepted as per the product and brand policy. Contact support within 7 days if your order arrives damaged or incorrect.</AccordionContent>
               </AccordionItem>

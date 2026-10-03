@@ -4,19 +4,15 @@ import {
   ArrowLeft,
   CheckCircle,
   FileText,
-  Gift,
   Loader2,
   LockKeyhole,
   Minus,
   PackageCheck,
   Plus,
   Send,
-  ShieldCheck,
   ShoppingBag,
   Trash2,
-  Truck,
   Upload,
-  Users,
   X,
 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
@@ -24,6 +20,7 @@ import { Footer } from "@/components/layout/Footer";
 import { SignedImage } from "@/components/common/SignedImage";
 import { LocationPicker } from "@/components/layout/LocationPicker";
 import { BulkOrderHero } from "@/components/rfq/BulkOrderHero";
+import { RFQBenefits } from "@/components/rfq/RFQBenefits";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,13 +32,6 @@ import { useRFQCart } from "@/hooks/useRFQCart";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDeliveryLocation } from "@/contexts/DeliveryLocationContext";
 import { supabase } from "@/integrations/supabase/client";
-
-const benefits = [
-  { icon: Truck, title: "Bulk Order Enquiries", detail: "Special pricing for large quantities" },
-  { icon: Gift, title: "Custom Packaging Assistance", detail: "Tailored for your occasion or brand" },
-  { icon: Users, title: "Dedicated Business Support", detail: "Personalized assistance from our team" },
-  { icon: ShieldCheck, title: "Trusted Quality", detail: "Pure ingredients, authentic taste" },
-];
 
 export default function RFQ() {
   const navigate = useNavigate();
@@ -226,6 +216,7 @@ export default function RFQ() {
             <Button asChild className="bg-accent text-accent-foreground hover:bg-accent-hover"><Link to="/dashboard">View My Requests</Link></Button>
           </div>
         </main>
+        <RFQBenefits />
         <Footer />
       </div>
     );
@@ -336,11 +327,9 @@ export default function RFQ() {
             </section>
           </div>
 
-          <div className="mx-auto mt-5 grid max-w-6xl grid-cols-2 divide-x divide-border border-t border-border pt-4 md:grid-cols-4">
-            {benefits.map(({ icon: Icon, title, detail }) => <div key={title} className="flex items-center gap-3 px-3 py-2"><Icon className="h-7 w-7 shrink-0 text-accent" /><span><strong className="block text-xs text-accent">{title}</strong><span className="text-[10px] text-muted-foreground">{detail}</span></span></div>)}
-          </div>
         </section>
       </main>
+      <RFQBenefits />
       <Footer />
     </div>
   );

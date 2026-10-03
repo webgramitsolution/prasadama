@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { SEOHead } from "@/components/SEOHead";
 import { CouponInput } from "@/components/checkout/CouponInput";
 import { BulkOrderHero } from "@/components/rfq/BulkOrderHero";
+import { RFQBenefits } from "@/components/rfq/RFQBenefits";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Database } from "@/integrations/supabase/types";
 
@@ -429,6 +430,7 @@ export default function Checkout() {
             <Button onClick={() => navigate("/login")}>Login</Button>
           </div>
         </main>
+        <RFQBenefits />
         <Footer />
       </div>
     );
@@ -469,6 +471,7 @@ export default function Checkout() {
             </motion.div>
           </div>
         </main>
+        <RFQBenefits />
         <Footer />
       </div>
     );
@@ -486,6 +489,7 @@ export default function Checkout() {
             <Button onClick={() => navigate("/products")}>Browse Products</Button>
           </div>
         </main>
+        <RFQBenefits />
         <Footer />
       </div>
     );
@@ -971,6 +975,7 @@ export default function Checkout() {
         </div>
       </main>
 
+      <RFQBenefits />
       <Footer />
     </div>
   );

@@ -12,7 +12,10 @@ export function BulkOrderHero({ variant = "rfq" }: { variant?: "rfq" | "checkout
   const isCheckout = variant === "checkout";
 
   return (
-    <section className="relative h-[152px] overflow-hidden border-b border-border sm:h-[170px] lg:h-[178px]">
+    <section className={isCheckout
+      ? "relative h-[152px] overflow-hidden border-b border-border sm:h-[170px] lg:h-[178px]"
+      : "relative h-[172px] overflow-hidden border-b border-border sm:h-[194px] lg:h-[206px]"
+    }>
       <img
         src={RFQ_HERO_URL}
         alt="Prasadam bulk sweets and festive gifting"
