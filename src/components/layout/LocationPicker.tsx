@@ -149,14 +149,14 @@ function LocationForm({ mobile, onConfirmed }: { mobile: boolean; onConfirmed: (
   };
 
   return (
-    <div className={cn("flex min-h-0 flex-col", mobile && "h-[min(58dvh,500px)]")}>
+    <div className={cn("flex min-h-0 flex-col", mobile && "h-[min(78dvh,680px)]")}>
       {!mobile && (
         <DialogHeader className="pr-8">
           <DialogTitle className="flex items-center gap-2 text-lg"><MapPin className="h-5 w-5 text-accent" />Let's Personalize Your Experience!</DialogTitle>
           <DialogDescription>Find the perfect products for you and your loved ones.</DialogDescription>
         </DialogHeader>
       )}
-      <div className={cn("min-h-0 flex-1", mobile ? "overflow-y-auto px-4 pb-4" : "mt-1")}>
+      <div className={cn("min-h-0 flex-1", mobile ? "overflow-y-auto px-4 pb-4 pt-4" : "mt-1")}>
         <div className="flex h-12 items-center justify-between rounded-md border border-input bg-card px-3 font-semibold">
           <span className="flex items-center gap-2"><IndiaFlag />India</span>
           <ChevronDown className="h-5 w-5" />
@@ -217,6 +217,17 @@ function LocationForm({ mobile, onConfirmed }: { mobile: boolean; onConfirmed: (
           </div>
         )}
       </div>
+      {mobile && (
+        <div className="px-4 pb-3">
+          <img
+            src={MOBILE_PICKER_ILLUSTRATION_URL}
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            className="mx-auto h-20 w-full max-w-sm object-contain"
+          />
+        </div>
+      )}
       <div className={cn("border-t border-border bg-card", mobile ? "p-4 pb-[max(1rem,env(safe-area-inset-bottom))]" : "mt-4 pt-4")}>
         <Button type="button" className="h-12 w-full" disabled={!selected || selected.pincode !== query || loading} onClick={confirm}>Confirm</Button>
       </div>
@@ -258,7 +269,7 @@ export function LocationPicker({ className, variant = "desktop" }: { className?:
       <ChevronRight className="h-5 w-5 shrink-0 text-accent" />
     </Button>
   ) : (
-    <Button type="button" variant="ghost" onClick={() => setOpen(true)} className={cn("h-14 max-w-[190px] justify-start gap-2 px-2 text-left hover:bg-transparent", className)}>
+    <Button type="button" variant="ghost" onClick={() => setOpen(true)} className={cn("h-14 max-w-[190px] justify-start gap-2 bg-card px-2 text-left text-foreground hover:bg-card hover:text-foreground", className)}>
       <IndiaFlag />
       <span className="min-w-0 flex-1 leading-tight">
         <span className="block truncate text-xs font-semibold">{location ? `Deliver to ${location.city}` : "Where to deliver?"}</span>
@@ -278,15 +289,6 @@ export function LocationPicker({ className, variant = "desktop" }: { className?:
               <SheetTitle className="text-xl">Delivery Location</SheetTitle>
             </SheetHeader>
             <LocationForm mobile onConfirmed={() => setOpen(false)} />
-            <div className="px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-              <img
-                src={MOBILE_PICKER_ILLUSTRATION_URL}
-                alt=""
-                aria-hidden="true"
-                loading="lazy"
-                className="mx-auto h-16 w-full max-w-sm object-contain"
-              />
-            </div>
           </SheetContent>
         </Sheet>
       ) : (

@@ -44,7 +44,7 @@ export function WidePromoBanners() {
       if (cards.length < 2) return;
       const current = cards.findIndex((card) => Math.abs(card.offsetLeft - rail.scrollLeft) < card.offsetWidth / 2);
       const next = cards[(current + 1) % cards.length];
-      next?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+      if (next) rail.scrollTo({ left: next.offsetLeft - rail.offsetLeft, behavior: "smooth" });
     }, 3500);
 
     return () => window.clearInterval(interval);
