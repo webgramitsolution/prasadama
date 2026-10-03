@@ -27,6 +27,6 @@
 - [x] Rebuild cart offer states and the responsive pincode-based delivery location flow
 - [x] Refine saved-pincode timing, mobile location sheet, cart voucher icon, and promo auto-scroll
 - [x] Match category/auth/location styling and rebuild RFQ from the supplied bulk-order blueprint
-- [ ] Match the compact centered RFQ reference and reuse its banner on Checkout
-- [ ] Add real RFQ estimated totals and persist item price snapshots
-- [ ] Verify a real RFQ submission appears in the admin status workflow
+- [x] Match the compact centered RFQ reference and reuse its banner on Checkout
+- [x] Add real RFQ estimated totals and persist item price snapshots
+- [x] Verify a real RFQ submission is stored for the admin status workflow
