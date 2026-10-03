@@ -235,7 +235,7 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const { addToRFQCart } = useRFQCart();
   const { user, role } = useAuth();
-  const { addToCart } = useCart();
+  const { addToCart, getQuantityInCart } = useCart();
   const [isAddingToRFQ, setIsAddingToRFQ] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [zoomOpen, setZoomOpen] = useState(false);
@@ -544,6 +544,8 @@ export default function ProductDetail() {
   };
 
   const [isBuyingNow, setIsBuyingNow] = useState(false);
+
+  const cartQtyForSelection = product ? getQuantityInCart(product.id, selectedVariation?.id ?? null) : 0;
 
   const handleAddToCartClick = async () => {
     if (!product || !moqValid) return;
@@ -1000,7 +1002,7 @@ export default function ProductDetail() {
                     disabled={isAddingToCart || isBuyingNow || !moqValid}
                   >
                     {isAddingToCart ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShoppingCart className="h-4 w-4" />}
-                    {isAddingToCart ? "Adding..." : "Add to cart"}
+                    {isAddingToCart ? "Adding..." : cartQtyForSelection > 0 ? `Add more (${cartQtyForSelection} in cart)` : "Add to cart"}
                   </Button>
                 </div>
 
@@ -1030,7 +1032,7 @@ export default function ProductDetail() {
                     disabled={isAddingToCart || isBuyingNow || !moqValid}
                   >
                     {isAddingToCart ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShoppingCart className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
-                    {isAddingToCart ? "Adding..." : "ADD TO CART"}
+                    {isAddingToCart ? "Adding..." : cartQtyForSelection > 0 ? `IN CART (${cartQtyForSelection}) +` : "ADD TO CART"}
                   </Button>
                   <Button
                     className="btn-gold-frame btn-premium-shine hidden lg:inline-flex flex-1 min-w-0 text-[11px] sm:text-sm font-bold h-11 uppercase tracking-tight sm:tracking-wide rounded-[5px] px-2 items-center justify-center gap-1 sm:gap-1.5"
