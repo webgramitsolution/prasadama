@@ -30,3 +30,4 @@
 - [x] Match the compact centered RFQ reference and reuse its banner on Checkout
 - [x] Add real RFQ estimated totals and persist item price snapshots
 - [x] Verify a real RFQ submission is stored for the admin status workflow
+- [x] Refine product pincode result, RFQ/Checkout banners, RFQ split, and variation label

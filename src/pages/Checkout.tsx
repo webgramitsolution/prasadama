@@ -494,7 +494,7 @@ export default function Checkout() {
       <Header />
       
       <main className="pb-20 overflow-x-hidden">
-        <BulkOrderHero />
+        <BulkOrderHero variant="checkout" />
         <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 overflow-x-hidden">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

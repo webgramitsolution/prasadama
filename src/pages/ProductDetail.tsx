@@ -162,12 +162,6 @@ function DeliveryChecker({ freeShipping }: { freeShipping: boolean }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location?.pincode]);
 
-  const minDate = result ? new Date(Date.now() + (result.delivery_days || 0) * 86400000) : null;
-  const maxDate = result
-    ? new Date(Date.now() + ((result as any).delivery_days_max ?? result.delivery_days ?? 0) * 86400000)
-    : null;
-  const fmt = (d: Date) => d.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" });
-
   return (
     <div className="pt-3 border-t border-border">
       <p className="text-base font-semibold text-foreground mb-2">Choose Delivery Preference</p>
@@ -201,47 +195,7 @@ function DeliveryChecker({ freeShipping }: { freeShipping: boolean }) {
           {checking ? "..." : "Check"}
         </Button>
       </div>
-      {result && (
-        <div className="mt-2 p-2.5 rounded-lg bg-success/5 border border-success/20 space-y-1">
-          <p className="text-xs font-medium text-success flex items-center gap-1">
-            <Check className="h-3.5 w-3.5" /> Delivery available
-            {result.city && (
-              <span className="text-muted-foreground font-normal">
-                to {result.city}{result.state ? `, ${result.state}` : ""}
-              </span>
-            )}
-          </p>
-          <p className="text-xs text-foreground">
-            {result.delivery_days_max && result.delivery_days_max !== result.delivery_days ? (
-              <>
-                Estimated delivery between{" "}
-                <span className="font-semibold">{minDate && fmt(minDate)}</span> –{" "}
-                <span className="font-semibold">{maxDate && fmt(maxDate)}</span>
-                <span className="text-muted-foreground"> ({result.delivery_days}-{result.delivery_days_max} days)</span>
-              </>
-            ) : (
-              <>
-                Estimated delivery by <span className="font-semibold">{minDate && fmt(minDate)}</span>
-                <span className="text-muted-foreground"> ({result.delivery_days} days)</span>
-              </>
-            )}
-          </p>
-          {result.is_cod_available && <p className="text-[10px] text-success">✓ Cash on Delivery available</p>}
-            {freeShipping && (
-              <p className="flex items-center gap-2 overflow-hidden text-xs font-semibold text-success">
-                <span className="relative block h-5 w-12 shrink-0" aria-hidden="true">
-                  <Truck className="absolute left-0 top-0.5 h-4 w-4 animate-[delivery-van_2.4s_ease-in-out_infinite]" />
-                </span>
-                Free Shipping available
-              </p>
-            )}
-            <p className="text-[10px] text-muted-foreground">
-              {result.fallback
-                ? "Standard shipping across India via trusted courier partners."
-                : "Delivery timeline is based on your serviceable pincode."}
-            </p>
-        </div>
-      )}
+      {result && <span className="sr-only" role="status">Delivery availability checked for {pincode}.</span>}
       {invalid && (
         <p className="mt-2 text-xs text-destructive">Please enter a valid 6-digit Indian pincode.</p>
       )}
@@ -934,10 +888,10 @@ export default function ProductDetail() {
                       const isSelected = selectedVariation?.id === v.id;
                       const total = sortedVariations.length;
                       const badge =
-                        total >= 4 && vi === 1 ? { text: "★ Most Sale", tone: "var-badge--red" }
+                        total >= 4 && vi === 1 ? { text: "Most Popular", tone: "var-badge--red", responsive: true }
                         : total >= 4 && vi === 2 ? { text: "Best Deal", tone: "var-badge--green" }
                         : total >= 4 && vi === total - 1 ? { text: "Max Savings", tone: "var-badge--amber" }
-                        : total === 3 && vi === 1 ? { text: "★ Most Sale", tone: "var-badge--red" }
+                         : total === 3 && vi === 1 ? { text: "Most Popular", tone: "var-badge--red", responsive: true }
                         : total === 3 && vi === 2 ? { text: "Best Deal", tone: "var-badge--green" }
                         : total === 2 && vi === 1 ? { text: "Best Deal", tone: "var-badge--green" }
                         : null;
@@ -953,7 +907,9 @@ export default function ProductDetail() {
                           )}
                         >
                           {badge && (
-                            <span className={`var-badge ${badge.tone}`}>{badge.text}</span>
+                            <span className={`var-badge ${badge.tone}`}>
+                              {badge.responsive ? <><span className="sm:hidden">Most Popu..</span><span className="hidden sm:inline">Most Popular</span></> : badge.text}
+                            </span>
                           )}
                           {isSelected && (
                             <span className="absolute top-1.5 right-1.5 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-[#e8a33d] text-white">

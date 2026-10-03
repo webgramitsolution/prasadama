@@ -254,8 +254,8 @@ export default function RFQ() {
           </div>
         </section>
 
-        <section className="bg-promo-category px-3 py-4 md:px-5 md:py-5">
-          <div className="mx-auto grid max-w-5xl gap-2.5 lg:grid-cols-[0.95fr_1.05fr]">
+        <section className="bg-promo-category py-4 md:py-5">
+          <div className="grid w-full gap-2.5 px-2 md:grid-cols-[40%_60%] md:px-3">
             <section className="overflow-hidden rounded-lg border border-border bg-card shadow-card">
               <header className="flex items-center justify-between border-b border-border px-4 py-3">
                 <div className="flex items-center gap-3"><ShoppingBag className="h-6 w-6 text-accent" /><div><h2 className="text-lg font-bold text-foreground">Your Bulk Order</h2><p className="text-[11px] text-muted-foreground">Review the products you want a quotation for.</p></div></div>
