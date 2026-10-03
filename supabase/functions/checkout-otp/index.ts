@@ -71,7 +71,7 @@ serve(async (req) => {
         }
       }
 
-      const otp = String(Math.floor(100000 + Math.random() * 900000));
+      const otp = String((crypto.getRandomValues(new Uint32Array(1))[0] % 900000) + 100000);
       const expiresAt = new Date(Date.now() + OTP_TTL_MINUTES * 60 * 1000).toISOString();
       const otpHash = await hashOtp(otp, `${user.id}:${mobile}`);
 

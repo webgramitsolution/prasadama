@@ -124,7 +124,7 @@ serve(async (req) => {
     }
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = Array.from(crypto.getRandomValues(new Uint32Array(1)))[0] % 900000 + 100000 + "";
 
     const { error: dbError } = await supabase
       .from("signup_otp_events")
