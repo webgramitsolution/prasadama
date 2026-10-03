@@ -689,16 +689,16 @@ export default function CourierTracking() {
                 </p>
                 <div className="space-y-2 text-sm">
                   <a
-                    href="tel:+919876543210"
+                    href="tel:+917551120242"
                     className="flex items-center gap-2 text-foreground"
                   >
-                    <Phone className="h-4 w-4 text-accent" /> +91 98765 43210
+                    <Phone className="h-4 w-4 text-accent" /> +91 75511 20242
                   </a>
                   <a
-                    href="mailto:sales@houskase.com"
+                    href="mailto:info@webgramitsolution"
                     className="flex items-center gap-2 text-foreground"
                   >
-                    <Mail className="h-4 w-4 text-accent" /> sales@houskase.com
+                    <Mail className="h-4 w-4 text-accent" /> info@webgramitsolution
                   </a>
                 </div>
               </div>

@@ -543,7 +543,7 @@ export default function Products() {
                   </Button>
                 </div>
               ) : (
-                <div className={`grid gap-[10px] min-w-0 ${viewMode === "grid" ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4" : "grid-cols-1"}`}>
+                <div className={`grid gap-1.5 sm:gap-[10px] min-w-0 ${viewMode === "grid" ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4" : "grid-cols-1"}`}>
                   {sortedProducts.map((product, index) => (
                     <ProductCard key={product.id} product={product} index={index} />
                   ))}

@@ -190,14 +190,14 @@ export function TaggedProductSection({
           <>
             <div
               ref={gridRailRef}
-              className="flex lg:grid lg:grid-cols-5 gap-3 overflow-x-auto lg:overflow-x-visible pb-0 scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory"
+              className="flex lg:grid lg:grid-cols-5 gap-1.5 sm:gap-3 overflow-x-auto lg:overflow-x-visible pb-0 scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory"
             >
               {gridProducts.map((product, idx) => (
                 <ProductCard
                   key={product.id}
                   product={product}
                   index={idx}
-                  className={`shrink-0 w-[calc((100%-12px)/2)] sm:w-[31%] lg:w-full snap-start ${idx >= 5 ? "lg:hidden" : ""}`}
+                  className={`shrink-0 w-[calc((100%-6px)/2)] sm:w-[31%] lg:w-full snap-start ${idx >= 5 ? "lg:hidden" : ""}`}
                 />
               ))}
             </div>

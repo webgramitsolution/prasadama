@@ -165,7 +165,7 @@ serve(async (req) => {
                   <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/124/124021.png" class="social-icon" alt="Twitter"></a>
                   <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" class="social-icon" alt="Insta"></a>
                 </div>
-                <p>This email was sent by: <a href="mailto:sales@houskase.com" style="color:#fff; font-weight:bold;">sales@houskase.com</a></p>
+                <p>This email was sent by: <a href="mailto:info@webgramitsolution" style="color:#fff; font-weight:bold;">info@webgramitsolution</a></p>
                 <p>&copy; ${new Date().getFullYear()} Prasadam — A Divine Taste. All rights reserved.</p>
               </div>
             </div>

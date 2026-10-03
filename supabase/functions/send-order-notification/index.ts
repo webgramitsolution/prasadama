@@ -247,8 +247,8 @@ Deno.serve(async (req) => {
             <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" class="social-icon" alt="Insta"></a>
           </div>
           
-          <p>This email was sent by: <a href="mailto:sales@houskase.com" style="color:#fff; font-weight:bold;">sales@houskase.com</a></p>
-          <p>For any questions please send an email to <a href="mailto:sales@houskase.com" style="color:#fff; font-weight:bold;">sales@houskase.com</a></p>
+          <p>This email was sent by: <a href="mailto:info@webgramitsolution" style="color:#fff; font-weight:bold;">info@webgramitsolution</a></p>
+          <p>For any questions please send an email to <a href="mailto:info@webgramitsolution" style="color:#fff; font-weight:bold;">info@webgramitsolution</a></p>
           
           <div class="footer-links">
             <a href="https://houskase.com/privacy-policy">Privacy Policy</a> | 

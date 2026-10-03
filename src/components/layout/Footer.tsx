@@ -84,8 +84,8 @@ export function Footer() {
     { key: "X", icon: XIcon, url: social.twitter || "#" },
   ];
 
-  const displayPhone = store.storePhone || "+91 98512 95129";
-  const displayEmail = store.storeEmail || "sales@houskase.com";
+  const displayPhone = store.storePhone || "+91 75511 20242";
+  const displayEmail = store.storeEmail || "info@webgramitsolution";
 
   return (
     <footer className="bg-[#45040A] text-white">

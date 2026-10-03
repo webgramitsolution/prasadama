@@ -53,7 +53,7 @@ export function WidePromoBanners() {
   if (banners.length === 0) return null;
 
   return (
-    <section className="bg-background py-7 sm:py-9" aria-label="Promo banners">
+    <section className="my-5 bg-transparent py-0" aria-label="Promo banners">
       <div className="container mx-auto px-3 sm:px-4">
         <div ref={railRef} className="flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:gap-4">
           {banners.map((banner) => {
