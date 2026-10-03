@@ -140,7 +140,7 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
               key={category.id}
               to={category.slug ? `/products?category=${encodeURIComponent(category.slug)}` : "/products"}
               ariaLabel={category.name}
-              className="group relative block w-[92px] shrink-0 snap-start no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 sm:w-[118px] lg:w-[138px]"
+              className="group relative block w-[100px] shrink-0 snap-start no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 sm:w-[118px] lg:w-[144px]"
             >
               <div className="relative aspect-square transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none">
                 <div className="h-full w-full overflow-hidden rounded-full border-2 border-accent/30 bg-muted shadow-sm">
@@ -149,7 +149,7 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
                   alt={category.name}
                   loading={i < 2 ? "eager" : "lazy"}
                   decoding="async"
-                  sizes="(max-width: 639px) 92px, (max-width: 1023px) 118px, 138px"
+                  sizes="(max-width: 639px) 100px, (max-width: 1023px) 118px, 144px"
                   className="h-full w-full object-cover object-center"
                 />
                 </div>
