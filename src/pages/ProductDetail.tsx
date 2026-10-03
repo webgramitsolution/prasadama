@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { 
   FileText, Truck, Shield, Minus, Plus, Check, 
   Package, Clock, Phone, MessageCircle, Factory, 
-  Award, ChevronRight, ShoppingCart, Star, Zap, CheckCircle2, MapPin, X, ChevronLeft, Loader2,
+  Award, ChevronRight, ChevronDown, ShoppingCart, Star, Zap, CheckCircle2, MapPin, X, ChevronLeft, Loader2,
   Droplets, Leaf, Heart, ListChecks, RotateCcw, BadgeCheck
 } from "lucide-react";
 import { cn } from "@/lib/utils";
