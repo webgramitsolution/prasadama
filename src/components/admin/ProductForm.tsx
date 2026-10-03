@@ -1677,56 +1677,83 @@ export function ProductForm({ product, onClose, onSave }: ProductFormProps) {
             </p>
           </CollapsibleSection>
 
-          {/* Description Blocks - Image + Text grid */}
-          <CollapsibleSection id="descBlocks" title="Description blocks (image + text)" openSections={{ ...openSections, descBlocks: true }} toggleSection={toggleSection}>
+          {/* Description Blocks - image-only banners/grids (legacy text-paired blocks still render if present) */}
+          <CollapsibleSection id="descBlocks" title="Description blocks (images)" openSections={{ ...openSections, descBlocks: true }} toggleSection={toggleSection}>
             <div className="space-y-3">
               {descriptionBlocks.length === 0 && (
                 <p className="text-xs text-muted-foreground">
-                  Add rows below the description. Each row has an image on the left and text on the right.
-                  Leave either side blank to show only image or only text.
+                  Add image blocks shown below the description. Choose "Full-width banner" for a single wide image,
+                  or "2-column image grid" to show two images side by side.
                 </p>
               )}
               {descriptionBlocks.map((block, idx) => (
-                <div key={idx} className="grid grid-cols-1 sm:grid-cols-2 gap-3 border border-border rounded-lg p-3 bg-muted/20">
-                  <div className="space-y-1">
-                    <Label className="text-xs">Image (optional)</Label>
-                    <ImageUpload
-                      value={block.image}
-                      onChange={(url) =>
-                        setDescriptionBlocks((prev) =>
-                          prev.map((b, i) => (i === idx ? { ...b, image: url } : b))
-                        )
-                      }
-                      bucket="product-images"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-xs">Text (optional)</Label>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          setDescriptionBlocks((prev) => prev.filter((_, i) => i !== idx))
+                <div key={idx} className="space-y-2 border border-border rounded-lg p-3 bg-muted/20">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="space-y-1">
+                      <Label className="text-xs">Layout</Label>
+                      <Select
+                        value={block.layout}
+                        onValueChange={(value: "default" | "full" | "grid2") =>
+                          setDescriptionBlocks((prev) =>
+                            prev.map((b, i) => (i === idx ? { ...b, layout: value } : b))
+                          )
                         }
-                        className="h-6 px-2 text-destructive"
                       >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
+                        <SelectTrigger className="h-8 w-56 text-xs">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="default">Single image</SelectItem>
+                          <SelectItem value="full">Full-width banner</SelectItem>
+                          <SelectItem value="grid2">2-column image grid</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
-                    <Textarea
-                      value={block.text}
-                      onChange={(e) =>
-                        setDescriptionBlocks((prev) =>
-                          prev.map((b, i) => (i === idx ? { ...b, text: e.target.value } : b))
-                        )
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() =>
+                        setDescriptionBlocks((prev) => prev.filter((_, i) => i !== idx))
                       }
-                      placeholder="Write the text shown next to this image..."
-                      rows={6}
-                      className="resize-y text-sm"
-                    />
+                      className="h-6 px-2 text-destructive"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
                   </div>
+                  <div className={`grid grid-cols-1 gap-3 ${block.layout === "grid2" ? "sm:grid-cols-2" : ""}`}>
+                    <div className="space-y-1">
+                      <Label className="text-xs">{block.layout === "grid2" ? "Image 1" : "Image"}</Label>
+                      <ImageUpload
+                        value={block.image}
+                        onChange={(url) =>
+                          setDescriptionBlocks((prev) =>
+                            prev.map((b, i) => (i === idx ? { ...b, image: url } : b))
+                          )
+                        }
+                        bucket="product-images"
+                      />
+                    </div>
+                    {block.layout === "grid2" && (
+                      <div className="space-y-1">
+                        <Label className="text-xs">Image 2</Label>
+                        <ImageUpload
+                          value={block.image2}
+                          onChange={(url) =>
+                            setDescriptionBlocks((prev) =>
+                              prev.map((b, i) => (i === idx ? { ...b, image2: url } : b))
+                            )
+                          }
+                          bucket="product-images"
+                        />
+                      </div>
+                    )}
+                  </div>
+                  {block.text && (
+                    <p className="text-xs text-muted-foreground">
+                      This block has legacy text content ({block.text.length} chars) that will keep rendering next to the image on the product page.
+                    </p>
+                  )}
                 </div>
               ))}
               <Button
@@ -1734,7 +1761,7 @@ export function ProductForm({ product, onClose, onSave }: ProductFormProps) {
                 variant="outline"
                 size="sm"
                 onClick={() =>
-                  setDescriptionBlocks((prev) => [...prev, { image: "", text: "" }])
+                  setDescriptionBlocks((prev) => [...prev, { image: "", image2: "", text: "", layout: "default" }])
                 }
               >
                 <Plus className="h-4 w-4 mr-1" /> Add block
