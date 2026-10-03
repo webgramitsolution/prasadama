@@ -124,7 +124,7 @@ serve(async (req) => {
     }
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = Array.from(crypto.getRandomValues(new Uint32Array(1)))[0] % 900000 + 100000 + "";
 
     const { error: dbError } = await supabase
       .from("signup_otp_events")
@@ -264,8 +264,9 @@ serve(async (req) => {
     );
 
   } catch (error: any) {
+    console.error("send-signup-otp failed:", error?.message ?? error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: "Could not send the verification code. Please try again." }),
       { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }

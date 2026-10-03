@@ -99,7 +99,7 @@ serve(async (req) => {
       }
 
       // 2. Generate and store OTP
-      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      const code = String((crypto.getRandomValues(new Uint32Array(1))[0] % 900000) + 100000);
       const { error: dbError } = await supabase
         .from("password_reset_otps")
         .insert([{ email, otp_code: await hashResetOtp(email, code) }]);

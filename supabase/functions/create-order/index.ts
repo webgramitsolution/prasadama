@@ -13,6 +13,7 @@ const BodySchema = z.object({
   notes: z.string().max(2000).nullable().optional(),
   coupon_id: z.string().uuid().nullable().optional(),
   buyer_type: z.enum(['retail', 'shop']).optional(),
+  payment_method: z.enum(['razorpay', 'cod']).optional(),
 })
 
 Deno.serve(async (req) => {
@@ -60,11 +61,17 @@ Deno.serve(async (req) => {
         method: 'POST', headers: serviceRoleHeaders,
         body: JSON.stringify({ order_id: order.id, type: 'new_order' }),
       }),
-      fetch(`${functionUrl}/ekart-create-shipment`, {
-        method: 'POST', headers: forwardedHeaders,
-        body: JSON.stringify({ order_id: order.id }),
-      }),
     ]
+    // Ship immediately only for cash-on-delivery; prepaid orders are shipped
+    // by verify-razorpay-payment after the payment signature is verified.
+    if (body.payment_method === 'cod') {
+      tasks.push(
+        fetch(`${functionUrl}/ekart-create-shipment`, {
+          method: 'POST', headers: forwardedHeaders,
+          body: JSON.stringify({ order_id: order.id }),
+        }),
+      )
+    }
     const results = await Promise.allSettled(tasks)
     results.forEach((result, index) => {
       if (result.status === 'rejected') console.error(index === 0 ? 'notification_failed' : 'ekart_sync_failed')
