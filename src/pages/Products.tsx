@@ -554,7 +554,7 @@ export default function Products() {
         </div>
       </main>
 
-      <ReelsSection title="Trending Reels" placement="home" />
+      <ReelsSection title="Trending Reels" placement="home" catalogSpacing />
       <Footer />
     </div>
   );

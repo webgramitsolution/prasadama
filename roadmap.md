@@ -32,3 +32,4 @@
 - [x] Verify a real RFQ submission is stored for the admin status workflow
 - [x] Refine product pincode result, RFQ/Checkout banners, RFQ split, and variation label
 - [x] Reuse RFQ benefits on checkout/success, enlarge RFQ banner, refresh warm color, and keep admin white
+- [x] Keep a consistent 40px gap between category products and Trending Reels on every device
