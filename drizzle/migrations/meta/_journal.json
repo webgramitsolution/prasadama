@@ -15,6 +15,20 @@
       "when": 1791008030199,
       "tag": "0001_cart_realtime",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791018323852,
+      "tag": "0002_complete_rfq_cart_variations",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791018434507,
+      "tag": "0003_allow_user_owned_rfq_workflow",
+      "breakpoints": true
     }
   ]
 }

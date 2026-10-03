@@ -2,18 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
-  Boxes,
   CheckCircle,
   FileText,
   Gift,
-  Headphones,
   Loader2,
   LockKeyhole,
   Minus,
   PackageCheck,
   Plus,
   Send,
-  Settings,
   ShieldCheck,
   ShoppingBag,
   Trash2,
@@ -26,6 +23,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SignedImage } from "@/components/common/SignedImage";
 import { LocationPicker } from "@/components/layout/LocationPicker";
+import { BulkOrderHero } from "@/components/rfq/BulkOrderHero";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,14 +35,6 @@ import { useRFQCart } from "@/hooks/useRFQCart";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDeliveryLocation } from "@/contexts/DeliveryLocationContext";
 import { supabase } from "@/integrations/supabase/client";
-
-const RFQ_HERO_URL = "https://ik.imagekit.io/webgramitsolution/bulk%20order%20page.png";
-
-const highlights = [
-  { icon: Boxes, title: "Bulk Order Enquiries", detail: "Special pricing for large quantities" },
-  { icon: Settings, title: "Custom Product Requirements", detail: "Tailored to your requirements" },
-  { icon: Headphones, title: "Dedicated Sales Assistance", detail: "Personalized support from our team" },
-];
 
 const benefits = [
   { icon: Truck, title: "Bulk Order Enquiries", detail: "Special pricing for large quantities" },
@@ -68,6 +58,8 @@ export default function RFQ() {
   } = useRFQCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submittedNumber, setSubmittedNumber] = useState("");
+  const [submittedEstimate, setSubmittedEstimate] = useState(0);
   const [buyerType, setBuyerType] = useState("");
   const [attachments, setAttachments] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -79,6 +71,13 @@ export default function RFQ() {
   useEffect(() => {
     if (role === "shop" || role === "retail") setBuyerType(role);
   }, [role]);
+
+  const getUnitPrice = (item: (typeof rfqItems)[number]) => {
+    const source = item.variation || item.product;
+    if (!source) return 0;
+    return Number(buyerType === "shop" ? source.shop_price : source.retail_price) || 0;
+  };
+  const estimatedTotal = rfqItems.reduce((sum, item) => sum + getUnitPrice(item) * item.quantity, 0);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
@@ -151,9 +150,10 @@ export default function RFQ() {
           buyer_type: buyerType || null,
           product_name: productNames.length > 100 ? `${rfqItems.length} products` : productNames,
           quantity: itemCount,
+          target_price: estimatedTotal,
           user_id: user.id,
           status: "pending",
-          message: message || null,
+          address: message || null,
           postal_code: location?.pincode || null,
           city: location?.city || null,
           state: location?.state || null,
@@ -184,6 +184,7 @@ export default function RFQ() {
           product_image: item.product?.images?.[0] || null,
           variation_details: [item.variation?.size, item.variation?.color].filter(Boolean).join(" ") || null,
           quantity: item.quantity,
+          target_price: getUnitPrice(item),
         })),
       );
       if (itemError) throw itemError;
@@ -192,6 +193,8 @@ export default function RFQ() {
         body: { rfqNumber, fullName, companyName, email, phone, productName: productNames, quantity: itemCount, message, buyerType, itemCount: rfqItems.length, gstNumber },
       });
       await clearCart();
+      setSubmittedNumber(rfqNumber);
+      setSubmittedEstimate(estimatedTotal);
       setSubmitted(true);
       toast({ title: "Quotation request submitted", description: `${rfqNumber} has been sent to the Prasadam team.` });
     } catch (error) {
@@ -211,6 +214,13 @@ export default function RFQ() {
           <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-success/10"><CheckCircle className="h-10 w-10 text-success" /></div>
           <h1 className="text-3xl font-bold text-foreground">Quotation Request Submitted</h1>
           <p className="mt-3 text-muted-foreground">Our bulk-order team will review your requirements and contact you with custom pricing.</p>
+          <div className="mt-5 w-full rounded-lg border border-border bg-secondary/40 px-5 py-4">
+            <p className="text-xs text-muted-foreground">Request number</p>
+            <p className="font-bold text-foreground">{submittedNumber}</p>
+            <p className="mt-3 text-xs text-muted-foreground">Current estimated value</p>
+            <p className="text-xl font-bold text-accent">₹{submittedEstimate.toLocaleString("en-IN")}</p>
+            <p className="mt-1 text-[10px] text-muted-foreground">The Prasadam team will confirm your final bulk price.</p>
+          </div>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button variant="outline" onClick={() => setSubmitted(false)}>Submit Another Request</Button>
             <Button asChild className="bg-accent text-accent-foreground hover:bg-accent-hover"><Link to="/dashboard">View My Requests</Link></Button>
@@ -226,26 +236,10 @@ export default function RFQ() {
       <SEOHead title="Bulk Orders & Custom Quotations" description="Request custom pricing for Prasadam bulk orders, festive gifting and devotional offerings." />
       <Header />
       <main className="bg-card pb-20 md:pb-0">
-        <section className="relative min-h-[250px] overflow-hidden border-b border-border md:min-h-[270px]">
-          <img src={RFQ_HERO_URL} alt="Prasadam bulk sweets and festive gifting" className="absolute inset-0 h-full w-full object-cover object-center" />
-          <div className="absolute inset-0 bg-card/20" />
-          <div className="relative mx-auto flex min-h-[250px] max-w-6xl flex-col items-center justify-center px-4 py-7 text-center md:min-h-[270px]">
-            <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-card/90 px-3 py-1 text-xs font-bold text-accent"><Users className="h-3.5 w-3.5" />B2B PROCUREMENT</div>
-            <h1 className="text-3xl font-bold leading-tight text-foreground md:text-5xl">Bulk Orders & <span className="text-accent">Custom Quotations</span></h1>
-            <p className="mt-2 max-w-xl text-sm text-muted-foreground md:text-base">Looking to order in bulk? Share your product requirements and receive a tailored quotation from our team.</p>
-            <div className="mt-5 grid w-full max-w-3xl grid-cols-1 gap-3 sm:grid-cols-3">
-              {highlights.map(({ icon: Icon, title, detail }) => (
-                <div key={title} className="flex items-center justify-center gap-3 sm:border-r sm:border-accent/20 sm:last:border-0">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-accent bg-card/80 text-accent"><Icon className="h-5 w-5" /></span>
-                  <span className="text-left"><strong className="block text-xs text-foreground">{title}</strong><span className="block text-[10px] text-muted-foreground">{detail}</span></span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <BulkOrderHero />
 
         <section className="border-b border-border bg-card">
-          <div className="mx-auto grid max-w-4xl grid-cols-3 px-3 py-3">
+          <div className="mx-auto grid max-w-3xl grid-cols-3 px-3 py-2">
             {[
               ["1", "Select Products", "Add items to your quote cart"],
               ["2", "Business Details", "Tell us your requirements"],
@@ -253,15 +247,15 @@ export default function RFQ() {
             ].map(([number, title, detail], index) => (
               <div key={number} className="relative flex min-w-0 items-start justify-center gap-2 px-1">
                 {index < 2 && <span className="absolute left-[72%] right-[-28%] top-4 hidden h-px bg-border sm:block" />}
-                <span className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-bold ${index === 0 ? "border-accent bg-accent text-accent-foreground" : "border-border bg-card text-foreground"}`}>{number}</span>
-                <span className="hidden min-w-0 sm:block"><strong className="block text-xs text-foreground">{title}</strong><span className="block text-[10px] text-muted-foreground">{detail}</span></span>
+                <span className={`relative z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-[10px] font-bold ${index === 0 ? "border-accent bg-accent text-accent-foreground" : "border-border bg-card text-foreground"}`}>{number}</span>
+                <span className="hidden min-w-0 sm:block"><strong className="block text-[10px] text-foreground">{title}</strong><span className="block text-[9px] text-muted-foreground">{detail}</span></span>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="bg-[hsl(var(--promo-category))] px-3 py-5 md:px-5 md:py-7">
-          <div className="mx-auto grid max-w-6xl gap-3 lg:grid-cols-[0.95fr_1.05fr]">
+        <section className="bg-promo-category px-3 py-4 md:px-5 md:py-5">
+          <div className="mx-auto grid max-w-5xl gap-2.5 lg:grid-cols-[0.95fr_1.05fr]">
             <section className="overflow-hidden rounded-lg border border-border bg-card shadow-card">
               <header className="flex items-center justify-between border-b border-border px-4 py-3">
                 <div className="flex items-center gap-3"><ShoppingBag className="h-6 w-6 text-accent" /><div><h2 className="text-lg font-bold text-foreground">Your Bulk Order</h2><p className="text-[11px] text-muted-foreground">Review the products you want a quotation for.</p></div></div>
@@ -293,11 +287,11 @@ export default function RFQ() {
                 )}
               </div>
 
-              <div className="mx-4 mb-3 mt-3 rounded-lg bg-[hsl(var(--promo-category))] p-4">
+              <div className="mx-4 mb-3 mt-3 rounded-lg bg-promo-category p-3">
                 <div className="flex items-center gap-2 text-accent"><PackageCheck className="h-5 w-5" /><h3 className="text-sm font-bold">Order Summary</h3></div>
                 <div className="mt-3 grid grid-cols-2 divide-x divide-border rounded-md bg-card/80 text-center">
-                  <div className="p-3"><p className="text-[11px] text-muted-foreground">Total Products</p><strong className="text-xl text-foreground">{rfqItems.length}</strong></div>
-                  <div className="p-3"><p className="text-[11px] text-muted-foreground">Total Requested Quantity</p><strong className="text-xl text-foreground">{itemCount}</strong></div>
+                  <div className="p-2.5"><p className="text-[10px] text-muted-foreground">Total Products</p><strong className="text-lg text-foreground">{rfqItems.length}</strong></div>
+                  <div className="p-2.5"><p className="text-[10px] text-muted-foreground">Estimated Value</p><strong className="text-lg text-foreground">₹{estimatedTotal.toLocaleString("en-IN")}</strong></div>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2 px-4 pb-4">

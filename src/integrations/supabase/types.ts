@@ -1740,23 +1740,29 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          notes: string | null
           product_id: string | null
           quantity: number
           user_id: string
+          variation_id: string | null
         }
         Insert: {
           created_at?: string
           id?: string
+          notes?: string | null
           product_id?: string | null
           quantity?: number
           user_id: string
+          variation_id?: string | null
         }
         Update: {
           created_at?: string
           id?: string
+          notes?: string | null
           product_id?: string | null
           quantity?: number
           user_id?: string
+          variation_id?: string | null
         }
         Relationships: [
           {
@@ -1764,6 +1770,13 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rfq_cart_items_variation_id_fkey"
+            columns: ["variation_id"]
+            isOneToOne: false
+            referencedRelation: "product_variations"
             referencedColumns: ["id"]
           },
         ]

@@ -185,6 +185,8 @@ export default function AdminRFQ() {
     setIsUpdating(false);
   };
 
+  const requestedValue = (rfq: RFQRequest) => Number(rfq.target_price || 0);
+
   const filteredRfqs = rfqs.filter(rfq => {
     const matchesSearch = (rfq.rfq_number || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
       (rfq.product_name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -312,7 +314,8 @@ export default function AdminRFQ() {
                   <TableHead>Product</TableHead>
                   <TableHead>Buyer</TableHead>
                   <TableHead>Quantity</TableHead>
-                  <TableHead>Target Price</TableHead>
+                  <TableHead>Requested Value</TableHead>
+                  <TableHead>Final Quote</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Date</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
@@ -339,7 +342,10 @@ export default function AdminRFQ() {
                       </TableCell>
                       <TableCell>{rfq.quantity.toLocaleString()} units</TableCell>
                       <TableCell>
-                        {rfq.target_price ? `₹${Number(rfq.target_price).toLocaleString("en-IN")}` : "-"}
+                        {requestedValue(rfq) ? `₹${requestedValue(rfq).toLocaleString("en-IN")}` : "-"}
+                      </TableCell>
+                      <TableCell>
+                        {rfq.quoted_price ? `₹${Number(rfq.quoted_price).toLocaleString("en-IN")}` : "-"}
                       </TableCell>
                       <TableCell>
                         <Badge className={cn("gap-1", status?.color)}>
@@ -406,6 +412,17 @@ export default function AdminRFQ() {
                   )}
                 </div>
 
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-lg border border-border p-3">
+                    <p className="text-xs text-muted-foreground">Requested value</p>
+                    <p className="text-lg font-bold text-foreground">₹{requestedValue(selectedRfq).toLocaleString("en-IN")}</p>
+                  </div>
+                  <div className="rounded-lg border border-border p-3">
+                    <p className="text-xs text-muted-foreground">Final quote</p>
+                    <p className="text-lg font-bold text-accent">{selectedRfq.quoted_price ? `₹${Number(selectedRfq.quoted_price).toLocaleString("en-IN")}` : "Not sent"}</p>
+                  </div>
+                </div>
+
                 <div className="p-4 rounded-xl border">
                   <h4 className="font-medium mb-3">Buyer Information</h4>
                   <div className="grid sm:grid-cols-2 gap-4 text-sm">
@@ -449,7 +466,7 @@ export default function AdminRFQ() {
                             <div>
                               <p className="font-medium text-sm">{item.product_name}</p>
                               <p className="text-xs text-muted-foreground">{item.variation_details}</p>
-                              <p className="text-xs font-medium mt-1">Qty: {item.quantity}</p>
+                              <p className="text-xs font-medium mt-1">Qty: {item.quantity}{item.target_price ? ` · ₹${Number(item.target_price).toLocaleString("en-IN")} each` : ""}</p>
                             </div>
                           </div>
                         ))}
