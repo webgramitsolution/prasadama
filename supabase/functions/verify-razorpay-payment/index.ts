@@ -70,6 +70,17 @@ Deno.serve(async (req) => {
       .eq('id', order_id)
       .eq('payment_status', 'pending')
 
+    // Payment is verified — now create the courier shipment for this order.
+    try {
+      await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/ekart-create-shipment`, {
+        method: 'POST',
+        headers: { Authorization: authHeader, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_id }),
+      })
+    } catch (shipErr) {
+      console.error('ekart_sync_failed', shipErr)
+    }
+
     return json({ success: true })
   } catch (e) {
     return json({ success: false, error: (e as Error).message }, 500)
