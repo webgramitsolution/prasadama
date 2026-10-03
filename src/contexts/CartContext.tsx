@@ -211,7 +211,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const allMoqValid = items.every(validateMoq);
 
   return (
-    <CartContext.Provider value={{ items, isLoading, buyerType, addToCart, updateQuantity, removeFromCart, clearCart, getItemPrice, getItemMoq, validateMoq, subtotal, tax, itemCount, allMoqValid, refresh: fetchCart }}>
+    <CartContext.Provider value={{ items, isLoading, buyerType, addToCart, updateQuantity, removeFromCart, clearCart, getItemPrice, getItemMoq, validateMoq, subtotal, tax, itemCount, allMoqValid, refresh: fetchCart, getQuantityInCart }}>
       {children}
     </CartContext.Provider>
   );
