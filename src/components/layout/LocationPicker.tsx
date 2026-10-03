@@ -76,6 +76,7 @@ function LocationForm({ mobile, onConfirmed }: { mobile: boolean; onConfirmed: (
   const [error, setError] = useState("");
   const [activeIndex, setActiveIndex] = useState(-1);
   const requestNumber = useRef(0);
+  const [retry, setRetry] = useState(0);
 
   useEffect(() => {
     if (query.length < 3 || selected?.pincode === query) {
@@ -114,7 +115,7 @@ function LocationForm({ mobile, onConfirmed }: { mobile: boolean; onConfirmed: (
       window.clearTimeout(timer);
       controller.abort();
     };
-  }, [query, selected?.pincode]);
+  }, [query, selected?.pincode, retry]);
 
   const choose = (record: PostalRecord) => {
     setSelected(record);
@@ -196,7 +197,12 @@ function LocationForm({ mobile, onConfirmed }: { mobile: boolean; onConfirmed: (
                 <span className="min-w-0 whitespace-normal text-sm"><HighlightedPin pincode={record.pincode} query={query} />, {record.office_name}, {record.district}, {record.state}</span>
               </Button>
             ))}
-            {error && <p className="px-3 py-4 text-sm text-destructive" role="status">{error}</p>}
+            {error && (
+              <div className="flex items-center justify-between gap-3 px-3 py-4" role="status">
+                <p className="text-sm text-destructive">{error}</p>
+                {/Unable|timed out/.test(error) && <Button type="button" size="sm" variant="outline" onClick={() => setRetry((n) => n + 1)}>Retry</Button>}
+              </div>
+            )}
           </div>
         )}
         {query.length > 0 && query.length < 3 && <p className="mt-2 text-xs text-muted-foreground">Enter at least 3 digits to search.</p>}
