@@ -19,9 +19,11 @@ export function BulkOrderHero({ variant = "rfq" }: { variant?: "rfq" | "checkout
         className="absolute inset-0 h-full w-full object-cover object-center"
       />
       <div className="relative mx-auto flex h-full w-[58%] max-w-[610px] flex-col items-center justify-center px-1 py-2 text-center sm:w-[54%] lg:w-[50%]">
-        <div className="mb-1 inline-flex items-center gap-1 rounded-full bg-card/90 px-2.5 py-0.5 text-[7px] font-bold text-accent shadow-sm sm:text-[8px]">
-          <Users className="h-2.5 w-2.5" /> B2B PROCUREMENT
-        </div>
+        {!isCheckout && (
+          <div className="mb-1 inline-flex items-center gap-1 rounded-full bg-card/90 px-2.5 py-0.5 text-[7px] font-bold text-accent shadow-sm sm:text-[8px]">
+            <Users className="h-2.5 w-2.5" /> B2B PROCUREMENT
+          </div>
+        )}
         <h1 className="whitespace-nowrap font-serif text-[15px] font-bold leading-none text-foreground sm:text-[24px] lg:text-[28px]">
           {isCheckout ? "Checkout" : <>Bulk Orders &amp; <span className="text-accent">Custom Quotations</span></>}
         </h1>
