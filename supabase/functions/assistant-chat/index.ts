@@ -109,7 +109,7 @@ ${matchedProducts.length ? `PRODUCTS MATCHING THIS QUERY: ${matchedProducts.map(
     const chatHistory = Array.isArray(history)
       ? history.slice(-6).map((h: any) => ({
           role: h.role === "assistant" ? "assistant" : "user",
-          content: String(h.text || ""),
+          content: String(h.text || "").slice(0, 1000),
         }))
       : [];
 
