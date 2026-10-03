@@ -176,6 +176,16 @@ function DeliveryChecker({ freeShipping }: { freeShipping: boolean }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location?.pincode]);
 
+  const minDate = result ? new Date(Date.now() + result.delivery_days * 86400000) : null;
+  const maxDate = result
+    ? new Date(Date.now() + (result.delivery_days_max ?? result.delivery_days) * 86400000)
+    : null;
+  const formatDeliveryDate = (date: Date) => date.toLocaleDateString("en-IN", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+
   return (
     <div className="pt-3 border-t border-border">
       <p className="text-base font-semibold text-foreground mb-2">Choose Delivery Preference</p>
@@ -211,22 +221,43 @@ function DeliveryChecker({ freeShipping }: { freeShipping: boolean }) {
         </Button>
       </div>
       {result && (
-        <div className="mt-3 flex items-start gap-2 rounded-md border border-success/30 bg-success/10 px-3 py-2.5 text-sm" role="status">
-          <Truck className="mt-0.5 h-4 w-4 shrink-0 text-success" />
-          <div className="min-w-0">
-            <p className="font-semibold text-foreground">
-              Delivery in {result.delivery_days}{result.delivery_days_max ? `–${result.delivery_days_max}` : ""} business days
-            </p>
-            {(result.city || result.state) && (
-              <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                {[result.city, result.state, pincode].filter(Boolean).join(", ")}
-              </p>
+        <div className="mt-2 space-y-1 rounded-lg border border-success/20 bg-success/5 p-2.5" role="status">
+          <p className="flex items-center gap-1 text-xs font-medium text-success">
+            <Check className="h-3.5 w-3.5" /> Delivery available
+            {result.city && (
+              <span className="font-normal text-muted-foreground">
+                to {result.city}{result.state ? `, ${result.state}` : ""}
+              </span>
             )}
-            <p className="mt-0.5 text-xs text-muted-foreground">
-              {freeShipping ? "Free shipping available" : "Shipping charges calculated at checkout"}
-              {result.is_cod_available ? " · Cash on Delivery available" : ""}
+          </p>
+          <p className="text-xs text-foreground">
+            {result.delivery_days_max && result.delivery_days_max !== result.delivery_days ? (
+              <>
+                Estimated delivery between <span className="font-semibold">{minDate && formatDeliveryDate(minDate)}</span> –{" "}
+                <span className="font-semibold">{maxDate && formatDeliveryDate(maxDate)}</span>
+                <span className="text-muted-foreground"> ({result.delivery_days}-{result.delivery_days_max} days)</span>
+              </>
+            ) : (
+              <>
+                Estimated delivery by <span className="font-semibold">{minDate && formatDeliveryDate(minDate)}</span>
+                <span className="text-muted-foreground"> ({result.delivery_days} days)</span>
+              </>
+            )}
+          </p>
+          {result.is_cod_available && <p className="text-[10px] text-success">✓ Cash on Delivery available</p>}
+          {freeShipping && (
+            <p className="flex items-center gap-2 overflow-hidden text-xs font-semibold text-success">
+              <span className="relative block h-5 w-12 shrink-0" aria-hidden="true">
+                <Truck className="absolute left-0 top-0.5 h-4 w-4 animate-[delivery-van_2.4s_ease-in-out_infinite]" />
+              </span>
+              Free Shipping available
             </p>
-          </div>
+          )}
+          <p className="text-[10px] text-muted-foreground">
+            {result.fallback
+              ? "Standard shipping across India via trusted courier partners."
+              : "Delivery timeline is based on your serviceable pincode."}
+          </p>
         </div>
       )}
       {invalid && (
