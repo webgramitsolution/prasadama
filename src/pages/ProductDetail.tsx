@@ -1223,8 +1223,8 @@ export default function ProductDetail() {
               {mobileBenefits.map(({ title, detail, Icon }, index) => (
                 <div
                   key={`${title}-${detail}`}
-                  className={`flex min-w-0 items-center gap-2.5 px-1 py-3 ${
-                    index % 2 === 0 ? "border-r border-border" : ""
+                  className={`flex min-w-0 items-center gap-2.5 px-1.5 py-3 ${
+                    index % 2 === 0 ? "pr-4 border-r border-border" : "pl-4"
                   } ${index < 2 ? "border-b border-border" : ""}`}
                 >
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground">
