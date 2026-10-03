@@ -36,9 +36,10 @@ interface ReelsSectionProps {
   excludeProductId?: string;
   limit?: number;
   placement?: "home" | "product";
+  catalogSpacing?: boolean;
 }
 
-export function ReelsSection({ title = "Featured Videos", excludeProductId, limit = 12, placement = "home" }: ReelsSectionProps) {
+export function ReelsSection({ title = "Featured Videos", excludeProductId, limit = 12, placement = "home", catalogSpacing = false }: ReelsSectionProps) {
   const [reels, setReels] = useState<ReelRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -74,7 +75,7 @@ export function ReelsSection({ title = "Featured Videos", excludeProductId, limi
 
   if (loading) {
     return (
-      <section className={cn("bg-white py-8 sm:py-10", placement === "home" && "-mt-10")}>
+      <section className={cn("bg-white pb-8", catalogSpacing ? "pt-10" : "py-8 sm:py-10", placement === "home" && !catalogSpacing && "-mt-10")}>
         <div className="container mx-auto px-1.5 sm:px-4">
           <SectionHeading title={title} />
           <div className="flex gap-3 sm:gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -93,7 +94,7 @@ export function ReelsSection({ title = "Featured Videos", excludeProductId, limi
   if (reels.length === 0) return null;
 
   return (
-    <section className={cn("bg-white pb-5 pt-8 sm:pt-10", placement === "home" && "-mt-10")}>
+    <section className={cn("bg-white pb-5", catalogSpacing ? "pt-10" : "pt-8 sm:pt-10", placement === "home" && !catalogSpacing && "-mt-10")}>
       <div className="container mx-auto px-1.5 sm:px-4 relative">
         <SectionHeading title={title} />
         <div className="relative">
