@@ -137,7 +137,7 @@ export default function Login() {
           </div>
 
           <div className="flex flex-col items-center space-y-6">
-            <Button type="submit" className="w-full h-12 text-base font-semibold text-white hover:opacity-90 shadow-md transition-all active:scale-[0.98]" style={{ backgroundColor: "#AD1E2A" }} disabled={isLoading}>
+            <Button type="submit" className="w-full h-12 bg-accent text-base font-semibold text-accent-foreground hover:bg-accent-hover shadow-md transition-all active:scale-[0.98]" disabled={isLoading}>
               {isLoading ? "Signing In..." : "Login"}
             </Button>
             {/* Promo image is rendered once by AuthShell on mobile; show it here only on desktop. */}

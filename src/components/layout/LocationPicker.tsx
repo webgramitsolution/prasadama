@@ -228,7 +228,7 @@ function LocationForm({ mobile, onConfirmed }: { mobile: boolean; onConfirmed: (
           />
         </div>
       )}
-      <div className={cn("border-t border-border bg-card", mobile ? "p-4 pb-[max(1rem,env(safe-area-inset-bottom))]" : "mt-4 pt-4")}>
+      <div className={cn("border-t border-border bg-card", mobile ? "mb-[10px] p-4 pb-[max(1rem,env(safe-area-inset-bottom))]" : "mt-4 pt-4")}>
         <Button type="button" className="h-12 w-full" disabled={!selected || selected.pincode !== query || loading} onClick={confirm}>Confirm</Button>
       </div>
     </div>
