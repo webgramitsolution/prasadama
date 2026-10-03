@@ -32,7 +32,24 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
-    const { message, history, siteContext } = await req.json();
+    // Rate limit per caller IP to prevent abuse of the paid AI service.
+    const ip =
+      (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() ||
+      req.headers.get("x-real-ip") ||
+      "unknown";
+    const { data: withinLimit } = await supabaseClient.rpc("check_sms_rate_limit", {
+      _key: `assistant:${ip}`,
+      _max_hits: 20,
+      _window_seconds: 60,
+    });
+    if (withinLimit === false) {
+      return new Response(JSON.stringify({ error: "Too many requests. Please try again in a minute." }), {
+        status: 429,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const { message, history } = await req.json();
     const query = String(message || "").toLowerCase().trim();
 
     const hindiChars = String(message || "").match(/[\u0900-\u097F]/g) || [];
