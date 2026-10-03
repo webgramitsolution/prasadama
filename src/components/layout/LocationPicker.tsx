@@ -209,18 +209,10 @@ function LocationForm({ mobile, onConfirmed }: { mobile: boolean; onConfirmed: (
   );
 }
 
-export function LocationPicker({ className }: { className?: string }) {
+export function LocationPicker({ className, variant = "desktop" }: { className?: string; variant?: "desktop" | "mobile" }) {
   const { location, isHydrated } = useDeliveryLocation();
   const [open, setOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia("(max-width: 767px)");
-    const sync = () => setIsMobile(media.matches);
-    sync();
-    media.addEventListener("change", sync);
-    return () => media.removeEventListener("change", sync);
-  }, []);
+  const isMobile = variant === "mobile";
 
   useEffect(() => {
     if (isHydrated && isMobile && !location) setOpen(true);

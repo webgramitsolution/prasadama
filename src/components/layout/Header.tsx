@@ -367,7 +367,7 @@ export function Header() {
 
       {/* Compact mobile delivery location row */}
       <div className="border-t border-border bg-card md:hidden">
-        <LocationPicker />
+        <LocationPicker variant="mobile" />
       </div>
 
       {/* Bottom Header - Mega Menu Bar (Desktop/Tablet only) */}
