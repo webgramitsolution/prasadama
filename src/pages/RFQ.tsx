@@ -141,9 +141,7 @@ export default function RFQ() {
       const rfqNumber = `RFQ-${new Date().toISOString().slice(0, 10).replace(/-/g, "")}-${crypto.randomUUID().slice(0, 4).toUpperCase()}`;
       const productNames = rfqItems.map((item) => item.product?.name || "Product").join(", ");
 
-      const { data: rfqData, error: rfqError } = await supabase
-        .from("rfq_requests")
-        .insert({
+      const requestPayload = {
           rfq_number: rfqNumber,
           full_name: fullName,
           company_name: companyName,
@@ -155,12 +153,15 @@ export default function RFQ() {
           quantity: itemCount,
           user_id: user.id,
           status: "pending",
-          address: message || null,
+          message: message || null,
           postal_code: location?.pincode || null,
           city: location?.city || null,
           state: location?.state || null,
           country: location?.countryName || "India",
-        })
+        };
+      const { data: rfqData, error: rfqError } = await supabase
+        .from("rfq_requests")
+        .insert(requestPayload as never)
         .select("id")
         .single();
       if (rfqError || !rfqData) throw rfqError || new Error("Unable to create quotation request.");
