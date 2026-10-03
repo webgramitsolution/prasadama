@@ -122,7 +122,7 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
   if (categories.length === 0) return null;
 
   return (
-    <section className="w-full overflow-hidden bg-promo-category py-[8px] pb-[30px]">
+    <section className="w-full overflow-hidden bg-promo-category py-[8px] pb-[10px]">
       <div className="w-full py-2">
         <div
           ref={railRef}

@@ -62,12 +62,6 @@ export function WidePromoBanners() {
               <div className="relative aspect-[16/7] overflow-hidden rounded-[8px] bg-muted sm:aspect-[21/7]">
                 {banner.mobile_image_url && <SignedImage src={banner.mobile_image_url} alt={banner.title || "Prasadam offer"} className="absolute inset-0 h-full w-full object-cover sm:hidden" />}
                 <SignedImage src={banner.image_url} alt={banner.title || "Prasadam offer"} className={`${banner.mobile_image_url ? "hidden sm:block" : "block"} absolute inset-0 h-full w-full object-cover`} />
-                {(banner.title || banner.offer_text) && (
-                  <div className="absolute inset-x-0 bottom-0 bg-foreground/70 px-4 py-3 text-card">
-                    {banner.title && <p className="text-base font-bold sm:text-xl">{banner.title}</p>}
-                    {banner.offer_text && <p className="text-xs sm:text-sm">{banner.offer_text}</p>}
-                  </div>
-                )}
               </div>
             );
             return isExternal(href) ? (

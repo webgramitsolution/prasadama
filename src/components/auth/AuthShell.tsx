@@ -10,7 +10,7 @@ const SLIDES = [
   "https://ik.imagekit.io/Prasadam/Testimonial/testimonial%201?updatedAt=1787420142981",
 ];
 
-const BRAND = "#AD1E2A";
+const BRAND = "#AE1E2A";
 
 interface Props {
   mode: "login" | "signup";

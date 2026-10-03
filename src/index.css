@@ -50,7 +50,7 @@
     --primary-light: 213 50% 30%;
     --primary-dark: 213 60% 12%;
 
-    /* Brand Red #AD1E2A - CTAs & Actions */
+    /* Brand Red #AE1E2A - CTAs & Actions */
     --accent: 355 71% 40%;
     --accent-foreground: 0 0% 100%;
     --accent-hover: 355 71% 33%;
@@ -84,7 +84,7 @@
     --coupon-code-surface: 0 0% 100%;
     --coupon-description: 55 87% 18%;
     --coupon-ink: 0 0% 3%;
-    --promo-category: 40 16% 96%;
+    --promo-category: 31 84% 95%;
     --payment-blue: 200 96% 42%;
     --payment-blue-soft: 202 100% 97%;
     --payment-green: 151 91% 30%;
@@ -93,7 +93,7 @@
 
     --brand-navy: 213 72% 22%;
     --brand-navy-soft: 208 80% 96%;
-    --brand-red: 356 69% 40%;
+    --brand-red: 355 71% 40%;
     --brand-green: 112 61% 39%;
     --brand-green-soft: 112 58% 95%;
 
