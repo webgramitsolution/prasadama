@@ -1218,10 +1218,15 @@ export default function ProductDetail() {
 
           </div>
 
-          <section className="mt-3 border-y border-border bg-card px-1 py-4 md:hidden" aria-label="Product benefits">
-            <div className="grid grid-cols-2 gap-x-4 gap-y-4">
-              {mobileBenefits.map(({ title, detail, Icon }) => (
-                <div key={`${title}-${detail}`} className="flex min-w-0 items-center gap-2.5">
+          <section className="mt-3 bg-card px-1 py-4 md:hidden" aria-label="Product benefits">
+            <div className="grid grid-cols-2">
+              {mobileBenefits.map(({ title, detail, Icon }, index) => (
+                <div
+                  key={`${title}-${detail}`}
+                  className={`flex min-w-0 items-center gap-2.5 px-1 py-3 ${
+                    index % 2 === 0 ? "border-r border-border" : ""
+                  } ${index < 2 ? "border-b border-border" : ""}`}
+                >
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground">
                     <Icon className="h-5 w-5" />
                   </span>
