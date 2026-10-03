@@ -779,7 +779,7 @@
   top:clamp(-10px,-1.5385cqi,-20px); bottom:clamp(-10px,-1.5385cqi,-20px); width:1px; background:var(--hkcp-divider); }
 @media (prefers-reduced-motion: reduce) { .hkcp-online { animation:none; } .hkcp-online::after { display:none; } }
 
-/* ===== Variation card labels (Most Popular / Best Deal / Max Savings) with wave shine ===== */
+/* ===== Variation card labels (Most Sale / Best Deal / Max Savings) with wave shine ===== */
 .var-badge {
   position: absolute;
   top: 0;
@@ -813,6 +813,23 @@
   background: linear-gradient(100deg, transparent 0%, rgba(255, 255, 255, 0.7) 50%, transparent 100%);
   transform: skewX(-22deg);
   animation: var-badge-shine 2.4s ease-in-out infinite;
+}
+
+.variation-selected-frame {
+  border-color: transparent;
+  background:
+    linear-gradient(hsl(var(--card)), hsl(var(--card))) padding-box,
+    linear-gradient(
+      115deg,
+      hsl(var(--accent)) 0%,
+      hsl(var(--accent) / 0.55) 24%,
+      hsl(var(--accent-foreground)) 38%,
+      hsl(var(--accent)) 52%,
+      hsl(var(--accent) / 0.55) 76%,
+      hsl(var(--accent)) 100%
+    ) border-box;
+  background-size: 100% 100%, 300% 100%;
+  animation: gold-border-run 3s linear infinite;
 }
 @keyframes var-badge-shine {
   0% { left: -70%; }
