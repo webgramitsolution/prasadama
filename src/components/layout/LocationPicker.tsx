@@ -139,7 +139,7 @@ function LocationForm({ mobile, onConfirmed }: { mobile: boolean; onConfirmed: (
   };
 
   return (
-    <div className={cn("flex min-h-0 flex-col", mobile && "h-[min(70dvh,620px)]")}>
+    <div className={cn("flex min-h-0 flex-col", mobile && "h-[min(58dvh,500px)]")}>
       {!mobile && (
         <DialogHeader className="pr-8">
           <DialogTitle className="flex items-center gap-2 text-lg"><MapPin className="h-5 w-5 text-accent" />Let's Personalize Your Experience!</DialogTitle>
