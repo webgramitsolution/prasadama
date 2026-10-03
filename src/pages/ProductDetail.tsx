@@ -616,7 +616,7 @@ export default function ProductDetail() {
     const message = encodeURIComponent(
       `Hi, I'm interested in:\n\n*${product.name}*\nQuantity: ${quantity}\n${selectedVariation ? `Variation: ${selectedSize || ""} ${selectedColor || ""}` : ""}\n\n${url}\n\nPlease provide pricing and availability.`
     );
-    window.open(`https://wa.me/919851295129?text=${message}`, "_blank");
+    window.open(`https://wa.me/917551120242?text=${message}`, "_blank");
   };
 
   const handleVariantSelect = (variantId: string) => {
@@ -902,10 +902,10 @@ export default function ProductDetail() {
                       const isSelected = selectedVariation?.id === v.id;
                       const total = sortedVariations.length;
                       const badge =
-                        total >= 4 && vi === 1 ? { text: "★ Most Popular", tone: "var-badge--red" }
+                        total >= 4 && vi === 1 ? { text: "★ Most Sale", tone: "var-badge--red" }
                         : total >= 4 && vi === 2 ? { text: "Best Deal", tone: "var-badge--green" }
                         : total >= 4 && vi === total - 1 ? { text: "Max Savings", tone: "var-badge--amber" }
-                        : total === 3 && vi === 1 ? { text: "★ Most Popular", tone: "var-badge--red" }
+                        : total === 3 && vi === 1 ? { text: "★ Most Sale", tone: "var-badge--red" }
                         : total === 3 && vi === 2 ? { text: "Best Deal", tone: "var-badge--green" }
                         : total === 2 && vi === 1 ? { text: "Best Deal", tone: "var-badge--green" }
                         : null;
@@ -916,7 +916,7 @@ export default function ProductDetail() {
                           className={cn(
                             "relative shrink-0 basis-[calc((100%_-_1rem)/3)] snap-start rounded-[10px] border-2 bg-card overflow-visible transition-all text-center min-w-0 md:basis-[calc((100%_-_1.5rem)/3)] lg:basis-[calc((100%_-_2.25rem)/4)]",
                             isSelected
-                              ? "border-[#e8a33d] shadow-md"
+                              ? "variation-selected-frame shadow-md"
                               : "border-border hover:border-[#e8a33d]/60 hover:shadow-sm"
                           )}
                         >
@@ -963,7 +963,7 @@ export default function ProductDetail() {
               <ProductCoupons categoryId={product.category_id} />
 
               {/* Buy Box */}
-              <div className="!mt-1 space-y-3 pt-0">
+              <div className="!mt-[10px] space-y-3 pt-0 md:!mt-1">
                 {hasExplicitMoq && (
                   <p className="text-xs text-muted-foreground">Minimum Order Quantity- {currentMoq}</p>
                 )}
@@ -1061,12 +1061,12 @@ export default function ProductDetail() {
                 {/* Quick Actions Row */}
                 <div className="grid grid-cols-3 divide-x divide-border border border-border rounded-lg">
                   <button
-                    onClick={() => window.open("tel:+919851295129")}
+                    onClick={() => window.open("tel:+917551120242")}
                     className="flex flex-col items-center gap-1.5 py-3 hover:bg-secondary/50 transition-colors"
                   >
                     <Phone className="h-5 w-5 text-primary" />
                     <span className="text-[10px] text-center text-muted-foreground leading-tight">
-                      Call us at<br />+91 98512 95129
+                      Call us at<br />+91 75511 20242
                     </span>
                   </button>
                   <button

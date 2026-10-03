@@ -100,12 +100,12 @@ export function RelatedProducts({ currentProductId, categoryId }: RelatedProduct
       <div
         ref={scrollerRef}
         onScroll={onScroll}
-        className="flex gap-[10px] overflow-x-auto snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-1.5 sm:gap-[10px] overflow-x-auto snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
       >
         {products.map((product, idx) => (
           <div 
             key={product.id} 
-            className="snap-start shrink-0 w-[calc(50%-5px)] sm:w-[calc(25%-7.5px)] lg:w-[calc(20%-8px)]"
+            className="snap-start shrink-0 w-[calc(50%-3px)] sm:w-[calc(25%-7.5px)] lg:w-[calc(20%-8px)]"
           >
             <ProductCard product={product} index={idx} />
           </div>

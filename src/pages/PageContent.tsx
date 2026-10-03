@@ -220,7 +220,7 @@ export default function PageContent({ pageKey, title, description }: PageContent
 
           <p className="mt-6 text-xs text-muted-foreground text-center">
             Questions about this policy? Reach us at{" "}
-            <a href="mailto:sales@houskase.com" className="text-primary font-medium hover:underline">sales@houskase.com</a>
+            <a href="mailto:info@webgramitsolution" className="text-primary font-medium hover:underline">info@webgramitsolution</a>
           </p>
         </div>
       </main>

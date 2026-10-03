@@ -24,7 +24,7 @@ const trustItems = [
   {
     icon: Headphones,
     title: "365 Days Help Desk",
-    description: "+91 98512 95129",
+    description: "+91 75511 20242",
     isPhone: true,
   },
 ];
@@ -49,7 +49,7 @@ export function TrustSection() {
                 </div>
                 <h3 className="font-bold text-foreground text-sm mb-1">{item.title}</h3>
                 {item.isPhone ? (
-                  <a href="tel:+919851295129" className="text-muted-foreground text-xs leading-relaxed flex items-center gap-1">
+                  <a href="tel:+917551120242" className="text-muted-foreground text-xs leading-relaxed flex items-center gap-1">
                     <span className="text-green-600">📞</span> {item.description}
                   </a>
                 ) : (

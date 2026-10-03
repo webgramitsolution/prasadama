@@ -92,8 +92,8 @@ const faqCategories = [
 
 const contactOptions = [
   { icon: MessageSquare, title: "Live Chat", description: "Chat with our support team in real-time", action: "/chat", buttonText: "Start Chat", isLink: true },
-  { icon: Phone, title: "Call Us", description: "Mon-Sat, 9:00 AM - 6:00 PM IST", action: "tel:+919851295129", buttonText: "+91 98512 95129", isLink: false },
-  { icon: Mail, title: "Email Support", description: "We respond within 24 hours", action: "mailto:sales@houskase.com", buttonText: "sales@houskase.com", isLink: false },
+  { icon: Phone, title: "Call Us", description: "Mon-Sat, 9:00 AM - 6:00 PM IST", action: "tel:+917551120242", buttonText: "+91 75511 20242", isLink: false },
+  { icon: Mail, title: "Email Support", description: "We respond within 24 hours", action: "mailto:info@webgramitsolution", buttonText: "info@webgramitsolution", isLink: false },
 ];
 
 function ContactForm() {
@@ -152,7 +152,7 @@ function ContactForm() {
       console.error("Contact form error:", err);
       const msg = err?.message?.includes("Too many")
         ? "You've submitted too many inquiries. Please try again in a few minutes."
-        : "Please try again or email us directly at sales@houskase.com.";
+        : "Please try again or email us directly at info@webgramitsolution.";
       toast({ title: "Failed to send", description: msg, variant: "destructive" });
     }
     setSending(false);
@@ -275,15 +275,15 @@ export default function Help() {
                   <Link to="/chat"><MessageSquare className="mr-2 h-5 w-5" />Start Chat</Link>
                 </Button>
                 <Button asChild size="lg" className="rounded border border-[#661714]/25 bg-[#661714]/10 px-5 text-[#661714] hover:bg-[#661714]/20">
-                  <a href="tel:+919851295129"><Phone className="mr-2 h-5 w-5" />Call Support</a>
+                  <a href="tel:+917551120242"><Phone className="mr-2 h-5 w-5" />Call Support</a>
                 </Button>
               </div>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="grid gap-3 rounded-lg border border-[#661714]/15 bg-white p-4">
               {[
                 { icon: Clock, label: "Support Hours", value: "Mon–Sat, 9 AM–6 PM" },
-                { icon: Phone, label: "Phone", value: "+91 98512 95129" },
-                { icon: Mail, label: "Email", value: "sales@houskase.com" },
+                { icon: Phone, label: "Phone", value: "+91 75511 20242" },
+                { icon: Mail, label: "Email", value: "info@webgramitsolution" },
               ].map((item) => (
                 <div key={item.label} className="flex items-center gap-3 rounded-md bg-[#f5f5f5] p-3">
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">

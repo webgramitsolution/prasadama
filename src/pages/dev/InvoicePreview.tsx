@@ -8,8 +8,8 @@ const baseStore = {
   store_name: "Prasadam Retail Pvt Ltd",
   store_gstin: "07AAACH1234N1Z5",
   store_address: "12/45, Green Park Extension, Hauz Khas\nNew Delhi, Delhi 110016",
-  store_phone: "+91 98765 43210",
-  store_email: "sales@houskase.com",
+  store_phone: "+91 75511 20242",
+  store_email: "info@webgramitsolution",
 };
 
 const sampleItems = [

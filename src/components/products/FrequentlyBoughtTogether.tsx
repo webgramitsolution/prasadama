@@ -57,9 +57,9 @@ export function FrequentlyBoughtTogether({ currentProduct, categoryId, onAdd }: 
   };
 
   return (
-    <section className="md:hidden border-t border-border bg-card px-3 py-4" aria-labelledby="frequently-bought-heading">
-      <h2 id="frequently-bought-heading" className="text-xl font-bold text-foreground">Frequently Bought Together</h2>
-      <p className="mt-0.5 text-sm text-muted-foreground">These products are usually bought together</p>
+    <section className="md:hidden border-t border-border bg-card py-4" aria-labelledby="frequently-bought-heading">
+      <h2 id="frequently-bought-heading" className="px-3 text-xl font-bold text-foreground">Frequently Bought Together</h2>
+      <p className="mt-0.5 px-3 text-sm text-muted-foreground">These products are usually bought together</p>
 
       <div className="mt-3 space-y-2">
         {[currentProduct, ...products].map((item, index) => {
@@ -70,14 +70,14 @@ export function FrequentlyBoughtTogether({ currentProduct, categoryId, onAdd }: 
           return (
             <article
               key={item.id}
-              className={isCurrent ? "flex min-h-24 items-center gap-3 rounded-md border border-accent/30 p-2" : "flex min-h-24 items-center gap-3 rounded-md border border-border p-2"}
+              className={isCurrent ? "flex min-h-24 items-stretch gap-3 overflow-hidden border-y border-accent/30" : "flex min-h-24 items-stretch gap-3 overflow-hidden border-y border-border"}
             >
               <SignedImage
                 src={item.images?.[0] || "/placeholder.svg"}
                 alt={item.name}
-                className="h-20 w-24 shrink-0 rounded-md bg-muted object-contain"
+                className="w-28 shrink-0 self-stretch bg-muted object-cover"
               />
-              <div className="min-w-0 flex-1">
+              <div className="min-w-0 flex-1 py-2">
                 <h3 className="line-clamp-2 text-sm font-bold leading-tight text-foreground">{item.name}</h3>
                 <div className="mt-2 flex items-center gap-2">
                   <span className={isSelected ? "flex h-5 w-5 items-center justify-center rounded border border-accent bg-accent text-accent-foreground" : "flex h-5 w-5 items-center justify-center rounded border border-muted-foreground"}>
@@ -86,7 +86,7 @@ export function FrequentlyBoughtTogether({ currentProduct, categoryId, onAdd }: 
                   <span className="text-xs text-muted-foreground">{isCurrent ? "Current product" : isSelected ? "Added" : "Add this item"}</span>
                 </div>
               </div>
-              <div className="flex shrink-0 flex-col items-end gap-2">
+              <div className="flex shrink-0 flex-col items-end gap-2 py-2 pr-3">
                 <div className="text-right">
                   <p className="text-sm font-bold text-foreground">₹{price.toLocaleString("en-IN")}</p>
                   {mrp > price && <p className="text-xs text-muted-foreground line-through">₹{mrp.toLocaleString("en-IN")}</p>}

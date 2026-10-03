@@ -23,3 +23,4 @@
 - [x] Place variation offer labels above cards and use the admin attribute name directly
 - [x] Prevent first-visit location permission prompts and stale repeated GPS requests
 - [x] Enlarge promo category circles while keeping ribbons within the circle edges
+- [x] Refine variation labels, selected borders, mobile spacing, recommendations, banners, and global contact details

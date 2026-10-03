@@ -72,9 +72,9 @@ export function OffersDeals() {
           </div>
         ) : (
           <>
-            <div ref={railRef} className="flex snap-x snap-mandatory gap-3 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:grid lg:grid-cols-5 lg:overflow-visible">
+            <div ref={railRef} className="flex snap-x snap-mandatory gap-1.5 sm:gap-3 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:grid lg:grid-cols-5 lg:overflow-visible">
               {products.map((product, index) => (
-                <ProductCard key={product.id} product={product} index={index} className={`w-[calc((100%-12px)/2)] shrink-0 snap-start sm:w-[31%] lg:w-full ${index >= 5 ? "lg:hidden" : ""}`} />
+                <ProductCard key={product.id} product={product} index={index} className={`w-[calc((100%-6px)/2)] shrink-0 snap-start sm:w-[31%] lg:w-full ${index >= 5 ? "lg:hidden" : ""}`} />
               ))}
             </div>
             <RailDots active={active} pages={pages} goTo={goTo} />
