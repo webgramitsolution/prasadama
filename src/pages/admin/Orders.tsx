@@ -64,6 +64,27 @@ interface OrderWithProfile extends Order {
   };
 }
 
+type PaymentKind = "paid" | "cod" | "pending";
+function paymentKind(order: { payment_status?: string | null }): PaymentKind {
+  const p = (order.payment_status || "").toLowerCase();
+  if (p === "paid" || p === "captured") return "paid";
+  if (p === "cod") return "cod";
+  return "pending";
+}
+const paymentBadge: Record<PaymentKind, { label: string; className: string }> = {
+  paid: { label: "Paid", className: "bg-success/10 text-success border-success/20" },
+  cod: { label: "COD", className: "bg-accent/10 text-accent border-accent/20" },
+  pending: { label: "Payment pending", className: "bg-warning/10 text-warning border-warning/20" },
+};
+function shipmentLabel(order: { ekart_sync_status?: string | null; tracking_number?: string | null; status?: string | null }) {
+  if (order.status === "delivered") return { label: "Delivered", className: "bg-success/10 text-success" };
+  if (order.status === "cancelled") return { label: "Cancelled", className: "bg-destructive/10 text-destructive" };
+  if (order.tracking_number) return { label: `Shipped · ${order.tracking_number}`, className: "bg-primary/10 text-primary" };
+  if (order.ekart_sync_status === "synced") return { label: "Shipment created", className: "bg-primary/10 text-primary" };
+  if (order.ekart_sync_status === "failed") return { label: "Shipment failed", className: "bg-destructive/10 text-destructive" };
+  return { label: "Not shipped", className: "bg-muted text-muted-foreground" };
+}
+
 const statusConfig: Record<string, { icon: React.ElementType; color: string; label: string }> = {
   pending: { icon: Clock, color: "bg-warning/10 text-warning", label: "Pending" },
   confirmed: { icon: CheckCircle, color: "bg-primary/10 text-primary", label: "Confirmed" },
@@ -80,6 +101,7 @@ export default function AdminOrders() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [paymentFilter, setPaymentFilter] = useState<"all" | "paid" | "cod" | "pending">("all");
   const [selectedOrder, setSelectedOrder] = useState<OrderWithProfile | null>(null);
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [ekartLogs, setEkartLogs] = useState<any[]>([]);
@@ -285,8 +307,16 @@ export default function AdminOrders() {
       (order as any).profile?.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (order as any).profile?.email?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === "all" || order.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesPayment = paymentFilter === "all" || paymentKind(order) === paymentFilter;
+    return matchesSearch && matchesStatus && matchesPayment;
   });
+
+  const paymentCounts = {
+    all: orders.length,
+    paid: orders.filter(o => paymentKind(o) === "paid").length,
+    cod: orders.filter(o => paymentKind(o) === "cod").length,
+    pending: orders.filter(o => paymentKind(o) === "pending").length,
+  };
 
   const stats = {
     total: orders.length,
@@ -314,6 +344,9 @@ export default function AdminOrders() {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
+                    <Badge variant="outline" className={paymentBadge[paymentKind(selectedOrder)].className}>
+                      {paymentBadge[paymentKind(selectedOrder)].label}
+                    </Badge>
                     <Badge className={cn("gap-1", status?.color)}>
                       {status?.label}
                     </Badge>
@@ -645,7 +678,22 @@ export default function AdminOrders() {
 
       {/* Filters */}
       <Card className="shadow-card">
-        <CardContent className="pt-6">
+        <CardContent className="pt-6 space-y-4">
+          <div className="flex flex-wrap gap-2" role="tablist" aria-label="Filter by payment">
+            {([["all", "All orders"], ["paid", "Paid"], ["cod", "Cash on delivery"], ["pending", "Pending payment"]] as const).map(([key, label]) => (
+              <Button
+                key={key}
+                type="button"
+                role="tab"
+                aria-selected={paymentFilter === key}
+                size="sm"
+                variant={paymentFilter === key ? "default" : "outline"}
+                onClick={() => setPaymentFilter(key)}
+              >
+                {label} <span className="ml-1.5 rounded-full bg-background/20 px-1.5 text-xs">{paymentCounts[key]}</span>
+              </Button>
+            ))}
+          </div>
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -692,7 +740,9 @@ export default function AdminOrders() {
                   <TableHead>Order</TableHead>
                   <TableHead>Customer</TableHead>
                   <TableHead>Total</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>Payment</TableHead>
+                  <TableHead>Order status</TableHead>
+                  <TableHead>Shipment</TableHead>
                   <TableHead>Date</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
@@ -712,10 +762,16 @@ export default function AdminOrders() {
                       </TableCell>
                       <TableCell className="font-bold">₹{Number(order.total).toLocaleString("en-IN")}</TableCell>
                       <TableCell>
+                        <Badge variant="outline" className={paymentBadge[paymentKind(order)].className}>{paymentBadge[paymentKind(order)].label}</Badge>
+                      </TableCell>
+                      <TableCell>
                         <Badge className={cn("gap-1", st.color)}>
                           <StatusIcon className="h-3 w-3" />
                           {st.label}
                         </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className={cn("border-transparent", shipmentLabel(order).className)}>{shipmentLabel(order).label}</Badge>
                       </TableCell>
                       <TableCell className="text-muted-foreground">
                         {new Date(order.created_at).toLocaleDateString()}

@@ -53,6 +53,13 @@ Deno.serve(async (req) => {
       return json({ success: false, error: message }, 400)
     }
 
+    // Record cash-on-delivery so admins can tell COD orders apart from pending online payments
+    if (body.payment_method === 'cod') {
+      const { error: codError } = await admin.from('orders').update({ payment_status: 'cod' }).eq('id', order.id)
+      if (codError) console.error('cod_mark_failed', codError.message)
+      else order.payment_status = 'cod'
+    }
+
     const functionUrl = `${Deno.env.get('SUPABASE_URL')}/functions/v1`
     const serviceRoleHeaders = { Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`, 'Content-Type': 'application/json' }
     const forwardedHeaders = { Authorization: authHeader, 'Content-Type': 'application/json' }
