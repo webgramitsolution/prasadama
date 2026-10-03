@@ -153,7 +153,7 @@ export default function RFQ() {
           target_price: estimatedTotal,
           user_id: user.id,
           status: "pending",
-          message: message || null,
+          address: message || null,
           postal_code: location?.pincode || null,
           city: location?.city || null,
           state: location?.state || null,
