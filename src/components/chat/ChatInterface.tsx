@@ -367,7 +367,8 @@ export function ChatInterface() {
                           {msg.message.startsWith('<!DOCTYPE html>') || msg.message.includes('<table') ? (
                             <div className="bg-white rounded p-1 my-2 overflow-auto max-h-[400px]">
                                <iframe 
-                                 srcDoc={msg.message} 
+                                  srcDoc={msg.message} 
+                                 sandbox=""
                                  className="w-full min-h-[300px] border-0" 
                                  title="Email Content"
                                />

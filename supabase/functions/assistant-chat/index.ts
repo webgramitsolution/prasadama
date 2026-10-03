@@ -32,7 +32,24 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
-    const { message, history, siteContext } = await req.json();
+    // Rate limit per caller IP to prevent abuse of the paid AI service.
+    const ip =
+      (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() ||
+      req.headers.get("x-real-ip") ||
+      "unknown";
+    const { data: withinLimit } = await supabaseClient.rpc("check_sms_rate_limit", {
+      _key: `assistant:${ip}`,
+      _max_hits: 20,
+      _window_seconds: 60,
+    });
+    if (withinLimit === false) {
+      return new Response(JSON.stringify({ error: "Too many requests. Please try again in a minute." }), {
+        status: 429,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const { message, history } = await req.json();
     const query = String(message || "").toLowerCase().trim();
 
     const hindiChars = String(message || "").match(/[\u0900-\u097F]/g) || [];
@@ -40,21 +57,18 @@ serve(async (req) => {
 
     console.log(`[Assistant] Query: "${message}" | Lang: ${userLangIsHindi ? "Hindi" : "English"}`);
 
-    let products = siteContext?.products;
-    let categories = siteContext?.categories;
-
-    if (!products || !categories) {
-      const [pRes, cRes] = await Promise.all([
-        supabaseClient
-          .from("products")
-          .select("id, name, slug, guest_price, shop_price, short_description")
-          .eq("is_active", true)
-          .limit(100),
-        supabaseClient.from("categories").select("id, name, slug").eq("is_active", true),
-      ]);
-      products = pRes.data || [];
-      categories = cRes.data || [];
-    }
+    // Product/category data is always loaded server-side; caller-supplied
+    // siteContext is never trusted for the system prompt.
+    const [pRes, cRes] = await Promise.all([
+      supabaseClient
+        .from("products")
+        .select("id, name, slug, guest_price, shop_price, short_description")
+        .eq("is_active", true)
+        .limit(100),
+      supabaseClient.from("categories").select("id, name, slug").eq("is_active", true),
+    ]);
+    const products = pRes.data || [];
+    const categories = cRes.data || [];
 
     const t = (en: string, hi: string) => (userLangIsHindi ? hi : en);
 
@@ -95,7 +109,7 @@ ${matchedProducts.length ? `PRODUCTS MATCHING THIS QUERY: ${matchedProducts.map(
     const chatHistory = Array.isArray(history)
       ? history.slice(-6).map((h: any) => ({
           role: h.role === "assistant" ? "assistant" : "user",
-          content: String(h.text || ""),
+          content: String(h.text || "").slice(0, 1000),
         }))
       : [];
 

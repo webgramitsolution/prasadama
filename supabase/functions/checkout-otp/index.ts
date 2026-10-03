@@ -61,6 +61,21 @@ serve(async (req) => {
         .limit(1)
         .maybeSingle();
 
+      // Bind abuse check: a user may verify at most 3 distinct phone numbers
+      // per 24 hours, so the endpoint can't be used to spam arbitrary numbers.
+      if (!existing) {
+        const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+        const { data: recent } = await admin
+          .from("checkout_otp_verifications")
+          .select("mobile_number")
+          .eq("user_id", user.id)
+          .gte("created_at", since);
+        const distinct = new Set((recent ?? []).map((r: any) => r.mobile_number));
+        if (!distinct.has(mobile) && distinct.size >= 3) {
+          return json({ error: "Too many different phone numbers. Try again later." }, 429);
+        }
+      }
+
       if (existing) {
         const lastSent = new Date(existing.last_sent_at).getTime();
         if (Date.now() - lastSent < RESEND_COOLDOWN_SECONDS * 1000) {
