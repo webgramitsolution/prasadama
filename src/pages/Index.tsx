@@ -15,7 +15,6 @@ import { WhyChoosePrasadam } from "@/components/home/WhyChoosePrasadam";
 import { BlogSection } from "@/components/home/BlogSection";
 import { TrustedFamilies } from "@/components/home/TrustedFamilies";
 import { ReelsSection } from "@/components/reels/ReelsSection";
-import { VoiceAssistant } from "@/components/voice/VoiceAssistant";
 
 import { TrustSection } from "@/components/home/TrustSection";
 import { AvailableOnBanner } from "@/components/home/AvailableOnBanner";
@@ -78,7 +77,6 @@ const Index = () => {
       <TrustSection />
       <AvailableOnBanner />
       <Footer />
-      <VoiceAssistant />
     </div>
   );
 };

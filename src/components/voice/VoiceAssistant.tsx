@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Mic, MicOff, X, Volume2, VolumeX, Send, MessageCircle, Sparkles, Sofa, Search, Layers, Building2, Calendar, ShoppingCart, Package, ArrowRight, Loader2, ChevronRight, MessageSquare, ThumbsUp, ThumbsDown, Square } from "lucide-react";
+import { Mic, MicOff, X, Volume2, VolumeX, Send, Sofa, Search, Calendar, ShoppingCart, Package, ChevronRight, MessageSquare, ThumbsUp, ThumbsDown, Square } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { SignedImage } from "@/components/common/SignedImage";
 import { useToast } from "@/hooks/use-toast";
-import robotAiAsset from "@/assets/robot-ai.png.asset.json";
 
 
 interface CategoryRow { id: string; name: string; slug: string; }
@@ -195,7 +194,7 @@ export function VoiceAssistant() {
     const tokens = norm.split(/\s+/).filter((t) => t.length > 1);
     const all = productsRef.current;
     const direct = all.filter((p) => p.name.toLowerCase().includes(norm));
-    if (direct.length) return direct.slice(0, 6);
+    if (direct.length) return direct.slice(0, 8);
     if (!tokens.length) return [];
     const scored = all
       .map((p) => {
@@ -205,7 +204,7 @@ export function VoiceAssistant() {
       })
       .filter((x) => x.score > 0)
       .sort((a, b) => b.score - a.score);
-    return scored.slice(0, 6).map((x) => x.p);
+    return scored.slice(0, 8).map((x) => x.p);
   }, []);
 
   const handleCommand = useCallback((raw: string) => {
@@ -235,38 +234,36 @@ export function VoiceAssistant() {
       const match = productMatches[0];
       return closeAndGo(`/product/${match.slug}`);
     }
-    if (/(search|find|show|खोज|ढूं|दिखा)/i.test(original) && productMatches.length) {
+    if (productMatches.length) {
       return respond(
         t(`Found ${productMatches.length} products.`, `${productMatches.length} प्रोडक्ट मिले।`),
         productMatches
       );
     }
 
-    (async () => {
-      setThinking(true);
-      try {
-        const { data, error } = await supabase.functions.invoke("assistant-chat", {
-          body: { 
-            message: original, 
-            history: messages.slice(-4).map(m => ({ role: m.role, text: m.text })),
-            siteContext: {
-              categories: categoriesRef.current.slice(0, 20),
-              products: productsRef.current.slice(0, 20)
-            }
-          },
-        });
-        if (error) throw error;
-        respond(data.text, data.products);
-      } catch (err) {
-        respond(t(
-          "I'm having trouble connecting right now. Please try again in a moment.",
-          "मुझे अभी जुड़ने में परेशानी हो रही है। कृपया थोड़ी देर बाद फिर से प्रयास करें।"
-        ));
-      } finally {
-        setThinking(false);
-      }
-    })();
-  }, [navigate, respond, searchProducts, messages]);
+    const intent = hindiKeywords.find(({ re }) => re.test(original))?.intent;
+    const categoryNames = categoriesRef.current.slice(0, 6).map((category) => category.name).join(", ");
+
+    if (intent === "categories") {
+      return respond(t(
+        `Popular categories include ${categoryNames || "our devotional collections"}. Tap Categories below to browse all.`,
+        `लोकप्रिय श्रेणियाँ हैं ${categoryNames || "हमारे भक्ति संग्रह"}। सभी देखने के लिए नीचे Categories दबाएँ।`
+      ));
+    }
+    if (intent === "cart") return respond(t("Open My Cart below to review your selected items.", "अपने चुने हुए सामान देखने के लिए नीचे My Cart खोलें।"));
+    if (intent === "track") return respond(t("Open Track Order below and enter your order details.", "नीचे Track Order खोलें और अपने ऑर्डर की जानकारी भरें।"));
+    if (intent === "rfq") return respond(t("For bulk orders, open Request Quote below and add the required quantities.", "थोक ऑर्डर के लिए नीचे Request Quote खोलें और आवश्यक मात्रा जोड़ें।"));
+    if (intent === "login" || intent === "dashboard") return respond(t("Use Account in the website menu to sign in and view your orders.", "साइन इन और ऑर्डर देखने के लिए वेबसाइट मेनू में Account खोलें।"));
+    if (intent === "help" || /(contact|phone|call|sales)/i.test(original)) return respond(t("Our support team can help at +91 9851295129, or open Help below.", "हमारी सहायता टीम +91 9851295129 पर उपलब्ध है, या नीचे Help खोलें।"));
+    if (/(return|refund|वापसी)/i.test(original)) return respond(t("Returns follow the product and brand policy. Please contact support within 7 days for a damaged or incorrect order.", "रिटर्न प्रोडक्ट और ब्रांड नीति के अनुसार होता है। गलत या क्षतिग्रस्त ऑर्डर के लिए 7 दिनों के भीतर सहायता टीम से संपर्क करें।"));
+    if (/(deliver|shipping|delivery|डिलीवरी)/i.test(original)) return respond(t("Enter your pincode on a product page to see availability and the estimated delivery date.", "उपलब्धता और अनुमानित तारीख देखने के लिए प्रोडक्ट पेज पर अपना पिनकोड डालें।"));
+    if (/(find a product|search a product|product खोज)/i.test(original)) return respond(t("Tell me the product name you want to find.", "जिस प्रोडक्ट को खोजना है उसका नाम बताइए।"));
+
+    respond(t(
+      "I can search products and help with categories, delivery, orders, returns, cart, or bulk quotations. What do you need?",
+      "मैं प्रोडक्ट खोजने और श्रेणी, डिलीवरी, ऑर्डर, रिटर्न, कार्ट या थोक कोटेशन में मदद कर सकती हूँ। आपको क्या चाहिए?"
+    ));
+  }, [navigate, respond, searchProducts]);
 
   const startListening = useCallback(() => {
     if (!supported) {
@@ -586,19 +583,19 @@ export function VoiceAssistant() {
                         </div>
 
                         {m.role === "assistant" && m.products && m.products.length > 0 && (
-                          <div className="grid grid-cols-1 gap-2">
+                          <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                             {m.products.map((p) => (
                               <button
                                 key={p.id}
                                 onClick={() => { setOpen(false); navigate(`/product/${p.slug}`); }}
-                                className="flex items-center gap-3 p-2 bg-white border border-black/10 rounded-xl hover:shadow-md text-left transition-all"
+                                className="w-[112px] shrink-0 snap-start overflow-hidden rounded-lg border border-black/10 bg-white text-left transition-shadow hover:shadow-md"
                               >
-                                <div className="h-12 w-12 rounded-lg overflow-hidden flex-shrink-0 border border-black/10">
-                                  <SignedImage src={p.images?.[0] || "/placeholder.svg"} className="h-full w-full object-cover" />
+                                <div className="aspect-square w-full overflow-hidden border-b border-black/10 bg-muted">
+                                  <SignedImage src={p.images?.[0] || "/placeholder.svg"} alt={p.name} className="h-full w-full object-cover" />
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-xs font-bold truncate text-[#333333]">{p.name}</p>
-                                  <p className="text-[10px] flex items-center gap-1" style={{ color: BRAND }}>
+                                <div className="min-w-0 p-2">
+                                  <p className="line-clamp-2 min-h-8 text-[11px] font-bold leading-4 text-[#333333]">{p.name}</p>
+                                  <p className="mt-1 flex items-center gap-0.5 text-[9px]" style={{ color: BRAND }}>
                                     View details <ChevronRight className="h-3 w-3" />
                                   </p>
                                 </div>

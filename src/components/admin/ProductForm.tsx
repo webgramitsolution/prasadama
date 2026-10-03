@@ -200,7 +200,7 @@ export function ProductForm({ product, onClose, onSave }: ProductFormProps) {
       image: b.image || "",
       image2: b.image2 || "",
       text: b.text || "",
-      layout: (b.layout as any) || "default",
+      layout: b.layout === "grid2" || b.layout === "full" ? b.layout : b.text ? "default" : "full",
     }))
   );
 
@@ -1703,7 +1703,7 @@ export function ProductForm({ product, onClose, onSave }: ProductFormProps) {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="default">Single image</SelectItem>
+                          {block.layout === "default" && <SelectItem value="default">Legacy image + text</SelectItem>}
                           <SelectItem value="full">Full-width banner</SelectItem>
                           <SelectItem value="grid2">2-column image grid</SelectItem>
                         </SelectContent>
@@ -1761,7 +1761,7 @@ export function ProductForm({ product, onClose, onSave }: ProductFormProps) {
                 variant="outline"
                 size="sm"
                 onClick={() =>
-                  setDescriptionBlocks((prev) => [...prev, { image: "", image2: "", text: "", layout: "default" }])
+                  setDescriptionBlocks((prev) => [...prev, { image: "", image2: "", text: "", layout: "full" }])
                 }
               >
                 <Plus className="h-4 w-4 mr-1" /> Add block

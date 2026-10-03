@@ -33,3 +33,7 @@
 - [x] Refine product pincode result, RFQ/Checkout banners, RFQ split, and variation label
 - [x] Reuse RFQ benefits on checkout/success, enlarge RFQ banner, refresh warm color, and keep admin white
 - [x] Keep a consistent 40px gap between category products and Trending Reels on every device
+- [x] Replace paid voice-assistant responses with free browser voice and local catalog help
+- [x] Show assistant product matches in a horizontally swipeable card row
+- [x] Add image-only full-banner and two-image product description layouts
+- [x] Remove phone-only gaps around the banner below Frequently Bought Together

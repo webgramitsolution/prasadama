@@ -1283,7 +1283,7 @@ export default function ProductDetail() {
 
           {/* Promotional banner (admin-uploadable per product) */}
           {product.banner_image && (
-            <div className="mt-6 rounded-xl overflow-hidden border border-border">
+            <div className="overflow-hidden rounded-xl border border-border md:mt-6">
               <SignedImage
                 src={product.banner_image}
                 alt={`${product.name} promotional banner`}
@@ -1293,7 +1293,11 @@ export default function ProductDetail() {
           )}
 
           {/* Related products → Description blocks → Reviews → Trending reels */}
-          <RelatedProducts currentProductId={product.id} categoryId={product.category_id} />
+          <RelatedProducts
+            currentProductId={product.id}
+            categoryId={product.category_id}
+            compactTopOnMobile={Boolean(product.banner_image)}
+          />
 
           {Array.isArray((product as any).description_blocks) &&
             (product as any).description_blocks.length > 0 && (

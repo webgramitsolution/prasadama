@@ -14,3 +14,5 @@
 - RFQ must remain an authenticated, database-backed cart and submission workflow; visual redesigns must preserve admin records and shared delivery-location data.
 - RFQ estimates must be calculated from current persisted product or variation prices and saved as request and item snapshots; admin final quotes remain authoritative.
 - Reuse the shared RFQ benefits component on quotation, checkout, and order-confirmation surfaces so the trust row stays visually identical.
+- Keep the shopping assistant deterministic and catalog-backed in the browser; it must not depend on paid or external AI APIs.
+- Store product description media as backward-compatible JSON blocks with image-only full-width and two-column layouts.
