@@ -16,6 +16,7 @@ import { CreditCard, Truck, FileText, AlertTriangle, CheckCircle, Loader2, Walle
 import { cn } from "@/lib/utils";
 import { SEOHead } from "@/components/SEOHead";
 import { CouponInput } from "@/components/checkout/CouponInput";
+import { BulkOrderHero } from "@/components/rfq/BulkOrderHero";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Database } from "@/integrations/supabase/types";
 
@@ -493,16 +494,17 @@ export default function Checkout() {
       <Header />
       
       <main className="pb-20 overflow-x-hidden">
+        <BulkOrderHero />
         <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 overflow-x-hidden">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-4 pt-4"
+            className="mb-4 pt-3 text-center"
           >
-            <h1 className="text-2xl font-display font-bold text-foreground mb-1">
+            <h1 className="text-xl font-display font-bold text-foreground mb-0.5">
               Checkout
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               Complete your order
             </p>
           </motion.div>
