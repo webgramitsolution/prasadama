@@ -45,9 +45,18 @@ Deno.serve(async (req) => {
       return json({ success: false, error: 'Invalid payment signature' }, 400)
     }
 
-    const { data: order } = await supabase.from('orders').select('id, user_id').eq('id', order_id).maybeSingle()
+    const { data: order } = await supabase.from('orders').select('id, user_id, razorpay_order_id, payment_status').eq('id', order_id).maybeSingle()
     if (!order) return json({ success: false, error: 'Order not found' }, 404)
     if (order.user_id !== userData.user.id) return json({ success: false, error: 'Forbidden' }, 403)
+
+    // The signed Razorpay order must be the one created for this database order,
+    // otherwise a valid signature from a different purchase could confirm this order.
+    if (!order.razorpay_order_id || order.razorpay_order_id !== razorpay_order_id) {
+      return json({ success: false, error: 'Payment does not match this order' }, 400)
+    }
+    if (order.payment_status === 'paid') {
+      return json({ success: true })
+    }
 
     const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
     await admin
@@ -59,6 +68,7 @@ Deno.serve(async (req) => {
         status: 'confirmed',
       })
       .eq('id', order_id)
+      .eq('payment_status', 'pending')
 
     return json({ success: true })
   } catch (e) {

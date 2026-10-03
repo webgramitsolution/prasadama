@@ -264,8 +264,9 @@ serve(async (req) => {
     );
 
   } catch (error: any) {
+    console.error("send-signup-otp failed:", error?.message ?? error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: "Could not send the verification code. Please try again." }),
       { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
