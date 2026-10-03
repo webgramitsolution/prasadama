@@ -1,46 +1,55 @@
 import { supabase } from "@/integrations/supabase/client";
 
-const PRODUCT_BUCKET = "product-images";
+// All storefront media buckets are private; files are served through short-lived signed links.
+const PRIVATE_BUCKETS = ["product-images", "category-images", "banners", "reels"] as const;
 const cache = new Map<string, Promise<string>>();
 
-export function isProductBucketUrl(url?: string | null) {
-  if (!url) return false;
-  return url.includes(`/storage/v1/object/public/${PRODUCT_BUCKET}/`) || url.includes(`/storage/v1/object/sign/${PRODUCT_BUCKET}/`);
-}
-
-export function getProductStoragePathFromUrl(url?: string | null) {
+function parseStorageUrl(url?: string | null): { bucket: string; path: string } | null {
   if (!url) return null;
-  const markers = [
-    `/storage/v1/object/public/${PRODUCT_BUCKET}/`,
-    `/storage/v1/object/sign/${PRODUCT_BUCKET}/`,
-  ];
-  for (const marker of markers) {
-    const index = url.indexOf(marker);
-    if (index >= 0) {
-      const path = url.slice(index + marker.length).split("?")[0];
-      return decodeURIComponent(path || "") || null;
+  for (const bucket of PRIVATE_BUCKETS) {
+    for (const kind of ["public", "sign", "authenticated"]) {
+      const marker = `/storage/v1/object/${kind}/${bucket}/`;
+      const index = url.indexOf(marker);
+      if (index >= 0) {
+        const path = decodeURIComponent(url.slice(index + marker.length).split("?")[0] || "");
+        return path ? { bucket, path } : null;
+      }
     }
   }
   return null;
 }
 
+/** True for any URL that points at one of the private storefront buckets. */
+export function isProductBucketUrl(url?: string | null) {
+  return parseStorageUrl(url) !== null;
+}
+
+export const isPrivateStorageUrl = isProductBucketUrl;
+
+export function getProductStoragePathFromUrl(url?: string | null) {
+  return parseStorageUrl(url)?.path ?? null;
+}
+
 export async function getSignedImageUrl(url?: string | null): Promise<string> {
-  if (!url || !isProductBucketUrl(url)) return url || "";
+  const parsed = parseStorageUrl(url);
+  if (!url || !parsed) return url || "";
 
   const cached = cache.get(url);
   if (cached) return cached;
 
   const promise = (async () => {
     try {
-      const path = getProductStoragePathFromUrl(url);
-      if (!path) return url;
       const { data, error } = await supabase.storage
-        .from(PRODUCT_BUCKET)
-        .createSignedUrl(path, 60 * 60 * 24 * 7); // Extend to 7 days
-      if (error || !data?.signedUrl) return url;
+        .from(parsed.bucket)
+        .createSignedUrl(parsed.path, 60 * 60 * 24 * 7);
+      if (error || !data?.signedUrl) {
+        cache.delete(url);
+        return url;
+      }
       return data.signedUrl;
     } catch (error) {
       console.warn("Signed image fallback failed", error);
+      cache.delete(url);
       return url;
     }
   })();

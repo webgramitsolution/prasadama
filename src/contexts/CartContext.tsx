@@ -49,7 +49,14 @@ interface CartContextType {
   itemCount: number;
   allMoqValid: boolean;
   refresh: () => Promise<void>;
+  getQuantityInCart: (productId: string, variationId?: string | null) => number;
 }
+
+const CART_SELECT = `
+  id, product_id, variation_id, quantity,
+  product:products(id, name, guest_price, retail_price, shop_price, shop_moq, retail_moq, images, gst_percentage, gst_enabled, gst_pricing_mode),
+  variation:product_variations(id, size, color, guest_price, retail_price, shop_price, shop_moq, retail_moq)
+`;
 
 const CartContext = createContext<CartContextType | null>(null);
 
@@ -67,12 +74,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     try {
       const { data, error } = await supabase
         .from("cart_items")
-        .select(`
-          id, product_id, variation_id, quantity,
-          product:products(id, name, guest_price, retail_price, shop_price, shop_moq, retail_moq, images, gst_percentage, gst_enabled, gst_pricing_mode),
-          variation:product_variations(id, size, color, guest_price, retail_price, shop_price, shop_moq, retail_moq)
-        `)
-        .eq("user_id", user.id);
+        .select(CART_SELECT)
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: true });
       if (error) throw error;
       setItems((data as unknown as CartItem[]) || []);
     } catch (error) {
@@ -83,6 +87,25 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   useEffect(() => { fetchCart(); }, [fetchCart]);
+
+  // Keep the cart in sync in real time (other tabs/devices, background price changes)
+  useEffect(() => {
+    if (!user) return;
+    let timer: number | undefined;
+    const resync = () => { window.clearTimeout(timer); timer = window.setTimeout(() => fetchCart(), 400); };
+    const channel = supabase
+      .channel(`cart-${user.id}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "cart_items", filter: `user_id=eq.${user.id}` }, resync)
+      .subscribe();
+    const onFocus = () => resync();
+    window.addEventListener("focus", onFocus);
+    return () => { window.clearTimeout(timer); window.removeEventListener("focus", onFocus); supabase.removeChannel(channel); };
+  }, [user, fetchCart]);
+
+  const getQuantityInCart = useCallback((productId: string, variationId?: string | null) =>
+    items
+      .filter(i => i.product_id === productId && (variationId === undefined || i.variation_id === (variationId || null)))
+      .reduce((s, i) => s + i.quantity, 0), [items]);
 
   const addToCart = async (productId: string, quantity: number, variationId?: string | null) => {
     if (!user) {
@@ -104,9 +127,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setItems(prev => [...prev, { id: tempId, product_id: productId, variation_id: variationId || null, quantity }]);
       toast({ title: "Added to Cart", description: "Item has been added to your cart." });
 
-      const { error } = await supabase.from("cart_items").insert({ user_id: user.id, product_id: productId, variation_id: variationId || null, quantity });
+      const { data: inserted, error } = await supabase
+        .from("cart_items")
+        .insert({ user_id: user.id, product_id: productId, variation_id: variationId || null, quantity })
+        .select(CART_SELECT)
+        .single();
       if (error) { setItems(prev => prev.filter(item => item.id !== tempId)); throw error; }
-      fetchCart();
+      // Replace the temp row with the real row (with live product/variation prices) immediately
+      setItems(prev => prev.map(item => item.id === tempId ? (inserted as unknown as CartItem) : item));
       return true;
     } catch (error) {
       console.error("Error adding to cart:", error);
@@ -183,7 +211,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const allMoqValid = items.every(validateMoq);
 
   return (
-    <CartContext.Provider value={{ items, isLoading, buyerType, addToCart, updateQuantity, removeFromCart, clearCart, getItemPrice, getItemMoq, validateMoq, subtotal, tax, itemCount, allMoqValid, refresh: fetchCart }}>
+    <CartContext.Provider value={{ items, isLoading, buyerType, addToCart, updateQuantity, removeFromCart, clearCart, getItemPrice, getItemMoq, validateMoq, subtotal, tax, itemCount, allMoqValid, refresh: fetchCart, getQuantityInCart }}>
       {children}
     </CartContext.Provider>
   );

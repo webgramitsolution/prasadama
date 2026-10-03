@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { parseReelUrl } from "./reelUtils";
 import { cn } from "@/lib/utils";
 import { SignedImage } from "@/components/common/SignedImage";
+import { getSignedImageUrl } from "@/lib/signedImageUrls";
 import { Header } from "@/components/layout/Header";
 import { useReducedMotionReels } from "@/hooks/useReducedMotionReels";
 import { SectionHeading } from "@/components/home/SectionHeading";
@@ -58,7 +59,9 @@ export function ReelsSection({ title = "Featured Videos", excludeProductId, limi
         .order("created_at", { ascending: false })
         .limit(effectiveLimit);
       const rows = ((data || []) as unknown as ReelRow[]).filter((r) => r.product);
-      setReels(rows);
+      // Reels live in a private bucket: swap stored links for signed ones before playback.
+      const signedRows = await Promise.all(rows.map(async (r) => ({ ...r, video_url: await getSignedImageUrl(r.video_url) })));
+      setReels(signedRows);
       setLoading(false);
     })();
   }, [excludeProductId, limit, placement]);
@@ -154,7 +157,7 @@ function ReelCard({ reel, onOpen, autoplayDisabled }: { reel: ReelRow; onOpen: (
           loop
           playsInline
           className={cn("w-full h-full", objectFit === "contain" ? "object-contain" : "object-cover")}
-          poster={product.images?.[0] || ""}
+          poster={product.images?.[0] && !/\/storage\/v1\//.test(product.images[0]) ? product.images[0] : ""}
         />
         {autoplayDisabled && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/40">

@@ -26,7 +26,8 @@ interface ProductCardProps {
 
 export function ProductCard({ product, index = 0, className = "" }: ProductCardProps) {
   const { user } = useAuth();
-  const { addToCart } = useCart();
+  const { addToCart, getQuantityInCart } = useCart();
+  const inCart = getQuantityInCart(product.id);
   const navigate = useNavigate();
 
   const [isAdding, setIsAdding] = useState(false);
@@ -236,9 +237,13 @@ export function ProductCard({ product, index = 0, className = "" }: ProductCardP
               <button
                 onClick={handleAddToCart}
                 disabled={isAdding || isBuying}
-                className="flex items-center justify-center w-10 h-9 border border-border rounded hover:bg-secondary transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                aria-label={inCart > 0 ? `Add to cart (${inCart} in cart)` : "Add to cart"}
+                className="relative flex items-center justify-center w-10 h-9 border border-border rounded hover:bg-secondary transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isAdding ? <Loader2 className="h-4 w-4 animate-spin text-foreground" /> : <ShoppingCart className="h-4 w-4 text-foreground" />}
+                {inCart > 0 && (
+                  <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold leading-none text-primary-foreground">{inCart}</span>
+                )}
               </button>
               <button
                 onClick={handleBuyNow}

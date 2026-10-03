@@ -8,6 +8,13 @@
       "when": 1790960210592,
       "tag": "0000_add_homepage_category_controls",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791008030199,
+      "tag": "0001_cart_realtime",
+      "breakpoints": true
     }
   ]
 }

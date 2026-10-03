@@ -1,3 +1,4 @@
+import { SignedImage } from "@/components/common/SignedImage";
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -146,7 +147,7 @@ export function RFQTab() {
                             style={{ zIndex: 3 - idx }}
                           >
                             {item.product_image ? (
-                              <img
+                              <SignedImage
                                 src={item.product_image}
                                 alt={item.product_name}
                                 className="w-full h-full object-cover"
@@ -227,7 +228,7 @@ export function RFQTab() {
                                   >
                                     <div className="w-16 h-16 rounded-lg overflow-hidden bg-secondary">
                                       {item.product_image ? (
-                                        <img
+                                        <SignedImage
                                           src={item.product_image}
                                           alt={item.product_name}
                                           className="w-full h-full object-cover"

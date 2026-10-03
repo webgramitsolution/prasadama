@@ -14,8 +14,7 @@ interface PostalRecord {
   state: string;
 }
 
-const POSTAL_SEARCH_URL = "https://api.pincodeapi.in/api/v1/search";
-const POSTAL_PIN_URL = "https://api.pincodeapi.in/api/v1/pincode";
+const PINCODE_SEARCH_URL = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/pincode-search`;
 const PIN_QUERY = /^\d{0,6}$/;
 const VALID_PIN = /^[1-9]\d{5}$/;
 
@@ -31,21 +30,17 @@ function IndiaFlag() {
 }
 
 function normalizeRecords(payload: unknown, query: string): PostalRecord[] {
-  if (!payload || typeof payload !== "object") return [];
-  const data = (payload as { data?: { post_offices?: unknown[] } }).data;
-  if (!Array.isArray(data?.post_offices)) return [];
-  const seen = new Set<string>();
-  return data.post_offices.flatMap((entry) => {
+  if (!payload || typeof payload !== "object") throw new Error("unexpected response");
+  const body = payload as { success?: boolean; data?: unknown };
+  if (body.success !== true || !Array.isArray(body.data)) throw new Error("unexpected response");
+  return body.data.flatMap((entry) => {
     if (!entry || typeof entry !== "object") return [];
     const row = entry as Record<string, unknown>;
     const pincode = String(row["pincode"] ?? "");
-    const office = String(row["office_name"] ?? "").trim();
+    const office = String(row["postOffice"] ?? "").replace(/\s+[BSH]\.O\b.*$/i, "").trim();
     const district = String(row["district"] ?? "").trim();
     const state = String(row["state"] ?? "").trim();
     if (!VALID_PIN.test(pincode) || !pincode.startsWith(query) || !district || !state) return [];
-    const key = `${pincode}:${office}`;
-    if (seen.has(key)) return [];
-    seen.add(key);
     return [{ pincode, office_name: office || district, district, state }];
   }).slice(0, 8);
 }
@@ -81,6 +76,7 @@ function LocationForm({ mobile, onConfirmed }: { mobile: boolean; onConfirmed: (
   const [error, setError] = useState("");
   const [activeIndex, setActiveIndex] = useState(-1);
   const requestNumber = useRef(0);
+  const [retry, setRetry] = useState(0);
 
   useEffect(() => {
     if (query.length < 3 || selected?.pincode === query) {
@@ -94,19 +90,23 @@ function LocationForm({ mobile, onConfirmed }: { mobile: boolean; onConfirmed: (
       setLoading(true);
       setError("");
       try {
-        const exact = VALID_PIN.test(query);
-        const url = exact ? `${POSTAL_PIN_URL}/${encodeURIComponent(query)}` : `${POSTAL_SEARCH_URL}?q=${encodeURIComponent(query)}`;
-        const response = await fetch(url, { signal: controller.signal, headers: { Accept: "application/json" } });
-        if (!response.ok) throw new Error("lookup failed");
+        const timeout = window.setTimeout(() => controller.abort("timeout"), 8000);
+        const response = await fetch(`${PINCODE_SEARCH_URL}?q=${encodeURIComponent(query)}`, {
+          signal: controller.signal,
+          headers: { Accept: "application/json", apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY },
+        }).finally(() => window.clearTimeout(timeout));
+        if (!response.ok) throw new Error(`lookup failed: ${response.status}`);
         const found = normalizeRecords(await response.json(), query);
         if (currentRequest !== requestNumber.current) return;
         setResults(found);
         setActiveIndex(found.length ? 0 : -1);
-        if (!found.length) setError("No location found for this pincode.");
+        if (!found.length) setError(VALID_PIN.test(query) ? "No location found for this pincode." : "No matching locations found.");
       } catch (lookupError) {
-        if (controller.signal.aborted || currentRequest !== requestNumber.current) return;
+        if (currentRequest !== requestNumber.current) return;
+        if (controller.signal.aborted && controller.signal.reason !== "timeout") return;
+        if (import.meta.env.DEV) console.error("Pincode lookup failed", lookupError);
         setResults([]);
-        setError("Unable to fetch location. Please try again.");
+        setError(controller.signal.reason === "timeout" ? "Location search timed out. Please try again." : "Unable to fetch location. Please try again.");
       } finally {
         if (currentRequest === requestNumber.current) setLoading(false);
       }
@@ -115,7 +115,7 @@ function LocationForm({ mobile, onConfirmed }: { mobile: boolean; onConfirmed: (
       window.clearTimeout(timer);
       controller.abort();
     };
-  }, [query, selected?.pincode]);
+  }, [query, selected?.pincode, retry]);
 
   const choose = (record: PostalRecord) => {
     setSelected(record);
@@ -197,7 +197,12 @@ function LocationForm({ mobile, onConfirmed }: { mobile: boolean; onConfirmed: (
                 <span className="min-w-0 whitespace-normal text-sm"><HighlightedPin pincode={record.pincode} query={query} />, {record.office_name}, {record.district}, {record.state}</span>
               </Button>
             ))}
-            {error && <p className="px-3 py-4 text-sm text-destructive" role="status">{error}</p>}
+            {error && (
+              <div className="flex items-center justify-between gap-3 px-3 py-4" role="status">
+                <p className="text-sm text-destructive">{error}</p>
+                {/Unable|timed out/.test(error) && <Button type="button" size="sm" variant="outline" onClick={() => setRetry((n) => n + 1)}>Retry</Button>}
+              </div>
+            )}
           </div>
         )}
         {query.length > 0 && query.length < 3 && <p className="mt-2 text-xs text-muted-foreground">Enter at least 3 digits to search.</p>}
