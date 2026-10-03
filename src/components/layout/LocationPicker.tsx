@@ -31,10 +31,10 @@ function normalizeRecords(payload: unknown, query: string): PostalRecord[] {
   return data.post_offices.flatMap((entry) => {
     if (!entry || typeof entry !== "object") return [];
     const row = entry as Record<string, unknown>;
-    const pincode = String(row.pincode ?? "");
-    const office = String(row.office_name ?? "").trim();
-    const district = String(row.district ?? "").trim();
-    const state = String(row.state ?? "").trim();
+    const pincode = String(row["pincode"] ?? "");
+    const office = String(row["office_name"] ?? "").trim();
+    const district = String(row["district"] ?? "").trim();
+    const state = String(row["state"] ?? "").trim();
     if (!VALID_PIN.test(pincode) || !pincode.startsWith(query) || !district || !state) return [];
     const key = `${pincode}:${office}`;
     if (seen.has(key)) return [];
@@ -127,7 +127,8 @@ function LocationForm({ mobile, onConfirmed }: { mobile: boolean; onConfirmed: (
       setActiveIndex((current) => (current <= 0 ? results.length - 1 : current - 1));
     } else if (event.key === "Enter" && activeIndex >= 0) {
       event.preventDefault();
-      choose(results[activeIndex]);
+      const activeResult = results[activeIndex];
+      if (activeResult) choose(activeResult);
     }
   };
 
