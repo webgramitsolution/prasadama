@@ -1298,8 +1298,57 @@ export default function ProductDetail() {
           {Array.isArray((product as any).description_blocks) &&
             (product as any).description_blocks.length > 0 && (
               <section className="mt-10 space-y-8" aria-label="Product details">
-                {((product as any).description_blocks as Array<{ image?: string; text?: string }>).map(
-                  (block, idx) => (
+                {(
+                  (product as any).description_blocks as Array<{
+                    image?: string;
+                    image2?: string;
+                    text?: string;
+                    layout?: "default" | "full" | "grid2";
+                  }>
+                ).map((block, idx) => {
+                  const layout = block.layout || "default";
+
+                  // Full-width banner: single image spanning the full width
+                  if (layout === "full") {
+                    return block.image ? (
+                      <div key={idx} className="rounded-xl overflow-hidden border border-border bg-white">
+                        <SignedImage
+                          src={block.image}
+                          alt={`${product.name} detail ${idx + 1}`}
+                          className="w-full h-auto object-cover"
+                        />
+                      </div>
+                    ) : null;
+                  }
+
+                  // 2-column image grid: two images side by side
+                  if (layout === "grid2") {
+                    return (
+                      <div key={idx} className="grid grid-cols-2 gap-4 sm:gap-8">
+                        {block.image && (
+                          <div className="rounded-xl overflow-hidden border border-border bg-white">
+                            <SignedImage
+                              src={block.image}
+                              alt={`${product.name} detail ${idx + 1}a`}
+                              className="w-full h-auto object-contain"
+                            />
+                          </div>
+                        )}
+                        {block.image2 && (
+                          <div className="rounded-xl overflow-hidden border border-border bg-white">
+                            <SignedImage
+                              src={block.image2}
+                              alt={`${product.name} detail ${idx + 1}b`}
+                              className="w-full h-auto object-contain"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+
+                  // Default: legacy image + text side-by-side (text kept for backward compatibility)
+                  return (
                     <div
                       key={idx}
                       className={`grid gap-4 sm:gap-8 items-center md:grid-cols-2 ${idx % 2 === 1 ? "md:[&>*:first-child]:order-2" : ""}`}
@@ -1319,8 +1368,8 @@ export default function ProductDetail() {
                         </div>
                       )}
                     </div>
-                  )
-                )}
+                  );
+                })}
               </section>
             )}
 
