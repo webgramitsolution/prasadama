@@ -212,11 +212,20 @@ function LocationForm({ mobile, onConfirmed }: { mobile: boolean; onConfirmed: (
 export function LocationPicker({ className, variant = "desktop" }: { className?: string; variant?: "desktop" | "mobile" }) {
   const { location, isHydrated } = useDeliveryLocation();
   const [open, setOpen] = useState(false);
+  const [viewportIsMobile, setViewportIsMobile] = useState(false);
   const isMobile = variant === "mobile";
 
   useEffect(() => {
-    if (isHydrated && isMobile && !location) setOpen(true);
-  }, [isHydrated, isMobile, location]);
+    const media = window.matchMedia("(max-width: 767px)");
+    const sync = () => setViewportIsMobile(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    if (isHydrated && isMobile && viewportIsMobile && !location) setOpen(true);
+  }, [isHydrated, isMobile, location, viewportIsMobile]);
 
   const trigger = useMemo(() => isMobile ? (
     <Button type="button" variant="ghost" onClick={() => setOpen(true)} className={cn("h-11 w-full justify-between rounded-none px-3 text-left", className)}>
