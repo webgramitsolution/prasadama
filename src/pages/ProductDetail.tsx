@@ -121,9 +121,10 @@ function DeliveryChecker({ freeShipping }: { freeShipping: boolean }) {
   });
 
   const handleCheck = async (requestedPincode = pincode) => {
+    const normalizedPincode = requestedPincode.trim();
     setResult(null);
     setInvalid(false);
-    if (!isValidIndianPincode(requestedPincode)) {
+    if (!isValidIndianPincode(normalizedPincode)) {
       setInvalid(true);
       return;
     }
@@ -135,7 +136,7 @@ function DeliveryChecker({ freeShipping }: { freeShipping: boolean }) {
       const { data } = await supabase
         .from("delivery_pincodes")
         .select("delivery_days, city, state, is_cod_available")
-        .eq("pincode", requestedPincode)
+        .eq("pincode", normalizedPincode)
         .eq("is_active", true)
         .maybeSingle();
       if (data) {
@@ -145,6 +146,19 @@ function DeliveryChecker({ freeShipping }: { freeShipping: boolean }) {
           delivery_days: data.delivery_days || 5,
           is_cod_available: data.is_cod_available,
           fallback: false
+        });
+        return;
+      }
+
+      const { data: postalData } = await supabase.functions.invoke("pincode-search", {
+        body: { q: normalizedPincode },
+      });
+      const postalRecord = Array.isArray(postalData?.data) ? postalData.data[0] : null;
+      if (postalRecord) {
+        setResult({
+          ...getDefaultDeliveryResult(),
+          city: String(postalRecord.district ?? postalRecord.postOffice ?? "") || null,
+          state: String(postalRecord.state ?? "") || null,
         });
       }
     } catch {
@@ -185,8 +199,9 @@ function DeliveryChecker({ freeShipping }: { freeShipping: boolean }) {
             onChange={(e) => {
               setPincode(e.target.value.replace(/\D/g, "").slice(0, 6));
               setInvalid(false);
+              setResult(null);
             }}
-            className="h-9 flex-1 border-0 bg-transparent px-0 text-sm shadow-none focus-visible:ring-0"
+            className="h-9 flex-1 rounded-none border-0 bg-transparent px-0 text-sm shadow-none outline-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
             onKeyDown={(e) => e.key === "Enter" && handleCheck(pincode)}
           />
           <ChevronDown className="h-5 w-5 shrink-0 text-foreground" />
@@ -195,7 +210,25 @@ function DeliveryChecker({ freeShipping }: { freeShipping: boolean }) {
           {checking ? "..." : "Check"}
         </Button>
       </div>
-      {result && <span className="sr-only" role="status">Delivery availability checked for {pincode}.</span>}
+      {result && (
+        <div className="mt-3 flex items-start gap-2 rounded-md border border-success/30 bg-success/10 px-3 py-2.5 text-sm" role="status">
+          <Truck className="mt-0.5 h-4 w-4 shrink-0 text-success" />
+          <div className="min-w-0">
+            <p className="font-semibold text-foreground">
+              Delivery in {result.delivery_days}{result.delivery_days_max ? `–${result.delivery_days_max}` : ""} business days
+            </p>
+            {(result.city || result.state) && (
+              <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                {[result.city, result.state, pincode].filter(Boolean).join(", ")}
+              </p>
+            )}
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {freeShipping ? "Free shipping available" : "Shipping charges calculated at checkout"}
+              {result.is_cod_available ? " · Cash on Delivery available" : ""}
+            </p>
+          </div>
+        </div>
+      )}
       {invalid && (
         <p className="mt-2 text-xs text-destructive">Please enter a valid 6-digit Indian pincode.</p>
       )}
