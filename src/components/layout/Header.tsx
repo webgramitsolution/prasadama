@@ -365,6 +365,11 @@ export function Header() {
         </div>
       </div>
 
+      {/* Compact mobile delivery location row */}
+      <div className="border-t border-border bg-card md:hidden">
+        <LocationPicker />
+      </div>
+
       {/* Bottom Header - Mega Menu Bar (Desktop/Tablet only) */}
       <div className="hidden md:block bg-[#661714] text-white">
         <div className="container mx-auto px-4">

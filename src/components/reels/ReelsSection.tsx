@@ -72,7 +72,7 @@ export function ReelsSection({ title = "Featured Videos", excludeProductId, limi
   if (loading) {
     return (
       <section className={cn("bg-white py-8 sm:py-10", placement === "home" && "-mt-10")}>
-        <div className="container mx-auto px-3 sm:px-4">
+        <div className="container mx-auto px-1.5 sm:px-4">
           <SectionHeading title={title} />
           <div className="flex gap-3 sm:gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {[...Array(5)].map((_, i) => (
@@ -91,7 +91,7 @@ export function ReelsSection({ title = "Featured Videos", excludeProductId, limi
 
   return (
     <section className={cn("bg-white pb-5 pt-8 sm:pt-10", placement === "home" && "-mt-10")}>
-      <div className="container mx-auto px-3 sm:px-4 relative">
+      <div className="container mx-auto px-1.5 sm:px-4 relative">
         <SectionHeading title={title} />
         <div className="relative">
           <button type="button" onClick={() => scrollBy(-1)} className="hidden md:flex absolute -left-3 top-1/2 -translate-y-1/2 z-10 bg-background border border-border shadow-md rounded-full p-2">

@@ -61,7 +61,7 @@ export function FrequentlyBoughtTogether({ currentProduct, categoryId, onAdd }: 
       <h2 id="frequently-bought-heading" className="px-3 text-xl font-bold text-foreground">Frequently Bought Together</h2>
       <p className="mt-0.5 px-3 text-sm text-muted-foreground">These products are usually bought together</p>
 
-      <div className="mt-3 space-y-2">
+      <div className="mt-3 space-y-2 px-1.5">
         {[currentProduct, ...products].map((item, index) => {
           const price = priceOf(item);
           const mrp = item.regular_price > price ? item.regular_price : price;
@@ -70,7 +70,7 @@ export function FrequentlyBoughtTogether({ currentProduct, categoryId, onAdd }: 
           return (
             <article
               key={item.id}
-              className={isCurrent ? "flex min-h-24 items-stretch gap-3 overflow-hidden border-y border-accent/30" : "flex min-h-24 items-stretch gap-3 overflow-hidden border-y border-border"}
+              className={isCurrent ? "flex min-h-24 items-stretch gap-3 overflow-hidden rounded-[5px] border border-accent/30" : "flex min-h-24 items-stretch gap-3 overflow-hidden rounded-[5px] border border-border"}
             >
               <SignedImage
                 src={item.images?.[0] || "/placeholder.svg"}

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingCart, ShoppingBag, Trash2, Plus, Minus, AlertTriangle, Ticket, ChevronRight, Settings } from "lucide-react";
+import { ShoppingCart, ShoppingBag, Trash2, Plus, Minus, AlertTriangle, Ticket, ChevronRight, Gift, IndianRupee } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { cn } from "@/lib/utils";
 import { SignedImage } from "@/components/common/SignedImage";
@@ -34,6 +34,7 @@ export function CartSheet() {
   ];
   const nextTier = tiers.find((t) => itemCount < t.count);
   const progressPct = Math.min(100, (itemCount / 3) * 100);
+  const activeTier = Math.min(3, Math.max(1, itemCount));
 
   // Load an active coupon (if any) to show as suggestion
   const [suggestedCoupon, setSuggestedCoupon] = useState<{ code: string } | null>(null);
@@ -62,7 +63,7 @@ export function CartSheet() {
           <span className="hidden sm:block text-[10px] text-foreground font-medium mt-0.5">Cart</span>
         </button>
       </SheetTrigger>
-      <SheetContent className="w-full sm:max-w-md flex flex-col p-0 bg-secondary/40">
+      <SheetContent className="w-full sm:max-w-md flex flex-col p-0 bg-card">
         <SheetHeader className="px-4 py-3 bg-background border-b">
           <SheetTitle className="text-base font-semibold">
             Your Cart ({itemCount} {itemCount === 1 ? "item" : "items"})
@@ -70,11 +71,11 @@ export function CartSheet() {
         </SheetHeader>
 
         {items.length > 0 && (
-          <div className="bg-background px-4 py-3 border-b">
-            <p className="text-center text-sm font-semibold mb-3">
+          <div className="bg-secondary/50 px-4 py-3 border-b">
+            <p className="text-center text-sm font-semibold mb-3 text-foreground">
               {nextTier
                 ? `Add ${nextTier.count - itemCount} More to ${nextTier.label} 🎁`
-                : "🎉 You unlocked all offers!"}
+                : `🎉 You unlocked all offers at ₹${subtotal.toLocaleString("en-IN")}!`}
             </p>
             <div className="relative">
               <div className="absolute top-3 left-0 right-0 h-1 bg-border rounded-full" />
@@ -85,13 +86,15 @@ export function CartSheet() {
               <div className="relative flex justify-between">
                 {tiers.map((t) => {
                   const reached = itemCount >= t.count;
+                  const current = activeTier === t.count;
                   return (
                     <div key={t.count} className="flex flex-col items-center gap-1">
                       <div className={cn(
-                        "w-6 h-6 rounded-full flex items-center justify-center border-2 bg-background",
-                        reached ? "border-accent text-accent" : "border-border text-muted-foreground"
+                        "w-6 h-6 rounded-full flex items-center justify-center border-2 bg-card transition-colors",
+                        reached ? "border-accent text-accent" : "border-border text-muted-foreground",
+                        current && "bg-accent text-accent-foreground shadow-sm"
                       )}>
-                        <Settings className="h-3 w-3" />
+                        <Gift className="h-3 w-3" />
                       </div>
                       <p className="text-[10px] font-semibold text-foreground">{t.count} {t.count === 1 ? "Item" : "Items"}</p>
                       <p className={cn("text-[10px] font-medium", reached ? "text-accent" : "text-muted-foreground")}>{t.label}</p>
@@ -103,7 +106,7 @@ export function CartSheet() {
           </div>
         )}
 
-        <div className="flex-1 overflow-y-auto p-3 space-y-3">
+        <div className="flex-1 overflow-y-auto bg-card p-3 space-y-3">
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
               <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
@@ -240,7 +243,7 @@ export function CartSheet() {
 
             <div className="flex items-center justify-between w-full">
               <span className="flex items-center gap-2 font-semibold text-sm">
-                <Ticket className="h-4 w-4" /> Estimated Total
+                <IndianRupee className="h-4 w-4 text-success" /> Estimated Total
               </span>
               <span className="text-lg font-bold">₹{subtotal.toLocaleString("en-IN")}</span>
             </div>

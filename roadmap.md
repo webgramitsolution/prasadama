@@ -24,3 +24,4 @@
 - [x] Prevent first-visit location permission prompts and stale repeated GPS requests
 - [x] Enlarge promo category circles while keeping ribbons within the circle edges
 - [x] Refine variation labels, selected borders, mobile spacing, recommendations, banners, and global contact details
+- [x] Rebuild cart offer states and the responsive pincode-based delivery location flow
