@@ -239,8 +239,15 @@ export function LocationPicker({ className, variant = "desktop" }: { className?:
   }, []);
 
   useEffect(() => {
-    if (isHydrated && isMobile && viewportIsMobile && !location) setOpen(true);
+    if (!isHydrated || !isMobile || !viewportIsMobile || location) return;
+    if (sessionStorage.getItem("prasadam_location_skipped")) return;
+    setOpen(true);
   }, [isHydrated, isMobile, location, viewportIsMobile]);
+
+  const onMobileOpenChange = (next: boolean) => {
+    if (!next && !location) sessionStorage.setItem("prasadam_location_skipped", "1");
+    setOpen(next);
+  };
 
   const trigger = useMemo(() => isMobile ? (
     <Button type="button" variant="ghost" onClick={() => setOpen(true)} className={cn("h-11 w-full justify-between rounded-none px-3 text-left", className)}>
@@ -251,7 +258,7 @@ export function LocationPicker({ className, variant = "desktop" }: { className?:
       <ChevronRight className="h-5 w-5 shrink-0 text-accent" />
     </Button>
   ) : (
-    <Button type="button" variant="ghost" onClick={() => setOpen(true)} className={cn("h-14 max-w-[190px] justify-start gap-2 px-2 text-left", className)}>
+    <Button type="button" variant="ghost" onClick={() => setOpen(true)} className={cn("h-14 max-w-[190px] justify-start gap-2 px-2 text-left hover:bg-transparent", className)}>
       <IndiaFlag />
       <span className="min-w-0 flex-1 leading-tight">
         <span className="block truncate text-xs font-semibold">{location ? `Deliver to ${location.city}` : "Where to deliver?"}</span>
@@ -265,7 +272,7 @@ export function LocationPicker({ className, variant = "desktop" }: { className?:
     <>
       {trigger}
       {isMobile ? (
-        <Sheet open={open} onOpenChange={setOpen}>
+        <Sheet open={open} onOpenChange={onMobileOpenChange}>
           <SheetContent side="bottom" className="max-h-[85dvh] rounded-t-2xl border-border bg-card p-0">
             <SheetHeader className="border-b border-border px-4 py-4 text-left">
               <SheetTitle className="text-xl">Delivery Location</SheetTitle>

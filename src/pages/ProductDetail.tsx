@@ -94,7 +94,8 @@ interface Product {
 }
 
 function DeliveryChecker() {
-  const [pincode, setPincode] = useState("");
+  const { location } = useDeliveryLocation();
+  const [pincode, setPincode] = useState(location?.pincode ?? "");
   const [checking, setChecking] = useState(false);
   const [result, setResult] = useState<{
     delivery_days: number;
@@ -159,23 +160,34 @@ function DeliveryChecker() {
 
   return (
     <div className="pt-3 border-t border-border">
-      <p className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1.5">
-        <MapPin className="h-3.5 w-3.5 text-destructive" />
-        Check Delivery Details
+      <p className="text-base font-semibold text-foreground mb-2">Choose Delivery Preference</p>
+      <p className="text-xs font-medium text-muted-foreground mb-2 flex items-center gap-1.5">
+        <MapPin className="h-4 w-4" />
+        Delivery Location
       </p>
       <div className="flex gap-2">
-        <Input
-          placeholder="Enter 6-digit Pincode"
-          inputMode="numeric"
-          value={pincode}
-          onChange={(e) => {
-            setPincode(e.target.value.replace(/\D/g, "").slice(0, 6));
-            setInvalid(false);
-          }}
-          className="h-9 text-xs flex-1"
-          onKeyDown={(e) => e.key === "Enter" && handleCheck()}
-        />
-        <Button size="sm" className="h-9 text-xs px-4 bg-accent hover:bg-accent-hover" onClick={handleCheck} disabled={checking}>
+        <div className="flex h-11 flex-1 items-center gap-2 rounded-md border border-input bg-card px-3">
+          <img
+            src="https://ik.imagekit.io/Prasadam/razor%20pay%20icon/Flag_of_India.svg"
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            className="h-3.5 w-5 shrink-0 rounded-[1px] object-contain"
+          />
+          <Input
+            placeholder="Enter pincode, locality, etc"
+            inputMode="numeric"
+            value={pincode}
+            onChange={(e) => {
+              setPincode(e.target.value.replace(/\D/g, "").slice(0, 6));
+              setInvalid(false);
+            }}
+            className="h-9 flex-1 border-0 bg-transparent px-0 text-sm shadow-none focus-visible:ring-0"
+            onKeyDown={(e) => e.key === "Enter" && handleCheck()}
+          />
+          <ChevronDown className="h-5 w-5 shrink-0 text-foreground" />
+        </div>
+        <Button size="sm" className="h-11 text-xs px-4 bg-accent hover:bg-accent-hover" onClick={handleCheck} disabled={checking}>
           {checking ? "..." : "Check"}
         </Button>
       </div>
