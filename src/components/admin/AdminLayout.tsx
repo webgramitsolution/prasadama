@@ -19,7 +19,7 @@ export function AdminLayout() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-card flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
       </div>
     );
@@ -29,7 +29,7 @@ export function AdminLayout() {
   if (!isAdmin) return <Navigate to="/dashboard" replace />;
 
   return (
-    <div className="min-h-screen bg-background overflow-hidden">
+    <div className="min-h-screen bg-card overflow-hidden">
       {/* Desktop/Tablet Sidebar - visible on md and up */}
       <div className="hidden md:block">
         <AdminSidebar
@@ -54,7 +54,7 @@ export function AdminLayout() {
         )}
       >
         <AdminHeader onMobileMenuToggle={() => setMobileMenuOpen(true)} />
-        <main className="flex-1 overflow-y-auto p-3 lg:p-4">
+        <main className="flex-1 overflow-y-auto bg-card p-3 lg:p-4">
           <Outlet />
         </main>
       </div>
