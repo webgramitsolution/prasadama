@@ -72,8 +72,7 @@ export function LocationPicker({ className }: { className?: string }) {
         setOpen(false);
       },
       () => setLoading(false),
-      // High accuracy so the detected area matches the user's actual position.
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 300000 }
     );
   };
 
@@ -87,17 +86,16 @@ export function LocationPicker({ className }: { className?: string }) {
         /* ignore */
       }
     }
-    // Auto-detect on first visit; if permission is already granted this is silent,
-    // otherwise the browser shows its standard one-time prompt.
+    // Detect silently only when the visitor has already granted permission.
+    // A first-time browser prompt is shown only after they explicitly choose
+    // "Use my current location" from the picker.
     if (navigator.permissions?.query) {
       navigator.permissions
         .query({ name: "geolocation" as PermissionName })
         .then((status) => {
-          if (status.state !== "denied") detect();
+          if (status.state === "granted") detect();
         })
-        .catch(() => detect());
-    } else {
-      detect();
+        .catch(() => undefined);
     }
   }, []);
 

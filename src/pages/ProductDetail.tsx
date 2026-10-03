@@ -737,7 +737,7 @@ export default function ProductDetail() {
       />
       <Header />
 
-      <main className="bg-card pt-0 pb-24 md:bg-transparent lg:pb-0">
+      <main className="bg-card pt-0 pb-0 md:bg-transparent">
         <div className="container mx-auto px-3 sm:px-4 py-2 max-w-full">
 
 
@@ -888,12 +888,12 @@ export default function ProductDetail() {
               {sortedVariations.length > 0 && (
                 <div>
                   <p className="text-sm font-bold text-foreground mb-2.5">
-                    Select {variationAttributeLabel}:{" "}
+                    {variationAttributeLabel}:{" "}
                     <span className="font-bold">
                       {selectedVariationLabel}
                     </span>
                   </p>
-                  <div className="-mx-3 flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:gap-3 md:px-0">
+                  <div className="-mx-3 flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 pt-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:gap-3 md:px-0">
                     {sortedVariations.map((v: any, vi: number) => {
                       const label = [v.size, v.color].filter(Boolean).join(" ") || v.sku || "Variant";
                       const vPrice = getRolePrice(product, v);
@@ -914,7 +914,7 @@ export default function ProductDetail() {
                           key={v.id}
                           onClick={() => handleVariantSelect(v.id)}
                           className={cn(
-                            "relative shrink-0 basis-[calc((100%_-_1rem)/3)] snap-start rounded-[10px] border-2 bg-card overflow-hidden transition-all text-center min-w-0 md:basis-[calc((100%_-_1.5rem)/3)] lg:basis-[calc((100%_-_2.25rem)/4)]",
+                            "relative shrink-0 basis-[calc((100%_-_1rem)/3)] snap-start rounded-[10px] border-2 bg-card overflow-visible transition-all text-center min-w-0 md:basis-[calc((100%_-_1.5rem)/3)] lg:basis-[calc((100%_-_2.25rem)/4)]",
                             isSelected
                               ? "border-[#e8a33d] shadow-md"
                               : "border-border hover:border-[#e8a33d]/60 hover:shadow-sm"

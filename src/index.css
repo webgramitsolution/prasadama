@@ -240,7 +240,7 @@
   }
 
   .promo-category-ribbon svg {
-    @apply block w-[105%] overflow-visible;
+    @apply block w-[94%] overflow-visible;
     filter: drop-shadow(0 2px 3px hsl(var(--foreground) / 0.28));
   }
 
@@ -782,14 +782,14 @@
 /* ===== Variation card labels (Most Popular / Best Deal / Max Savings) with wave shine ===== */
 .var-badge {
   position: absolute;
-  top: 0;
+  bottom: 100%;
   right: 0;
   z-index: 20;
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
   padding: 3px 10px 4px;
-  border-radius: 0 0 10px 10px;
+  border-radius: 8px 8px 0 0;
   font-size: 9.5px;
   line-height: 1.2;
   font-weight: 700;

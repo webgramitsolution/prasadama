@@ -19,3 +19,7 @@
 - [x] Align product-card reviews right and animate coupon borders
 - [x] Show promo banners as two complete desktop columns and one auto-sliding phone banner
 - [x] Rebuild checkout payment choices to match the supplied Razorpay and COD reference
+- [x] Reduce Trending Reels-to-footer spacing on product and category pages
+- [x] Place variation offer labels above cards and use the admin attribute name directly
+- [x] Prevent first-visit location permission prompts and stale repeated GPS requests
+- [x] Enlarge promo category circles while keeping ribbons within the circle edges
