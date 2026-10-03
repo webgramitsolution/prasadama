@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
+import { DeliveryLocationProvider } from "@/contexts/DeliveryLocationContext";
 
 import { SecurityHeaders } from "@/components/SecurityHeaders";
 import { ScrollToTop } from "@/components/ScrollToTop";
@@ -106,7 +107,8 @@ const RouteFallback = () => (
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <CartProvider>
+      <DeliveryLocationProvider>
+        <CartProvider>
       <TooltipProvider>
         <SecurityHeaders />
         <Toaster />
@@ -203,7 +205,8 @@ const App = () => (
         </BrowserRouter>
 
       </TooltipProvider>
-      </CartProvider>
+        </CartProvider>
+      </DeliveryLocationProvider>
     </AuthProvider>
   </QueryClientProvider>
 );

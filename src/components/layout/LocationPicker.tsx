@@ -1,190 +1,277 @@
-import { useEffect, useState } from "react";
-import { MapPin, Loader2, LocateFixed } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
+import { ChevronDown, ChevronRight, Loader2, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { DeliveryLocation, useDeliveryLocation } from "@/contexts/DeliveryLocationContext";
+import { cn } from "@/lib/utils";
 
-const STORAGE_KEY = "prasadam_delivery_location";
-
-interface StoredLocation {
-  label: string;
-  pincode?: string;
+interface PostalRecord {
+  pincode: string;
+  office_name: string;
+  district: string;
+  state: string;
 }
 
-// Free, key-less reverse geocoding. BigDataCloud is primary (fast, CORS-friendly,
-// accurate locality + postcode for India); Nominatim is the fallback.
-async function reverseGeocode(lat: number, lon: number): Promise<StoredLocation | null> {
-  try {
-    const res = await fetch(
-      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`
-    );
-    if (res.ok) {
-      const d = await res.json();
-      const city = d.locality || d.city || d.principalSubdivision || "";
-      const pincode = d.postcode || "";
-      const label = [city, pincode].filter(Boolean).join(" ");
-      if (label.trim()) return { label: label.trim(), pincode };
-    }
-  } catch {
-    /* fall through to Nominatim */
-  }
-  try {
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&addressdetails=1&lat=${lat}&lon=${lon}`,
-      { headers: { Accept: "application/json" } }
-    );
-    if (!res.ok) return null;
-    const data = await res.json();
-    const a = data?.address ?? {};
-    const city =
-      a.suburb || a.neighbourhood || a.village || a.town || a.city_district || a.city || a.county || "";
-    const pincode = a.postcode || "";
-    const label = [city, pincode].filter(Boolean).join(" ") || data?.display_name?.split(",")[0];
-    return label ? { label, pincode } : null;
-  } catch {
-    return null;
-  }
+const POSTAL_SEARCH_URL = "https://api.pincodeapi.in/api/v1/search";
+const POSTAL_PIN_URL = "https://api.pincodeapi.in/api/v1/pincode";
+const PIN_QUERY = /^\d{0,6}$/;
+const VALID_PIN = /^[1-9]\d{5}$/;
+
+function IndiaFlag() {
+  return (
+    <span aria-hidden="true" className="relative inline-flex h-3.5 w-5 shrink-0 overflow-hidden rounded-[1px] border border-border shadow-sm">
+      <span className="absolute inset-x-0 top-0 h-1/3 bg-[#FF9933]" />
+      <span className="absolute inset-x-0 top-1/3 h-1/3 bg-white" />
+      <span className="absolute inset-x-0 bottom-0 h-1/3 bg-[#138808]" />
+      <span className="absolute left-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#000080]" />
+    </span>
+  );
 }
 
-async function detectApproximateLocation(): Promise<StoredLocation | null> {
-  try {
-    const res = await fetch("https://ipwho.is/");
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (!data?.success || data?.country_code !== "IN") return null;
-    const city = data.city || data.region || "";
-    const pincode = /^\d{6}$/.test(String(data.postal || "")) ? String(data.postal) : "";
-    const label = [city, pincode].filter(Boolean).join(" ").trim();
-    return label ? { label, pincode } : null;
-  } catch {
-    return null;
-  }
+function normalizeRecords(payload: unknown, query: string): PostalRecord[] {
+  if (!payload || typeof payload !== "object") return [];
+  const data = (payload as { data?: { post_offices?: unknown[] } }).data;
+  if (!Array.isArray(data?.post_offices)) return [];
+  const seen = new Set<string>();
+  return data.post_offices.flatMap((entry) => {
+    if (!entry || typeof entry !== "object") return [];
+    const row = entry as Record<string, unknown>;
+    const pincode = String(row["pincode"] ?? "");
+    const office = String(row["office_name"] ?? "").trim();
+    const district = String(row["district"] ?? "").trim();
+    const state = String(row["state"] ?? "").trim();
+    if (!VALID_PIN.test(pincode) || !pincode.startsWith(query) || !district || !state) return [];
+    const key = `${pincode}:${office}`;
+    if (seen.has(key)) return [];
+    seen.add(key);
+    return [{ pincode, office_name: office || district, district, state }];
+  }).slice(0, 8);
 }
 
-export function LocationPicker({ className }: { className?: string }) {
-  const [location, setLocation] = useState<StoredLocation | null>(null);
+function toDeliveryLocation(record: PostalRecord): DeliveryLocation {
+  return {
+    countryCode: "IN",
+    countryName: "India",
+    pincode: record.pincode,
+    locality: record.office_name,
+    city: record.district,
+    state: record.state,
+    displayLabel: [record.office_name, record.district, record.state, record.pincode].filter(Boolean).join(", "),
+  };
+}
+
+function HighlightedPin({ pincode, query }: { pincode: string; query: string }) {
+  const matchLength = pincode.startsWith(query) ? query.length : 0;
+  return <><strong>{pincode.slice(0, matchLength)}</strong>{pincode.slice(matchLength)}</>;
+}
+
+function LocationForm({ mobile, onConfirmed }: { mobile: boolean; onConfirmed: () => void }) {
+  const { location, saveLocation } = useDeliveryLocation();
+  const [query, setQuery] = useState(location?.pincode ?? "");
+  const [results, setResults] = useState<PostalRecord[]>([]);
+  const [selected, setSelected] = useState<PostalRecord | null>(location ? {
+    pincode: location.pincode,
+    office_name: location.locality,
+    district: location.city,
+    state: location.state,
+  } : null);
   const [loading, setLoading] = useState(false);
-  const [pin, setPin] = useState("");
-  const [open, setOpen] = useState(false);
-
-  const save = (loc: StoredLocation) => {
-    setLocation(loc);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(loc));
-  };
-
-  const detect = () => {
-    if (!navigator.geolocation) return;
-    setLoading(true);
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const loc = await reverseGeocode(pos.coords.latitude, pos.coords.longitude);
-        if (loc) save(loc);
-        setLoading(false);
-        setOpen(false);
-      },
-      () => setLoading(false),
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 300000 }
-    );
-  };
+  const [error, setError] = useState("");
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const requestNumber = useRef(0);
 
   useEffect(() => {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
+    if (query.length < 3 || selected?.pincode === query) {
+      setResults([]);
+      setError("");
+      return;
+    }
+    const currentRequest = ++requestNumber.current;
+    const controller = new AbortController();
+    const timer = window.setTimeout(async () => {
+      setLoading(true);
+      setError("");
       try {
-        setLocation(JSON.parse(raw));
-        return;
-      } catch {
-        /* ignore */
+        const exact = VALID_PIN.test(query);
+        const url = exact ? `${POSTAL_PIN_URL}/${encodeURIComponent(query)}` : `${POSTAL_SEARCH_URL}?q=${encodeURIComponent(query)}`;
+        const response = await fetch(url, { signal: controller.signal, headers: { Accept: "application/json" } });
+        if (!response.ok) throw new Error("lookup failed");
+        const found = normalizeRecords(await response.json(), query);
+        if (currentRequest !== requestNumber.current) return;
+        setResults(found);
+        setActiveIndex(found.length ? 0 : -1);
+        if (!found.length) setError("No location found for this pincode.");
+      } catch (lookupError) {
+        if (controller.signal.aborted || currentRequest !== requestNumber.current) return;
+        setResults([]);
+        setError("Unable to fetch location. Please try again.");
+      } finally {
+        if (currentRequest === requestNumber.current) setLoading(false);
       }
-    }
-    // Use precise coordinates silently when permission was already granted.
-    // Otherwise use a no-prompt, IP-based city fallback; precise GPS remains
-    // available through the explicit "Use my current location" action.
-    if (navigator.permissions?.query) {
-      navigator.permissions
-        .query({ name: "geolocation" as PermissionName })
-        .then((status) => {
-          if (status.state === "granted") {
-            detect();
-            return;
-          }
-          void detectApproximateLocation().then((loc) => {
-            if (loc) save(loc);
-          });
-        })
-        .catch(() => {
-          void detectApproximateLocation().then((loc) => {
-            if (loc) save(loc);
-          });
-        });
-    } else {
-      void detectApproximateLocation().then((loc) => {
-        if (loc) save(loc);
-      });
-    }
-  }, []);
+    }, 300);
+    return () => {
+      window.clearTimeout(timer);
+      controller.abort();
+    };
+  }, [query, selected?.pincode]);
 
+  const choose = (record: PostalRecord) => {
+    setSelected(record);
+    setQuery(record.pincode);
+    setResults([]);
+    setError("");
+  };
 
-  const applyPin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!/^\d{6}$/.test(pin)) return;
-    save({ label: pin, pincode: pin });
-    setPin("");
-    setOpen(false);
+  const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (!results.length) return;
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setActiveIndex((current) => (current + 1) % results.length);
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setActiveIndex((current) => (current <= 0 ? results.length - 1 : current - 1));
+    } else if (event.key === "Enter" && activeIndex >= 0) {
+      event.preventDefault();
+      const activeResult = results[activeIndex];
+      if (activeResult) choose(activeResult);
+    }
+  };
+
+  const confirm = () => {
+    if (!selected || selected.pincode !== query || !VALID_PIN.test(query)) return;
+    saveLocation(toDeliveryLocation(selected));
+    onConfirmed();
   };
 
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger asChild>
-        <button
-          type="button"
-          aria-label="Set delivery location"
-          className={`flex items-center gap-1.5 px-2 py-1.5 rounded-md hover:bg-secondary/60 transition-colors text-left ${className ?? ""}`}
-        >
-          {loading ? (
-            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-          ) : (
-            <MapPin className="h-4 w-4 text-primary" />
-          )}
-          <span className="flex flex-col leading-tight">
-            <span className="text-[10px] text-muted-foreground">Deliver to</span>
-            <span className="text-[12px] font-medium text-foreground max-w-[110px] truncate">
-              {location?.label || "Select location"}
-            </span>
-          </span>
-        </button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-64 p-3 space-y-3">
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full justify-start gap-2 h-9 text-sm"
-          onClick={detect}
-          disabled={loading}
-        >
-          <LocateFixed className="h-4 w-4" />
-          {loading ? "Detecting..." : "Use my current location"}
-        </Button>
-        <form onSubmit={applyPin} className="space-y-2">
-          <p className="text-xs text-muted-foreground">Or enter a 6-digit pincode</p>
-          <div className="flex gap-2">
-            <Input
-              value={pin}
-              onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
-              placeholder="e.g. 110001"
-              inputMode="numeric"
-              className="h-9"
-            />
-            <Button type="submit" className="h-9" disabled={pin.length !== 6}>
-              Set
-            </Button>
+    <div className={cn("flex min-h-0 flex-col", mobile && "h-[min(58dvh,500px)]")}>
+      {!mobile && (
+        <DialogHeader className="pr-8">
+          <DialogTitle className="flex items-center gap-2 text-lg"><MapPin className="h-5 w-5 text-accent" />Let's Personalize Your Experience!</DialogTitle>
+          <DialogDescription>Find the perfect products for you and your loved ones.</DialogDescription>
+        </DialogHeader>
+      )}
+      <div className={cn("min-h-0 flex-1", mobile ? "overflow-y-auto px-4 pb-4" : "mt-1")}>
+        <div className="flex h-12 items-center justify-between rounded-md border border-input bg-card px-3 font-semibold">
+          <span className="flex items-center gap-2"><IndiaFlag />India</span>
+          <ChevronDown className="h-5 w-5" />
+        </div>
+        <div className="relative mt-3">
+          <Input
+            value={query}
+            onChange={(event) => {
+              const value = event.target.value.replace(/\D/g, "").slice(0, 6);
+              if (!PIN_QUERY.test(value)) return;
+              setQuery(value);
+              setSelected(null);
+              setError("");
+            }}
+            onKeyDown={onKeyDown}
+            inputMode="numeric"
+            autoComplete="postal-code"
+            maxLength={6}
+            placeholder="Enter pincode"
+            aria-label="Pincode"
+            aria-autocomplete="list"
+            aria-controls="pincode-suggestions"
+            className="h-12 bg-card text-base"
+          />
+          {loading && <Loader2 className="absolute right-3 top-3.5 h-5 w-5 animate-spin text-muted-foreground" aria-label="Searching locations" />}
+        </div>
+        {(results.length > 0 || error) && (
+          <div id="pincode-suggestions" role="listbox" className="max-h-64 overflow-y-auto border-x border-b border-border bg-card shadow-sm">
+            {results.map((record, index) => (
+              <Button
+                key={`${record.pincode}-${record.office_name}`}
+                type="button"
+                variant="ghost"
+                role="option"
+                aria-selected={activeIndex === index}
+                className={cn("h-auto w-full justify-start rounded-none border-b border-border px-3 py-3 text-left font-normal last:border-b-0", activeIndex === index && "bg-secondary")}
+                onMouseEnter={() => setActiveIndex(index)}
+                onClick={() => choose(record)}
+              >
+                <MapPin className="mr-3 h-5 w-5 shrink-0 text-accent" />
+                <span className="min-w-0 whitespace-normal text-sm"><HighlightedPin pincode={record.pincode} query={query} />, {record.office_name}, {record.district}, {record.state}</span>
+              </Button>
+            ))}
+            {error && <p className="px-3 py-4 text-sm text-destructive" role="status">{error}</p>}
           </div>
-        </form>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        )}
+        {query.length > 0 && query.length < 3 && <p className="mt-2 text-xs text-muted-foreground">Enter at least 3 digits to search.</p>}
+        {query.length >= 3 && query.length < 6 && !loading && !results.length && !error && <p className="mt-2 text-xs text-muted-foreground">Continue typing or choose a matching location.</p>}
+        {selected && selected.pincode === query && (
+          <div className="mt-3 flex gap-2 rounded-md bg-success/10 p-3 text-sm text-foreground">
+            <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-success" />
+            <span>{selected.pincode}, {selected.office_name}, {selected.district}, {selected.state}</span>
+          </div>
+        )}
+      </div>
+      <div className={cn("border-t border-border bg-card", mobile ? "p-4 pb-[max(1rem,env(safe-area-inset-bottom))]" : "mt-4 pt-4")}>
+        <Button type="button" className="h-12 w-full" disabled={!selected || selected.pincode !== query || loading} onClick={confirm}>Confirm</Button>
+      </div>
+    </div>
+  );
+}
+
+export function LocationPicker({ className, variant = "desktop" }: { className?: string; variant?: "desktop" | "mobile" }) {
+  const { location, isHydrated } = useDeliveryLocation();
+  const [open, setOpen] = useState(false);
+  const [viewportIsMobile, setViewportIsMobile] = useState(false);
+  const isMobile = variant === "mobile";
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 767px)");
+    const sync = () => setViewportIsMobile(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    if (isHydrated && isMobile && viewportIsMobile && !location) setOpen(true);
+  }, [isHydrated, isMobile, location, viewportIsMobile]);
+
+  const trigger = useMemo(() => isMobile ? (
+    <Button type="button" variant="ghost" onClick={() => setOpen(true)} className={cn("h-11 w-full justify-between rounded-none px-3 text-left", className)}>
+      <span className="flex min-w-0 items-center gap-2">
+        <IndiaFlag />
+        <span className="truncate text-sm font-medium">{location ? `Deliver to ${location.pincode}, ${location.city}, ${location.state}` : "Enter location to check availability"}</span>
+      </span>
+      <ChevronRight className="h-5 w-5 shrink-0 text-accent" />
+    </Button>
+  ) : (
+    <Button type="button" variant="ghost" onClick={() => setOpen(true)} className={cn("h-14 max-w-[190px] justify-start gap-2 px-2 text-left", className)}>
+      <IndiaFlag />
+      <span className="min-w-0 flex-1 leading-tight">
+        <span className="block truncate text-xs font-semibold">{location ? `Deliver to ${location.city}` : "Where to deliver?"}</span>
+        <span className={cn("mt-0.5 block truncate text-[11px]", location ? "text-muted-foreground" : "text-accent")}>{location ? `${location.locality}, ${location.pincode}` : "Location missing"}</span>
+      </span>
+      <ChevronDown className="h-4 w-4 shrink-0 text-accent" />
+    </Button>
+  ), [className, isMobile, location]);
+
+  return (
+    <>
+      {trigger}
+      {isMobile ? (
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetContent side="bottom" className="max-h-[85dvh] rounded-t-2xl border-border bg-card p-0">
+            <SheetHeader className="border-b border-border px-4 py-4 text-left">
+              <SheetTitle className="text-xl">Delivery Location</SheetTitle>
+            </SheetHeader>
+            <LocationForm mobile onConfirmed={() => setOpen(false)} />
+          </SheetContent>
+        </Sheet>
+      ) : (
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogContent className="max-h-[90vh] w-[calc(100%-2rem)] max-w-[480px] gap-0 overflow-hidden rounded-xl bg-card p-5 shadow-xl">
+            <LocationForm mobile={false} onConfirmed={() => setOpen(false)} />
+          </DialogContent>
+        </Dialog>
+      )}
+    </>
   );
 }
