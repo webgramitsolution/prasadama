@@ -13,3 +13,4 @@
 - Delivery location must use the shared context and validated postal suggestions; never auto-request GPS or infer location silently because inaccurate delivery data harms checkout trust.
 - RFQ must remain an authenticated, database-backed cart and submission workflow; visual redesigns must preserve admin records and shared delivery-location data.
 - RFQ estimates must be calculated from current persisted product or variation prices and saved as request and item snapshots; admin final quotes remain authoritative.
+- Reuse the shared RFQ benefits component on quotation, checkout, and order-confirmation surfaces so the trust row stays visually identical.
