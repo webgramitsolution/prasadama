@@ -57,21 +57,18 @@ serve(async (req) => {
 
     console.log(`[Assistant] Query: "${message}" | Lang: ${userLangIsHindi ? "Hindi" : "English"}`);
 
-    let products = siteContext?.products;
-    let categories = siteContext?.categories;
-
-    if (!products || !categories) {
-      const [pRes, cRes] = await Promise.all([
-        supabaseClient
-          .from("products")
-          .select("id, name, slug, guest_price, shop_price, short_description")
-          .eq("is_active", true)
-          .limit(100),
-        supabaseClient.from("categories").select("id, name, slug").eq("is_active", true),
-      ]);
-      products = pRes.data || [];
-      categories = cRes.data || [];
-    }
+    // Product/category data is always loaded server-side; caller-supplied
+    // siteContext is never trusted for the system prompt.
+    const [pRes, cRes] = await Promise.all([
+      supabaseClient
+        .from("products")
+        .select("id, name, slug, guest_price, shop_price, short_description")
+        .eq("is_active", true)
+        .limit(100),
+      supabaseClient.from("categories").select("id, name, slug").eq("is_active", true),
+    ]);
+    const products = pRes.data || [];
+    const categories = cRes.data || [];
 
     const t = (en: string, hi: string) => (userLangIsHindi ? hi : en);
 
