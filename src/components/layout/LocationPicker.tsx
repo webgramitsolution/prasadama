@@ -36,10 +36,10 @@ function normalizeRecords(payload: unknown, query: string): PostalRecord[] {
   return body.data.flatMap((entry) => {
     if (!entry || typeof entry !== "object") return [];
     const row = entry as Record<string, unknown>;
-    const pincode = String(row.pincode ?? "");
-    const office = String(row.postOffice ?? "").replace(/\s+[BSH]\.O\b.*$/i, "").trim();
-    const district = String(row.district ?? "").trim();
-    const state = String(row.state ?? "").trim();
+    const pincode = String(row["pincode"] ?? "");
+    const office = String(row["postOffice"] ?? "").replace(/\s+[BSH]\.O\b.*$/i, "").trim();
+    const district = String(row["district"] ?? "").trim();
+    const state = String(row["state"] ?? "").trim();
     if (!VALID_PIN.test(pincode) || !pincode.startsWith(query) || !district || !state) return [];
     return [{ pincode, office_name: office || district, district, state }];
   }).slice(0, 8);
