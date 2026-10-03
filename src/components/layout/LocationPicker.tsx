@@ -50,6 +50,21 @@ async function reverseGeocode(lat: number, lon: number): Promise<StoredLocation 
   }
 }
 
+async function detectApproximateLocation(): Promise<StoredLocation | null> {
+  try {
+    const res = await fetch("https://ipwho.is/");
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data?.success || data?.country_code !== "IN") return null;
+    const city = data.city || data.region || "";
+    const pincode = /^\d{6}$/.test(String(data.postal || "")) ? String(data.postal) : "";
+    const label = [city, pincode].filter(Boolean).join(" ").trim();
+    return label ? { label, pincode } : null;
+  } catch {
+    return null;
+  }
+}
+
 export function LocationPicker({ className }: { className?: string }) {
   const [location, setLocation] = useState<StoredLocation | null>(null);
   const [loading, setLoading] = useState(false);
@@ -86,16 +101,30 @@ export function LocationPicker({ className }: { className?: string }) {
         /* ignore */
       }
     }
-    // Detect silently only when the visitor has already granted permission.
-    // A first-time browser prompt is shown only after they explicitly choose
-    // "Use my current location" from the picker.
+    // Use precise coordinates silently when permission was already granted.
+    // Otherwise use a no-prompt, IP-based city fallback; precise GPS remains
+    // available through the explicit "Use my current location" action.
     if (navigator.permissions?.query) {
       navigator.permissions
         .query({ name: "geolocation" as PermissionName })
         .then((status) => {
-          if (status.state === "granted") detect();
+          if (status.state === "granted") {
+            detect();
+            return;
+          }
+          void detectApproximateLocation().then((loc) => {
+            if (loc) save(loc);
+          });
         })
-        .catch(() => undefined);
+        .catch(() => {
+          void detectApproximateLocation().then((loc) => {
+            if (loc) save(loc);
+          });
+        });
+    } else {
+      void detectApproximateLocation().then((loc) => {
+        if (loc) save(loc);
+      });
     }
   }, []);
 
