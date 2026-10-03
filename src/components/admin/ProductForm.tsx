@@ -189,12 +189,19 @@ export function ProductForm({ product, onClose, onSave }: ProductFormProps) {
   const [bannerImage, setBannerImage] = useState<string>((product as any)?.banner_image || "");
   const [galleryImages, setGalleryImages] = useState<string[]>(product?.images?.slice(1) || []);
 
-  // Description Blocks (image + text grid)
+  // Description Blocks (image-only; supports legacy image+text, full-width banner, or 2-column grid)
   const initialBlocks = Array.isArray((product as any)?.description_blocks)
-    ? ((product as any).description_blocks as Array<{ image?: string; text?: string }>)
+    ? ((product as any).description_blocks as Array<{ image?: string; image2?: string; text?: string; layout?: string }>)
     : [];
-  const [descriptionBlocks, setDescriptionBlocks] = useState<Array<{ image: string; text: string }>>(
-    initialBlocks.map((b) => ({ image: b.image || "", text: b.text || "" }))
+  const [descriptionBlocks, setDescriptionBlocks] = useState<
+    Array<{ image: string; image2: string; text: string; layout: "default" | "full" | "grid2" }>
+  >(
+    initialBlocks.map((b) => ({
+      image: b.image || "",
+      image2: b.image2 || "",
+      text: b.text || "",
+      layout: (b.layout as any) || "default",
+    }))
   );
 
   // Simple Product Pricing (3-Tier)
@@ -596,7 +603,15 @@ export function ProductForm({ product, onClose, onSave }: ProductFormProps) {
         slug: slug || generateSlug(name),
         description: description || null,
         short_description: shortDescription || null,
-        description_blocks: (descriptionBlocks.filter((b) => b.image || b.text.trim()) as any) || [],
+        description_blocks:
+          (descriptionBlocks
+            .filter((b) => b.image || b.image2 || b.text.trim())
+            .map((b) => ({
+              image: b.image || "",
+              ...(b.image2 ? { image2: b.image2 } : {}),
+              ...(b.text.trim() ? { text: b.text } : {}),
+              layout: b.layout,
+            })) as any) || [],
         sku: sku || null,
         hsn_code: hsnCode.trim() || null,
         category_id: categoryId || null,
