@@ -421,8 +421,9 @@ export default function Checkout() {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <main className="pt-4 pb-20">
-          <div className="container mx-auto px-4 text-center">
+        <main className="pb-20">
+          <BulkOrderHero variant="checkout" />
+          <div className="container mx-auto px-4 pt-4 text-center">
             <h1 className="text-2xl font-bold mb-4">Please Login</h1>
             <p className="text-muted-foreground mb-6">You need to be logged in to checkout.</p>
             <Button onClick={() => navigate("/login")}>Login</Button>
@@ -437,8 +438,9 @@ export default function Checkout() {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <main className="pt-4 pb-20">
-          <div className="container mx-auto px-4">
+        <main className="pb-20">
+          <BulkOrderHero variant="checkout" />
+          <div className="container mx-auto px-4 pt-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -476,8 +478,9 @@ export default function Checkout() {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <main className="pt-4 pb-20">
-          <div className="container mx-auto px-4 text-center">
+        <main className="pb-20">
+          <BulkOrderHero variant="checkout" />
+          <div className="container mx-auto px-4 pt-4 text-center">
             <h1 className="text-2xl font-bold mb-4">Your Cart is Empty</h1>
             <p className="text-muted-foreground mb-6">Add some products to checkout.</p>
             <Button onClick={() => navigate("/products")}>Browse Products</Button>
@@ -494,23 +497,10 @@ export default function Checkout() {
       <Header />
       
       <main className="pb-20 overflow-x-hidden">
-        <BulkOrderHero />
+        <BulkOrderHero variant="checkout" />
         <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 overflow-x-hidden">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-4 pt-3 text-center"
-          >
-            <h1 className="text-xl font-display font-bold text-foreground mb-0.5">
-              Checkout
-            </h1>
-            <p className="text-xs text-muted-foreground">
-              Complete your order
-            </p>
-          </motion.div>
-
           {!allMoqValid && (
-            <div className="flex items-center gap-2 p-4 rounded-lg bg-destructive/10 text-destructive mb-6">
+            <div className="mt-4 flex items-center gap-2 rounded-lg bg-destructive/10 p-4 text-destructive mb-6">
               <AlertTriangle className="h-5 w-5" />
               <span>Some items don't meet minimum order quantity. Please update your cart.</span>
             </div>
