@@ -25,3 +25,4 @@
 - [x] Enlarge promo category circles while keeping ribbons within the circle edges
 - [x] Refine variation labels, selected borders, mobile spacing, recommendations, banners, and global contact details
 - [x] Rebuild cart offer states and the responsive pincode-based delivery location flow
+- [x] Refine saved-pincode timing, mobile location sheet, cart voucher icon, and promo auto-scroll

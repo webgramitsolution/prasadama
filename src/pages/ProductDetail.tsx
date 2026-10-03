@@ -92,9 +92,10 @@ interface Product {
   brand: { name: string } | null;
   sku: string | null;
   banner_image?: string | null;
+  shipping_class?: string | null;
 }
 
-function DeliveryChecker() {
+function DeliveryChecker({ freeShipping }: { freeShipping: boolean }) {
   const { location } = useDeliveryLocation();
   const [pincode, setPincode] = useState(location?.pincode ?? "");
   const [checking, setChecking] = useState(false);
@@ -152,6 +153,14 @@ function DeliveryChecker() {
       setChecking(false);
     }
   };
+
+  useEffect(() => {
+    if (!location?.pincode || !isValidIndianPincode(location.pincode)) return;
+    setPincode(location.pincode);
+    void handleCheck();
+    // The saved delivery location should trigger one availability lookup when it changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location?.pincode]);
 
   const minDate = result ? new Date(Date.now() + (result.delivery_days || 0) * 86400000) : null;
   const maxDate = result
@@ -218,6 +227,14 @@ function DeliveryChecker() {
             )}
           </p>
           {result.is_cod_available && <p className="text-[10px] text-success">✓ Cash on Delivery available</p>}
+            {freeShipping && (
+              <p className="flex items-center gap-2 overflow-hidden text-xs font-semibold text-success">
+                <span className="relative block h-5 w-12 shrink-0" aria-hidden="true">
+                  <Truck className="absolute left-0 top-0.5 h-4 w-4 animate-[delivery-van_2.4s_ease-in-out_infinite]" />
+                </span>
+                Free Shipping available
+              </p>
+            )}
             <p className="text-[10px] text-muted-foreground">
               {result.fallback
                 ? "Standard shipping across India via trusted courier partners."
@@ -1105,7 +1122,7 @@ export default function ProductDetail() {
                 </div>
 
                 {/* Delivery Pincode Check */}
-                <DeliveryChecker />
+                <DeliveryChecker freeShipping={product.shipping_class === "free" || currentPrice >= 499} />
 
                 {/* Returns + Shipping */}
                 <div className="grid grid-cols-2 gap-2 pt-3 border-t border-border">
@@ -1308,7 +1325,7 @@ export default function ProductDetail() {
           disabled={isAddingToCart || isBuyingNow || !moqValid}
         >
           {isBuyingNow ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Zap className="mr-2 h-5 w-5" />}
-          {isBuyingNow ? "Processing..." : "Buy it now"}
+          {isBuyingNow ? "Processing..." : "Buy Now"}
         </Button>
       </div>
 

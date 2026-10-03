@@ -840,3 +840,9 @@
 /* ===== Checkout: ImageKit Razorpay + UPI logos ===== */
 .hkcp-rzp-logo { height: clamp(14px, 2cqi, 26px); width: auto; max-width: 120px; object-fit: contain; display: block; }
 .hkcp-chip--upi .hkcp-upi-logo { width: clamp(32px, 5.5385cqi, 72px); height: clamp(11px, 1.8462cqi, 24px); object-fit: contain; display: block; }
+
+@keyframes delivery-van {
+  0% { transform: translateX(0); opacity: 0; }
+  15%, 75% { opacity: 1; }
+  100% { transform: translateX(32px); opacity: 0; }
+}

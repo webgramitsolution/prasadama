@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingCart, ShoppingBag, Trash2, Plus, Minus, AlertTriangle, Ticket, ChevronRight, Gift, IndianRupee } from "lucide-react";
+import { ShoppingCart, ShoppingBag, Trash2, Plus, Minus, AlertTriangle, Ticket, ChevronRight, Gift } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { cn } from "@/lib/utils";
 import { SignedImage } from "@/components/common/SignedImage";
@@ -243,7 +243,7 @@ export function CartSheet() {
 
             <div className="flex items-center justify-between w-full">
               <span className="flex items-center gap-2 font-semibold text-sm">
-                <IndianRupee className="h-4 w-4 text-success" /> Estimated Total
+                <Ticket className="h-4 w-4 text-foreground" /> Estimated Total
               </span>
               <span className="text-lg font-bold">₹{subtotal.toLocaleString("en-IN")}</span>
             </div>
