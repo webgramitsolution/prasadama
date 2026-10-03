@@ -17,15 +17,18 @@ interface PostalRecord {
 const PINCODE_SEARCH_URL = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/pincode-search`;
 const PIN_QUERY = /^\d{0,6}$/;
 const VALID_PIN = /^[1-9]\d{5}$/;
+const INDIA_FLAG_URL = "https://ik.imagekit.io/Prasadam/razor%20pay%20icon/Flag_of_India.svg";
+const MOBILE_PICKER_ILLUSTRATION_URL = "https://ik.imagekit.io/Prasadam/razor%20pay%20icon/phone%20device%20location%20picker.png";
 
 function IndiaFlag() {
   return (
-    <span aria-hidden="true" className="relative inline-flex h-3.5 w-5 shrink-0 overflow-hidden rounded-[1px] border border-border shadow-sm">
-      <span className="absolute inset-x-0 top-0 h-1/3 bg-[#FF9933]" />
-      <span className="absolute inset-x-0 top-1/3 h-1/3 bg-white" />
-      <span className="absolute inset-x-0 bottom-0 h-1/3 bg-[#138808]" />
-      <span className="absolute left-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#000080]" />
-    </span>
+    <img
+      src={INDIA_FLAG_URL}
+      alt=""
+      aria-hidden="true"
+      loading="lazy"
+      className="h-3.5 w-5 shrink-0 rounded-[1px] object-contain"
+    />
   );
 }
 
@@ -268,6 +271,15 @@ export function LocationPicker({ className, variant = "desktop" }: { className?:
               <SheetTitle className="text-xl">Delivery Location</SheetTitle>
             </SheetHeader>
             <LocationForm mobile onConfirmed={() => setOpen(false)} />
+            <div className="px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+              <img
+                src={MOBILE_PICKER_ILLUSTRATION_URL}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                className="mx-auto h-16 w-full max-w-sm object-contain"
+              />
+            </div>
           </SheetContent>
         </Sheet>
       ) : (
