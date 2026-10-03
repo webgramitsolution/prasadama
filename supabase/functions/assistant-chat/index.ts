@@ -106,52 +106,10 @@ CATEGORIES: ${catList || "(none)"}
 PRODUCTS (sample): ${prodList || "(none)"}
 ${matchedProducts.length ? `PRODUCTS MATCHING THIS QUERY: ${matchedProducts.map((p: any) => `${p.name} (₹${p.shop_price || p.guest_price || "-"})`).join("; ")}` : ""}`;
 
-    const chatHistory = Array.isArray(history)
-      ? history.slice(-6).map((h: any) => ({
-          role: h.role === "assistant" ? "assistant" : "user",
-          content: String(h.text || "").slice(0, 1000),
-        }))
-      : [];
-
     let responseText = "";
 
-    const apiKey = Deno.env.get("LOVABLE_API_KEY");
-    if (apiKey) {
-      const aiRes = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
-          messages: [
-            { role: "system", content: systemPrompt },
-            ...chatHistory,
-            { role: "user", content: String(message || "") },
-          ],
-        }),
-      });
-
-      if (aiRes.ok) {
-        const data = await aiRes.json();
-        responseText = data?.choices?.[0]?.message?.content?.trim() || "";
-      } else {
-        const errText = await aiRes.text();
-        console.error(`[Assistant] AI gateway ${aiRes.status}: ${errText}`);
-        if (aiRes.status === 429) {
-          responseText = t(
-            "I'm getting a lot of requests right now. Please try again in a few seconds.",
-            "अभी बहुत सारे अनुरोध आ रहे हैं। कृपया कुछ सेकंड बाद फिर कोशिश करें।"
-          );
-        } else if (aiRes.status === 402) {
-          responseText = t(
-            "The assistant is temporarily unavailable. Please try again later.",
-            "सहायक अभी अस्थायी रूप से अनुपलब्ध है। कृपया बाद में प्रयास करें।"
-          );
-        }
-      }
-    }
-
     if (!responseText) {
-      // Data-grounded fallback when AI is unavailable
+      // Always-free, deterministic response grounded in current catalog data.
       if (matchedProducts.length) {
         const pDetails = matchedProducts
           .map((p: any) => `${p.name} (₹${p.shop_price || p.guest_price})`)
@@ -177,7 +135,7 @@ ${matchedProducts.length ? `PRODUCTS MATCHING THIS QUERY: ${matchedProducts.map(
           lang: userLangIsHindi ? "Hindi" : "English",
           detectedCategories: categories?.length || 0,
           detectedProducts: products?.length || 0,
-          aiUsed: !!apiKey,
+          aiUsed: false,
         },
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
