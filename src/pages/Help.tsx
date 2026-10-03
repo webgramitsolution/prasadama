@@ -32,7 +32,6 @@ import {
   Headphones,
   Clock,
 } from "lucide-react";
-import { VoiceAssistant } from "@/components/voice/VoiceAssistant";
 
 const faqCategories = [
   {
@@ -389,7 +388,6 @@ export default function Help() {
       </main>
 
       <Footer />
-      <VoiceAssistant />
     </div>
   );
 }
