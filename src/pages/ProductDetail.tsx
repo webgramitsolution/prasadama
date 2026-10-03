@@ -873,7 +873,7 @@ export default function ProductDetail() {
             </div>
 
             {/* Right: Product Info + Buy Box in one white card */}
-            <div className="min-w-0 space-y-4 bg-card px-4 py-3 sm:px-5 sm:py-4 md:rounded-xl md:border md:border-border md:p-5 md:shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+            <div className="min-w-0 space-y-4 bg-card rounded-xl border border-[#f9f9f9] px-4 py-3 sm:px-5 sm:py-4 md:p-5 md:shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
               {/* Title & Meta */}
               <div>
                 <h1 className="text-lg sm:text-xl md:text-lg lg:text-xl md:font-semibold font-bold text-foreground leading-tight md:leading-none mb-1 md:mb-0.5">
