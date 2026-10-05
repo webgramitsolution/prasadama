@@ -279,12 +279,6 @@ export function Header() {
                 </span>
                 <span className="mt-0.5 text-[10px] text-foreground font-medium">Bulk Order</span>
               </Link>
-              <Link to="/help" className="group flex flex-col items-center justify-center w-16 h-14 rounded-lg transition-colors hover:bg-secondary/60">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#661714]/8 ring-1 ring-[#661714]/20 text-[#661714] transition-colors group-hover:bg-[#661714] group-hover:text-white">
-                  <LifeBuoy className="h-4 w-4" strokeWidth={1.75} />
-                </span>
-                <span className="mt-0.5 text-[10px] text-foreground font-medium">Help</span>
-              </Link>
             </div>
 
 

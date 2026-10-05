@@ -13,6 +13,13 @@ interface HomeCategory {
   ribbon_label: string | null;
 }
 
+interface ShopAllSettings {
+  image_url?: string;
+  ribbon_label?: string;
+}
+
+const DEFAULT_SHOP_ALL_IMAGE = "https://ik.imagekit.io/Prasadam/Status-scaled.jpg?updatedAt=1787405014112";
+
 interface PromoBannersProps {
   onFetchStatus?: (status: string) => void;
 }
@@ -65,20 +72,34 @@ export const PromoBanners = ({ onFetchStatus }: PromoBannersProps) => {
   useEffect(() => {
     (async () => {
       onFetchStatus?.("loading");
-      const categoryResult = await supabase
+      const [categoryResult, shopAllResult] = await Promise.all([
+        supabase
           .from("categories")
           .select("id, name, slug, image_url, ribbon_label")
           .eq("is_active", true)
           .eq("show_on_home", true)
           .is("parent_id", null)
-          .order("sort_order", { ascending: true });
+          .order("sort_order", { ascending: true }),
+        supabase
+          .from("site_settings")
+          .select("value")
+          .eq("key", "shop_all_category")
+          .maybeSingle(),
+      ]);
       if (categoryResult.error) {
         onFetchStatus?.("error");
         return;
       }
       const rows = (categoryResult.data || []) as HomeCategory[];
+      const shopAll = (shopAllResult.data?.value || {}) as ShopAllSettings;
       setCategories([
-        { id: "shop-all", name: "Shop All", slug: "", image_url: "/prasadam-logo.png", ribbon_label: "Shop All" },
+        {
+          id: "shop-all",
+          name: "Shop All",
+          slug: "",
+          image_url: shopAll.image_url?.trim() || DEFAULT_SHOP_ALL_IMAGE,
+          ribbon_label: shopAll.ribbon_label?.trim() || "Shop All",
+        },
         ...rows,
       ]);
       onFetchStatus?.("success");
