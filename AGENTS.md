@@ -9,7 +9,7 @@
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
 
-- Homepage merchandising must use category records for category circles, discounted active products for deals, and promo banner records for wide banners, so admin changes automatically reach the storefront.
+- Homepage merchandising must use category records for category circles, an editable site setting for the synthetic Shop All circle, discounted active products for deals, and promo banner records for wide banners, so admin changes automatically reach the storefront.
 - Delivery location must use the shared context and validated postal suggestions; never auto-request GPS or infer location silently because inaccurate delivery data harms checkout trust.
 - RFQ must remain an authenticated, database-backed cart and submission workflow; visual redesigns must preserve admin records and shared delivery-location data.
 - RFQ estimates must be calculated from current persisted product or variation prices and saved as request and item snapshots; admin final quotes remain authoritative.
