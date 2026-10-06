@@ -59,6 +59,11 @@ export default {
           green: "hsl(var(--brand-green))",
           "green-soft": "hsl(var(--brand-green-soft))",
         },
+        footer: {
+          foreground: "hsl(var(--footer-foreground))",
+          gold: "hsl(var(--footer-gold))",
+          overlay: "hsl(var(--footer-overlay))",
+        },
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
