@@ -39,3 +39,5 @@
 - [x] Remove phone-only gaps around the banner below Frequently Bought Together
 - [x] Refine mobile product borders, coupon spacing, delivery dividers, and Bulk Order menu access
 - [x] Add an admin-editable Shop All image and remove the desktop Help shortcut and pre-trending banner
+
+- [x] Match phone footer artwork, gold logo, and four working reference-style accordion rows

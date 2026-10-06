@@ -2,10 +2,13 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Mail, Phone, Linkedin, Facebook, Youtube, MessageCircle, X as XIcon,
-  HelpCircle, FileText, ShoppingBag, Instagram
+  HelpCircle, FileText, ShoppingBag, Instagram, Flower2, Headset, Share2
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+
+import mobileFooterLogo from "@/assets/footer-logo.png.asset.json";
+import mobileFooterBackground from "@/assets/footer-phone.png.asset.json";
 
 const FOOTER_LOGO_URL = "/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
 
@@ -88,20 +91,21 @@ export function Footer() {
   const displayEmail = store.storeEmail || "info@webgramitsolution";
 
   return (
-    <footer className="bg-[#45040A] text-white">
-      <div className="container mx-auto px-4 pt-10 md:pt-14 pb-[5px]">
+    <footer className="prasadam-footer">
+      <img src={mobileFooterBackground.url} alt="" aria-hidden="true" className="mobile-footer-art md:hidden" />
+      <div className="footer-content container mx-auto px-4 pt-0 md:pt-14 pb-[5px]">
         {/* Company col is wider (2fr); remaining 4 cols equal */}
         {/* Mobile: accordion */}
-        <div className="md:hidden">
-          <div className="space-y-4 mb-6">
-            <img src={FOOTER_LOGO_URL} alt="Prasadam" className="h-11 w-auto object-contain" />
-            <p className="text-primary-foreground/85 text-[15px] leading-relaxed">
+        <div className="mobile-footer md:hidden">
+          <div className="mobile-footer-brand">
+            <img src={mobileFooterLogo.url} alt="Prasadam — Divine to your door" className="mobile-footer-logo" />
+            <p className="mobile-footer-description">
               Prasadam delivers thoughtfully crafted devotional offerings and temple prasad for your spiritual journey — premium sweets, pooja samagri, bhog and more. Trusted quality, delivered across India.
             </p>
           </div>
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="categories" className="border-white/20">
-              <AccordionTrigger className="text-base font-display font-semibold hover:no-underline">Categories</AccordionTrigger>
+          <Accordion type="single" collapsible className="mobile-footer-accordion w-full">
+            <AccordionItem value="categories" className="mobile-footer-item">
+              <AccordionTrigger className="mobile-footer-trigger hover:no-underline"><span><Flower2 aria-hidden="true" />Categories</span></AccordionTrigger>
               <AccordionContent>
                 <ul className="space-y-2.5 pb-2">
                   {categoryLinks.map((link) => (
@@ -112,8 +116,8 @@ export function Footer() {
                 </ul>
               </AccordionContent>
             </AccordionItem>
-            <AccordionItem value="policy" className="border-white/20">
-              <AccordionTrigger className="text-base font-display font-semibold hover:no-underline">Policy</AccordionTrigger>
+            <AccordionItem value="policy" className="mobile-footer-item">
+              <AccordionTrigger className="mobile-footer-trigger hover:no-underline"><span><FileText aria-hidden="true" />Policy</span></AccordionTrigger>
               <AccordionContent>
                 <ul className="space-y-2.5 pb-2">
                   {policyLinks.map((link) => (
@@ -124,8 +128,8 @@ export function Footer() {
                 </ul>
               </AccordionContent>
             </AccordionItem>
-            <AccordionItem value="support" className="border-white/20">
-              <AccordionTrigger className="text-base font-display font-semibold hover:no-underline">Support</AccordionTrigger>
+            <AccordionItem value="support" className="mobile-footer-item">
+              <AccordionTrigger className="mobile-footer-trigger hover:no-underline"><span><Headset aria-hidden="true" />Support</span></AccordionTrigger>
               <AccordionContent>
                 <ul className="space-y-2.5 pb-2">
                   {supportLinks.map(({ label, href }) => (
@@ -137,7 +141,7 @@ export function Footer() {
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="connect" className="border-b-0">
-              <AccordionTrigger className="text-base font-display font-semibold hover:no-underline">Connect</AccordionTrigger>
+              <AccordionTrigger className="mobile-footer-trigger hover:no-underline"><span><Share2 aria-hidden="true" />Connect</span></AccordionTrigger>
               <AccordionContent>
                 <ul className="space-y-2.5 pb-2">
                   {socialItems.map(({ key, icon: Icon, url }) => (
@@ -254,9 +258,9 @@ export function Footer() {
       </div>
 
       {/* Bottom Bar — centered copyright */}
-      <div className="border-t border-white/20 mt-[5px]">
+      <div className="footer-copyright border-t border-primary-foreground/20 mt-[5px]">
         <div className="container mx-auto px-4 py-[10px]">
-          <p className="text-white/70 text-xs text-center">
+          <p className="text-primary-foreground/70 text-xs text-center">
             © 2026 Prasadam International Private Limited. All rights reserved.
           </p>
         </div>
