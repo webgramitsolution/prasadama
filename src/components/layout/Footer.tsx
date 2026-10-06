@@ -13,8 +13,8 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import footerLogo from "@/assets/prasadam-logo-transparent.png.asset.json";
 
-const FOOTER_LOGO_URL = "/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
 const SHOP_ALL_IMAGE = "https://ik.imagekit.io/Prasadam/shop%20All.png?updatedAt=1791171289075";
 
 const categoryLinks = [
@@ -94,7 +94,7 @@ export function Footer() {
       <div className="footer-mobile-art md:hidden">
         <div className="footer-art-overlay px-5 pb-6 pt-8">
           <div className="mx-auto max-w-sm pb-5">
-            <img src={FOOTER_LOGO_URL} alt="Prasadam" className="h-16 w-auto object-contain" />
+            <img src={footerLogo.url} alt="Prasadam" className="h-16 w-auto object-contain" />
             <p className="mt-5 max-w-[310px] text-[17px] leading-8 text-footer-foreground/95">
               Prasadam delivers thoughtfully crafted devotional offerings and temple prasad for your spiritual journey — premium sweets, pooja samagri, bhog and more. Trusted quality, delivered across India.
             </p>
@@ -151,7 +151,7 @@ export function Footer() {
           <div className="container mx-auto px-5 pb-5 pt-16 lg:px-8">
             <div className="grid grid-cols-[1.75fr_repeat(4,1fr)] gap-0">
               <div className="min-w-0 pr-7">
-                <img src={FOOTER_LOGO_URL} alt="Prasadam" className="h-16 w-auto object-contain" />
+                <img src={footerLogo.url} alt="Prasadam" className="h-16 w-auto object-contain" />
                 <p className="mt-5 max-w-[390px] text-sm leading-7 text-footer-foreground/90 lg:text-[15px]">
                   Prasadam delivers thoughtfully crafted devotional offerings and temple prasad for your spiritual journey — premium sweets, pooja samagri, bhog and more. Trusted quality, delivered across India.
                 </p>
