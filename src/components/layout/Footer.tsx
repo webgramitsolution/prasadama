@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 import mobileFooterLogo from "@/assets/footer-logo.png.asset.json";
-import mobileFooterBackground from "@/assets/footer-phone.png.asset.json";
+import mobileFooterBackground from "@/assets/footer-background-mobile.jpg.asset.json";
 
 const FOOTER_LOGO_URL = "/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
 

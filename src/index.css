@@ -858,15 +858,15 @@
 @media (max-width: 767px) {
   .prasadam-footer { color: hsl(var(--footer-foreground)); }
   .prasadam-footer .footer-content { padding-left: 18px; padding-right: 18px; }
-  .mobile-footer-brand { padding: 22px 8px 28px; min-height: 270px; }
-  .mobile-footer-logo { width: 140px; height: 80px; object-fit: contain; margin: 0 0 14px 10px; }
-  .mobile-footer-description { max-width: 235px; margin: 0; font-size: 15px; line-height: 1.48; color: hsl(var(--footer-foreground)); }
+  .mobile-footer-brand { padding: 20px 8px 18px; min-height: 258px; }
+  .mobile-footer-logo { width: 140px; height: 80px; object-fit: contain; margin: 0 0 10px 10px; }
+  .mobile-footer-description { max-width: 225px; margin: 0; font-family: Georgia, 'Times New Roman', serif; font-size: 14px; font-weight: 400; line-height: 1.48; color: hsl(var(--footer-foreground)); }
   .mobile-footer-item { border-color: hsl(var(--footer-divider)); }
-  .mobile-footer-trigger { min-height: 53px; padding: 14px 6px; font-size: 17px; font-weight: 600; }
-  .mobile-footer-trigger > span { display: flex; align-items: center; gap: 18px; }
-  .mobile-footer-trigger > span > svg { width: 25px; height: 25px; color: hsl(var(--footer-gold)); stroke-width: 1.7; }
-  .mobile-footer-trigger > svg { width: 18px; height: 18px; }
-  .mobile-footer-accordion ul { padding-left: 49px; }
+  .mobile-footer-trigger { min-height: 52px; padding: 10px 6px; font-family: Georgia, 'Times New Roman', serif; font-size: 16px; font-weight: 600; color: hsl(var(--footer-foreground)); }
+  .mobile-footer-trigger > span { display: flex; align-items: center; gap: 16px; }
+  .mobile-footer-trigger > span > svg { width: 22px; height: 22px; flex-shrink: 0; color: hsl(var(--footer-gold)); stroke-width: 1.7; }
+  .mobile-footer-trigger > svg { width: 16px; height: 16px; }
+  .mobile-footer-accordion ul { padding-left: 44px; }
   .mobile-footer-accordion a { color: hsl(var(--footer-foreground)); }
   .prasadam-footer .footer-copyright { border-color: hsl(var(--footer-divider) / .45); }
 }
