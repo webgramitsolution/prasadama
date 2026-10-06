@@ -18,7 +18,7 @@ interface ShopAllSettings {
   ribbon_label?: string;
 }
 
-const DEFAULT_SHOP_ALL_IMAGE = "https://ik.imagekit.io/Prasadam/Status-scaled.jpg?updatedAt=1787405014112";
+const DEFAULT_SHOP_ALL_IMAGE = "https://ik.imagekit.io/Prasadam/shop%20All.png?updatedAt=1791171289075";
 
 interface PromoBannersProps {
   onFetchStatus?: (status: string) => void;
