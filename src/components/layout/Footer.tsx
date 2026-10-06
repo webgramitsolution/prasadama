@@ -7,7 +7,7 @@ import {
   Headphones,
   Instagram,
   Linkedin,
-  Lotus,
+  Flower2,
   Share2,
   X as XIcon,
 } from "lucide-react";
@@ -68,10 +68,10 @@ export function Footer() {
       const value = data?.value as Record<string, string> | null;
       if (!value) return;
       setSocial({
-        facebook: value.socialFacebook || "",
-        instagram: value.socialInstagram || "",
-        linkedin: value.socialLinkedin || "",
-        twitter: value.socialTwitter || "",
+        facebook: value["socialFacebook"] || "",
+        instagram: value["socialInstagram"] || "",
+        linkedin: value["socialLinkedin"] || "",
+        twitter: value["socialTwitter"] || "",
       });
     });
   }, []);
@@ -84,7 +84,7 @@ export function Footer() {
   ];
 
   const mobileSections = [
-    { value: "categories", title: "Categories", icon: Lotus, links: categoryLinks },
+    { value: "categories", title: "Categories", icon: Flower2, links: categoryLinks },
     { value: "policy", title: "Policy", icon: FileText, links: policyLinks },
     { value: "support", title: "Support", icon: Headphones, links: supportLinks },
   ];
