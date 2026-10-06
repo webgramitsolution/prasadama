@@ -13,7 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
 const allowedTabs = new Set(["categories", "offers", "banners"]);
-const DEFAULT_SHOP_ALL_IMAGE = "https://ik.imagekit.io/Prasadam/shop%20All.png?updatedAt=1791171289075";
+const DEFAULT_SHOP_ALL_IMAGE = "https://ik.imagekit.io/Prasadam/Status-scaled.jpg?updatedAt=1787405014112";
 
 export default function HomeMerchandising() {
   const [searchParams, setSearchParams] = useSearchParams();

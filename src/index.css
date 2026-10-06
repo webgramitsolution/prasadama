@@ -90,9 +90,6 @@
     --payment-green: 151 91% 30%;
     --payment-green-soft: 145 62% 94%;
     --payment-gold: 38 92% 43%;
-    --footer-foreground: 39 56% 93%;
-    --footer-gold: 43 72% 65%;
-    --footer-overlay: 357 84% 16%;
 
     --brand-navy: 213 72% 22%;
     --brand-navy-soft: 208 80% 96%;
@@ -184,9 +181,6 @@
     --payment-green: 151 65% 48%;
     --payment-green-soft: 145 28% 16%;
     --payment-gold: 38 80% 55%;
-    --footer-foreground: 39 56% 93%;
-    --footer-gold: 43 72% 65%;
-    --footer-overlay: 357 84% 12%;
 
     --brand-navy: 213 60% 55%;
     --brand-navy-soft: 215 25% 14%;
@@ -237,26 +231,6 @@
 }
 
 @layer utilities {
-  .footer-desktop-art {
-    background-color: hsl(var(--footer-overlay));
-    background-image: url("https://ik.imagekit.io/bta2xqsld/Footer%20computer.png");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  .footer-mobile-art {
-    background-color: hsl(var(--footer-overlay));
-    background-image: url("https://ik.imagekit.io/bta2xqsld/footer%20phone.png");
-    background-position: center top;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  .footer-art-overlay {
-    background-color: hsl(var(--footer-overlay) / 0.16);
-  }
-
   .bg-promo-category {
     background-color: hsl(var(--promo-category));
   }
