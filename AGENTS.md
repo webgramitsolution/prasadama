@@ -16,3 +16,5 @@
 - Reuse the shared RFQ benefits component on quotation, checkout, and order-confirmation surfaces so the trust row stays visually identical.
 - Keep the shopping assistant deterministic and catalog-backed in the browser; it must not depend on paid or external AI APIs.
 - Store product description media as backward-compatible JSON blocks with image-only full-width and two-column layouts.
+
+- Render mobile footer artwork as a separate decorative layer beneath live accordion content so links stay accessible and desktop remains independent.

@@ -85,6 +85,10 @@
     --coupon-description: 55 87% 18%;
     --coupon-ink: 0 0% 3%;
     --promo-category: 33 74% 92%;
+    --footer-background: 354 89% 14%;
+    --footer-foreground: 40 80% 94%;
+    --footer-gold: 42 77% 74%;
+    --footer-divider: 36 49% 43%;
     --payment-blue: 200 96% 42%;
     --payment-blue-soft: 202 100% 97%;
     --payment-green: 151 91% 30%;
@@ -845,4 +849,24 @@
   0% { transform: translateX(0); opacity: 0; }
   15%, 75% { opacity: 1; }
   100% { transform: translateX(32px); opacity: 0; }
+}
+
+/* Shared footer: phone artwork and live accordion links, desktop unchanged. */
+.prasadam-footer { position: relative; isolation: isolate; background: hsl(var(--footer-background)); color: hsl(var(--primary-foreground)); }
+.footer-content, .footer-copyright { position: relative; z-index: 1; }
+.mobile-footer-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; pointer-events: none; z-index: -1; }
+@media (max-width: 767px) {
+  .prasadam-footer { color: hsl(var(--footer-foreground)); }
+  .prasadam-footer .footer-content { padding-left: 18px; padding-right: 18px; }
+  .mobile-footer-brand { padding: 22px 8px 28px; min-height: 270px; }
+  .mobile-footer-logo { width: 140px; height: 80px; object-fit: contain; margin: 0 0 14px 10px; }
+  .mobile-footer-description { max-width: 235px; margin: 0; font-size: 15px; line-height: 1.48; color: hsl(var(--footer-foreground)); }
+  .mobile-footer-item { border-color: hsl(var(--footer-divider)); }
+  .mobile-footer-trigger { min-height: 53px; padding: 14px 6px; font-size: 17px; font-weight: 600; }
+  .mobile-footer-trigger > span { display: flex; align-items: center; gap: 18px; }
+  .mobile-footer-trigger > span > svg { width: 25px; height: 25px; color: hsl(var(--footer-gold)); stroke-width: 1.7; }
+  .mobile-footer-trigger > svg { width: 18px; height: 18px; }
+  .mobile-footer-accordion ul { padding-left: 49px; }
+  .mobile-footer-accordion a { color: hsl(var(--footer-foreground)); }
+  .prasadam-footer .footer-copyright { border-color: hsl(var(--footer-divider) / .45); }
 }
