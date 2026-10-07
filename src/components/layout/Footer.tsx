@@ -9,6 +9,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
 import mobileFooterLogo from "@/assets/footer-logo.png.asset.json";
 import mobileFooterBackground from "@/assets/footer-background-mobile.jpg.asset.json";
+import desktopFooterBackground from "@/assets/footer-desktop.jpg.asset.json";
 
 const FOOTER_LOGO_URL = "/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
 
@@ -93,6 +94,7 @@ export function Footer() {
   return (
     <footer className="prasadam-footer">
       <img src={mobileFooterBackground.url} alt="" aria-hidden="true" className="mobile-footer-art md:hidden" />
+      <img src={desktopFooterBackground.url} alt="" aria-hidden="true" className="desktop-footer-art hidden md:block" />
       <div className="footer-content container mx-auto px-4 pt-0 md:pt-14 pb-[5px]">
         {/* Company col is wider (2fr); remaining 4 cols equal */}
         {/* Mobile: accordion */}
@@ -167,13 +169,13 @@ export function Footer() {
         </div>
 
         {/* Desktop / tablet grid */}
-        <div className="hidden md:grid md:[grid-template-columns:2fr_1fr_1fr_1fr_1fr] gap-8 md:gap-0 md:divide-x md:divide-white/20">
+        <div className="desktop-footer-grid hidden md:grid gap-8 md:gap-0">
 
           {/* Company column — wider */}
           <div className="col-span-2 md:col-span-1 space-y-4 md:pr-6">
             <div className="flex flex-col gap-1.5">
               <img
-                src={FOOTER_LOGO_URL}
+                src={mobileFooterLogo.url}
                 alt="Prasadam"
                 className="h-11 w-auto object-contain"
                 onError={(e) => {
@@ -192,7 +194,7 @@ export function Footer() {
 
           {/* Categories */}
           <div className="md:px-6">
-            <h4 className="font-display font-semibold text-base md:text-lg mb-4">Categories</h4>
+             <h4 className="font-display font-semibold text-base md:text-lg mb-4"><Flower2 aria-hidden="true" />Categories</h4>
             <ul className="space-y-2.5">
               {categoryLinks.map((link) => (
                 <li key={link.label}>
@@ -206,7 +208,7 @@ export function Footer() {
 
           {/* Policy */}
           <div className="md:px-6">
-            <h4 className="font-display font-semibold text-base md:text-lg mb-4">Policy</h4>
+             <h4 className="font-display font-semibold text-base md:text-lg mb-4"><FileText aria-hidden="true" />Policy</h4>
             <ul className="space-y-2.5">
               {policyLinks.map((link) => (
                 <li key={link.label}>
@@ -220,7 +222,7 @@ export function Footer() {
 
           {/* Support */}
           <div className="md:px-6">
-            <h4 className="font-display font-semibold text-base md:text-lg mb-4">Support</h4>
+             <h4 className="font-display font-semibold text-base md:text-lg mb-4"><Headset aria-hidden="true" />Support</h4>
             <ul className="space-y-2.5">
               {supportLinks.map(({ label, href }) => (
                 <li key={label}>
@@ -234,7 +236,7 @@ export function Footer() {
 
           {/* Connect — icon + name */}
           <div className="md:px-6">
-            <h4 className="font-display font-semibold text-base md:text-lg mb-4">Connect</h4>
+             <h4 className="font-display font-semibold text-base md:text-lg mb-4"><Share2 aria-hidden="true" />Connect</h4>
             <ul className="space-y-2.5">
               {socialItems.map(({ key, icon: Icon, url }) => (
                 <li key={key}>
