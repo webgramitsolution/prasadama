@@ -864,14 +864,14 @@
   .desktop-footer-grid { width: 82%; grid-template-columns: 2.1fr 1.25fr 1.3fr 1.15fr 1.15fr; }
   .desktop-footer-grid > div + div { border-left: 1px solid hsl(var(--footer-divider) / .35); padding-left: 18px; padding-right: 18px; }
   .desktop-footer-grid > div:first-child { padding-right: 24px; }
-  .desktop-footer-grid > div:first-child img { height: 90px; max-width: 100%; width: 190px; margin: 0 auto 14px; }
+  .desktop-footer-grid > div:first-child img { height: 90px; max-width: 100%; width: 190px; margin: 0 auto 4px; }
   .desktop-footer-grid > div:first-child p { color: hsl(var(--footer-gold)); font-size: 13px; line-height: 1.6; }
   .desktop-footer-grid h4 { display: flex; align-items: center; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid hsl(var(--footer-divider)); font-family: Georgia, 'Times New Roman', serif; font-size: 16px; font-weight: 600; color: hsl(var(--footer-foreground)); }
   .desktop-footer-grid h4 > svg { width: 25px; height: 25px; color: hsl(var(--footer-gold)); flex-shrink: 0; stroke-width: 1.7; }
   .desktop-footer-grid a { font-size: 12px; color: hsl(var(--footer-foreground)); }
   .desktop-footer-grid > div:not(:last-child) li { position: relative; padding-left: 15px; }
   .desktop-footer-grid > div:not(:last-child) li::before { content: '›'; position: absolute; left: 0; color: hsl(var(--footer-gold)); }
-  .prasadam-footer .footer-copyright { border-color: hsl(var(--footer-divider)); padding: 8px 0 20px; }
+  .prasadam-footer .footer-copyright { border-color: hsl(var(--footer-divider)); padding: 0; }
   .prasadam-footer .footer-copyright p { color: hsl(var(--footer-foreground)); }
 }
 @media (min-width: 1440px) {
@@ -890,7 +890,7 @@
   .prasadam-footer { color: hsl(var(--footer-foreground)); }
   .prasadam-footer .footer-content { padding-left: 18px; padding-right: 18px; }
   .mobile-footer-brand { padding: 20px 8px 18px; min-height: 258px; }
-  .mobile-footer-logo { width: 140px; height: 80px; object-fit: contain; margin: 0 0 10px 10px; }
+  .mobile-footer-logo { width: 140px; height: 80px; object-fit: contain; margin: 0 0 2px 10px; }
   .mobile-footer-description { max-width: 225px; margin: 0; font-family: Georgia, 'Times New Roman', serif; font-size: 14px; font-weight: 400; line-height: 1.48; color: hsl(var(--footer-gold)); }
   .mobile-footer-item { border-color: hsl(var(--footer-divider)); }
   .mobile-footer-trigger { min-height: 52px; padding: 10px 6px; font-family: Georgia, 'Times New Roman', serif; font-size: 16px; font-weight: 600; color: hsl(var(--footer-foreground)); }
@@ -900,4 +900,41 @@
   .mobile-footer-accordion ul { padding-left: 44px; }
   .mobile-footer-accordion a { color: hsl(var(--footer-foreground)); }
   .prasadam-footer .footer-copyright { border-color: hsl(var(--footer-divider) / .45); }
+}
+
+/* Supplied devotional artwork is isolated to the phone signup banner. */
+.signup-phone-banner {
+  position: relative;
+  isolation: isolate;
+  flex-shrink: 0;
+  width: 100%;
+  aspect-ratio: 2653 / 1557;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 24px;
+}
+.signup-phone-banner-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  z-index: -1;
+}
+.signup-phone-banner-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: hsl(var(--card));
+  border: 2px solid hsl(var(--accent-foreground) / .6);
+}
+.signup-phone-banner-logo:focus-visible {
+  outline: 3px solid hsl(var(--accent-foreground));
+  outline-offset: 3px;
 }

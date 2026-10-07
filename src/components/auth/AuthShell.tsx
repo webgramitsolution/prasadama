@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { useIsMobile } from "@/hooks/use-mobile";
+import signupPhoneBackground from "@/assets/signup-phone-background.png.asset.json";
 
 
 const SLIDES = [
@@ -72,11 +73,14 @@ export function AuthShell({ mode, children }: Props) {
       <div className={mode === "signup" ? "min-h-[100dvh] flex flex-col" : "fixed inset-0 flex flex-col overflow-hidden"} style={{ backgroundColor: BRAND }}>
         {/* Hero — logo only (clickable, returns to home). Meets 44×44 tap-target
             guidance and shows a premium hover/active state with a soft ring. */}
-        <div className="flex flex-col items-center justify-center pt-10 pb-6 shrink-0">
+        <div className={mode === "signup" ? "signup-phone-banner" : "flex flex-col items-center justify-center pt-10 pb-6 shrink-0"}>
+          {mode === "signup" && (
+            <img src={signupPhoneBackground.url} alt="" aria-hidden="true" className="signup-phone-banner-art" loading="eager" />
+          )}
           <Link
             to="/"
             aria-label="Go to Prasadam home"
-            className="group h-24 w-24 min-h-11 min-w-11 rounded-full bg-white flex items-center justify-center ring-2 ring-white/40 overflow-hidden shadow-lg transition-all duration-200 hover:ring-white/80 hover:shadow-2xl hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white"
+            className={mode === "signup" ? "signup-phone-banner-logo" : "group h-24 w-24 min-h-11 min-w-11 rounded-full bg-white flex items-center justify-center ring-2 ring-white/40 overflow-hidden shadow-lg transition-all duration-200 hover:ring-white/80 hover:shadow-2xl hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white"}
           >
             <img
               src="/prasadam-logo.png"

@@ -172,7 +172,7 @@ export function Footer() {
         <div className="desktop-footer-grid hidden md:grid gap-8 md:gap-0">
 
           {/* Company column — wider */}
-          <div className="col-span-2 md:col-span-1 space-y-4 md:pr-6">
+          <div className="col-span-2 md:col-span-1 space-y-2 md:pr-6">
             <div className="flex flex-col gap-1.5">
               <img
                 src={mobileFooterLogo.url}
