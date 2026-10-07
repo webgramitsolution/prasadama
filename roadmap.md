@@ -1,5 +1,8 @@
 # Roadmap
 
+- [ ] Tighten footer logo spacing and set equal 10px copyright padding
+- [ ] Replace phone signup logo banner with supplied devotional artwork and verify
+
 - [x] Dynamic variation attribute labels and values
 - [x] Mobile reference-style detail sections and trust indicators
 - [x] Frequently Bought Together list
