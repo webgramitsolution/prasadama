@@ -9,7 +9,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
 import mobileFooterLogo from "@/assets/footer-logo.png.asset.json";
 import mobileFooterBackground from "@/assets/footer-background-mobile.jpg.asset.json";
-import desktopFooterBackground from "@/assets/footer-desktop.jpg.asset.json";
+import desktopFooterBackground from "@/assets/footer-computer.png.asset.json";
 
 const FOOTER_LOGO_URL = "/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
 
@@ -261,10 +261,12 @@ export function Footer() {
 
       {/* Bottom Bar — centered copyright */}
       <div className="footer-copyright border-t border-primary-foreground/20 mt-[5px]">
-        <div className="container mx-auto px-4 py-[10px]">
+        <div className="footer-copyright-inner container mx-auto px-4 pt-[10px] pb-[5px]">
+          <span className="footer-copyright-ornament" aria-hidden="true"><Flower2 /></span>
           <p className="text-primary-foreground/70 text-xs text-center">
             © 2026 Prasadam International Private Limited. All rights reserved.
           </p>
+          <span className="footer-copyright-ornament" aria-hidden="true"><Flower2 /></span>
         </div>
       </div>
     </footer>
