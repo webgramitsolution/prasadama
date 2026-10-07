@@ -907,7 +907,7 @@
   --accent: 354 80.645% 24.314%; /* Phone auth only: #700c16. */
   --accent-hover: 354 81% 21%;
   background-size: auto calc(100vw * 1750 / 2653 + 47px);
-  background-position: center top;
+  background-position: center -10px;
   background-repeat: no-repeat;
 }
 .signup-phone-banner {
