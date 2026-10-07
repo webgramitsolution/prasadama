@@ -2,7 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { useIsMobile } from "@/hooks/use-mobile";
-import signupPhoneBackground from "@/assets/signup-phone-background.png.asset.json";
+import signupPhoneBackground from "@/assets/phone-auth-temple-background.jpg.asset.json";
 
 
 const SLIDES = [

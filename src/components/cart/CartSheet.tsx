@@ -250,7 +250,7 @@ export function CartSheet() {
 
             <Link to="/checkout" className="w-full">
               <Button
-                className="w-full h-12 rounded-xl bg-[#AD1E2A] text-white hover:bg-[#8b1822] disabled:opacity-60 inline-flex items-center justify-center gap-2 px-2"
+                className="w-full h-12 rounded-xl bg-accent text-accent-foreground hover:bg-accent-hover disabled:opacity-60 inline-flex items-center justify-center gap-2 px-2"
                 disabled={!allMoqValid || isLoading}
               >
                 <span className="text-sm font-bold tracking-wide">{isLoading ? "Loading..." : "PLACE ORDER"}</span>

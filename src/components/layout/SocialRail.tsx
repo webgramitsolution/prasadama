@@ -32,7 +32,7 @@ export function SocialRail() {
     })();
   }, []);
 
-  const brandStyle = { background: "#A03225", color: "#fff" } as const;
+  const brandStyle = { background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" } as const;
 
   const items = [
     { key: "Facebook", icon: Facebook, url: social.facebook, style: brandStyle },

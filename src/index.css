@@ -51,7 +51,7 @@
     --primary-dark: 213 60% 12%;
 
     /* Prasadam maroon #770e19 - CTAs & Actions */
-    --accent: 354 79% 26%;
+    --accent: 353.714 78.947% 26.078%;
     --accent-foreground: 0 0% 100%;
     --accent-hover: 354 79% 22%;
 
@@ -644,7 +644,7 @@
     border: 2px solid transparent;
     border-radius: 5px;
     background:
-      linear-gradient(0deg, #ad1e2a 0%, #ad1e2a 100%) padding-box,
+      linear-gradient(0deg, hsl(var(--accent)) 0%, hsl(var(--accent)) 100%) padding-box,
       linear-gradient(
           115deg,
           #8a6410 0%,
