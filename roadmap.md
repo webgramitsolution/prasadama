@@ -41,3 +41,4 @@
 - [x] Add an admin-editable Shop All image and remove the desktop Help shortcut and pre-trending banner
 
 - [x] Match phone footer artwork, gold logo, and four working reference-style accordion rows
+- [x] Refine phone gold description, bullet links and unstretched artwork; match desktop devotional footer with current links and socials
