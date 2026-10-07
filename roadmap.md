@@ -42,4 +42,3 @@
 
 - [x] Match phone footer artwork, gold logo, and four working reference-style accordion rows
 - [x] Refine phone gold description, bullet links and unstretched artwork; match desktop devotional footer with current links and socials
-- [x] Refine tablet footer, reduce logo and copyright spacing, replace computer artwork and add copyright ornaments
