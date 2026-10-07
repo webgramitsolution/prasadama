@@ -130,7 +130,7 @@ export default function ForgotPassword() {
             <Button 
               type="submit" 
               className="w-full h-11 text-white" 
-              style={{ backgroundColor: "#AD1E2A" }} 
+              style={{ backgroundColor: "hsl(var(--accent))" }} 
               disabled={isLoading}
             >
               {isLoading ? "Sending Code..." : "Send Verification Code"}
@@ -162,7 +162,7 @@ export default function ForgotPassword() {
             <Button 
               type="submit" 
               className="w-full h-11 text-white" 
-              style={{ backgroundColor: "#AD1E2A" }} 
+              style={{ backgroundColor: "hsl(var(--accent))" }} 
               disabled={isLoading}
             >
               {isLoading ? "Verifying..." : "Verify OTP"}
@@ -219,7 +219,7 @@ export default function ForgotPassword() {
             <Button 
               type="submit" 
               className="w-full h-11 text-white" 
-              style={{ backgroundColor: "#AD1E2A" }} 
+              style={{ backgroundColor: "hsl(var(--accent))" }} 
               disabled={isLoading}
             >
               {isLoading ? "Updating..." : "Update Password"}

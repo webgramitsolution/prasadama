@@ -53,7 +53,7 @@ export function HeroMarquee() {
   const loop = [...list, ...list];
 
   return (
-    <div className="overflow-hidden text-white" style={{ backgroundColor: "#ad1e2a" }}>
+    <div className="overflow-hidden bg-accent text-accent-foreground">
       <div className="marquee-track h-8 flex items-center relative overflow-hidden">
         <div className="animate-marquee-fast flex whitespace-nowrap min-w-max">
           {loop.map((s, i) => (

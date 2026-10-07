@@ -360,7 +360,7 @@ export function ChatInterface() {
                             "max-w-[80%] sm:max-w-[65%] rounded-2xl px-3 py-2 sm:px-4",
                             isOwn
                               ? "bg-shop text-shop-foreground rounded-br-md"
-                              : "bg-[#ad1e2a] text-white rounded-bl-md"
+                              : "bg-accent text-accent-foreground rounded-bl-md"
 
                           )}
                         >

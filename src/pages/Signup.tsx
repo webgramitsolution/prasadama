@@ -22,7 +22,7 @@ import { AuthShell } from "@/components/auth/AuthShell";
 type Step = "form" | "otp" | "success";
 type DeliveryState = "idle" | "sending" | "retrying" | "sent" | "failed";
 
-const BRAND = "#AE1E2A";
+const BRAND = "hsl(var(--accent))";
 
 const makeCorrelationId = () =>
   crypto.randomUUID?.() ?? `cid-${Date.now()}-${Math.random().toString(16).slice(2)}`;

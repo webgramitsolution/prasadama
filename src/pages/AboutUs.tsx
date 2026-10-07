@@ -335,7 +335,7 @@ export default function AboutUs() {
 
 
         {/* CTA FOOTER STRIP */}
-        <section className="relative overflow-hidden py-10 text-primary-foreground" style={{ backgroundColor: "#AD1E2A" }}>
+        <section className="relative overflow-hidden py-10 text-primary-foreground" style={{ backgroundColor: "hsl(var(--accent))" }}>
           <img
             src="/products-hero-banner.jpg"
             alt="Prasadam devotional offerings collection"

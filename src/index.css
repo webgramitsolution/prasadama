@@ -50,10 +50,10 @@
     --primary-light: 213 50% 30%;
     --primary-dark: 213 60% 12%;
 
-    /* Brand Red #AE1E2A - CTAs & Actions */
-    --accent: 355 71% 40%;
+    /* Prasadam maroon #770e19 - CTAs & Actions */
+    --accent: 353.714 78.947% 26.078%;
     --accent-foreground: 0 0% 100%;
-    --accent-hover: 355 71% 33%;
+    --accent-hover: 354 79% 22%;
 
     /* Shop/Wholesale Green */
     --shop: 142 70% 35%;
@@ -97,7 +97,7 @@
 
     --brand-navy: 213 72% 22%;
     --brand-navy-soft: 208 80% 96%;
-    --brand-red: 355 71% 40%;
+    --brand-red: var(--accent);
     --brand-green: 112 61% 39%;
     --brand-green-soft: 112 58% 95%;
 
@@ -109,7 +109,7 @@
 
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(213 55% 20%) 0%, hsl(213 60% 12%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(355 71% 40%) 0%, hsl(355 71% 33%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(var(--accent-hover)) 100%);
     --gradient-hero: linear-gradient(135deg, hsl(213 55% 20%) 0%, hsl(213 50% 30%) 50%, hsl(213 60% 12%) 100%);
     --gradient-shop: linear-gradient(135deg, hsl(142 70% 35%) 0%, hsl(142 70% 28%) 100%);
     --gradient-retail: linear-gradient(135deg, hsl(201 90% 45%) 0%, hsl(201 90% 38%) 100%);
@@ -119,18 +119,18 @@
     --shadow-md: 0 4px 6px -1px hsl(215 25% 15% / 0.1), 0 2px 4px -2px hsl(215 25% 15% / 0.1);
     --shadow-lg: 0 10px 15px -3px hsl(215 25% 15% / 0.1), 0 4px 6px -4px hsl(215 25% 15% / 0.1);
     --shadow-xl: 0 20px 25px -5px hsl(215 25% 15% / 0.1), 0 8px 10px -6px hsl(215 25% 15% / 0.1);
-    --shadow-accent: 0 8px 20px -4px hsl(355 71% 40% / 0.35);
+    --shadow-accent: 0 8px 20px -4px hsl(var(--accent) / 0.35);
     --shadow-card: 0 2px 8px -2px hsl(215 25% 15% / 0.08), 0 4px 16px -4px hsl(215 25% 15% / 0.12);
 
     /* Sidebar */
     --sidebar-background: 213 55% 20%;
     --sidebar-foreground: 210 20% 95%;
-    --sidebar-primary: 355 71% 40%;
+    --sidebar-primary: var(--accent);
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 213 50% 28%;
     --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 213 45% 25%;
-    --sidebar-ring: 355 71% 40%;
+    --sidebar-ring: var(--accent);
   }
 
   .dark {
@@ -593,7 +593,7 @@
   .badge-premium-inner {
     position: relative;
     display: block;
-    background: #AE1E2A;
+    background: hsl(var(--accent));
     -webkit-mask: var(--ribbon-shape) center / 100% 100% no-repeat;
     mask: var(--ribbon-shape) center / 100% 100% no-repeat;
     overflow: hidden;
@@ -644,7 +644,7 @@
     border: 2px solid transparent;
     border-radius: 5px;
     background:
-      linear-gradient(0deg, #ad1e2a 0%, #ad1e2a 100%) padding-box,
+      linear-gradient(0deg, hsl(var(--accent)) 0%, hsl(var(--accent)) 100%) padding-box,
       linear-gradient(
           115deg,
           #8a6410 0%,
@@ -902,17 +902,17 @@
   .prasadam-footer .footer-copyright { border-color: hsl(var(--footer-divider) / .45); }
 }
 
-/* Supplied devotional artwork is isolated to the phone signup banner. */
+/* Phone auth artwork keeps its full width and natural temple proportions. */
 .signup-phone-banner {
   position: relative;
   isolation: isolate;
   flex-shrink: 0;
   width: 100%;
-  aspect-ratio: 2653 / 1557;
+  aspect-ratio: 2653 / 1750;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding-bottom: 24px;
+  padding-bottom: 42px;
 }
 .signup-phone-banner-art {
   position: absolute;
