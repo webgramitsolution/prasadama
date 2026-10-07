@@ -67,7 +67,7 @@ export function BuyerSidebar({ collapsed, onToggle, activeTab, onTabChange }: Bu
         "fixed left-0 top-0 h-screen flex flex-col transition-all duration-300 z-50",
         collapsed ? "w-[70px]" : "w-64"
       )}
-      style={{ backgroundColor: "#AD1E2A" }}
+      style={{ backgroundColor: "hsl(var(--accent))" }}
     >
       {/* Logo Area */}
       <div className={cn(

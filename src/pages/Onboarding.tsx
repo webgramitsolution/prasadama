@@ -133,7 +133,7 @@ export default function Onboarding() {
               <Button
                 type="submit"
                 className="w-full h-11 text-white hover:opacity-90 mt-2"
-                style={{ backgroundColor: "#AD1E2A" }}
+                style={{ backgroundColor: "hsl(var(--accent))" }}
                 disabled={isLoading}
               >
                 {isLoading ? (
