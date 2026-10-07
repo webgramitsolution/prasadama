@@ -18,3 +18,4 @@
 - Store product description media as backward-compatible JSON blocks with image-only full-width and two-column layouts.
 
 - Render footer artwork as independent aspect-preserving decorative layers beneath live mobile accordions and desktop links so navigation stays accessible without stretching temple imagery.
+- Phone login and signup share aspect-preserving banner artwork and semantic brand accents so their appearance remains consistent when the theme changes.
