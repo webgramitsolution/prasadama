@@ -70,10 +70,10 @@ export function AuthShell({ mode, children }: Props) {
 
   if (isMobile) {
     return (
-      <div className={mode === "signup" ? "min-h-[100dvh] flex flex-col" : "fixed inset-0 flex flex-col overflow-hidden"} style={{ backgroundColor: BRAND }}>
+      <div className={`phone-auth-shell ${mode === "signup" ? "min-h-[100dvh] flex flex-col" : "fixed inset-0 flex flex-col overflow-hidden"}`} style={{ backgroundImage: `url(${signupPhoneBackground.url})` }}>
         {/* Hero — logo only (clickable, returns to home). Meets 44×44 tap-target
             guidance and shows a premium hover/active state with a soft ring. */}
-        <div className="signup-phone-banner">
+        <div className="signup-phone-banner" style={{ backgroundImage: `url(${signupPhoneBackground.url})` }}>
           <img src={signupPhoneBackground.url} alt="" aria-hidden="true" className="signup-phone-banner-art" loading="eager" />
           <Link
             to="/"

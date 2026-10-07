@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Use image-backed phone login/signup corners and scope the new auth accent without changing the website theme
+
 - [x] Update phone auth artwork framing and apply the requested maroon theme
 
 - [x] Tighten footer logo spacing and set equal 10px copyright padding

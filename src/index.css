@@ -903,6 +903,13 @@
 }
 
 /* Phone auth artwork keeps its full width and natural temple proportions. */
+.phone-auth-shell {
+  --accent: 354 80.645% 24.314%; /* Phone auth only: #700c16. */
+  --accent-hover: 354 81% 21%;
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
 .signup-phone-banner {
   position: relative;
   isolation: isolate;
@@ -914,6 +921,9 @@
   align-items: flex-end;
   justify-content: center;
   padding-bottom: 42px;
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
 }
 .signup-phone-banner-art {
   position: absolute;
