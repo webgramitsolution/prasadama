@@ -159,7 +159,7 @@ export default function Checkout() {
           email: user?.email || "",
           contact: (formData.get("phone") as string) || profile?.phone || "",
         },
-        theme: { color: getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() ? `hsl(${getComputedStyle(document.documentElement).getPropertyValue("--accent").trim()})` : "#770e19" },
+        theme: { color: `hsl(${getComputedStyle(document.documentElement).getPropertyValue("--accent").trim()})` },
         modal: {
           ondismiss: () => reject(new Error("Payment cancelled")),
         },

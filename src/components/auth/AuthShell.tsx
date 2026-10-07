@@ -74,9 +74,7 @@ export function AuthShell({ mode, children }: Props) {
         {/* Hero — logo only (clickable, returns to home). Meets 44×44 tap-target
             guidance and shows a premium hover/active state with a soft ring. */}
         <div className="signup-phone-banner">
-          {(
-            <img src={signupPhoneBackground.url} alt="" aria-hidden="true" className="signup-phone-banner-art" loading="eager" />
-          )}
+          <img src={signupPhoneBackground.url} alt="" aria-hidden="true" className="signup-phone-banner-art" loading="eager" />
           <Link
             to="/"
             aria-label="Go to Prasadam home"

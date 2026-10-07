@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Update phone auth artwork framing and apply the requested maroon theme
+- [x] Update phone auth artwork framing and apply the requested maroon theme
 
 - [x] Tighten footer logo spacing and set equal 10px copyright padding
 - [x] Replace phone signup logo banner with supplied devotional artwork and verify
