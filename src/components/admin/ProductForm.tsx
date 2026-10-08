@@ -1929,9 +1929,10 @@ export function ProductForm({ product, onClose, onSave }: ProductFormProps) {
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {[
-                    { tag: "bestseller", label: "Bestseller section" },
+                    { tag: "offers & deals", label: "Offers & Deals section" },
+                    { tag: "trending", label: "Trending Products section" },
                     { tag: "mega saver packs", label: "Mega Saver Packs section" },
-                    { tag: "trending", label: "Trending section" },
+                    { tag: "bestseller", label: "Bestseller section" },
                   ].map(({ tag, label }) => {
                     const active = tags.some((t) => t.toLowerCase() === tag);
                     return (

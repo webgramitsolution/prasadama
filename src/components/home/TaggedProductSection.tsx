@@ -70,8 +70,9 @@ export function TaggedProductSection({
         .from("products")
         .select("id, name, slug, images, guest_price, retail_price, shop_price, regular_price, has_variations")
         .eq("is_active", true)
+        .overlaps("tags", tagVariants(tag))
         .order("created_at", { ascending: false })
-        .limit(12);
+        .limit(limit > 12 ? limit : 12);
       if (!isMounted) return;
       setProducts((data as unknown as Product[]) || []);
       setLoading(false);

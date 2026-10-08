@@ -31,16 +31,12 @@ export function OffersDeals() {
       .from("products")
       .select("id, name, slug, images, guest_price, retail_price, shop_price, regular_price, has_variations")
       .eq("is_active", true)
+      .overlaps("tags", ["offers & deals", "Offers & Deals", "OFFERS & DEALS", "offers", "deals", "offers-deals", "offers_deals"])
       .order("created_at", { ascending: false })
       .limit(24)
       .then(({ data }) => {
         if (!mounted) return;
-        const deals = ((data as DealProduct[] | null) || [])
-          .filter((product) => {
-            const sellingPrice = product.guest_price > 0 ? product.guest_price : product.retail_price;
-            return product.regular_price > sellingPrice;
-          })
-          .slice(0, 10);
+        const deals = ((data as DealProduct[] | null) || []).slice(0, 10);
         setProducts(deals);
         setLoading(false);
       });

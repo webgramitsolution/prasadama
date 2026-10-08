@@ -42,6 +42,7 @@ export function FeaturedProducts({ onFetchStatus }: FeaturedProductsProps) {
             .from("products")
             .select("id, name, slug, images, guest_price, retail_price, shop_price, regular_price, has_variations")
             .eq("is_active", true)
+            .overlaps("tags", ["trending", "Trending", "TRENDING", "trending products", "Trending Products"])
             .order("created_at", { ascending: false })
             .limit(12);
 
