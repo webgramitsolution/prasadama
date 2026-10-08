@@ -41,6 +41,7 @@ import {
   MoreHorizontal,
   Edit,
   Trash2,
+  Copy,
   Eye,
   EyeOff,
   Loader2,
@@ -139,6 +140,84 @@ export default function AdminProducts() {
       console.error("Error deleting product:", error);
       toast({ title: "Error", description: "Failed to delete product", variant: "destructive" });
     }
+  };
+
+  const [duplicatingId, setDuplicatingId] = useState<string | null>(null);
+
+  const handleDuplicateProduct = async (product: Product) => {
+    setDuplicatingId(product.id);
+    try {
+      // Unique slug for the copy
+      const baseSlug = `${product.slug}-copy`;
+      let slug = baseSlug;
+      let suffix = 2;
+      // eslint-disable-next-line no-constant-condition
+      while (true) {
+        const { data: existing } = await supabase
+          .from("products")
+          .select("id")
+          .eq("slug", slug)
+          .maybeSingle();
+        if (!existing) break;
+        slug = `${baseSlug}-${suffix++}`;
+      }
+
+      const { id: _id, created_at: _c, updated_at: _u, ...rest } = product;
+      const { data: newProduct, error: insertError } = await supabase
+        .from("products")
+        .insert({
+          ...rest,
+          name: `${product.name} (Copy)`,
+          slug,
+          sku: product.sku ? `${product.sku}-COPY` : null,
+          is_active: false,
+        } as any)
+        .select()
+        .single();
+      if (insertError) throw insertError;
+
+      // Copy variations
+      const { data: variations } = await supabase
+        .from("product_variations")
+        .select("*")
+        .eq("product_id", product.id);
+      if (variations && variations.length > 0) {
+        const rows = variations.map(({ id: _i, created_at: _c2, updated_at: _u2, ...v }) => ({
+          ...v,
+          product_id: newProduct.id,
+          sku: v.sku ? `${v.sku}-COPY` : null,
+        }));
+        await supabase.from("product_variations").insert(rows as any);
+      }
+
+      // Copy custom tabs
+      const { data: tabs } = await supabase
+        .from("product_custom_tabs")
+        .select("*")
+        .eq("product_id", product.id);
+      if (tabs && tabs.length > 0) {
+        const rows = tabs.map(({ id: _i, created_at: _c3, ...t }) => ({ ...t, product_id: newProduct.id }));
+        await supabase.from("product_custom_tabs").insert(rows as any);
+      }
+
+      // Copy attribute assignments
+      const { data: assignments } = await supabase
+        .from("product_attribute_assignments")
+        .select("*")
+        .eq("product_id", product.id);
+      if (assignments && assignments.length > 0) {
+        const rows = assignments.map(({ id: _i, created_at: _c4, ...a }) => ({ ...a, product_id: newProduct.id }));
+        await supabase.from("product_attribute_assignments").insert(rows as any);
+      }
+
+      toast({ title: "Product Duplicated", description: `"${newProduct.name}" created as draft. Edit and activate it.` });
+      await fetchData();
+      handleOpenForm(newProduct as Product);
+    } catch (error) {
+      console.error("Error duplicating product:", error);
+      toast({ title: "Error", description: "Failed to duplicate product", variant: "destructive" });
+    }
+    setDuplicatingId(null);
   };
 
   // Export products to CSV
@@ -582,6 +661,14 @@ export default function AdminProducts() {
                                   <DropdownMenuItem onClick={() => handleOpenForm(product)}>
                                     <Edit className="h-4 w-4 mr-2" />
                                     Edit
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleDuplicateProduct(product)} disabled={duplicatingId === product.id}>
+                                    {duplicatingId === product.id ? (
+                                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                    ) : (
+                                      <Copy className="h-4 w-4 mr-2" />
+                                    )}
+                                    Duplicate
                                   </DropdownMenuItem>
                                   <DropdownMenuItem onClick={() => handleToggleActive(product)}>
                                     {product.is_active ? <EyeOff className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
