@@ -14,77 +14,77 @@ import { PWAInstallPrompt } from "@/pwa/PWAInstallPrompt";
 
 import { lazy, Suspense } from "react";
 import { Loader2 } from "lucide-react";
+import { RouteCanonical } from "./components/RouteCanonical";
 
 // Eager: user-facing pages — instant navigation, no white flash
 import Index from "./pages/Index";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Products from "./pages/Products";
-import ProductDetail from "./pages/ProductDetail";
-import RFQ from "./pages/RFQ";
-import Checkout from "./pages/Checkout";
-import Chat from "./pages/Chat";
-import Help from "./pages/Help";
-import CourierTracking from "./pages/CourierTracking";
-import NotFound from "./pages/NotFound";
-import PageContent from "./pages/PageContent";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import Dashboard from "./pages/Dashboard";
-import Onboarding from "./pages/Onboarding";
-import AboutUs from "./pages/AboutUs";
-import Blog from "./pages/Blog";
-import BlogPost from "./pages/BlogPost";
-import PWADiagnosticsPage from "./pages/PWADiagnostics";
-import SEOChecklist from "./pages/SEOChecklist";
-import { RouteCanonical } from "./components/RouteCanonical";
+const Login = lazy(() => import("./pages/Login"));
+const Signup = lazy(() => import("./pages/Signup"));
+const Products = lazy(() => import("./pages/Products"));
+const ProductDetail = lazy(() => import("./pages/ProductDetail"));
+const RFQ = lazy(() => import("./pages/RFQ"));
+const Checkout = lazy(() => import("./pages/Checkout"));
+const Chat = lazy(() => import("./pages/Chat"));
+const Help = lazy(() => import("./pages/Help"));
+const CourierTracking = lazy(() => import("./pages/CourierTracking"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const PageContent = lazy(() => import("./pages/PageContent"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Onboarding = lazy(() => import("./pages/Onboarding"));
+const AboutUs = lazy(() => import("./pages/AboutUs"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
+const PWADiagnosticsPage = lazy(() => import("./pages/PWADiagnostics"));
+const SEOChecklist = lazy(() => import("./pages/SEOChecklist"));
 
-import BambooVsCottonGuide from "./pages/guides/BambooVsCottonTowels";
-import OAuthConsent from "./pages/OAuthConsent";
-import Connect from "./pages/Connect";
-import EmailPreview from "./pages/dev/EmailPreview";
-import { VoiceAssistant } from "./components/voice/VoiceAssistant";
+const BambooVsCottonGuide = lazy(() => import("./pages/guides/BambooVsCottonTowels"));
+const OAuthConsent = lazy(() => import("./pages/OAuthConsent"));
+const Connect = lazy(() => import("./pages/Connect"));
+const EmailPreview = lazy(() => import("./pages/dev/EmailPreview"));
+const VoiceAssistant = lazy(() => import("./components/voice/VoiceAssistant").then(m => ({ default: m.VoiceAssistant })));
 
 
 // Admin — eager imports to eliminate white-flash on route changes
-import { AdminLayout } from "./components/admin/AdminLayout";
-import AdminLogin from "./pages/admin/Login";
-import AdminDashboard from "./pages/admin/Dashboard";
-import AdminUsers from "./pages/admin/Users";
-import AdminUserCreate from "./pages/admin/UserCreate";
-import AdminProducts from "./pages/admin/Products";
-import AdminOrders from "./pages/admin/Orders";
-import AdminRFQ from "./pages/admin/RFQ";
-import AdminCategories from "./pages/admin/Categories";
-import AdminBrands from "./pages/admin/Brands";
-import AdminChat from "./pages/admin/Chat";
-import AdminNotifications from "./pages/admin/Notifications";
-import AdminSettings from "./pages/admin/Settings";
+const AdminLayout = lazy(() => import("./components/admin/AdminLayout").then(m => ({ default: m.AdminLayout })));
+const AdminLogin = lazy(() => import("./pages/admin/Login"));
+const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
+const AdminUsers = lazy(() => import("./pages/admin/Users"));
+const AdminUserCreate = lazy(() => import("./pages/admin/UserCreate"));
+const AdminProducts = lazy(() => import("./pages/admin/Products"));
+const AdminOrders = lazy(() => import("./pages/admin/Orders"));
+const AdminRFQ = lazy(() => import("./pages/admin/RFQ"));
+const AdminCategories = lazy(() => import("./pages/admin/Categories"));
+const AdminBrands = lazy(() => import("./pages/admin/Brands"));
+const AdminChat = lazy(() => import("./pages/admin/Chat"));
+const AdminNotifications = lazy(() => import("./pages/admin/Notifications"));
+const AdminSettings = lazy(() => import("./pages/admin/Settings"));
 
-import AdminOffers from "./pages/admin/Offers";
-import AdminReviews from "./pages/admin/Reviews";
-import AdminCustomTabs from "./pages/admin/CustomTabs";
-import AdminHeroSlides from "./pages/admin/HeroSlides";
-import AdminPromoBanners from "./pages/admin/PromoBanners";
-import AdminCoupons from "./pages/admin/Coupons";
-import AdminPincodes from "./pages/admin/Pincodes";
+const AdminOffers = lazy(() => import("./pages/admin/Offers"));
+const AdminReviews = lazy(() => import("./pages/admin/Reviews"));
+const AdminCustomTabs = lazy(() => import("./pages/admin/CustomTabs"));
+const AdminHeroSlides = lazy(() => import("./pages/admin/HeroSlides"));
+const AdminPromoBanners = lazy(() => import("./pages/admin/PromoBanners"));
+const AdminCoupons = lazy(() => import("./pages/admin/Coupons"));
+const AdminPincodes = lazy(() => import("./pages/admin/Pincodes"));
 
-import AdminReels from "./pages/admin/Reels";
-import AdminRoles from "./pages/admin/Roles";
-import AdminDiagnostics from "./pages/admin/Diagnostics";
-import AdminContactInquiries from "./pages/admin/ContactInquiries";
-import AdminEkartLogs from "./pages/admin/EkartLogs";
-import AdminEkartSettings from "./pages/admin/EkartSettings";
-import AdminBlog from "./pages/admin/Blog";
-import AdminFamilyTestimonials from "./pages/admin/FamilyTestimonials";
-import AdminWebhookLogs from "./pages/admin/WebhookLogs";
-import AdminOtpLogs from "./pages/admin/OtpLogs";
-import AdminSecurityLogs from "./pages/admin/SecurityLogs";
-import InvoicePreview from "./pages/dev/InvoicePreview";
-import AdminSecurityDiagnostics from "./pages/admin/SecurityDiagnostics";
-import AdminSmsLogs from "./pages/admin/SmsLogs";
-import AdminEmailSettings from "./pages/admin/EmailSettings";
-import AdminHomeMerchandising from "./pages/admin/HomeMerchandising";
+const AdminReels = lazy(() => import("./pages/admin/Reels"));
+const AdminRoles = lazy(() => import("./pages/admin/Roles"));
+const AdminDiagnostics = lazy(() => import("./pages/admin/Diagnostics"));
+const AdminContactInquiries = lazy(() => import("./pages/admin/ContactInquiries"));
+const AdminEkartLogs = lazy(() => import("./pages/admin/EkartLogs"));
+const AdminEkartSettings = lazy(() => import("./pages/admin/EkartSettings"));
+const AdminBlog = lazy(() => import("./pages/admin/Blog"));
+const AdminFamilyTestimonials = lazy(() => import("./pages/admin/FamilyTestimonials"));
+const AdminWebhookLogs = lazy(() => import("./pages/admin/WebhookLogs"));
+const AdminOtpLogs = lazy(() => import("./pages/admin/OtpLogs"));
+const AdminSecurityLogs = lazy(() => import("./pages/admin/SecurityLogs"));
+const InvoicePreview = lazy(() => import("./pages/dev/InvoicePreview"));
+const AdminSecurityDiagnostics = lazy(() => import("./pages/admin/SecurityDiagnostics"));
+const AdminSmsLogs = lazy(() => import("./pages/admin/SmsLogs"));
+const AdminEmailSettings = lazy(() => import("./pages/admin/EmailSettings"));
+const AdminHomeMerchandising = lazy(() => import("./pages/admin/HomeMerchandising"));
 
 
 const queryClient = new QueryClient({
@@ -201,7 +201,7 @@ const App = () => (
           
           <BottomNavigation />
           <PWAInstallPrompt />
-          <VoiceAssistant />
+          <Suspense fallback={null}><VoiceAssistant /></Suspense>
         </BrowserRouter>
 
       </TooltipProvider>
