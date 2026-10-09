@@ -341,7 +341,7 @@ Deno.serve(async (req) => {
         const shipping = (order.shipping_address ?? {}) as Record<string, unknown>;
         const phone = String(billing.phone || shipping.phone || '');
         if (phone) {
-          console.log(`Triggering SMS for order ${order.order_number} to ${phone}`);
+          console.log(`Triggering SMS for order ${order.order_number} to ***${String(phone).slice(-4)}`);
           fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/send-sms`, {
             method: 'POST',
             headers: { 
