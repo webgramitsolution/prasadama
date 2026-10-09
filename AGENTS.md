@@ -19,3 +19,4 @@
 
 - Render footer artwork as independent aspect-preserving decorative layers beneath live mobile accordions and desktop links so navigation stays accessible without stretching temple imagery.
 - Phone login and signup share aspect-preserving image-backed banners and locally scoped semantic accents so auth styling never changes the website theme.
+- Site images are self-hosted under public/cdn and referenced as /cdn/... so the app works on external hosts (Hostinger) where Lovable's asset proxy is unavailable.
