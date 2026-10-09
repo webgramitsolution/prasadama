@@ -284,7 +284,7 @@ export function CustomerReviews({
         : await supabase.from("product_reviews").insert({
           product_id: productId,
           user_id: user.id,
-          is_approved: false, // Explicitly pending moderation
+          is_approved: true, // Auto-approved; admin can edit/delete later
           ...payload,
         });
     setSubmitting(false);
@@ -299,7 +299,7 @@ export function CustomerReviews({
         title: editingId ? "Review updated!" : "Review submitted!",
         description: editingId 
           ? "Your review has been updated." 
-          : "Your review has been submitted and is pending moderation.",
+          : "Your review is now live.",
       });
       resetForm();
       await fetchReviews();
