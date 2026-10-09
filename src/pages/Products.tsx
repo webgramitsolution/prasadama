@@ -348,7 +348,7 @@ export default function Products() {
         ]}
       />
       <Header />
-      <main className="pt-4 pb-0 overflow-x-hidden">
+      <main className="pt-4 pb-10 sm:pb-12 overflow-x-hidden">
         <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 overflow-x-hidden">
           {/* Category Banner */}
           {(categoryBanner?.banner_image || categoryBanner?.image_url) && selectedCategory ? (
