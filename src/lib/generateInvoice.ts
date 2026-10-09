@@ -1,5 +1,5 @@
 import { jsPDF } from "jspdf";
-const PRASADAM_LOGO_URL = "/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
+const PRASADAM_LOGO_URL = "/cdn/prasadam-logo-transparent.png";
 
 interface InvoiceItem {
   name: string;

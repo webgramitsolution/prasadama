@@ -11,7 +11,7 @@ import mobileFooterLogo from "@/assets/footer-logo.png.asset.json";
 import mobileFooterBackground from "@/assets/footer-background-mobile.jpg.asset.json";
 import desktopFooterBackground from "@/assets/footer-desktop.jpg.asset.json";
 
-const FOOTER_LOGO_URL = "/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png";
+const FOOTER_LOGO_URL = "/cdn/prasadam-logo-transparent.png";
 
 const categoryLinks = [
   { label: "Temple Prasad", href: "/products?category=office" },

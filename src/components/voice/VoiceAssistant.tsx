@@ -380,7 +380,7 @@ export function VoiceAssistant() {
               style={{ backgroundColor: BRAND }}
             >
               <span className="h-11 w-11 rounded-full bg-white flex items-center justify-center overflow-hidden">
-                <img src="/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png" alt="Prasadam Assistant" className="h-8 w-8 object-contain" />
+                <img src="/cdn/prasadam-logo-transparent.png" alt="Prasadam Assistant" className="h-8 w-8 object-contain" />
               </span>
               <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-white text-[10px] font-bold flex items-center justify-center shadow" style={{ color: BRAND }}>
                 1
@@ -402,7 +402,7 @@ export function VoiceAssistant() {
             <div className="flex items-center justify-between px-3 py-2.5" style={{ backgroundColor: BRAND }}>
               <div className="flex items-center gap-2">
                 <span className="h-8 w-8 rounded-full bg-white flex items-center justify-center overflow-hidden">
-                  <img src="/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png" alt="" className="h-6 w-6 object-contain" />
+                  <img src="/cdn/prasadam-logo-transparent.png" alt="" className="h-6 w-6 object-contain" />
                 </span>
                 <div className="text-white">
                   <p className="text-xs font-bold leading-tight">Prasadam Assistant</p>
@@ -417,7 +417,7 @@ export function VoiceAssistant() {
             </div>
             <div className="p-3 space-y-3">
               <div className="flex items-start gap-2 rounded-lg bg-[#F7F7F7] p-2.5">
-                <img src="/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png" alt="" className="h-4 w-4 object-contain mt-0.5" />
+                <img src="/cdn/prasadam-logo-transparent.png" alt="" className="h-4 w-4 object-contain mt-0.5" />
                 <p className="text-[11px] text-[#333333]">Hi! How can I help you today?</p>
               </div>
               <button
@@ -480,7 +480,7 @@ export function VoiceAssistant() {
             <div className="px-4 py-3 flex items-center justify-between" style={{ backgroundColor: BRAND }}>
               <div className="flex items-center gap-3">
                 <span className="h-10 w-10 rounded-full bg-white flex items-center justify-center overflow-hidden">
-                  <img src="/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png" className="h-7 w-7 object-contain" alt="Prasadam Assistant" />
+                  <img src="/cdn/prasadam-logo-transparent.png" className="h-7 w-7 object-contain" alt="Prasadam Assistant" />
                 </span>
                 <div className="text-white">
                   <h3 className="font-bold text-sm leading-tight">Prasadam Assistant</h3>
@@ -508,7 +508,7 @@ export function VoiceAssistant() {
               {messages.length === 0 ? (
                 <div className="space-y-5">
                   <div className="text-center space-y-2 pt-2">
-                    <img src="/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png" alt="" className="h-12 w-12 object-contain mx-auto" />
+                    <img src="/cdn/prasadam-logo-transparent.png" alt="" className="h-12 w-12 object-contain mx-auto" />
                     <h3 className="font-bold text-lg text-[#333333]">Welcome to Prasadam 👋</h3>
                     <p className="text-[13px] text-[#333333]/70 leading-relaxed px-2">
                       Hi! I'm your shopping assistant. Ask me about products, orders, delivery, or anything else. I'm here to help!
@@ -556,7 +556,7 @@ export function VoiceAssistant() {
                     <div key={i} className={cn("flex gap-2", m.role === "user" ? "justify-end" : "items-start")}>
                       {m.role === "assistant" && (
                         <span className="h-7 w-7 rounded-full bg-[#F7F7F7] flex items-center justify-center flex-shrink-0 mt-1">
-                          <img src="/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png" alt="" className="h-4 w-4 object-contain" />
+                          <img src="/cdn/prasadam-logo-transparent.png" alt="" className="h-4 w-4 object-contain" />
                         </span>
                       )}
                       <div className="max-w-[78%] space-y-2">
@@ -616,7 +616,7 @@ export function VoiceAssistant() {
                   {thinking && (
                     <div className="flex items-start gap-2">
                       <span className="h-7 w-7 rounded-full bg-[#F7F7F7] flex items-center justify-center flex-shrink-0">
-                        <img src="/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png" alt="" className="h-4 w-4 object-contain" />
+                        <img src="/cdn/prasadam-logo-transparent.png" alt="" className="h-4 w-4 object-contain" />
                       </span>
                       <div className="bg-[#F7F7F7] px-3.5 py-3 rounded-2xl rounded-bl-md">
                         <div className="flex items-center gap-1">

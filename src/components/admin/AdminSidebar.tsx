@@ -149,7 +149,7 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
         {!collapsed ? (
           <Link to="/" className="flex items-center">
             <img
-              src="/__l5e/assets-v1/d790c6ca-3f3e-4a9a-a2eb-aa297ef27f6b/prasadam-logo-transparent.png"
+              src="/cdn/prasadam-logo-transparent.png"
               alt="Prasadam"
               className="h-8 w-auto object-contain"
             />
