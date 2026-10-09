@@ -304,7 +304,7 @@ export function Header() {
                 user ? (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                  <button className="group flex flex-col items-center justify-center h-10 w-10 sm:h-14 sm:w-14 hover:bg-secondary/60 rounded-md transition-colors">
+                  <button aria-label="Account menu" className="group flex flex-col items-center justify-center h-10 w-10 sm:h-14 sm:w-14 hover:bg-secondary/60 rounded-md transition-colors">
                         <div className={cn(
                           "w-7 h-7 rounded-full ring-1 flex items-center justify-center",
                           role === "shop" ? "ring-shop bg-shop/10" : role === "retail" ? "ring-retail bg-retail/10" : "ring-[#661714]/20 bg-[#661714]/8 transition-colors group-hover:bg-[#661714] group-hover:text-white"
@@ -355,7 +355,7 @@ export function Header() {
                   </DropdownMenu>
                 ) : (
                   <Link to="/signup">
-                    <button className="group flex flex-col items-center justify-center h-10 w-10 sm:h-14 sm:w-14 hover:bg-secondary/60 rounded-md transition-colors">
+                    <button aria-label="Sign in or register for an account" className="group flex flex-col items-center justify-center h-10 w-10 sm:h-14 sm:w-14 hover:bg-secondary/60 rounded-md transition-colors">
                       <div className="w-7 h-7 rounded-full bg-[#661714]/8 ring-1 ring-[#661714]/20 flex items-center justify-center transition-colors group-hover:bg-[#661714]">
                         <UserRound className="h-4 w-4 text-[#661714] transition-colors group-hover:text-white" strokeWidth={1.75} />
                       </div>

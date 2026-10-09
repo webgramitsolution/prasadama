@@ -45,6 +45,7 @@ const Index = () => {
       <Header />
       <SocialRail />
       <main className="pt-0">
+        <h1 className="sr-only">Prasadam: Blessed Temple Prasad & Devotional Offerings</h1>
         <HeroSection onFetchStatus={noop} />
         <HeroMarquee />
         <PromoBanners />
