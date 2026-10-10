@@ -1,7 +1,7 @@
 # Roadmap
 
-- [ ] Align all four Why Choose icons within the reference's left-side area
-- [ ] Preserve viewport-sticky headers on inner storefront pages and verify scrolling
+- [x] Align all four Why Choose icons within the reference's left-side area
+- [x] Preserve viewport-sticky headers on inner storefront pages and verify scrolling
 
 - [x] Use image-backed phone login/signup corners and scope the new auth accent without changing the website theme
 
