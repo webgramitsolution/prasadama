@@ -496,7 +496,7 @@ export default function Checkout() {
   }
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
+    <div className="min-h-screen bg-background overflow-x-clip">
       <SEOHead title="Checkout" description="Complete your order on Prasadam. Secure checkout with multiple payment options." noIndex />
       <Header />
       
