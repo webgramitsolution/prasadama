@@ -323,7 +323,7 @@ export default function Products() {
   });
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
+    <div className="min-h-screen bg-background overflow-x-clip">
       <SEOHead
         title={categoryBanner?.name ? `${categoryBanner.name} — Buy Online at Prasadam` : "Shop Prasadam Offerings — Temple Prasad, Mithai & Pooja Samagri"}
         description={categoryBanner?.name

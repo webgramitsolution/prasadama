@@ -45,7 +45,7 @@ export function WhyChoosePrasadam() {
       style={{ backgroundImage: `url("${BG}")` }}
       aria-label="Why Choose Prasadaim"
     >
-      <div className="mx-auto w-full max-w-[1100px] px-4 py-6 sm:py-8 md:py-10 md:pr-[26%]">
+      <div className="mx-auto w-full px-4 py-6 sm:py-8 md:ml-[6.5%] md:mr-0 md:w-[62%] md:px-0 md:py-10">
         <div className="text-center">
           <h2 className="font-display text-xl sm:text-2xl md:text-[30px] font-medium text-[#6b1d16] flex items-center justify-center gap-2 sm:gap-3">
             <Flourish flip />
@@ -57,7 +57,7 @@ export function WhyChoosePrasadam() {
           </p>
         </div>
 
-        <div className="mt-4 sm:mt-6 grid grid-cols-2 sm:grid-cols-4 gap-x-2 gap-y-5">
+        <div className="mt-4 sm:mt-6 grid grid-cols-2 sm:grid-cols-4 gap-x-2 gap-y-5 md:w-4/5">
           {items.map((item, i) => (
             <div
               key={item.title}
