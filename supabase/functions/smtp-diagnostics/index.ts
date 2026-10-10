@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { logEmailDelivery, maskValue, smtpPort } from "../_shared/email-log.ts";
+import { resolveTestRecipient } from "./test-recipient.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -71,11 +72,28 @@ serve(async (req) => {
     if (!isAdmin) return json({ error: "Forbidden" }, 403);
 
     // ---- Input -------------------------------------------------------------
-    let body: { action?: string; testRecipient?: string } = {};
+    let body: { action?: string; sendTestEmail?: boolean; testRecipient?: string } = {};
     if (req.method === "POST") {
-      try { body = await req.json(); } catch { body = {}; }
+      try {
+        const input = await req.json();
+        if (!input || typeof input !== "object" || Array.isArray(input) ||
+            (input.action !== undefined && !["status", "test"].includes(input.action)) ||
+            (input.sendTestEmail !== undefined && typeof input.sendTestEmail !== "boolean") ||
+            (input.testRecipient !== undefined && typeof input.testRecipient !== "string")) {
+          return json({ error: "Invalid test request." }, 400);
+        }
+        body = input;
+      } catch { return json({ error: "Invalid test request." }, 400); }
     }
     const action = body.action === "test" ? "test" : "status";
+    let recipient = "";
+    if (action === "test") {
+      try {
+        recipient = resolveTestRecipient(body, userData.user.email, userData.user.email_confirmed_at);
+      } catch (error) {
+        return json({ error: error instanceof Error ? error.message : "Invalid recipient." }, 403);
+      }
+    }
 
     const host = Deno.env.get("SMTP_HOST") || "";
     const user = Deno.env.get("SMTP_USER") || "";
@@ -92,6 +110,7 @@ serve(async (req) => {
       hostSet: Boolean(host),
       userSet: Boolean(user),
       bridgeConfigured: Boolean(Deno.env.get("MAIL_BRIDGE_URL")),
+      testEmailAvailable: Boolean(userData.user.email && userData.user.email_confirmed_at),
     };
 
     if (action === "status") return json({ settings });
@@ -107,10 +126,6 @@ serve(async (req) => {
     }
     if (!/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(host)) {
       return json({ settings, success: false, error: "SMTP_HOST does not look like a valid hostname." }, 200);
-    }
-    const recipient = (body.testRecipient || "").trim();
-    if (recipient && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient)) {
-      return json({ settings, success: false, error: "Test recipient is not a valid email address." }, 200);
     }
 
     // ---- Live SMTP test ----------------------------------------------------
