@@ -30,6 +30,7 @@ type SmtpSettings = {
   hostSet: boolean;
   userSet: boolean;
   bridgeConfigured: boolean;
+  testEmailAvailable: boolean;
 };
 
 type TestStep = { step: string; ok: boolean; detail: string };
@@ -66,7 +67,6 @@ const TYPE_GROUPS: Record<string, string[]> = {
 
 export default function AdminEmailSettings() {
   const { toast } = useToast();
-  const [testRecipient, setTestRecipient] = useState("");
   const [testing, setTesting] = useState(false);
   const [result, setResult] = useState<TestResult | null>(null);
   const [search, setSearch] = useState("");
@@ -101,15 +101,11 @@ export default function AdminEmailSettings() {
   });
 
   const runTest = async (withEmail: boolean) => {
-    if (withEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(testRecipient.trim())) {
-      toast({ title: "Invalid email", description: "Enter a valid recipient address.", variant: "destructive" });
-      return;
-    }
     setTesting(true);
     setResult(null);
     try {
       const { data, error } = await supabase.functions.invoke("smtp-diagnostics", {
-        body: { action: "test", testRecipient: withEmail ? testRecipient.trim() : undefined },
+        body: { action: "test", sendTestEmail: withEmail },
       });
       if (error) throw error;
       const payload = data as TestResult;
@@ -118,7 +114,7 @@ export default function AdminEmailSettings() {
         title: payload.success ? "SMTP connection OK" : "SMTP test failed",
         description: payload.success
           ? withEmail
-            ? `Test email sent to ${testRecipient.trim()}.`
+            ? "Test email sent to your verified account email."
             : "Connected and authenticated successfully."
           : payload.error || "Check the step details below.",
         variant: payload.success ? "default" : "destructive",
@@ -229,22 +225,15 @@ export default function AdminEmailSettings() {
         <CardContent className="space-y-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
             <div className="flex-1 space-y-1">
-              <Label htmlFor="test-recipient">Send test email to (optional)</Label>
-              <Input
-                id="test-recipient"
-                type="email"
-                placeholder="you@example.com"
-                value={testRecipient}
-                onChange={(e) => setTestRecipient(e.target.value)}
-                maxLength={255}
-              />
+              <Label>Test email recipient</Label>
+              <p className="text-sm text-muted-foreground">Your verified account email</p>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" disabled={testing} onClick={() => runTest(false)}>
                 {testing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <PlugZap className="mr-2 h-4 w-4" />}
                 Test connection
               </Button>
-              <Button disabled={testing || !testRecipient.trim()} onClick={() => runTest(true)}>
+              <Button disabled={testing || !settings?.testEmailAvailable} onClick={() => runTest(true)}>
                 {testing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Mail className="mr-2 h-4 w-4" />}
                 Send test email
               </Button>
