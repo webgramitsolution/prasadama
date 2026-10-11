@@ -18,6 +18,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { CouponInput } from "@/components/checkout/CouponInput";
 import { BulkOrderHero } from "@/components/rfq/BulkOrderHero";
 import { RFQBenefits } from "@/components/rfq/RFQBenefits";
+import { OrderSuccessFlow, type OrderFlowStage } from "@/components/checkout/OrderSuccessFlow";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Database } from "@/integrations/supabase/types";
 
@@ -63,6 +64,8 @@ export default function Checkout() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
+  const [flowStage, setFlowStage] = useState<OrderFlowStage>("idle");
+  const [placedTotal, setPlacedTotal] = useState(0);
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
   const [billingSameAsShipping, setBillingSameAsShipping] = useState(true);
@@ -278,6 +281,8 @@ export default function Checkout() {
 
     setIsSubmitting(true);
     const formData = new FormData(e.currentTarget);
+    const flowStartedAt = Date.now();
+    if (paymentMethod === "cod") setFlowStage("processing");
 
     try {
       // Billing fields (Primary)
@@ -392,11 +397,18 @@ export default function Checkout() {
           const msg = payErr instanceof Error ? payErr.message : "Payment failed";
           toast({ title: "Payment not completed", description: msg, variant: "destructive" });
           setIsSubmitting(false);
+          setFlowStage("idle");
           return;
         }
+        setFlowStage("processing");
       }
 
+      setPlacedTotal(Number(order.total_amount ?? order.total ?? total) || total);
       setOrderNumber(order.order_number);
+      // Keep the branded processing animation visible for a moment
+      const minWait = Math.max(0, (paymentMethod === "cod" ? 2200 : 1400) - (Date.now() - flowStartedAt));
+      await new Promise((r) => setTimeout(r, minWait));
+      setFlowStage("success");
       setOrderPlaced(true);
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       await clearCart();
@@ -408,6 +420,7 @@ export default function Checkout() {
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to place order. Please try again.";
       console.error("Error placing order:", error);
+      setFlowStage("idle");
       toast({
         title: "Error",
         description: message,
@@ -439,6 +452,15 @@ export default function Checkout() {
   if (orderPlaced) {
     return (
       <div className="min-h-screen bg-background">
+        <OrderSuccessFlow
+          stage={flowStage}
+          orderNumber={orderNumber}
+          total={placedTotal}
+          onStageChange={setFlowStage}
+          onViewOrder={() => navigate(`/track-order/${encodeURIComponent(orderNumber)}`)}
+          onContinue={() => navigate("/products")}
+          onClose={() => setFlowStage("idle")}
+        />
         <Header />
         <main className="pb-20">
           <BulkOrderHero variant="checkout" />
@@ -497,6 +519,15 @@ export default function Checkout() {
 
   return (
     <div className="min-h-screen bg-background overflow-x-clip">
+      <OrderSuccessFlow
+        stage={flowStage}
+        orderNumber={orderNumber}
+        total={total}
+        onStageChange={setFlowStage}
+        onViewOrder={() => {}}
+        onContinue={() => {}}
+        onClose={() => {}}
+      />
       <SEOHead title="Checkout" description="Complete your order on Prasadam. Secure checkout with multiple payment options." noIndex />
       <Header />
       
@@ -936,7 +967,7 @@ export default function Checkout() {
                     <button
                       type="submit"
                       disabled={isSubmitting || !allMoqValid || !isOtpVerified}
-                      className="w-full h-14 rounded-md bg-accent text-accent-foreground font-bold tracking-wide inline-flex items-center justify-center gap-2 px-3 hover:opacity-90 transition-opacity disabled:opacity-60 mt-4"
+                      className="osf-place-btn w-full h-14 rounded-md bg-accent text-accent-foreground font-bold tracking-wide inline-flex items-center justify-center gap-2 px-3 hover:opacity-90 transition-opacity disabled:opacity-60 mt-4"
                     >
                       {isSubmitting && <Loader2 className="h-4 w-4 animate-spin flex-shrink-0" />}
                       <span className="text-sm sm:text-base whitespace-nowrap">
