@@ -792,7 +792,7 @@ export default function Checkout() {
 
                     <button
                       type="submit"
-                      disabled={isSubmitting || !allMoqValid || !isOtpVerified}
+                      disabled={isSubmitting || !allMoqValid}
                       className="osf-place-btn w-full h-14 rounded-md bg-accent text-accent-foreground font-bold tracking-wide inline-flex items-center justify-center gap-2 px-3 hover:opacity-90 transition-opacity disabled:opacity-60 mt-4"
                     >
                       {isSubmitting && <Loader2 className="h-4 w-4 animate-spin flex-shrink-0" />}
