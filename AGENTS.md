@@ -21,4 +21,5 @@
 - Phone login and signup share aspect-preserving image-backed banners and locally scoped semantic accents so auth styling never changes the website theme.
 - Site images are self-hosted under public/cdn and referenced as /cdn/... so the app works on external hosts (Hostinger) where Lovable's asset proxy is unavailable.
 - Storefront wrappers containing the shared sticky Header must use overflow-x-clip rather than overflow-x-hidden so horizontal clipping does not create a non-scrolling ancestor that breaks viewport stickiness.
+- Customer account layout places the shared Header above a fixed-width sidebar/content row, with only the content scrolling; this keeps the full storefront header visible without a duplicate sidebar logo or desktop collapse state.
 - SMTP diagnostic email recipients must be derived from the authenticated administrator's verified account email on the server, never from arbitrary request addresses, to prevent unsolicited test-email delivery.

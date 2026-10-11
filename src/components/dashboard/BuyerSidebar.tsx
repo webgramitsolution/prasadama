@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import {
   FileText,
   User,
   ShoppingCart,
   FileQuestion,
-  ChevronLeft,
   LogOut,
   LayoutDashboard,
   MessageSquare
@@ -27,13 +25,11 @@ const menuItems = [
 
 
 interface BuyerSidebarProps {
-  collapsed: boolean;
-  onToggle: () => void;
   activeTab: string;
   onTabChange: (tab: string) => void;
 }
 
-export function BuyerSidebar({ collapsed, onToggle, activeTab, onTabChange }: BuyerSidebarProps) {
+export function BuyerSidebar({ activeTab, onTabChange }: BuyerSidebarProps) {
   const { user, signOut } = useAuth();
   const [unreadCount, setUnreadCount] = useState(0);
 
@@ -62,96 +58,40 @@ export function BuyerSidebar({ collapsed, onToggle, activeTab, onTabChange }: Bu
   }, [user]);
 
   return (
-    <aside
-      className={cn(
-        "fixed left-0 top-0 h-screen flex flex-col transition-all duration-300 z-50",
-        collapsed ? "w-[70px]" : "w-64"
-      )}
-      style={{ backgroundColor: "hsl(var(--accent))" }}
-    >
-      {/* Logo Area */}
-      <div className={cn(
-        "h-16 flex items-center border-b border-white/15 bg-white",
-        collapsed ? "justify-center px-2 gap-1" : "justify-between px-4"
-      )}>
-        {!collapsed ? (
-          <Link to="/" className="flex items-center">
-            <img
-              src="/cdn/prasadam-logo-transparent.png"
-              alt="Prasadam"
-              className="h-10 w-auto object-contain"
-            />
-          </Link>
-        ) : (
-          <>
-            <Link to="/" className="flex items-center">
-              <img
-                src="/favicon.png"
-                alt="Prasadam"
-                className="h-12 w-12 object-contain"
-                onError={(e) => {
-                  e.currentTarget.src = "/favicon.ico";
-                }}
-              />
-            </Link>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onToggle}
-              className="text-black hover:bg-black/5 hover:text-black h-12 w-12"
-            >
-              <ChevronLeft className="h-6 w-6 rotate-180" />
-            </Button>
-          </>
-        )}
-        {!collapsed && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onToggle}
-            className="text-black hover:bg-black/5 hover:text-black"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Button>
-        )}
-      </div>
-
-
+    <aside aria-label="My account" className="h-full w-full flex flex-col bg-accent text-accent-foreground">
       {/* Navigation */}
       <div className="flex-1 overflow-y-auto py-4 px-2">
         <div>
-          {!collapsed && (
-            <p className="px-3 mb-2 text-xs font-semibold text-white/60 uppercase tracking-wider">
+            <p className="px-3 mb-2 text-xs font-semibold text-accent-foreground/60 uppercase tracking-wider">
               My Account
             </p>
-          )}
           <ul className="space-y-1">
             {menuItems.map((item) => {
               const isActive = "tab" in item && activeTab === item.tab;
               const baseClass = cn(
                 "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left",
                 isActive
-                  ? "bg-white text-black font-semibold"
-                  : "text-white/85 hover:bg-white/10 hover:text-white"
+                  ? "bg-card text-card-foreground font-semibold hover:bg-card hover:text-card-foreground"
+                  : "text-accent-foreground/85 hover:bg-accent-foreground/10 hover:text-accent-foreground"
               );
               const inner = (
                 <>
                   <div className="relative">
-                    <item.icon className={cn("h-5 w-5 flex-shrink-0", collapsed && "mx-auto")} />
+                    <item.icon className="h-5 w-5 flex-shrink-0" />
                     {item.tab === 'chat' && unreadCount > 0 && (
-                      <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] font-bold text-shop">
+                      <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-card text-[10px] font-bold text-accent">
                         {unreadCount}
                       </span>
                     )}
                   </div>
-                  {!collapsed && <span className="text-sm font-medium">{item.label}</span>}
+                  <span className="text-sm font-medium">{item.label}</span>
                 </>
               );
               return (
                 <li key={item.tab}>
-                  <button onClick={() => onTabChange(item.tab)} className={baseClass}>
+                  <Button variant="ghost" aria-current={isActive ? "page" : undefined} onClick={() => onTabChange(item.tab)} className={cn(baseClass, "h-auto justify-start")}>
                     {inner}
-                  </button>
+                  </Button>
                 </li>
               );
             })}
@@ -161,17 +101,14 @@ export function BuyerSidebar({ collapsed, onToggle, activeTab, onTabChange }: Bu
       </div>
 
       {/* Logout */}
-      <div className="p-4 border-t border-white/15">
+      <div className="p-4 border-t border-accent-foreground/15">
         <Button
           variant="ghost"
           onClick={signOut}
-          className={cn(
-            "w-full justify-start gap-3 text-white/90 hover:bg-white/10 hover:text-white",
-            collapsed && "justify-center"
-          )}
+          className="w-full justify-start gap-3 text-accent-foreground/90 hover:bg-accent-foreground/10 hover:text-accent-foreground"
         >
-          <LogOut className={cn("h-5 w-5 flex-shrink-0", collapsed && "mx-auto")} />
-          {!collapsed && <span className="text-sm font-medium">Logout</span>}
+          <LogOut className="h-5 w-5 flex-shrink-0" />
+          <span className="text-sm font-medium">Logout</span>
         </Button>
       </div>
     </aside>
