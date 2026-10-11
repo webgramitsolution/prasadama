@@ -1,5 +1,8 @@
 # Roadmap
 
+- [ ] Place the full website header above the account sidebar and content
+- [ ] Remove the account sidebar logo and desktop collapse controls; verify navigation and layout
+
 - [x] Align all four Why Choose icons within the reference's left-side area
 - [x] Preserve viewport-sticky headers on inner storefront pages and verify scrolling
 
