@@ -937,3 +937,17 @@
   outline: 3px solid hsl(var(--accent-foreground));
   outline-offset: 3px;
 }
+
+/* Order success flow — locally scoped brand palette */
+.osf {
+  --osf-maroon: 0 62% 27%;
+  --osf-gold: 37 59% 57%;
+  --osf-rose: 352 70% 48%;
+  --osf-cream: 36 60% 97%;
+}
+.osf .osf-title { font-family: Georgia, "Times New Roman", serif; font-weight: 700; font-size: 1.75rem; line-height: 1.2; color: hsl(var(--osf-maroon)); }
+.osf .osf-btn-primary { height: 2.75rem; border-radius: .5rem; font-weight: 600; font-size: .9rem; background: hsl(var(--osf-maroon)); color: hsl(var(--osf-cream)); box-shadow: 0 8px 18px -10px hsl(var(--osf-maroon)); transition: transform .2s, opacity .2s; }
+.osf .osf-btn-outline { height: 2.75rem; border-radius: .5rem; font-weight: 600; font-size: .9rem; background: hsl(var(--card)); color: hsl(var(--osf-maroon)); border: 1.5px solid hsl(var(--osf-maroon)); transition: transform .2s; }
+.osf .osf-btn-primary:hover, .osf .osf-btn-outline:hover { transform: translateY(-1px); }
+.osf-place-btn:active { transform: scale(.97); }
+.osf-place-btn { position: relative; overflow: hidden; transition: transform .15s; }
