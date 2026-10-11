@@ -75,14 +75,7 @@ export default function Checkout() {
     freeThreshold: 500,
     rate: 25
   });
-  const [showOtpField, setShowOtpField] = useState(false);
-  const [otpValue, setOtpValue] = useState("");
-  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
-  const [isOtpVerified, setIsOtpVerified] = useState(false);
-  const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [billingPhoneValue, setBillingPhoneValue] = useState("");
-  const [otpExpiresAt, setOtpExpiresAt] = useState<number | null>(null);
-  const [resendIn, setResendIn] = useState(0);
 
   // Keep the billing phone in sync once the profile finishes loading
   useEffect(() => {
@@ -90,12 +83,6 @@ export default function Checkout() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile?.phone]);
 
-  // Resend cooldown ticker
-  useEffect(() => {
-    if (resendIn <= 0) return;
-    const t = setInterval(() => setResendIn((s) => (s > 0 ? s - 1 : 0)), 1000);
-    return () => clearInterval(t);
-  }, [resendIn]);
 
 
   useEffect(() => {
@@ -191,89 +178,6 @@ export default function Checkout() {
       rz.open();
     });
   };
-
-  const OTP_TTL_MS = 5 * 60 * 1000;
-  const RESEND_COOLDOWN = 30;
-
-  const handleSendOtp = async (phone: string) => {
-    const cleaned = (phone || "").replace(/[^\d]/g, "");
-    if (cleaned.length < 10) {
-      toast({
-        title: "Invalid phone number",
-        description: "Enter a valid 10-digit mobile number before requesting an OTP.",
-        variant: "destructive",
-      });
-      return;
-    }
-    if (resendIn > 0) return;
-
-    setIsSendingOtp(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("checkout-otp", {
-        body: { action: "send", phone: cleaned },
-      });
-
-      if (error) throw new Error(error.message || "Verification service unreachable");
-      if (data && (data as any).error) throw new Error((data as any).error);
-
-      const expiresAt = (data as any)?.expires_at
-        ? new Date((data as any).expires_at).getTime()
-        : Date.now() + OTP_TTL_MS;
-      setOtpExpiresAt(expiresAt);
-      setOtpValue("");
-      setShowOtpField(true);
-      setResendIn(RESEND_COOLDOWN);
-      toast({
-        title: "OTP sent",
-        description: `A 6-digit code was sent to ${cleaned}. It expires in 5 minutes.`,
-      });
-    } catch (err: any) {
-      console.error("Failed to send OTP:", err);
-      const offline = typeof navigator !== "undefined" && navigator.onLine === false;
-      toast({
-        title: "Could not send OTP",
-        description: offline
-          ? "You appear to be offline. Check your connection and try again."
-          : err?.message
-            ? `${err.message}`
-            : "SMS could not be sent. Please try again in a moment.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSendingOtp(false);
-    }
-  };
-
-  const handleVerifyOtp = async () => {
-    setIsVerifyingOtp(true);
-    try {
-      const cleaned = (billingPhoneValue || "").replace(/[^\d]/g, "");
-      const { data, error } = await supabase.functions.invoke("checkout-otp", {
-        body: { action: "verify", phone: cleaned, otp: otpValue.trim() },
-      });
-
-      if (error) throw new Error(error.message || "Verification failed");
-      if (data && (data as any).error) throw new Error((data as any).error);
-
-      if ((data as any)?.verified) {
-        setIsOtpVerified(true);
-        setShowOtpField(false);
-        setOtpExpiresAt(null);
-        toast({ title: "Verified", description: "Phone number verified successfully." });
-      } else {
-        throw new Error("The code you entered is incorrect.");
-      }
-    } catch (err: any) {
-      toast({
-        title: "Verification failed",
-        description: err?.message || "Please check the code and try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsVerifyingOtp(false);
-    }
-  };
-
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -566,95 +470,17 @@ export default function Checkout() {
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="billingPhone">Phone *</Label>
-                        {isOtpVerified ? (
-                          <div className="relative">
-                            <Input
-                              id="billingPhone"
-                              name="billingPhone"
-                              type="tel"
-                              inputMode="tel"
-                              pattern="[0-9+\-\s()]{7,15}"
-                              title="Enter a valid phone number"
-                              value={billingPhoneValue}
-                              readOnly
-                              required
-                              className="pr-24"
-                            />
-                            <span className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 text-xs font-medium text-success">
-                              <CheckCircle className="h-3.5 w-3.5" /> Verified
-                            </span>
-                          </div>
-                        ) : showOtpField ? (
-                          <div className="space-y-1.5">
-                            <div className="flex gap-2">
-                              <Input
-                                id="billingOtp"
-                                placeholder="Enter 6-digit OTP"
-                                inputMode="numeric"
-                                maxLength={6}
-                                value={otpValue}
-                                onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, ""))}
-                                className="flex-1"
-                              />
-                              <Button
-                                type="button"
-                                onClick={handleVerifyOtp}
-                                disabled={isVerifyingOtp || otpValue.length < 6}
-                                className="shrink-0"
-                              >
-                                {isVerifyingOtp ? <Loader2 className="h-4 w-4 animate-spin" /> : "Verify"}
-                              </Button>
-                            </div>
-                            <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-                              <span>Code sent to {billingPhoneValue}</span>
-                              <button
-                                type="button"
-                                className="underline disabled:no-underline disabled:opacity-60"
-                                disabled={resendIn > 0 || isSendingOtp}
-                                onClick={() => handleSendOtp(billingPhoneValue)}
-                              >
-                                {resendIn > 0 ? `Resend in ${resendIn}s` : "Resend OTP"}
-                              </button>
-                            </div>
-                            <button
-                              type="button"
-                              className="text-[11px] underline text-muted-foreground"
-                              onClick={() => {
-                                setShowOtpField(false);
-                                setOtpValue("");
-                              }}
-                            >
-                              Change phone number
-                            </button>
-                            <input type="hidden" name="billingPhone" value={billingPhoneValue} />
-                          </div>
-                        ) : (
-                          <div className="flex gap-2">
-                            <Input
-                              id="billingPhone"
-                              name="billingPhone"
-                              type="tel"
-                              inputMode="tel"
-                              pattern="[0-9+\-\s()]{7,15}"
-                              title="Enter a valid phone number"
-                              value={billingPhoneValue}
-                              onChange={(e) => setBillingPhoneValue(e.target.value)}
-                              required
-                              className="flex-1"
-                            />
-                            <Button
-                              type="button"
-                              onClick={() => handleSendOtp(billingPhoneValue)}
-                              disabled={isSendingOtp}
-                              className="shrink-0"
-                            >
-                              {isSendingOtp ? <Loader2 className="h-4 w-4 animate-spin" /> : "Send OTP"}
-                            </Button>
-                          </div>
-                        )}
-                        {!isOtpVerified && !showOtpField && (
-                          <p className="text-[10px] text-muted-foreground mt-1">Verify your mobile number to place the order.</p>
-                        )}
+                        <Input
+                          id="billingPhone"
+                          name="billingPhone"
+                          type="tel"
+                          inputMode="tel"
+                          pattern="[0-9+\-\s()]{7,15}"
+                          title="Enter a valid phone number"
+                          value={billingPhoneValue}
+                          onChange={(e) => setBillingPhoneValue(e.target.value)}
+                          required
+                        />
                       </div>
                     </div>
 
@@ -966,7 +792,7 @@ export default function Checkout() {
 
                     <button
                       type="submit"
-                      disabled={isSubmitting || !allMoqValid || !isOtpVerified}
+                      disabled={isSubmitting || !allMoqValid}
                       className="osf-place-btn w-full h-14 rounded-md bg-accent text-accent-foreground font-bold tracking-wide inline-flex items-center justify-center gap-2 px-3 hover:opacity-90 transition-opacity disabled:opacity-60 mt-4"
                     >
                       {isSubmitting && <Loader2 className="h-4 w-4 animate-spin flex-shrink-0" />}
