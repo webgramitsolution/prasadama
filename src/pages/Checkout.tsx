@@ -403,7 +403,7 @@ export default function Checkout() {
         setFlowStage("processing");
       }
 
-      setPlacedTotal(Number(order.total_amount ?? order.total ?? total) || total);
+      setPlacedTotal(total);
       setOrderNumber(order.order_number);
       // Keep the branded processing animation visible for a moment
       const minWait = Math.max(0, (paymentMethod === "cod" ? 2200 : 1400) - (Date.now() - flowStartedAt));
