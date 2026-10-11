@@ -79,8 +79,8 @@ function Mandala({ size = 220, spin = false }: { size?: number; spin?: boolean }
       viewBox="0 0 200 200"
       className="absolute"
       aria-hidden="true"
-      animate={spin ? { rotate: 360 } : undefined}
-      transition={spin ? { duration: 30, repeat: Infinity, ease: "linear" } : undefined}
+      animate={spin ? { rotate: 360 } : { rotate: 0 }}
+      transition={spin ? { duration: 30, repeat: Infinity, ease: "linear" } : { duration: 0 }}
     >
       <g fill="none" stroke="hsl(var(--osf-gold))" strokeOpacity="0.35" strokeWidth="1">
         {Array.from({ length: 16 }).map((_, i) => (
@@ -150,7 +150,7 @@ export function OrderSuccessFlow({ stage, orderNumber, total, onStageChange, onV
 
   // Auto-advance mobile sequence: success -> confirmed -> thanks
   useEffect(() => {
-    if (isDesktop) return;
+    if (isDesktop) return undefined;
     if (stage === "success") {
       const t = setTimeout(() => onStageChange("confirmed"), 2200);
       return () => clearTimeout(t);
@@ -159,6 +159,7 @@ export function OrderSuccessFlow({ stage, orderNumber, total, onStageChange, onV
       const t = setTimeout(() => onStageChange("thanks"), 2600);
       return () => clearTimeout(t);
     }
+    return undefined;
   }, [stage, isDesktop, onStageChange]);
 
   useEffect(() => {
