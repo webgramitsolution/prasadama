@@ -1,6 +1,7 @@
 # Roadmap
 
-- [ ] Reduce phone Delivery Location height and verify the 30px illustration gap
+- [x] Reduce phone Delivery Location height with a 30px illustration gap
+- [ ] Verify phone Delivery Location visually — blocked: live preview still serves the pre-edit layout despite a fresh load
 
 - [x] Place the full website header above the account sidebar and content
 - [x] Remove the account sidebar logo and desktop collapse controls
