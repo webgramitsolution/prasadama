@@ -1,7 +1,8 @@
 # Roadmap
 
-- [ ] Place the full website header above the account sidebar and content
-- [ ] Remove the account sidebar logo and desktop collapse controls; verify navigation and layout
+- [x] Place the full website header above the account sidebar and content
+- [x] Remove the account sidebar logo and desktop collapse controls
+- [ ] Verify signed-in account navigation and layout — blocked: no app account matches the requesting user; preview sign-in required
 
 - [x] Align all four Why Choose icons within the reference's left-side area
 - [x] Preserve viewport-sticky headers on inner storefront pages and verify scrolling
