@@ -1,5 +1,8 @@
 # Roadmap
 
+- [ ] Diagnose and fix missing submitted orders in the website order panel
+- [ ] Diagnose and fix order email notification failures
+
 - [x] Reduce phone Delivery Location height with a 30px illustration gap
 - [ ] Verify phone Delivery Location visually — blocked: live preview still serves the pre-edit layout despite a fresh load
 
