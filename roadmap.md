@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Reduce phone Delivery Location height and verify the 30px illustration gap
+
 - [x] Place the full website header above the account sidebar and content
 - [x] Remove the account sidebar logo and desktop collapse controls
 - [ ] Verify signed-in account navigation and layout — blocked: no app account matches the requesting user; preview sign-in required

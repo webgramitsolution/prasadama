@@ -149,14 +149,14 @@ function LocationForm({ mobile, onConfirmed }: { mobile: boolean; onConfirmed: (
   };
 
   return (
-    <div className={cn("flex min-h-0 flex-col", mobile && "h-[min(78dvh,680px)]")}>
+    <div className={cn("flex min-h-0 flex-col", mobile && "max-h-[calc(85dvh-61px)] overflow-y-auto")}>
       {!mobile && (
         <DialogHeader className="pr-8">
           <DialogTitle className="flex items-center gap-2 text-lg"><MapPin className="h-5 w-5 text-accent" />Let's Personalize Your Experience!</DialogTitle>
           <DialogDescription>Find the perfect products for you and your loved ones.</DialogDescription>
         </DialogHeader>
       )}
-      <div className={cn("min-h-0 flex-1", mobile ? "overflow-y-auto px-4 pb-4 pt-4" : "mt-1")}>
+      <div className={cn("min-h-0", mobile ? "shrink-0 px-4 pt-4" : "mt-1 flex-1")}>
         <div className="flex h-12 items-center justify-between rounded-md border border-input bg-card px-3 font-semibold">
           <span className="flex items-center gap-2"><IndiaFlag />India</span>
           <ChevronDown className="h-5 w-5" />
@@ -218,7 +218,7 @@ function LocationForm({ mobile, onConfirmed }: { mobile: boolean; onConfirmed: (
         )}
       </div>
       {mobile && (
-        <div className="px-4 pb-3">
+        <div className="mt-[30px] shrink-0 px-4 pb-3">
           <img
             src={MOBILE_PICKER_ILLUSTRATION_URL}
             alt=""
@@ -228,7 +228,7 @@ function LocationForm({ mobile, onConfirmed }: { mobile: boolean; onConfirmed: (
           />
         </div>
       )}
-      <div className={cn("border-t border-border bg-card", mobile ? "mb-[10px] p-4 pb-[max(1rem,env(safe-area-inset-bottom))]" : "mt-4 pt-4")}>
+      <div className={cn("shrink-0 border-t border-border bg-card", mobile ? "mb-[10px] p-4 pb-[max(1rem,env(safe-area-inset-bottom))]" : "mt-4 pt-4")}>
         <Button type="button" className="h-12 w-full" disabled={!selected || selected.pincode !== query || loading} onClick={confirm}>Confirm</Button>
       </div>
     </div>
