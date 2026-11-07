@@ -50,6 +50,13 @@
       "when": 1794024689283,
       "tag": "0006_admin_chat_customer_profile_read",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1794024711698,
+      "tag": "0007_enable_customer_chat_realtime",
+      "breakpoints": true
     }
   ]
 }
