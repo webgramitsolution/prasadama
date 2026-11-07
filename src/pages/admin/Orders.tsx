@@ -430,26 +430,20 @@ export default function AdminOrders() {
                       className="gap-2"
                       onClick={async () => {
                         try {
-                          let notificationType = selectedOrder.status || "new_order";
+                          let notificationType = selectedOrder.status === 'pending' ? 'new_order' : `order_${selectedOrder.status || 'processing'}`;
                           if (notificationType === 'confirmed') notificationType = 'order_confirmed';
                           if (notificationType === 'shipped') notificationType = 'order_shipped';
                           if (notificationType === 'delivered') notificationType = 'order_delivered';
                           if (notificationType === 'cancelled') notificationType = 'order_cancelled';
 
-                          const { error } = await supabase.functions.invoke("send-order-notification", {
+                          const { data, error } = await supabase.functions.invoke("send-order-notification", {
                             body: {
                               type: notificationType,
-                              order_number: selectedOrder.order_number,
-                              to_email: (selectedOrder.billing_address as any)?.email || (selectedOrder.shipping_address as any)?.email || selectedOrder.profile?.email,
+                              order_id: selectedOrder.id,
                             },
                           });
                           if (error) throw error;
-                          
-                          await supabase.from("email_logs").insert({
-                            recipient_email: (selectedOrder.billing_address as any)?.email || (selectedOrder.shipping_address as any)?.email || (selectedOrder as any).profile?.email || "unknown",
-                            status: "sent",
-                            notification_type: notificationType
-                          });
+                          if (data?.success !== true) throw new Error(data?.error || 'Email delivery failed');
                           
                           toast({ title: "Email Resent", description: `Notification (${notificationType}) has been sent.` });
                         } catch (err) {

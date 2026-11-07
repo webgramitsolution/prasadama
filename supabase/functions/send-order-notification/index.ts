@@ -97,7 +97,8 @@ Deno.serve(async (req) => {
       };
       items = [{ product_name: "Premium Dry Fruit Prasad", quantity: 2, total_price: 1500, variation_details: "Pack: 500g" }];
     } else {
-      const { data: orderData } = await admin.from('orders').select('*').eq('id', parsed.data.order_id!).maybeSingle()
+      if (!parsed.data.order_id) return json({ success: false, error: 'Order ID is required' }, 400)
+      const { data: orderData } = await admin.from('orders').select('*').eq('id', parsed.data.order_id).maybeSingle()
       order = orderData;
       if (!order) return json({ success: false, error: 'Order not found' }, 404)
       if (order.user_id !== authData.user.id && !isAdmin) return json({ success: false, error: 'Forbidden' }, 403)
@@ -272,6 +273,7 @@ Deno.serve(async (req) => {
     
     // For new orders, notify admin as well with a special subject
     const recipients = parsed.data.type === 'new_order' ? [recipient, user] : [recipient]
+    let failedDeliveries = 0
     for (const to of [...new Set(recipients)]) {
       const isToAdmin = to === user;
       const subject = isToAdmin 
@@ -305,6 +307,7 @@ Deno.serve(async (req) => {
           console.error('Failed to log email success:', logErr);
         }
       } catch (err) {
+        failedDeliveries += 1
         console.error('SMTP error:', err);
         await logEmailDelivery({
           email_type: parsed.data.type,
@@ -321,7 +324,6 @@ Deno.serve(async (req) => {
             recipient_email: to,
             notification_type: parsed.data.type,
             status: 'failed',
-            error_reason: err instanceof Error ? err.message : 'Unknown SMTP error',
             sent_at: new Date().toISOString()
           });
         } catch (logErr) {
@@ -361,7 +363,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    return json({ success: true })
+    return json({ success: failedDeliveries === 0, ...(failedDeliveries ? { error: 'One or more order emails failed. Check email delivery logs.' } : {}) }, failedDeliveries ? 502 : 200)
   } catch (error) {
     console.error('order_notification_failed')
     return json({ success: false, error: error instanceof Error ? error.message : 'Notification failed' }, 500)
