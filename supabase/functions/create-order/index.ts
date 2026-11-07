@@ -1,6 +1,7 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { z } from 'npm:zod@3.23.8'
+import { notifyOrder } from '../_shared/order-notification.ts'
 
 const BodySchema = z.object({
   items: z.array(z.object({
@@ -61,13 +62,9 @@ Deno.serve(async (req) => {
     }
 
     const functionUrl = `${Deno.env.get('SUPABASE_URL')}/functions/v1`
-    const serviceRoleHeaders = { Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`, 'Content-Type': 'application/json' }
     const forwardedHeaders = { Authorization: authHeader, 'Content-Type': 'application/json' }
     const tasks = [
-      fetch(`${functionUrl}/send-order-notification`, {
-        method: 'POST', headers: serviceRoleHeaders,
-        body: JSON.stringify({ order_id: order.id, type: 'new_order' }),
-      }),
+      notifyOrder(functionUrl, authHeader, order.id, 'new_order'),
     ]
     // Ship immediately only for cash-on-delivery; prepaid orders are shipped
     // by verify-razorpay-payment after the payment signature is verified.
@@ -81,7 +78,7 @@ Deno.serve(async (req) => {
     }
     const results = await Promise.allSettled(tasks)
     results.forEach((result, index) => {
-      if (result.status === 'rejected') console.error(index === 0 ? 'notification_failed' : 'ekart_sync_failed')
+      if (result.status === 'rejected' || (index === 0 && result.value !== true)) console.error(index === 0 ? 'notification_failed' : 'ekart_sync_failed')
     })
 
     return json({ success: true, order })

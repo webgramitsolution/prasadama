@@ -1,6 +1,7 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { z } from 'npm:zod@3.23.8'
+import { notifyOrder } from '../_shared/order-notification.ts'
 
 const BodySchema = z.object({
   order_id: z.string().uuid(),
@@ -43,11 +44,8 @@ Deno.serve(async (req) => {
       cancelled: 'order_cancelled'
     }
     const type = typeMap[parsed.data.status] || 'order_processing'
-    const notify = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/send-order-notification`, {
-      method: 'POST', headers: { Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ order_id: order.id, type }),
-    })
-    return json({ success: true, order, email_sent: notify.ok })
+    const emailSent = await notifyOrder(`${Deno.env.get('SUPABASE_URL')}/functions/v1`, authHeader, order.id, type)
+    return json({ success: true, order, email_sent: emailSent })
   } catch (error) {
     return json({ success: false, error: error instanceof Error ? error.message : 'Order update failed' }, 500)
   }
