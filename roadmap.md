@@ -1,10 +1,11 @@
 # Roadmap
 
-- [ ] Diagnose and fix missing submitted orders in the website order panel
-- [ ] Diagnose and fix order email notification failures
+- [x] Restore admin order read permission while preserving buyer-only access
+- [x] Correct order notification authorization, admin resend payload, and truthful delivery results; deploy affected actions and run regression tests
+- [ ] Verify a real signed-in order submission, owner readback, admin panel, and email delivery — blocked: requesting user has no matching app session; preview sign-in required
 
 - [x] Reduce phone Delivery Location height with a 30px illustration gap
-- [ ] Verify phone Delivery Location visually — blocked: live preview still serves the pre-edit layout despite a fresh load
+- [x] Verify phone Delivery Location visually — 30px gap, 399px empty-sheet height, live postal suggestions visible
 
 - [x] Place the full website header above the account sidebar and content
 - [x] Remove the account sidebar logo and desktop collapse controls
