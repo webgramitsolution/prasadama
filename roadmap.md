@@ -1,6 +1,7 @@
 # Roadmap
 
-- [ ] Fix admin customer-chat loading, preserve private customer access, and run chat regression checks
+- [x] Fix admin customer-chat loading, preserve private customer access, enable live chat updates, and pass 15 regression tests
+- [ ] Verify admin chat and customer reply end-to-end — blocked: no app account matches the requesting user; preview sign-in required
 
 - [x] Restore admin order read permission while preserving buyer-only access
 - [x] Correct order notification authorization, admin resend payload, and truthful delivery results; deploy affected actions and run regression tests
