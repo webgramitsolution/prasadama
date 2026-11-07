@@ -24,3 +24,4 @@
 - Customer account layout places the shared Header above a fixed-width sidebar/content row, with only the content scrolling; this keeps the full storefront header visible without a duplicate sidebar logo or desktop collapse state.
 - SMTP diagnostic email recipients must be derived from the authenticated administrator's verified account email on the server, never from arbitrary request addresses, to prevent unsolicited test-email delivery.
 - Order actions forward their validated user session to the protected notification action and check its result; service credentials are not user JWTs and must not be passed to Auth.getUser.
+- Admin chat loads conversations and customer profiles separately by profiles.user_id because buyer_id has no profile foreign key; only admins with customer chats may read those profiles, and chat tables participate in Realtime.

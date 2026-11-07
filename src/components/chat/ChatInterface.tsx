@@ -64,7 +64,7 @@ export function ChatInterface() {
     fetchConversations();
 
     const channel = supabase
-      .channel(`conv-list-${user.id}`)
+      .channel(`conv-list-${user.id}-${crypto.randomUUID()}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "chat_conversations" }, () => {
         fetchConversations();
       })
@@ -100,7 +100,7 @@ export function ChatInterface() {
     fetchMessages();
 
     const channel = supabase
-      .channel(`messages-${activeConversation}`)
+      .channel(`messages-${activeConversation}-${crypto.randomUUID()}`)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "chat_messages", filter: `conversation_id=eq.${activeConversation}` },
