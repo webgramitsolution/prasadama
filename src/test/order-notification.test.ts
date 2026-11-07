@@ -5,7 +5,9 @@ describe('Order notification dispatch', () => {
   it('forwards the user authorization and persisted order ID', async () => {
     const request = vi.fn().mockResolvedValue(new Response(JSON.stringify({ success: true })));
     expect(await notifyOrder('https://example.test/functions/v1', 'Bearer user-session', 'persisted-order', 'new_order', request)).toBe(true);
-    const options = request.mock.calls[0][1];
+    const call = request.mock.calls[0];
+    if (!call) throw new Error('Notification request was not dispatched');
+    const options = call[1];
     expect(options.headers.Authorization).toBe('Bearer user-session');
     expect(JSON.parse(options.body)).toEqual({ order_id: 'persisted-order', type: 'new_order' });
   });
