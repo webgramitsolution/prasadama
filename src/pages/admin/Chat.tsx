@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { loadAdminConversations } from "@/lib/admin-chat";
 
 export default function AdminChat() {
   const { toast } = useToast();
@@ -31,24 +32,12 @@ export default function AdminChat() {
   const [otherTyping, setOtherTyping] = useState(false);
   const typingChannelRef = useRef<any>(null);
   const otherTypingTimerRef = useRef<any>(null);
+  const activeConversationIdRef = useRef<string | null>(null);
 
   const fetchConversations = async () => {
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.from("chat_conversations")
-        .select(`
-          *,
-          buyer_profile:profiles!chat_conversations_buyer_id_fkey(
-            full_name,
-            email,
-            company_name,
-            buyer_type
-          )
-        `)
-        .order("last_message_at", { ascending: false });
-
-      if (error) throw error;
-      setConversations(data || []);
+      setConversations(await loadAdminConversations());
     } catch (error) {
       console.error("Error fetching conversations:", error);
       toast({ title: "Error", description: "Failed to load chats", variant: "destructive" });
@@ -64,6 +53,7 @@ export default function AdminChat() {
         .order("created_at", { ascending: true });
 
       if (error) throw error;
+      if (activeConversationIdRef.current !== conversationId) return;
       setMessages(data || []);
       
       // Use RPC to mark conversation as read
@@ -77,6 +67,7 @@ export default function AdminChat() {
       if (typingChannelRef.current) supabase.removeChannel(typingChannelRef.current);
       
       const { data: { user } } = await supabase.auth.getUser();
+      if (activeConversationIdRef.current !== conversationId) return;
       const typingCh = supabase
         .channel(`typing-${conversationId}`, { config: { broadcast: { self: false } } })
         .on("broadcast", { event: "typing" }, (payload) => {
@@ -90,6 +81,7 @@ export default function AdminChat() {
       typingChannelRef.current = typingCh;
     } catch (error) {
       console.error("Error fetching messages:", error);
+      toast({ title: "Error", description: "Failed to load messages", variant: "destructive" });
     }
   };
 
@@ -97,19 +89,22 @@ export default function AdminChat() {
     fetchConversations();
 
     const channel = supabase
-      .channel("admin-chat-realtime")
+      .channel(`admin-chat-realtime-${crypto.randomUUID()}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "chat_conversations" }, () => {
         fetchConversations();
       })
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "chat_messages" }, (payload: any) => {
         const msg = payload.new;
-        if (activeConversation && msg.conversation_id === activeConversation.id) {
+        fetchConversations();
+        if (msg.conversation_id === activeConversationIdRef.current) {
           setMessages(prev => {
             if (prev.some(m => m.id === msg.id)) return prev;
             return [...prev, msg];
           });
           // Mark new message as read if active
-          supabase.rpc("mark_conversation_read", { _conversation_id: activeConversation.id });
+          if (activeConversationIdRef.current) {
+            supabase.rpc("mark_conversation_read", { _conversation_id: activeConversationIdRef.current });
+          }
         }
       })
       .subscribe();
@@ -119,7 +114,7 @@ export default function AdminChat() {
       if (typingChannelRef.current) supabase.removeChannel(typingChannelRef.current);
       if (otherTypingTimerRef.current) clearTimeout(otherTypingTimerRef.current);
     };
-  }, [activeConversation?.id]);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewMessage(e.target.value);
@@ -148,14 +143,17 @@ export default function AdminChat() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      const { error } = await supabase.from("chat_messages")
+      const { data: sentMessage, error } = await supabase.from("chat_messages")
         .insert({
           conversation_id: activeConversation.id,
           sender_id: user.id,
           message: text
-        });
+        }).select().single();
 
       if (error) throw error;
+      if (sentMessage && activeConversationIdRef.current === sentMessage.conversation_id) {
+        setMessages(prev => prev.some(m => m.id === sentMessage.id) ? prev : [...prev, sentMessage]);
+      }
       
       // Update conversation to mark as unread for the buyer and update timestamp
       await supabase.from("chat_conversations")
@@ -234,6 +232,9 @@ export default function AdminChat() {
                 <button
                   key={conv.id}
                   onClick={() => {
+                    activeConversationIdRef.current = conv.id;
+                    setMessages([]);
+                    setOtherTyping(false);
                     setActiveConversation(conv);
                     fetchMessages(conv.id);
                   }}
@@ -288,7 +289,11 @@ export default function AdminChat() {
                 variant="ghost"
                 size="icon"
                 className="lg:hidden"
-                onClick={() => setActiveConversation(null)}
+                onClick={() => {
+                  activeConversationIdRef.current = null;
+                  setActiveConversation(null);
+                  if (typingChannelRef.current) supabase.removeChannel(typingChannelRef.current);
+                }}
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
