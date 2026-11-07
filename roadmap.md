@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Fix admin customer-chat loading, preserve private customer access, and run chat regression checks
+
 - [x] Restore admin order read permission while preserving buyer-only access
 - [x] Correct order notification authorization, admin resend payload, and truthful delivery results; deploy affected actions and run regression tests
 - [ ] Verify a real signed-in order submission, owner readback, admin panel, and email delivery — blocked: requesting user has no matching app session; preview sign-in required
