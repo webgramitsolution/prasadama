@@ -1,10 +1,11 @@
 # Roadmap
 
-- [ ] Diagnose still-empty admin chats using a real admin session
-- [ ] Fill available chat height and remove page-switch white screens
+- [x] Diagnose still-empty admin chats using the identified admin session — existing customer conversation and message read successfully, no loading error
+- [x] Fill available chat height in saved code and retain the admin shell during lazy page loading; five chat regression tests passed
+- [ ] Confirm latest gap/navigation changes visually — preview still serves pre-edit modules despite fresh browser loads and automatic flush checks
 
 - [x] Fix admin customer-chat loading, preserve private customer access, enable live chat updates, and pass 15 regression tests
-- [ ] Verify admin chat and customer reply end-to-end — blocked: no app account matches the requesting user; preview sign-in required
+- [x] Verify admin chat list and existing customer message readback with the identified admin account
 
 - [x] Restore admin order read permission while preserving buyer-only access
 - [x] Correct order notification authorization, admin resend payload, and truthful delivery results; deploy affected actions and run regression tests
