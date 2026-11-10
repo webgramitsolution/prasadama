@@ -25,3 +25,4 @@
 - SMTP diagnostic email recipients must be derived from the authenticated administrator's verified account email on the server, never from arbitrary request addresses, to prevent unsolicited test-email delivery.
 - Order actions forward their validated user session to the protected notification action and check its result; service credentials are not user JWTs and must not be passed to Auth.getUser.
 - Admin chat loads conversations and customer profiles separately by profiles.user_id because buyer_id has no profile foreign key; only admins with customer chats may read those profiles, and chat tables participate in Realtime.
+- Admin child pages suspend inside the persistent admin shell, route navigation uses React transitions, and chat fills the available main height to prevent blank navigation screens and bottom gaps.

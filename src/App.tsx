@@ -16,7 +16,7 @@ import { lazy, Suspense } from "react";
 import { Loader2 } from "lucide-react";
 import { RouteCanonical } from "./components/RouteCanonical";
 
-// Eager: user-facing pages — instant navigation, no white flash
+// Homepage is eager; other pages retain code splitting.
 import Index from "./pages/Index";
 const Login = lazy(() => import("./pages/Login"));
 const Signup = lazy(() => import("./pages/Signup"));
@@ -46,7 +46,7 @@ const EmailPreview = lazy(() => import("./pages/dev/EmailPreview"));
 const VoiceAssistant = lazy(() => import("./components/voice/VoiceAssistant").then(m => ({ default: m.VoiceAssistant })));
 
 
-// Admin — eager imports to eliminate white-flash on route changes
+// Admin child pages load inside the persistent layout's Suspense boundary.
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout").then(m => ({ default: m.AdminLayout })));
 const AdminLogin = lazy(() => import("./pages/admin/Login"));
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
@@ -113,7 +113,7 @@ const App = () => (
         <SecurityHeaders />
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        <BrowserRouter future={{ v7_startTransition: true }}>
           <ScrollToTop />
           <RouteCanonical />
           <Suspense fallback={<RouteFallback />}>
