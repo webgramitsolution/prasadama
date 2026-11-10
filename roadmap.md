@@ -1,5 +1,8 @@
 # Roadmap
 
+- [ ] Diagnose still-empty admin chats using a real admin session
+- [ ] Fill available chat height and remove page-switch white screens
+
 - [x] Fix admin customer-chat loading, preserve private customer access, enable live chat updates, and pass 15 regression tests
 - [ ] Verify admin chat and customer reply end-to-end — blocked: no app account matches the requesting user; preview sign-in required
 
