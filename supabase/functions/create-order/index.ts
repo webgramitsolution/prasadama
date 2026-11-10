@@ -67,7 +67,7 @@ Deno.serve(async (req) => {
       notifyOrder(functionUrl, authHeader, order.id, 'new_order'),
     ]
     // Ship immediately only for cash-on-delivery; prepaid orders are shipped
-    // by verify-razorpay-payment after the payment signature is verified.
+    // only by the signed captured-payment webhook after payment confirmation.
     if (body.payment_method === 'cod') {
       tasks.push(
         fetch(`${functionUrl}/ekart-create-shipment`, {
