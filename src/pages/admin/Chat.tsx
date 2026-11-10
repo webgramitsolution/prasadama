@@ -28,6 +28,8 @@ export default function AdminChat() {
   const [newMessage, setNewMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+  const conversationsLoadedRef = useRef(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [otherTyping, setOtherTyping] = useState(false);
   const typingChannelRef = useRef<any>(null);
@@ -35,10 +37,13 @@ export default function AdminChat() {
   const activeConversationIdRef = useRef<string | null>(null);
 
   const fetchConversations = async () => {
-    setIsLoading(true);
+    if (!conversationsLoadedRef.current) setIsLoading(true);
     try {
       setConversations(await loadAdminConversations());
+      conversationsLoadedRef.current = true;
+      setLoadError(false);
     } catch (error) {
+      setLoadError(true);
       console.error("Error fetching conversations:", error);
       toast({ title: "Error", description: "Failed to load chats", variant: "destructive" });
     }
@@ -190,7 +195,7 @@ export default function AdminChat() {
   });
 
   return (
-    <div className="flex h-[calc(100vh-120px)] bg-background rounded-xl border border-border overflow-hidden shadow-card">
+    <div className="flex h-full min-h-0 bg-background rounded-xl border border-border overflow-hidden shadow-card">
       <div className={cn(
         "w-full lg:w-80 border-r border-border flex flex-col bg-muted/30",
         activeConversation && "hidden lg:flex"
@@ -201,11 +206,11 @@ export default function AdminChat() {
               <MessageSquare className="h-5 w-5 text-primary" />
               Customer Chats
             </h2>
-              <Button variant="ghost" size="icon" onClick={fetchConversations}>
+              <Button variant="ghost" size="icon" aria-label="Refresh chats" onClick={fetchConversations}>
                 <Clock className="h-4 w-4" />
               </Button>
               <Button variant="ghost" size="sm" asChild>
-                <Link to="/dev/email-preview-internal" className="text-xs">
+                <Link to="/admin/dev/email-preview-internal" className="text-xs">
                   <Mail className="h-4 w-4 mr-1" /> Preview
                 </Link>
               </Button>
@@ -221,9 +226,14 @@ export default function AdminChat() {
           </div>
         </div>
 
-        <ScrollArea className="flex-1">
+        <ScrollArea className="flex-1 min-h-0">
           {isLoading ? (
             <div className="p-8 text-center"><Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground" /></div>
+          ) : loadError && conversations.length === 0 ? (
+            <div className="p-8 text-center text-muted-foreground" role="alert">
+              <p>Could not load customer chats.</p>
+              <Button variant="outline" className="mt-3" onClick={fetchConversations}>Retry</Button>
+            </div>
           ) : filteredConversations.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground">No conversations found</div>
           ) : (
@@ -279,7 +289,7 @@ export default function AdminChat() {
       </div>
 
       <div className={cn(
-        "flex-1 flex flex-col",
+        "flex-1 min-h-0 min-w-0 flex flex-col",
         !activeConversation && "hidden lg:flex"
       )}>
         {activeConversation ? (
@@ -322,7 +332,7 @@ export default function AdminChat() {
               </Badge>
             </div>
 
-            <ScrollArea className="flex-1 p-4 bg-muted/10">
+            <ScrollArea className="flex-1 min-h-0 p-4 bg-muted/10">
               <div className="space-y-4">
                 {messages.map((msg) => (
                   <div

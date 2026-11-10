@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { AdminSidebar } from "./AdminSidebar";
 import { AdminHeader } from "./AdminHeader";
@@ -54,8 +54,10 @@ export function AdminLayout() {
         )}
       >
         <AdminHeader onMobileMenuToggle={() => setMobileMenuOpen(true)} />
-        <main className="flex-1 overflow-y-auto bg-card p-3 lg:p-4">
-          <Outlet />
+        <main className="flex-1 min-h-0 overflow-y-auto bg-card p-3 lg:p-4">
+          <Suspense fallback={<div role="status" aria-label="Loading page" className="h-full space-y-4"><div className="h-8 w-48 animate-pulse rounded bg-muted" /><div className="h-48 animate-pulse rounded bg-muted" /></div>}>
+            <Outlet />
+          </Suspense>
         </main>
       </div>
     </div>
