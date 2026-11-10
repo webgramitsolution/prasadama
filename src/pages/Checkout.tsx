@@ -166,6 +166,11 @@ export default function Checkout() {
             if (verifyErr || !verify?.success) {
               return reject(new Error(verify?.error || "Payment verification failed"));
             }
+            if (!verify.confirmed) {
+              toast({ title: "Payment confirmation pending", description: "Your order is saved. Confirmation will appear in My Orders after Razorpay confirms payment." });
+              navigate("/dashboard?tab=orders");
+              return reject(new Error("Payment confirmation pending. Please check My Orders."));
+            }
             resolve();
           } catch (err) {
             reject(err);

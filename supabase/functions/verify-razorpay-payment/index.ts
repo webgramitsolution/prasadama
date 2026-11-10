@@ -1,5 +1,6 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
 import { createClient } from 'npm:@supabase/supabase-js@2'
+import { validHmac } from '../_shared/razorpay-event.ts'
 
 function hex(buf: ArrayBuffer) {
   return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('')
@@ -33,19 +34,11 @@ Deno.serve(async (req) => {
       return json({ success: false, error: 'Missing payment verification fields' }, 400)
     }
 
-    const key = await crypto.subtle.importKey(
-      'raw',
-      new TextEncoder().encode(keySecret),
-      { name: 'HMAC', hash: 'SHA-256' },
-      false,
-      ['sign'],
-    )
-    const sig = hex(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(`${razorpay_order_id}|${razorpay_payment_id}`)))
-    if (sig !== razorpay_signature) {
+    if (!await validHmac(`${razorpay_order_id}|${razorpay_payment_id}`, razorpay_signature, keySecret)) {
       return json({ success: false, error: 'Invalid payment signature' }, 400)
     }
 
-    const { data: order } = await supabase.from('orders').select('id, user_id, razorpay_order_id, payment_status').eq('id', order_id).maybeSingle()
+    const { data: order } = await supabase.from('orders').select('id, user_id, razorpay_order_id, razorpay_payment_id, payment_status').eq('id', order_id).maybeSingle()
     if (!order) return json({ success: false, error: 'Order not found' }, 404)
     if (order.user_id !== userData.user.id) return json({ success: false, error: 'Forbidden' }, 403)
 
@@ -55,33 +48,12 @@ Deno.serve(async (req) => {
       return json({ success: false, error: 'Payment does not match this order' }, 400)
     }
     if (order.payment_status === 'paid') {
-      return json({ success: true })
+      return json({ success: order.razorpay_payment_id === razorpay_payment_id, confirmed: order.razorpay_payment_id === razorpay_payment_id })
     }
 
-    const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
-    await admin
-      .from('orders')
-      .update({
-        payment_status: 'paid',
-        razorpay_payment_id,
-        razorpay_order_id,
-        status: 'confirmed',
-      })
-      .eq('id', order_id)
-      .eq('payment_status', 'pending')
-
-    // Payment is verified — now create the courier shipment for this order.
-    try {
-      await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/ekart-create-shipment`, {
-        method: 'POST',
-        headers: { Authorization: authHeader, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ order_id }),
-      })
-    } catch (shipErr) {
-      console.error('ekart_sync_failed', shipErr)
-    }
-
-    return json({ success: true })
+    // A browser callback is only an acknowledgement. The signed webhook owns
+    // the paid transition and shipment, never this user-callable action.
+    return json({ success: true, confirmed: false, pending: true })
   } catch (e) {
     return json({ success: false, error: (e as Error).message }, 500)
   }

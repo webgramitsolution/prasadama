@@ -1,5 +1,8 @@
 # Roadmap
 
+- [ ] Fix selected Razorpay finding: only signed server-received captured-payment events may confirm and ship prepaid orders
+- [ ] Deploy and test payment verification and webhook; configure webhook secret and Razorpay delivery
+
 - [x] Diagnose still-empty admin chats using the identified admin session — existing customer conversation and message read successfully, no loading error
 - [x] Fill available chat height in saved code and retain the admin shell during lazy page loading; five chat regression tests passed
 - [ ] Confirm latest gap/navigation changes visually — preview still serves pre-edit modules despite fresh browser loads and automatic flush checks

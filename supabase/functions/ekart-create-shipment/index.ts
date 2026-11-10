@@ -1,6 +1,7 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { z } from 'npm:zod@3.23.8'
+import { validHmac } from '../_shared/razorpay-event.ts'
 
 const BodySchema = z.object({ order_id: z.string().uuid() })
 
@@ -10,17 +11,24 @@ Deno.serve(async (req) => {
   let orderId: string | null = null
   const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
   try {
-    const parsed = BodySchema.safeParse(await req.json().catch(() => null))
+    const raw = await req.text()
+    const parsed = BodySchema.safeParse(JSON.parse(raw))
     if (!parsed.success) return json({ success: false, error: 'A valid order is required' }, 400)
     orderId = parsed.data.order_id
     const authHeader = req.headers.get('Authorization') ?? ''
     const token = authHeader.replace(/^Bearer\s+/i, '')
+    const timestamp = req.headers.get('x-payment-timestamp') ?? ''
+    const secret = Deno.env.get('RAZORPAY_WEBHOOK_SECRET')
+    const trustedPayment = Boolean(secret && /^\d+$/.test(timestamp) && Math.abs(Date.now() - Number(timestamp)) < 60000 && await validHmac(`${timestamp}.${raw}`, req.headers.get('x-payment-signature') ?? '', secret))
     const { data: authData } = token ? await admin.auth.getUser(token) : { data: { user: null } }
-    if (!authData.user) return json({ success: false, error: 'Unauthorized' }, 401)
+    if (!authData.user && !trustedPayment) return json({ success: false, error: 'Unauthorized' }, 401)
     const { data: order } = await admin.from('orders').select('*').eq('id', orderId).maybeSingle()
     if (!order) return json({ success: false, error: 'Order not found' }, 404)
-    const { data: role } = await admin.from('user_roles').select('role').eq('user_id', authData.user.id).eq('role', 'admin').maybeSingle()
-    if (order.user_id !== authData.user.id && !role) return json({ success: false, error: 'Forbidden' }, 403)
+    if (!['paid', 'cod'].includes(order.payment_status ?? '')) return json({ success: false, error: 'Payment confirmation required' }, 409)
+    if (!trustedPayment && authData.user) {
+      const { data: role } = await admin.from('user_roles').select('role').eq('user_id', authData.user.id).eq('role', 'admin').maybeSingle()
+      if (order.user_id !== authData.user.id && !role) return json({ success: false, error: 'Forbidden' }, 403)
+    }
     if (order.tracking_number && order.ekart_sync_status === 'synced') return json({ success: true, already: true, tracking_id: order.tracking_number })
 
     const endpoint = Deno.env.get('EKART_SHIPMENT_API_URL')
