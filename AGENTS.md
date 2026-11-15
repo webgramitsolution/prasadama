@@ -27,3 +27,4 @@
 - Admin chat loads conversations and customer profiles separately by profiles.user_id because buyer_id has no profile foreign key; only admins with customer chats may read those profiles, and chat tables participate in Realtime.
 - Admin child pages suspend inside the persistent admin shell, route navigation uses React transitions, and chat fills the available main height to prevent blank navigation screens and bottom gaps.
 - Only the raw-body signed Razorpay webhook may mark prepaid orders paid after checking captured status, INR amount and persisted gateway order; browser callbacks are read-only and shipment rejects unpaid orders.
+- Customer order emails are sent only to the order owner's verified account email (never the checkout billing email); only admins may override the recipient, to prevent unsolicited mail to third parties.

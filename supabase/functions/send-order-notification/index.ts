@@ -2,6 +2,7 @@ import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { z } from 'npm:zod@3.23.8'
 import { logEmailDelivery, smtpPort } from '../_shared/email-log.ts'
+import { resolveOrderRecipient } from '../_shared/order-recipient.ts'
 
 const BodySchema = z.object({
   order_id: z.string().uuid().optional(),
@@ -109,13 +110,21 @@ Deno.serve(async (req) => {
     const billing = (order.billing_address ?? {}) as Record<string, unknown>
     const shipping = (order.shipping_address ?? {}) as Record<string, unknown>
     
-    let recipient = (isAdmin ? parsed.data.to_override : '') || String(billing.email || '');
-    if (!recipient && !parsed.data.preview_only) {
-      const { data: owner } = await admin.auth.admin.getUserById(order.user_id)
-      recipient = owner.user?.email || '';
+    let recipient = ''
+    if (!parsed.data.preview_only) {
+      const { data: owner } = order.user_id ? await admin.auth.admin.getUserById(order.user_id) : { data: { user: null } }
+      try {
+        recipient = resolveOrderRecipient({
+          isAdmin,
+          override: parsed.data.to_override,
+          ownerEmail: owner.user?.email,
+          ownerConfirmedAt: owner.user?.email_confirmed_at,
+        })
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : 'Forbidden'
+        return json({ success: false, error: msg }, msg === 'Forbidden' ? 403 : 400)
+      }
     }
-    
-    if (!recipient && !parsed.data.preview_only) return json({ success: false, error: 'Buyer email is unavailable' }, 400)
 
 
     const label: Record<string, string> = {
@@ -272,7 +281,8 @@ Deno.serve(async (req) => {
     if (!user || !pass) return json({ success: false, error: 'Email is not configured' }, 500)
     
     // For new orders, notify admin as well with a special subject
-    const recipients = parsed.data.type === 'new_order' ? [recipient, user] : [recipient]
+    const recipients = (parsed.data.type === 'new_order' ? [recipient, user] : [recipient]).filter(Boolean)
+    if (recipients.length === 0) return json({ success: true, skipped: 'No verified account email for this order' })
     let failedDeliveries = 0
     for (const to of [...new Set(recipients)]) {
       const isToAdmin = to === user;
