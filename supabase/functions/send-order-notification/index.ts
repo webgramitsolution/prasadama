@@ -88,6 +88,8 @@ Deno.serve(async (req) => {
     let items: any[] = [];
     
     if (parsed.data.preview_only || parsed.data.order_id === "00000000-0000-0000-0000-000000000000") {
+      // Sample orders are an admin-only tool so they cannot be used to send mail.
+      if (!isAdmin) return json({ success: false, error: 'Forbidden' }, 403)
       order = {
         order_number: "ORD-TEST-12345",
         created_at: new Date().toISOString(),
