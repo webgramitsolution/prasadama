@@ -57,10 +57,8 @@ export function AuthShell({ mode, children }: Props) {
     return () => clearInterval(t);
   }, []);
 
-  // Login stays app-like and fixed; signup can scroll on small phones so the
-  // "Create Account" CTA is always reachable.
+  // Both auth pages stay app-like: the banner stays fixed, only the form sheet scrolls.
   useEffect(() => {
-    if (mode === "signup") return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
@@ -70,7 +68,7 @@ export function AuthShell({ mode, children }: Props) {
 
   if (isMobile) {
     return (
-      <div className={`phone-auth-shell ${mode === "signup" ? "min-h-[100dvh] flex flex-col" : "fixed inset-0 flex flex-col overflow-hidden"}`} style={{ backgroundImage: `url(${signupPhoneBackground.url})` }}>
+      <div className="phone-auth-shell fixed inset-0 flex flex-col overflow-hidden" style={{ backgroundImage: `url(${signupPhoneBackground.url})` }}>
         {/* Hero — logo only (clickable, returns to home). Meets 44×44 tap-target
             guidance and shows a premium hover/active state with a soft ring. */}
         <div className="signup-phone-banner">
@@ -96,8 +94,8 @@ export function AuthShell({ mode, children }: Props) {
 
         {/* White sheet with form */}
         <div
-          className={`flex-1 bg-white rounded-t-[32px] px-5 pt-6 ${mode === "signup" ? "pb-9" : "pb-24"} shadow-[0_-8px_30px_rgba(0,0,0,0.15)] overflow-y-auto [&::-webkit-scrollbar]:hidden`}
-          style={{ minHeight: 500, scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          className={`flex-1 bg-white rounded-t-[32px] px-5 pt-6 pb-24 shadow-[0_-8px_30px_rgba(0,0,0,0.15)] min-h-0 overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden`}
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           <Tabs mode={mode} />
           <div className="bg-white rounded-2xl p-4">{children}</div>
