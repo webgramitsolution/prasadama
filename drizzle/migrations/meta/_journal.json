@@ -64,6 +64,20 @@
       "when": 1794802154428,
       "tag": "0008_guard_review_moderation_fields",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1794802246906,
+      "tag": "0009_has_role_self_only",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1794802262702,
+      "tag": "0010_has_role_self_only_fix",
+      "breakpoints": true
     }
   ]
 }

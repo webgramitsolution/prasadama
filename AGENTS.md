@@ -29,3 +29,4 @@
 - Only the raw-body signed Razorpay webhook may mark prepaid orders paid after checking captured status, INR amount and persisted gateway order; browser callbacks are read-only and shipment rejects unpaid orders.
 - Customer order emails are sent only to the order owner's verified account email (never the checkout billing email); only admins may override the recipient, to prevent unsolicited mail to third parties.
 - Review approval and verification are admin-only: a product_reviews trigger resets moderation fields on customer edits, so policies alone never decide approval.
+- public.has_role only answers for the caller's own user ID (or service role), so role membership cannot be probed; always call it with auth.uid().
