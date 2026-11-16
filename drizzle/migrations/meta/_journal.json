@@ -57,6 +57,13 @@
       "when": 1794024711698,
       "tag": "0007_enable_customer_chat_realtime",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1794802154428,
+      "tag": "0008_guard_review_moderation_fields",
+      "breakpoints": true
     }
   ]
 }
