@@ -47,7 +47,7 @@ async function sendSms(number: string, message: string) {
     message,
   });
 
-  console.log(`Sending SMS to ${number}...`);
+  console.log(`Sending SMS to ***${String(number).slice(-4)}...`);
 
   try {
     // Sensitive values go in the encrypted request body instead of the URL.
@@ -57,7 +57,8 @@ async function sendSms(number: string, message: string) {
       body: params.toString(),
     });
     const result = await response.text();
-    console.log("SMS API Response:", result);
+    // Provider responses can echo the recipient number, so only log a redacted summary.
+    console.log("SMS API Response:", response.status, result.replace(/\d{6,}/g, (m) => `***${m.slice(-4)}`).slice(0, 200));
     return result;
   } catch (e: any) {
     console.error("SMS Fetch Exception:", e.message);
