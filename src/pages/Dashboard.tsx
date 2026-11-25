@@ -951,9 +951,9 @@ export default function Dashboard() {
       {/* Main Content */}
        <div className="flex-1 flex flex-col min-w-0 min-h-0">
         {/* Main Content Area */}
-         <main className={cn("flex-1 min-h-0 p-3 lg:p-5", activeTab === "chat" ? "overflow-hidden" : "overflow-y-auto", (activeTab === "chat" || activeTab === "invoices") && "flex flex-col")}>
+         <main className={cn("flex-1 min-h-0", activeTab === "chat" ? "overflow-hidden px-0 lg:px-5" : "overflow-y-auto p-3 lg:p-5", (activeTab === "chat" || activeTab === "invoices") && "flex flex-col")}>
           {/* Mobile Sidebar Toggle */}
-          <div className="mb-2 shrink-0 md:hidden">
+          <div className={cn("mb-2 shrink-0 md:hidden", activeTab === "chat" && "px-3 pt-2")}>
             <Button 
               variant="outline" 
               size="sm" 
