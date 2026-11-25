@@ -261,11 +261,26 @@ export function SupportCenter({ openChat }: { openChat?: () => void }) {
       `${category.title} ${faq.question} ${faq.answer}`.toLowerCase().includes(search)) }))
     .filter(category => category.faqs.length);
 
+  const hero = (
+    <div className="relative isolate flex min-h-44 items-center overflow-hidden rounded-xl border border-[#f2ddda] bg-[#fbe8e6] p-5 sm:min-h-52 sm:p-7">
+      <img src="/products-hero-banner.jpg" alt="" fetchPriority={openChat ? "auto" : "high"} className="absolute inset-y-0 right-0 -z-20 h-full w-full object-cover object-right sm:w-3/5" />
+      <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-[#fbe8e6] via-[#fbe8e6]/95 to-[#fbe8e6]/40 sm:to-transparent" />
+      <div className="w-full max-w-xl"><h2 className={`${title} text-2xl`}>How can we help you?</h2>
+        <p className="mt-1 text-sm text-muted-foreground">Search for answers or browse our help topics.</p>
+        <label className="relative mt-3 block"><Search aria-hidden className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Input className="bg-white pl-9" aria-label="Search help articles" placeholder="Search delivery, refunds, coupons…" value={query}
+            onChange={event => { setQuery(event.target.value); setTopic(""); }} />
+        </label>
+      </div>
+    </div>
+  );
+
   return <section className="space-y-4" aria-labelledby="support-heading">
     <div>
       <h1 id="support-heading" className={`${title} text-3xl`}>Support</h1>
       <p className="mt-1 text-muted-foreground">Find answers, contact us or raise a support request.</p>
     </div>
+    {!openChat && hero}
     <div className="grid grid-cols-2 gap-2 lg:grid-cols-4 lg:gap-3">
       {shortcuts.map(({ icon: Icon, title: name, label, body, to, topic: shortcut, tone }) => {
         const content = <><span className={`mb-2 inline-flex rounded-full p-2 ${tone}`}><Icon size={21} /></span>
@@ -276,19 +291,9 @@ export function SupportCenter({ openChat }: { openChat?: () => void }) {
           <button className={classes} key={name} type="button" onClick={() => { setTopic(shortcut ?? ""); setQuery(""); }}>{content}</button>;
       })}
     </div>
-    <div className="relative isolate grid items-center gap-3 overflow-hidden rounded-xl border border-[#f2ddda] bg-gradient-to-r from-[#fbe8e6] to-[#fff6ef] p-4 sm:p-6 md:grid-cols-[1fr_auto]">
-      {!openChat && <div aria-hidden className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,#fbe8e6_12%,#fff2e9e8_55%,#fff2e965_100%),url(/products-hero-banner.jpg)] bg-[position:center,right_center] bg-[size:cover,auto_100%] bg-no-repeat" />}
-      <div><h2 className={`${title} text-2xl`}>How can we help you?</h2>
-        <p className="mt-1 text-sm text-muted-foreground">Search for answers or browse our help topics.</p>
-        <label className="relative mt-3 block"><Search aria-hidden className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input className="bg-white pl-9" aria-label="Search help articles" placeholder="Search delivery, refunds, coupons…" value={query}
-            onChange={event => { setQuery(event.target.value); setTopic(""); }} />
-        </label>
-      </div>
-      <Headphones aria-hidden size={74} strokeWidth={1.25} className="mx-6 hidden text-[#951819] md:block" />
-    </div>
+    {openChat && hero}
     <div className="grid items-start gap-3 lg:grid-cols-[minmax(0,1fr)_17rem]">
-      <div className="space-y-3">
+      <div className="min-w-0 space-y-3">
         <section className={card}><h2 className={`${title} text-xl`}>Popular Help Topics</h2>
           <div className="mt-3 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
             {supportTopics.map(({ icon: Icon, title: name }) => <button type="button" key={name}
@@ -302,14 +307,14 @@ export function SupportCenter({ openChat }: { openChat?: () => void }) {
           <h2 className={`${title} text-xl`}>{topic || "Frequently Asked Questions"}</h2>
           {(topic || search) && <Button type="button" variant="link" onClick={() => { setQuery(""); setTopic(""); }}>View all FAQs</Button>}
         </div>
-          {results.length ? <Accordion type="single" collapsible>
+          {results.length ? <div role="region" aria-label="FAQ answers" tabIndex={0} className="mt-2 rounded focus-visible:outline focus-visible:outline-[#850d12] lg:max-h-[min(52dvh,29rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-3"><Accordion type="single" collapsible>
             {results.flatMap(category => category.faqs).map(faq => <AccordionItem key={faq.question} value={faq.question}>
               <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger><AccordionContent>{faq.answer}</AccordionContent>
             </AccordionItem>)}
-          </Accordion> : <p className="mt-3 text-sm text-muted-foreground">No matching answers. Try another search or contact support.</p>}
+          </Accordion></div> : <p className="mt-3 text-sm text-muted-foreground">No matching answers. Try another search or contact support.</p>}
         </section>
       </div>
-      <aside className={card}><h2 className={`${title} text-xl`}>Contact Us</h2>
+      <aside className={`${card} lg:sticky lg:top-40`}><h2 className={`${title} text-xl`}>Contact Us</h2>
         <p className="mt-1 text-sm text-muted-foreground">Get in touch with our support team.</p>
         <div className="mt-3 space-y-2">{contactOptions.map(option => <div key={option.title} className="flex items-start gap-2 rounded-lg border p-3">
           <option.icon size={18} className="mt-1 shrink-0 text-[#850d12]" />

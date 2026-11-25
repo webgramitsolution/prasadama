@@ -304,7 +304,7 @@ export default function CourierTracking() {
                         if (error) setError(null);
                       }}
                       onKeyDown={(e) => e.key === "Enter" && handleTrack()}
-                      className="border-0 shadow-none focus-visible:ring-0 h-11 px-0"
+                      className="border-0 shadow-none focus-visible:ring-0 h-11 px-3 sm:px-4"
                       aria-invalid={!!error}
                     />
                   </div>

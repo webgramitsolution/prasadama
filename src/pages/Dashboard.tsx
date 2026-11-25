@@ -469,7 +469,6 @@ export default function Dashboard() {
   };
 
   const lastPurchasedProduct = orders.flatMap(order => itemsByOrder[order.id] ?? []).find(item => item.product_id)?.product_id;
-  const latestOrderImage = orders.flatMap(order => itemsByOrder[order.id] ?? []).find(item => item.product_image)?.product_image;
   const recentReorder = orders.find(order => itemsByOrder[order.id]?.some(item => item.product_id));
   const shortcuts = [
     { label: "Track Order", detail: "Check your order status", icon: Truck, action: () => selectTab("orders") },
@@ -480,9 +479,9 @@ export default function Dashboard() {
   const accountLinks = [...shortcuts.slice(2), { label: "Account Settings", detail: "Profile and preferences", icon: Settings, action: () => selectTab("profile") }];
   const OverviewContent = () => (
     <div className="space-y-4">
-      <section className="relative isolate overflow-hidden rounded-xl border border-[#eedac4] bg-[#fae6ca] p-5 sm:p-7">
-        {latestOrderImage && <img src={latestOrderImage} alt="" className="absolute inset-y-0 right-0 -z-20 h-full w-3/5 object-cover object-center" />}
-        <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-[#fff3df] via-[#fff0d8] to-transparent" />
+      <section className="relative isolate overflow-hidden rounded-xl border border-[#eedac4] bg-[#fae6ca] p-5 sm:min-h-40 sm:p-7">
+        <img src="/auth-mithai.jpg" alt="" fetchPriority="high" className="absolute inset-y-0 right-0 -z-20 h-full w-3/4 object-cover object-center sm:w-3/5" />
+        <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-[#fff3df] via-[#fff0d8]/95 to-[#fff0d8]/15" />
         <h1 className="max-w-[70%] font-serif text-3xl font-bold leading-tight text-[#800b12] sm:text-4xl">Welcome back,<br />{profile?.full_name || "Buyer"}!</h1>
         <p className="mt-2 text-sm font-medium text-[#800b12]">Good food, good blessings.</p>
       </section>

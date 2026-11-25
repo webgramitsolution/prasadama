@@ -148,7 +148,7 @@ export function AccountAddresses({ user, profile }: { user: User; profile: Legac
   </section>;
 }
 
-type Review = Tables<"product_reviews"> & { products: Pick<Tables<"products">, "name" | "images"> | null };
+type Review = Tables<"product_reviews"> & { products: Pick<Tables<"products">, "name" | "images" | "slug"> | null };
 export function AccountReviews({ userId }: { userId: string }) {
   const { toast } = useToast();
   const [reviews, setReviews] = useState<Review[] | null>(null);
@@ -159,7 +159,7 @@ export function AccountReviews({ userId }: { userId: string }) {
 
   useEffect(() => {
     let current = true;
-    supabase.from("product_reviews").select("*, products(name, images)").eq("user_id", userId).order("created_at", { ascending: false })
+    supabase.from("product_reviews").select("*, products(name, images, slug)").eq("user_id", userId).order("created_at", { ascending: false })
       .then(({ data, error }) => {
         if (!current) return;
         if (error) setLoadError(error.message);
@@ -174,7 +174,7 @@ export function AccountReviews({ userId }: { userId: string }) {
     setSaving(true);
     const { data, error } = await supabase.from("product_reviews").update({
       rating: edit.rating, review_title: edit.review_title, review_text: edit.review_text,
-    }).eq("id", edit.id).eq("user_id", userId).select("*, products(name, images)").single();
+    }).eq("id", edit.id).eq("user_id", userId).select("*, products(name, images, slug)").single();
     setSaving(false);
     if (error) { toast({ title: error.message, variant: "destructive" }); return; }
     setReviews(current => current?.map(review => review.id === data.id ? data : review) ?? []);
@@ -198,23 +198,30 @@ export function AccountReviews({ userId }: { userId: string }) {
       <div className="space-y-3">
         <div className="flex overflow-x-auto rounded-lg border bg-white p-1">
           {["All Reviews", "Published", "Pending"].map(tab => <Button key={tab} variant="ghost" aria-pressed={tab === filter}
-            className={cn("shrink-0", tab === filter && "bg-[#fce9e8] text-[#850d12]")} onClick={() => setFilter(tab)}>{tab}</Button>)}
+            className={cn("shrink-0 rounded-none border-b-2 border-transparent", tab === filter && "border-[#850d12] text-[#850d12]")} onClick={() => setFilter(tab)}>{tab} ({tab === "All Reviews" ? list.length : list.filter(review => !!review.is_approved === (tab === "Published")).length})</Button>)}
         </div>
         {loadError && <p className={panel} role="alert">{loadError}</p>}
         {!loadError && (!reviews ? <p>Loading reviews…</p> : !visible.length && <p className={panel}>No reviews in this view.</p>)}
-        {visible.map(review => <article className={cn(panel, "flex flex-wrap gap-3")} key={review.id}>
-          {review.products?.images?.[0] && <img className="h-20 w-20 rounded-lg object-cover" src={review.products.images[0]} alt="" loading="lazy" />}
+        {visible.map(review => {
+          const productUrl = review.product_id ? `/product/${encodeURIComponent(review.products?.slug || review.product_id)}` : null;
+          const productName = review.products?.name ?? "Product review";
+          const thumbnail = review.products?.images?.[0];
+          return <article className={cn(panel, "grid grid-cols-[auto_minmax(0,1fr)] gap-3 sm:gap-4")} key={review.id}>
+          {productUrl && thumbnail ? <Link to={productUrl} aria-label={productName}><img className="h-20 w-20 rounded-lg object-cover sm:h-24 sm:w-24" src={thumbnail} alt="" loading="lazy" /></Link> :
+          <span aria-hidden className="grid h-20 w-20 place-items-center rounded-lg bg-[#fff0df] text-[#850d12]"><Star size={21} /></span>}
           <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2"><h2 className="font-semibold">{review.products?.name ?? "Product review"}</h2><span className={cn("rounded px-2 py-1 text-xs", review.is_approved ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-900")}>{review.is_approved ? "Published" : "Pending"}</span></div>
+            <div className="flex flex-wrap items-center gap-2"><h2 className="font-semibold">{productUrl ? <Link to={productUrl} className="hover:text-[#850d12] hover:underline">{productName}</Link> : productName}</h2><span className={cn("rounded px-2 py-1 text-xs", review.is_approved ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-900")}>{review.is_approved ? "Published" : "Pending"}</span></div>
+            <p className="mt-1 text-xs text-muted-foreground"><time dateTime={review.created_at}>{new Date(review.created_at).toLocaleDateString("en-IN", { dateStyle: "medium" })}</time></p>
             <p aria-label={`${review.rating} out of 5 stars`} className="my-1 flex text-amber-500">{[1, 2, 3, 4, 5].map(star => <Star key={star} size={16} fill={star <= review.rating ? "currentColor" : "none"} />)}</p>
             {review.review_title && <p className="font-medium">{review.review_title}</p>}<p className="text-sm text-muted-foreground">{review.review_text}</p>
             <div className="mt-2 flex flex-wrap gap-1">{review.photos?.map((photo, index) => <img key={index} src={photo} alt="" className="h-12 w-12 rounded object-cover" loading="lazy" />)}</div>
           </div>
-          <div className="flex w-full justify-end gap-2 sm:w-auto">
+          <div className="col-span-2 flex justify-end gap-2">
             <Button variant="outline" size="sm" onClick={() => setEdit(review)}>Edit</Button>
             <Button variant="outline" size="sm" onClick={() => remove(review)}>Delete</Button>
           </div>
-        </article>)}
+        </article>;
+        })}
       </div>
       <aside className={panel}><h2 className={cn(heading, "text-xl")}>Overall Rating</h2><p className="mt-2 text-3xl font-bold">{list.length ? (list.reduce((sum, review) => sum + review.rating, 0) / list.length).toFixed(1) : "—"}<span className="text-sm font-normal"> / 5</span></p><p className="text-sm text-muted-foreground">{list.length} reviews</p>
         <div className="mt-4 space-y-2">{[5, 4, 3, 2, 1].map(star => {
