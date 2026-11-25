@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,7 +26,7 @@ import {
   Send,
   CheckCircle2,
   Headphones,
-  Tag, Search, ChevronRight, Package,
+  Tag, Search, ChevronRight, Package, Ticket, UserRound, XCircle, ArrowRight, Plus,
 } from "lucide-react";
 
 export const faqCategories = [
@@ -86,9 +86,9 @@ export const faqCategories = [
 ];
 
 const contactOptions = [
-  { icon: MessageSquare, title: "Live Chat", description: "Chat with our support team in real-time", action: "/chat", buttonText: "Start Chat", isLink: true },
-  { icon: Phone, title: "Call Us", description: "Mon-Sat, 9:00 AM - 6:00 PM IST", action: "tel:+917551120242", buttonText: "+91 75511 20242", isLink: false },
-  { icon: Mail, title: "Email Support", description: "We respond within 24 hours", action: "mailto:info@webgramitsolution", buttonText: "info@webgramitsolution", isLink: false },
+  { icon: MessageSquare, title: "WhatsApp Support", label: "Chat Now", mobile: "Chat Now", description: "Chat with us on WhatsApp", action: "https://wa.me/917551120242", tone: "bg-emerald-50 text-[#008c49]" },
+  { icon: Phone, title: "Phone Support", label: "+91 75511 20242", mobile: "Call Us", description: "Mon–Sat, 9 AM–6 PM IST", action: "tel:+917551120242", tone: "bg-[#fff0ef] text-[#a60810]" },
+  { icon: Mail, title: "Email Support", label: "Email Us", mobile: "Email Us", description: "Send us your question", action: "mailto:info@webgramitsolution", tone: "bg-blue-50 text-blue-700" },
 ];
 
 function ContactForm() {
@@ -238,16 +238,28 @@ function ContactForm() {
 }
 
 const shortcuts = [
-  { icon: Package, title: "Track My Order", label: "Track order", body: "Check your shipment status.", to: "/courier-tracking", tone: "bg-orange-100 text-orange-800" },
-  { icon: RotateCcw, title: "Returns & Refunds", label: "View policy", body: "Find answers about returns and refunds.", topic: "Returns & Warranty", tone: "bg-amber-100 text-amber-800" },
-  { icon: Tag, title: "Offers & Coupons", label: "Get help", body: "Get help with discounts and coupon codes.", topic: "Offers & Coupons", tone: "bg-rose-100 text-rose-800" },
-  { icon: CreditCard, title: "Account & Payments", label: "View guide", body: "Find help with billing and payments.", topic: "Payment & Invoicing", tone: "bg-sky-100 text-sky-800" },
+  { icon: Package, title: "Track My Order", label: "Track Order", body: "Check your shipment status.", to: "/courier-tracking", tone: "bg-orange-100 text-orange-800" },
+  { icon: RotateCcw, title: "Returns & Refunds", label: "View Policy", body: "Find answers about returns and refunds.", topic: "Returns & Warranty", tone: "bg-amber-100 text-amber-800" },
+  { icon: Ticket, title: "Offers & Coupons", label: "Get Help", body: "Get help with discounts and coupon codes.", topic: "Offers & Coupons", tone: "bg-rose-100 text-rose-800" },
+  { icon: UserRound, title: "Account & Payments", label: "View Guide", body: "Find help with billing and payments.", topic: "Payment & Invoicing", tone: "bg-sky-100 text-sky-800" },
 ];
 
 const supportTopics = [...faqCategories, {
+  icon: XCircle, title: "Cancellation",
+  faqs: [{ question: "Can I cancel or modify my order?", answer: "Check the available actions under My Orders. For changes or cancellation assistance, contact support with your order number." }],
+}, {
   icon: Tag, title: "Offers & Coupons",
   faqs: [{ question: "How do I apply a coupon?", answer: "Enter your coupon in the checkout coupon field and apply it before placing your order. Check the offer terms if a code is rejected." }],
 }];
+const popularTopics = [
+  { icon: Truck, name: "Order & Delivery", topic: "Shipping & Delivery", detail: "Tracking, delivery time, late delivery", tone: "bg-blue-50 text-blue-700" },
+  { icon: XCircle, name: "Cancellation", topic: "Cancellation", detail: "Cancel or modify an order", tone: "bg-red-50 text-red-700" },
+  { icon: RotateCcw, name: "Returns & Refunds", topic: "Returns & Warranty", detail: "Return products and get a refund", tone: "bg-orange-50 text-orange-700" },
+  { icon: Tag, name: "Offers & Coupons", topic: "Offers & Coupons", detail: "Apply coupons and get discounts", tone: "bg-violet-50 text-violet-700" },
+  { icon: UserRound, name: "Account & Profile", topic: "Account & Registration", detail: "Login, profile and account settings", tone: "bg-cyan-50 text-cyan-700" },
+  { icon: Package, name: "Products & Stock", topic: "RFQ (Request for Quotation)", detail: "Product availability and bulk orders", tone: "bg-violet-50 text-violet-700" },
+];
+
 const card = "rounded-xl border border-[#eee4dd] bg-white p-4 sm:p-5";
 const title = "font-serif font-bold text-[#800b12]";
 
@@ -255,24 +267,42 @@ export function SupportCenter({ openChat }: { openChat?: () => void }) {
   const [query, setQuery] = useState("");
   const [topic, setTopic] = useState("");
   const [showRequest, setShowRequest] = useState(false);
+  const faq = useRef<HTMLElement>(null);
+  const [draftQuery, setDraftQuery] = useState("");
+  const [showAll, setShowAll] = useState(false);
+  const focusFaq = () => faq.current?.scrollIntoView({ block: "nearest" });
+  function chooseTopic(value: string) {
+    setTopic(value); setQuery(""); setDraftQuery(""); setShowAll(false); focusFaq();
+  }
   const search = query.trim().toLowerCase();
   const results = supportTopics.filter(category => !topic || category.title === topic)
     .map(category => ({ ...category, faqs: category.faqs.filter(faq =>
       `${category.title} ${faq.question} ${faq.answer}`.toLowerCase().includes(search)) }))
     .filter(category => category.faqs.length);
 
+  const questions = results.flatMap(category => category.faqs);
+  const featured = ["How do I track my order?", "What is your return policy?", "How long does delivery take?", "Can I cancel or modify my order?", "How do I apply a coupon?"];
+  const visible = showAll || topic || search ? questions : featured.flatMap(question => questions.filter(faq => faq.question === question));
+  const searchForm = (mobile: boolean) => (
+    <form role="search" className={mobile ? "flex gap-1 lg:hidden" : "mt-3 hidden gap-2 lg:flex"} onSubmit={event => {
+      event.preventDefault(); setTopic(""); setQuery(draftQuery); setShowAll(false); focusFaq();
+    }}>
+      <div className="relative min-w-0 flex-1"><Search aria-hidden className="absolute left-3 top-3 size-4 text-slate-500" />
+        <Input className="h-10 bg-white pl-9" aria-label="Search help articles" placeholder="Search for help articles…" value={draftQuery} onChange={event => setDraftQuery(event.target.value)} />
+      </div>
+      <Button type="submit" className="h-10 bg-[#850800] px-3 text-white hover:bg-[#650600]" aria-label="Search"><Search size={17} className="lg:hidden" /><span className="hidden lg:inline">Search</span></Button>
+    </form>
+  );
+
   const hero = (
-    <div className="relative isolate flex min-h-44 items-center overflow-hidden rounded-xl border border-[#f2ddda] bg-[#fbe8e6] p-5 sm:min-h-52 sm:p-7">
-      <img src="/cdn/support-center-hero.webp" alt="" fetchPriority={openChat ? "auto" : "high"} className="absolute inset-y-0 right-0 -z-20 h-full w-3/5 object-cover object-right sm:w-1/2" />
-      <div aria-hidden className="absolute inset-y-0 left-0 -z-10 w-[58%] bg-gradient-to-r from-[#fbe8e6] from-75% to-transparent sm:w-[55%]" />
-      <div className="w-[63%] max-w-lg sm:w-[49%]">{openChat
-        ? <h2 className={`${title} text-2xl`}>How can we help you?</h2>
-        : <h1 id="support-hero-heading" className={`${title} text-2xl sm:text-3xl`}>How can we help you?</h1>}
-        <p className="mt-1 text-sm text-muted-foreground">Search for answers or browse our help topics.</p>
-        <label className="relative mt-3 block"><Search aria-hidden className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input className="bg-white pl-9" aria-label="Search help articles" placeholder="Search delivery, refunds, coupons…" value={query}
-            onChange={event => { setQuery(event.target.value); setTopic(""); }} />
-        </label>
+    <div className="relative isolate flex min-h-24 items-center overflow-hidden rounded-lg bg-[#fae8e6] px-3 py-3 lg:min-h-36 lg:px-6 lg:py-4">
+      <img src="/cdn/support-center-hero.webp" alt="" className="absolute inset-y-0 left-0 -z-10 h-full w-2/5 object-cover object-[80%_center] lg:left-auto lg:right-0 lg:w-[34%]" />
+      <div className="ml-[36%] w-[64%] rounded-md bg-[#fff7f6]/90 p-2 lg:ml-0 lg:w-[72%] lg:bg-transparent lg:p-0">
+        <div className="flex items-center gap-4"><Headphones aria-hidden className="hidden size-10 text-[#850800] lg:block" />
+          <div>{openChat ? <h2 className={`${title} text-lg lg:text-2xl`}>How can we help you?</h2> : <h1 id="support-hero-heading" className={`${title} text-lg lg:text-2xl`}>How can we help you?</h1>}
+            <p className="mt-1 text-xs text-slate-600 lg:text-sm">Search for answers or browse our help topics.</p></div>
+        </div>
+        {searchForm(false)}
       </div>
     </div>
   );
@@ -282,51 +312,55 @@ export function SupportCenter({ openChat }: { openChat?: () => void }) {
       <h1 id="support-heading" className={`${title} text-3xl`}>Support</h1>
       <p className="mt-1 text-muted-foreground">Find answers, contact us or raise a support request.</p>
     </div>}
+    {searchForm(true)}
     {!openChat && hero}
-    <div className="grid grid-cols-2 gap-2 lg:grid-cols-4 lg:gap-3">
+    <div className="grid grid-cols-4 gap-2 lg:gap-3">
       {shortcuts.map(({ icon: Icon, title: name, label, body, to, topic: shortcut, tone }) => {
         const content = <><span className={`mb-2 inline-flex rounded-full p-2 ${tone}`}><Icon size={21} /></span>
-          <span className={`block ${title}`}>{name}</span><span className="mt-1 hidden text-sm text-muted-foreground sm:block">{body}</span>
-          <span className="mt-2 inline-flex items-center text-sm font-semibold text-[#850d12]">{label}<ChevronRight size={15} /></span></>;
-        const classes = `${card} block text-left hover:border-[#bc7775]`;
+          <span className={`block text-xs leading-tight lg:text-base ${title}`}>{name}</span><span className="mt-1 hidden text-sm text-slate-600 lg:block">{body}</span>
+          <span className="mt-2 hidden items-center gap-1 text-sm font-semibold text-[#a50709] lg:inline-flex">{label}<ArrowRight size={14} /></span></>;
+        const classes = "block rounded-lg border border-[#eee9e6] bg-white px-1 py-3 text-center hover:border-[#bc7775] lg:p-4 lg:text-left";
         return to ? <Link className={classes} key={name} to={to}>{content}</Link> :
-          <button className={classes} key={name} type="button" onClick={() => { setTopic(shortcut ?? ""); setQuery(""); }}>{content}</button>;
+          <button className={classes} key={name} type="button" onClick={() => chooseTopic(shortcut ?? "")}>{content}</button>;
       })}
     </div>
     {openChat && hero}
-    <div className="grid items-start gap-3 lg:grid-cols-[minmax(0,1fr)_17rem]">
+    <div className="grid items-start gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(14rem,27%)]">
       <div className={`min-w-0 space-y-3 ${openChat ? "lg:max-h-[min(65dvh,40rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-2" : ""}`}>
         <section className={card}><h2 className={`${title} text-xl`}>Popular Help Topics</h2>
           <div className="mt-3 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
-            {supportTopics.map(({ icon: Icon, title: name }) => <button type="button" key={name}
-              onClick={() => { setTopic(topic === name ? "" : name); setQuery(""); }} aria-pressed={topic === name}
-              className="flex items-center gap-2 rounded-lg border p-3 text-left text-sm font-medium hover:bg-[#fcf4ee] aria-pressed:bg-[#fbe8e6]">
-              <Icon size={18} className="shrink-0 text-[#850d12]" /><span className="flex-1">{name}</span><ChevronRight size={15} />
+            {popularTopics.map(({ icon: Icon, name, topic: key, detail, tone }) => <button type="button" key={name}
+              onClick={() => chooseTopic(topic === key ? "" : key)} aria-pressed={topic === key}
+              className="flex items-center gap-2 rounded-md border border-slate-100 p-2 text-left hover:bg-[#fcf4ee] aria-pressed:bg-[#fbe8e6]">
+              <span className={`shrink-0 rounded-full p-2 ${tone}`}><Icon size={18} /></span><span className="min-w-0 flex-1 text-xs font-semibold">{name}<span className="mt-0.5 block font-normal text-slate-600">{detail}</span></span><ChevronRight size={14} />
             </button>)}
           </div>
         </section>
-        <section className={card}><div className="flex flex-wrap items-center justify-between gap-1">
+        <section ref={faq} className={card}><div className="flex flex-wrap items-center justify-between gap-1">
           <h2 className={`${title} text-xl`}>{topic || "Frequently Asked Questions"}</h2>
-          {(topic || search) && <Button type="button" variant="link" onClick={() => { setQuery(""); setTopic(""); }}>View all FAQs</Button>}
+          <Button type="button" variant="link" className="text-[#9b0908]" onClick={() => { chooseTopic(""); setShowAll(true); }}>View All FAQs <ArrowRight size={14} className="ml-1" /></Button>
         </div>
-          {results.length ? <div role="region" aria-label="FAQ answers" tabIndex={0} className={`mt-2 rounded focus-visible:outline focus-visible:outline-[#850d12] ${openChat ? "" : "lg:max-h-[min(52dvh,29rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-3"}`}><Accordion type="single" collapsible>
-            {results.flatMap(category => category.faqs).map(faq => <AccordionItem key={faq.question} value={faq.question}>
-              <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger><AccordionContent>{faq.answer}</AccordionContent>
+          {visible.length ? <div role="region" aria-label="FAQ answers" tabIndex={0} className={`mt-2 rounded focus-visible:outline focus-visible:outline-[#850d12] ${openChat ? "" : "lg:max-h-[min(52dvh,29rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-3"}`}><Accordion type="single" collapsible>
+            {visible.map(faq => <AccordionItem key={faq.question} value={faq.question}>
+              <AccordionTrigger className="justify-start gap-2 py-3 text-left [&>svg:last-child]:hidden"><Plus aria-hidden size={16} className="shrink-0" />{faq.question}</AccordionTrigger><AccordionContent>{faq.answer}</AccordionContent>
             </AccordionItem>)}
           </Accordion></div> : <p className="mt-3 text-sm text-muted-foreground">No matching answers. Try another search or contact support.</p>}
         </section>
       </div>
       <aside className={`${card} lg:sticky ${openChat ? "lg:top-0" : "lg:top-40"}`}><h2 className={`${title} text-xl`}>Contact Us</h2>
         <p className="mt-1 text-sm text-muted-foreground">Get in touch with our support team.</p>
-        <div className="mt-3 space-y-2">{contactOptions.map(option => <div key={option.title} className="flex items-start gap-2 rounded-lg border p-3">
-          <option.icon size={18} className="mt-1 shrink-0 text-[#850d12]" />
-          <div className="min-w-0"><p className="text-sm font-semibold">{option.title}</p><p className="text-xs text-muted-foreground">{option.description}</p>
-            {option.isLink ? openChat ? <button type="button" className="mt-1 text-sm font-medium text-[#850d12] underline" onClick={openChat}>{option.buttonText}</button> :
-              <Link className="mt-1 block text-sm font-medium text-[#850d12] underline" to={option.action}>{option.buttonText}</Link> :
-              <a className="mt-1 block break-all text-sm font-medium text-[#850d12] underline" href={option.action}>{option.buttonText}</a>}
-          </div>
-        </div>)}</div>
-        <Button type="button" className="mt-3 w-full bg-[#850d12] text-white hover:bg-[#6c090e]" onClick={() => setShowRequest(true)}>Raise a Support Request</Button>
+        <div className="mt-3 grid grid-cols-3 gap-2 lg:grid-cols-1">
+          {contactOptions.map(({ icon: Icon, title: name, label, mobile, description, action, tone }) =>
+            <a key={name} href={action} className="flex min-w-0 flex-col items-center gap-2 rounded-lg border border-slate-100 p-2 text-center hover:bg-[#fcf4ee] lg:flex-row lg:text-left">
+              <span className={`shrink-0 rounded-full p-2 ${tone}`}><Icon size={19} /></span>
+              <span className="min-w-0 text-xs"><strong className="lg:hidden">{mobile}</strong><strong className="hidden lg:block">{name}</strong>
+                <span className="hidden text-slate-600 lg:block">{description}</span><span className={`mt-1 hidden font-semibold lg:inline-block ${name === "WhatsApp Support" ? "rounded border border-emerald-600 px-2 py-1 text-emerald-800" : "text-[#850800]"}`}>{label}</span>
+              </span>
+            </a>)}
+        </div>
+        <div className="my-3 hidden items-center gap-2 text-xs text-slate-500 lg:flex"><span className="h-px flex-1 bg-slate-200" />OR<span className="h-px flex-1 bg-slate-200" /></div>
+        <Button type="button" className="mt-3 w-full gap-2 bg-[#850800] px-2 text-xs text-white hover:bg-[#650600] lg:mt-0" onClick={() => setShowRequest(true)}><Ticket size={16} />Raise a Support Request</Button>
+        <Link to="/chat" onClick={event => { if (openChat) { event.preventDefault(); openChat(); } }} className="mt-2 block text-center text-xs text-[#850800] underline">Start Live Chat</Link>
       </aside>
       <Dialog open={showRequest} onOpenChange={setShowRequest}>
         <DialogContent className="max-h-[90dvh] overflow-y-auto">

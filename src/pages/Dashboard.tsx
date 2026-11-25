@@ -36,7 +36,6 @@ import { AccountAddresses, AccountReviews, AccountSettings, OrderProgress } from
 import { BuyerSidebar } from "@/components/dashboard/BuyerSidebar";
 import { ChatInterface } from "@/components/chat/ChatInterface";
 import { SupportCenter } from "@/components/support/SupportCenter";
-import { RelatedProducts } from "@/components/products/RelatedProducts";
 import { useCart } from "@/contexts/CartContext";
 
 type Order = Tables<"orders">;
@@ -468,7 +467,6 @@ export default function Dashboard() {
     );
   };
 
-  const lastPurchasedProduct = orders.flatMap(order => itemsByOrder[order.id] ?? []).find(item => item.product_id)?.product_id;
   const recentReorder = orders.find(order => itemsByOrder[order.id]?.some(item => item.product_id));
   const shortcuts = [
     { label: "Track Order", detail: "Check your order status", icon: Truck, action: () => selectTab("orders") },
@@ -515,7 +513,6 @@ export default function Dashboard() {
           </section>
         </aside>
       </div>
-      <RelatedProducts {...(lastPurchasedProduct ? { currentProductId: lastPurchasedProduct } : {})} compactTopOnMobile />
     </div>
   );
 
