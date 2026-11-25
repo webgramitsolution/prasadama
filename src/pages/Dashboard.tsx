@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,8 +17,8 @@ import {
   Phone,
   MapPin,
   Loader2,
-  Eye,
   Menu,
+  Home, LayoutGrid, Search,
   Camera,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -31,11 +30,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Tables } from "@/integrations/supabase/types";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { RFQTab } from "@/components/dashboard/RFQTab";
+import { AccountAddresses, AccountReviews, AccountSettings, AccountSupport, OrderProgress } from "@/components/dashboard/AccountSections";
 import { BuyerSidebar } from "@/components/dashboard/BuyerSidebar";
 import { ChatInterface } from "@/components/chat/ChatInterface";
-import { SEOHeadSafe as SEOHead } from "@/components/SEOHeadSafe";
+import { RelatedProducts } from "@/components/products/RelatedProducts";
+import { useCart } from "@/contexts/CartContext";
 
 type Order = Tables<"orders">;
 type Invoice = Tables<"invoices">;
@@ -78,17 +79,24 @@ const statusColors: Record<string, string> = {
 };
 
 export default function Dashboard() {
-  const { user, profile, role, isLoading: authLoading, refreshProfile, signOut } = useAuth();
+  const { user, profile, role, isLoading: authLoading, refreshProfile } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
+  const [filter, setFilter] = useState("All Orders");
+  const [query, setQuery] = useState("");
+  const [period, setPeriod] = useState("all");
+  const [itemsByOrder, setItemsByOrder] = useState<Record<string, Tables<"order_items">[]>>({});
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [orderItems, setOrderItems] = useState<any[]>([]);
+  const [orderItems, setOrderItems] = useState<Tables<"order_items">[]>([]);
   const [loadingItems, setLoadingItems] = useState(false);
   const { toast } = useToast();
+  const { addToCart } = useCart();
+  const [reordering, setReordering] = useState(false);
+  const orderDetailsRequest = useRef(0);
 
   // Profile form state
   const [profileForm, setProfileForm] = useState({
@@ -159,7 +167,16 @@ export default function Dashboard() {
           .order("created_at", { ascending: false }),
       ]);
 
-      if (ordersRes.data) setOrders(ordersRes.data);
+      if (ordersRes.data) {
+        setOrders(ordersRes.data);
+        const ids = ordersRes.data.map(order => order.id);
+        const { data } = ids.length ? await supabase.from("order_items").select("*").in("order_id", ids) : { data: [] };
+        const grouped: Record<string, Tables<"order_items">[]> = {};
+        for (const item of data ?? []) {
+          if (item.order_id) (grouped[item.order_id] ??= []).push(item);
+        }
+        setItemsByOrder(grouped);
+      }
       if (invoicesRes.data) setInvoices(invoicesRes.data);
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
@@ -294,145 +311,16 @@ export default function Dashboard() {
     return <Navigate to="/admin" replace />;
   }
 
-  // Overview Tab Content
-  const OverviewContent = () => (
-    <div className="space-y-6">
-      {/* Welcome */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h1 className="text-xl md:text-2xl font-display font-medium text-foreground mb-2">
-          Welcome back, <span className="text-accent">{profile?.full_name || "Buyer"}</span>
-        </h1>
-      </motion.div>
-
-      {/* Stats - clickable */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <Card className="shadow-card cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab("orders")}>
-          <CardContent className="p-4 sm:pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs sm:text-sm text-muted-foreground">Total Orders</p>
-                <p className="text-xl sm:text-2xl font-bold">{orders.length}</p>
-              </div>
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-card cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab("orders")}>
-          <CardContent className="p-4 sm:pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs sm:text-sm text-muted-foreground">Pending</p>
-                <p className="text-xl sm:text-2xl font-bold">
-                  {orders.filter(o => o.status === "pending" || o.status === "processing").length}
-                </p>
-              </div>
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-warning/10 flex items-center justify-center">
-                <Clock className="h-5 w-5 sm:h-6 sm:w-6 text-warning" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-card cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab("orders")}>
-          <CardContent className="p-4 sm:pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs sm:text-sm text-muted-foreground">Delivered</p>
-                <p className="text-xl sm:text-2xl font-bold">
-                  {orders.filter(o => o.status === "delivered").length}
-                </p>
-              </div>
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-success/10 flex items-center justify-center">
-                <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-success" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-card cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab("orders")}>
-          <CardContent className="p-4 sm:pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs sm:text-sm text-muted-foreground">Total Spent</p>
-                <p className="text-xl sm:text-2xl font-bold">
-                  ₹{orders.reduce((sum, o) => sum + Number(o.total), 0).toLocaleString("en-IN")}
-                </p>
-              </div>
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
-                <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-accent" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Recent Orders */}
-      <Card className="shadow-card">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Recent Orders</CardTitle>
-            <Button variant="outline" size="sm" onClick={() => setActiveTab("orders")}>
-              View All
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {orders.slice(0, 5).length === 0 ? (
-            <div className="text-center py-8">
-              <ShoppingCart className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
-              <p className="text-muted-foreground">No orders yet</p>
-              <Button asChild className="mt-3">
-                <Link to="/products">Start Shopping</Link>
-              </Button>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {orders.slice(0, 5).map((order) => {
-                const StatusIcon = statusIcons[order.status || "pending"] || Package;
-                return (
-                  <div
-                    key={order.id}
-                    className="flex items-center justify-between p-3 rounded-lg border bg-card hover:shadow-sm transition-shadow"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
-                        <Package className="h-5 w-5 text-muted-foreground" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-foreground">{order.order_number}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {new Date(order.created_at).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <p className="font-semibold">₹{Number(order.total).toLocaleString("en-IN")}</p>
-                      <Badge className={cn("text-xs", statusColors[order.status || "pending"])}>
-                        {StatusIcon && <StatusIcon className="h-3 w-3 mr-1" />}
-                        {order.status}
-                      </Badge>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  );
-
   const viewOrder = async (order: Order) => {
+    const request = ++orderDetailsRequest.current;
     setSelectedOrder(order);
+    setOrderItems([]);
     setLoadingItems(true);
     const { data } = await supabase
       .from("order_items")
       .select("*")
       .eq("order_id", order.id);
+    if (request !== orderDetailsRequest.current) return;
     setOrderItems(data || []);
     setLoadingItems(false);
   };
@@ -523,6 +411,89 @@ export default function Dashboard() {
     }
   };
 
+  const selectTab = (tab: string) => {
+    orderDetailsRequest.current += 1;
+    setSelectedOrder(null);
+    setActiveTab(tab);
+  };
+
+  const reorder = async (items: Tables<"order_items">[]) => {
+    setReordering(true);
+    let added = 0;
+    try {
+      for (const item of items) {
+        if (item.product_id && await addToCart(item.product_id, item.quantity, item.variation_id)) added += 1;
+      }
+    } finally {
+      setReordering(false);
+    }
+    toast({ title: added ? "Items added to your cart" : "No items were added", description: `${added} of ${items.length} order lines added. Check your cart for current prices and availability.` });
+  };
+
+  const renderOrderCard = (order: Order) => {
+    const items = itemsByOrder[order.id] ?? [];
+    const status = String(order.status || "pending");
+    const image = items.find(item => item.product_image)?.product_image;
+    return (
+      <article key={order.id} className="rounded-xl border border-[#eee4dd] bg-white p-4 sm:p-5">
+        <div className="flex flex-wrap items-start justify-between gap-2">
+          <div>
+            <h3 className="font-semibold">Order #{order.order_number || order.id}</h3>
+            <p className="text-sm text-muted-foreground">
+              {new Date(order.created_at).toLocaleDateString("en-IN", { dateStyle: "medium" })}
+              {" · "}{items.reduce((sum, item) => sum + item.quantity, 0)} items
+              {" · ₹"}{Number(order.total).toLocaleString("en-IN")}
+            </p>
+          </div>
+          <Badge className={cn("capitalize", statusColors[status] || "bg-emerald-50 text-emerald-800")}>
+            {status.replaceAll("_", " ")}
+          </Badge>
+        </div>
+        <div className="mt-4 flex gap-4">
+          {image ? <img src={image} alt={items[0]?.product_name || ""} className="h-20 w-20 shrink-0 rounded-lg object-cover" loading="lazy" />
+            : <div className="grid h-20 w-20 shrink-0 place-items-center rounded-lg bg-[#fbefe1] text-[#860d13]"><Package /></div>}
+          <OrderProgress status={status} />
+        </div>
+        <div className="mt-4 flex flex-wrap justify-end gap-2">
+          {status !== "cancelled" && status !== "delivered" && <Button asChild size="sm" className="bg-[#850d12] text-white hover:bg-[#6c090e]"><Link to={`/track-order/${encodeURIComponent(order.order_number || order.id)}`}>Track Order</Link></Button>}
+          <Button variant="outline" size="sm" onClick={() => { setActiveTab("orders"); void viewOrder(order); }}>View Details</Button>
+          {items.some(item => item.product_id) && <Button variant="outline" size="sm" disabled={reordering} onClick={() => reorder(items)}>{status === "delivered" ? "Buy Again" : "Reorder"}</Button>}
+          {status === "delivered" && <Button variant="outline" size="sm" onClick={() => downloadOrderInvoice(order)}>Download Invoice</Button>}
+        </div>
+      </article>
+    );
+  };
+
+  const lastPurchasedProduct = orders.flatMap(order => itemsByOrder[order.id] ?? []).find(item => item.product_id)?.product_id;
+  const OverviewContent = () => (
+    <div className="space-y-4">
+      <section className="rounded-xl border border-[#eedac4] bg-gradient-to-r from-[#fff5e7] to-[#f4d3a9] p-5 sm:p-8">
+        <p className="text-sm font-medium text-[#800b12]">My Account</p>
+        <h1 className="mt-1 max-w-xl font-display text-3xl font-bold text-[#800b12] sm:text-4xl">Welcome back, {profile?.full_name || "Buyer"}!</h1>
+      </section>
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        {[
+          { name: "Track Order", icon: Truck, tab: "orders" },
+          { name: "My Addresses", icon: MapPin, tab: "addresses" },
+          { name: "My Reviews", icon: CheckCircle, tab: "reviews" },
+          { name: "Account Settings", icon: User, tab: "profile" },
+        ].map(({ name, icon: Icon, tab }) => (
+          <button type="button" key={tab} onClick={() => selectTab(tab)} className="flex min-h-16 items-center gap-2 rounded-lg border border-[#eee4dd] bg-white p-3 text-left text-sm font-medium hover:border-[#b84d53]">
+            <span className="rounded-full bg-[#fff0dd] p-2 text-[#840e14]"><Icon size={18} /></span>{name}
+          </button>
+        ))}
+      </div>
+      <div className="flex items-center justify-between">
+        <h2 className="font-display text-xl font-bold text-[#800b12]">Recent Orders</h2>
+        <Button variant="link" onClick={() => selectTab("orders")}>View All Orders</Button>
+      </div>
+      {isLoading ? <Loader2 className="animate-spin" aria-label="Loading orders" /> : orders.length ? orders.slice(0, 2).map(renderOrderCard) : (
+        <Card><CardContent className="space-y-3 p-5"><p>You haven’t placed an order yet.</p><Button asChild><Link to="/products">Start Shopping</Link></Button></CardContent></Card>
+      )}
+      {lastPurchasedProduct && <RelatedProducts currentProductId={lastPurchasedProduct} compactTopOnMobile />}
+    </div>
+  );
+
   // Orders Tab Content
   const OrdersContent = () => {
     if (selectedOrder) {
@@ -594,70 +565,42 @@ export default function Dashboard() {
       );
     }
 
+    const cutoff = new Date();
+    cutoff.setMonth(cutoff.getMonth() - Number(period));
+    const recent = orders.filter(order => period === "all" || new Date(order.created_at) >= cutoff);
+    const tabs: Record<string, string[]> = {
+      "All Orders": [], Processing: ["pending", "confirmed", "processing", "packed"],
+      Shipped: ["shipped"], "Out for Delivery": ["out_for_delivery"], Delivered: ["delivered"], Cancelled: ["cancelled"],
+    };
+    const matches = (order: Order, statuses: string[]) => !statuses.length || statuses.includes(String(order.status || "pending"));
+    const search = query.trim().toLowerCase();
+    const visible = recent.filter(order => matches(order, tabs[filter] ?? []) && [
+      order.order_number, order.id, ...(itemsByOrder[order.id] ?? []).map(item => item.product_name),
+    ].some(value => value?.toLowerCase().includes(search)));
+
     return (
-      <Card className="shadow-card">
-        <CardHeader>
-          <CardTitle>Order History</CardTitle>
-          <CardDescription>View and track all your orders</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin" />
-            </div>
-          ) : orders.length === 0 ? (
-            <div className="text-center py-12">
-              <ShoppingCart className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <p className="text-muted-foreground">No orders yet</p>
-              <Button asChild className="mt-4">
-                <Link to="/products">Start Shopping</Link>
-              </Button>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {orders.map((order) => {
-                const StatusIcon = (statusIcons[order.status || "pending"] as any) || Package;
-                return (
-                  <div
-                    key={order.id}
-                    className="flex items-center justify-between p-4 rounded-xl border bg-card hover:shadow-md transition-shadow"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center">
-                        <Package className="h-6 w-6 text-muted-foreground" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-foreground">{order.order_number}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {new Date(order.created_at).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="text-right">
-                        <p className="font-bold text-foreground">₹{Number(order.total).toLocaleString()}</p>
-                        <Badge className={cn("text-xs", statusColors[order.status || "pending"])}>
-                          {(StatusIcon as any) && <StatusIcon className="h-3 w-3 mr-1" />}
-                          {order.status}
-                        </Badge>
-                      </div>
-                      <Button variant="outline" size="icon" onClick={() => viewOrder(order)} title="View Order">
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button asChild variant="outline" size="icon" title="Track Order">
-                        <Link to={`/track-order/${encodeURIComponent(order.order_number || order.id)}`}><Truck className="h-4 w-4" /></Link>
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => downloadOrderInvoice(order)} title="Download Invoice">
-                        <Download className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      <div className="space-y-4">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div><h1 className="font-display text-3xl font-bold text-[#800b12]">My Orders</h1>
+          <p className="text-sm text-muted-foreground">View, track and manage your orders.</p></div>
+          <div className="flex w-full gap-2 sm:w-auto">
+            <label className="relative min-w-0 flex-1"><Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input aria-label="Search orders" value={query} onChange={event => setQuery(event.target.value)} placeholder="Order ID or product" className="bg-white pl-9" />
+            </label>
+            <select aria-label="Order date range" value={period} onChange={event => setPeriod(event.target.value)} className="rounded-md border bg-white px-2 text-sm">
+              <option value="all">All dates</option><option value="6">Last 6 months</option><option value="12">Last year</option>
+            </select>
+          </div>
+        </div>
+        <div aria-label="Filter orders by status" className="flex gap-1 overflow-x-auto rounded-lg border bg-white p-1">
+          {Object.entries(tabs).map(([label, statuses]) => <Button key={label} type="button" variant="ghost" aria-pressed={label === filter}
+            className={cn("shrink-0 rounded-none border-b-2 border-transparent", label === filter && "border-[#870d15] text-[#870d15]")}
+            onClick={() => setFilter(label)}>{label} ({recent.filter(order => matches(order, statuses)).length})</Button>)}
+        </div>
+        {isLoading ? <Loader2 className="animate-spin" aria-label="Loading orders" /> :
+          visible.length ? visible.map(renderOrderCard) :
+          <Card><CardContent className="p-5 text-sm">No orders match the selected filters.</CardContent></Card>}
+      </div>
     );
   };
 
@@ -751,12 +694,16 @@ export default function Dashboard() {
                 <Camera className="h-3.5 w-3.5 text-accent-foreground" />
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/jpeg,image/png"
                   className="hidden"
                   onChange={async (e) => {
                     const file = e.target.files?.[0];
                     if (!file || !user) return;
-                    const ext = file.name.split('.').pop();
+                    if (!["image/jpeg", "image/png"].includes(file.type) || file.size > 2 * 1024 * 1024) {
+                      toast({ title: "Choose a JPG or PNG up to 2 MB", variant: "destructive" });
+                      return;
+                    }
+                    const ext = file.type === "image/png" ? "png" : "jpg";
                     // Store avatars in the private "avatars" bucket, scoped to the
                     // owner's user id so RLS prevents cross-user access.
                     const path = `${user.id}/avatar_${Date.now()}.${ext}`;
@@ -820,8 +767,8 @@ export default function Dashboard() {
       {/* Edit Profile Form */}
       <Card className="shadow-card lg:col-span-2">
         <CardHeader>
-          <CardTitle>Edit Profile</CardTitle>
-          <CardDescription>Update your account information</CardDescription>
+          <CardTitle>Profile Information</CardTitle>
+          <CardDescription>Update your personal details.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid sm:grid-cols-2 gap-4">
@@ -927,6 +874,12 @@ export default function Dashboard() {
         return <RFQTab />;
       case "invoices":
         return InvoicesContent();
+      case "addresses":
+        return <AccountAddresses user={user} profile={extendedProfile} />;
+      case "reviews":
+        return <AccountReviews userId={user.id} />;
+      case "support":
+        return <AccountSupport openChat={() => selectTab("chat")} />;
       case "chat":
         return (
           <div className="h-[calc(100vh-180px)] min-h-[500px]">
@@ -934,50 +887,34 @@ export default function Dashboard() {
           </div>
         );
       case "profile":
-        return ProfileContent();
+        return <AccountSettings user={user} profileContent={ProfileContent()} openAddresses={() => selectTab("addresses")} openSupport={() => selectTab("chat")} />;
       default:
         return OverviewContent();
     }
   };
 
-  const getTabTitle = () => {
-    switch (activeTab) {
-      case "orders":
-        return "My Orders";
-      case "rfq":
-        return "RFQ Requests";
-      case "invoices":
-        return "My Invoices";
-      case "chat":
-        return "Chat Support";
-      case "profile":
-        return "My Profile";
-      default:
-        return "Dashboard";
-    }
-  };
-
   return (
-    <div className="h-dvh flex flex-col bg-background overflow-x-clip">
+    <div className="h-dvh flex flex-col bg-[#fcf7f0] overflow-x-clip">
       <div className="shrink-0">
         <Header />
       </div>
       <div className="flex flex-1 min-h-0">
       {/* Desktop Sidebar */}
-      <div className="hidden md:block w-64 shrink-0">
+      <div className="hidden h-full w-56 shrink-0 overflow-y-auto p-3 md:block xl:w-64">
         <BuyerSidebar
           activeTab={activeTab}
-          onTabChange={setActiveTab}
+          onTabChange={selectTab}
         />
       </div>
 
       {/* Mobile Sidebar */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
         <SheetContent side="left" className="w-64 p-0">
+          <SheetTitle className="sr-only">My Account</SheetTitle>
           <BuyerSidebar
             activeTab={activeTab}
             onTabChange={(tab) => {
-              setActiveTab(tab);
+              selectTab(tab);
               setMobileOpen(false);
             }}
           />
@@ -1001,10 +938,16 @@ export default function Dashboard() {
             </Button>
           </div>
           
-          <div className="w-full text-[15px]">
+          <div className="mx-auto w-full max-w-7xl text-[15px]">
             {renderContent()}
           </div>
         </main>
+        <nav aria-label="Store shortcuts" className="grid shrink-0 grid-cols-4 border-t bg-white pb-[env(safe-area-inset-bottom)] text-xs md:hidden">
+          <Link to="/" className="flex flex-col items-center gap-1 p-2"><Home size={19} />Home</Link>
+          <Link to="/products" className="flex flex-col items-center gap-1 p-2"><LayoutGrid size={19} />Categories</Link>
+          <button onClick={() => selectTab("orders")} aria-current={activeTab === "orders" ? "page" : undefined} className="flex flex-col items-center gap-1 p-2 aria-[current=page]:text-[#870d15]"><ShoppingCart size={19} />Orders</button>
+          <button onClick={() => selectTab("overview")} aria-current={activeTab !== "orders" ? "page" : undefined} className="flex flex-col items-center gap-1 p-2 aria-[current=page]:text-[#870d15]"><User size={19} />Account</button>
+        </nav>
       </div>
       </div>
     </div>
