@@ -276,7 +276,8 @@ export function SupportCenter({ openChat }: { openChat?: () => void }) {
           <button className={classes} key={name} type="button" onClick={() => { setTopic(shortcut ?? ""); setQuery(""); }}>{content}</button>;
       })}
     </div>
-    <div className="grid items-center gap-3 rounded-xl border border-[#f2ddda] bg-gradient-to-r from-[#fbe8e6] to-[#fff6ef] p-4 sm:p-6 md:grid-cols-[1fr_auto]">
+    <div className="relative isolate grid items-center gap-3 overflow-hidden rounded-xl border border-[#f2ddda] bg-gradient-to-r from-[#fbe8e6] to-[#fff6ef] p-4 sm:p-6 md:grid-cols-[1fr_auto]">
+      {!openChat && <div aria-hidden className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,#fbe8e6_12%,#fff2e9e8_55%,#fff2e965_100%),url(/products-hero-banner.jpg)] bg-[position:center,right_center] bg-[size:cover,auto_100%] bg-no-repeat" />}
       <div><h2 className={`${title} text-2xl`}>How can we help you?</h2>
         <p className="mt-1 text-sm text-muted-foreground">Search for answers or browse our help topics.</p>
         <label className="relative mt-3 block"><Search aria-hidden className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
