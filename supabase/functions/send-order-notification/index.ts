@@ -348,33 +348,6 @@ Deno.serve(async (req) => {
     }
 
     
-    // SMS Notification step
-    if (parsed.data.type === 'new_order') {
-      try {
-        const billing = (order.billing_address ?? {}) as Record<string, unknown>;
-        const shipping = (order.shipping_address ?? {}) as Record<string, unknown>;
-        const phone = String(billing.phone || shipping.phone || '');
-        if (phone) {
-          console.log(`Triggering SMS for order ${order.order_number} to ***${String(phone).slice(-4)}`);
-          fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/send-sms`, {
-            method: 'POST',
-            headers: { 
-              Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`, 
-              'Content-Type': 'application/json' 
-            },
-            body: JSON.stringify({ 
-              type: 'order_confirmation', 
-              phone, 
-              orderNumber: order.order_number,
-              fullName: billing.full_name || shipping.full_name || 'Customer'
-            }),
-          }).catch(err => console.error('SMS trigger failed:', err));
-        }
-      } catch (smsErr) {
-        console.error('SMS notification prep failed:', smsErr);
-      }
-    }
-
     return json({ success: failedDeliveries === 0, ...(failedDeliveries ? { error: 'One or more order emails failed. Check email delivery logs.' } : {}) }, failedDeliveries ? 502 : 200)
   } catch (error) {
     console.error('order_notification_failed')

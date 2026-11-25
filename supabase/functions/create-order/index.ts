@@ -62,24 +62,11 @@ Deno.serve(async (req) => {
     }
 
     const functionUrl = `${Deno.env.get('SUPABASE_URL')}/functions/v1`
-    const forwardedHeaders = { Authorization: authHeader, 'Content-Type': 'application/json' }
-    const tasks = [
-      notifyOrder(functionUrl, authHeader, order.id, 'new_order'),
-    ]
-    // Ship immediately only for cash-on-delivery; prepaid orders are shipped
-    // only by the signed captured-payment webhook after payment confirmation.
-    if (body.payment_method === 'cod') {
-      tasks.push(
-        fetch(`${functionUrl}/ekart-create-shipment`, {
-          method: 'POST', headers: forwardedHeaders,
-          body: JSON.stringify({ order_id: order.id }),
-        }),
-      )
+    try {
+      if (!await notifyOrder(functionUrl, authHeader, order.id, 'new_order')) console.error('notification_failed')
+    } catch {
+      console.error('notification_failed')
     }
-    const results = await Promise.allSettled(tasks)
-    results.forEach((result, index) => {
-      if (result.status === 'rejected' || (index === 0 && result.value !== true)) console.error(index === 0 ? 'notification_failed' : 'ekart_sync_failed')
-    })
 
     return json({ success: true, order })
   } catch (error) {

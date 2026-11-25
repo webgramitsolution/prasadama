@@ -47,33 +47,14 @@ export default function EmailPreview() {
   const fetchPreview = async () => {
     setIsPreviewLoading(true);
     try {
-      let data, error;
       
-      if (status === 'otp') {
-        ({ data, error } = await supabase.functions.invoke("send-signup-otp", {
-          body: {
-            email: "test@houskase.com",
-            password: "testpassword",
-            fullName: "Test Customer",
-            correlationId: "preview-only"
-          },
-        }));
-      } else if (status === 'password_reset') {
-        ({ data, error } = await supabase.functions.invoke("manage-password-reset", {
-          body: {
-            action: "send-otp",
-            email: "test@houskase.com"
-          },
-        }));
-      } else {
-        ({ data, error } = await supabase.functions.invoke("send-order-notification", {
+      const { data, error } = await supabase.functions.invoke("send-order-notification", {
           body: {
             type: status,
             order_id: "00000000-0000-0000-0000-000000000000",
             preview_only: true
           },
-        }));
-      }
+      });
 
       if (error) throw error;
       
@@ -212,8 +193,6 @@ export default function EmailPreview() {
                         {s.label}
                       </SelectItem>
                     ))}
-                    <SelectItem value="otp">Email OTP (Signup)</SelectItem>
-                    <SelectItem value="password_reset">Password Reset OTP</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
