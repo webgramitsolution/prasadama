@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { getSavedAddresses, type AccountAddress } from "@/lib/accountAddresses";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Header } from "@/components/layout/Header";
@@ -60,6 +61,40 @@ export default function Checkout() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user, profile, role } = useAuth();
+  const checkoutForm = useRef<HTMLFormElement>(null);
+  const savedAddresses = getSavedAddresses(user);
+
+  function applySavedAddress(address: AccountAddress, shipping = false) {
+    const savedFields = shipping ? {
+      fullName: address.name, phone: address.phone, address: [address.street, address.landmark].filter(Boolean).join(", "),
+      city: address.city, state: address.state, postalCode: address.postalCode,
+    } : {
+      billingFullName: address.name, billingAddress: [address.street, address.landmark].filter(Boolean).join(", "),
+      billingCity: address.city, billingState: address.state, billingPostalCode: address.postalCode,
+    };
+    for (const [name, value] of Object.entries(savedFields)) {
+      const input = checkoutForm.current?.elements.namedItem(name);
+      if (input instanceof HTMLInputElement && value !== undefined) input.value = value;
+    }
+    if (!shipping) setBillingPhoneValue(address.phone);
+  }
+
+  function savedAddressPicker(shipping = false) {
+    if (!savedAddresses.length) return null;
+    return <label className="block space-y-1 text-sm font-medium">
+      <span>{shipping ? "Use a saved delivery address" : "Fill details from a saved address"}</span>
+      <select className="block h-10 w-full rounded-md border bg-background px-3" defaultValue=""
+        onChange={event => {
+          const address = savedAddresses.find(item => item.id === event.target.value);
+          if (address) applySavedAddress(address, shipping);
+          event.target.value = "";
+        }}>
+        <option value="">Select an address</option>
+        {[...savedAddresses].sort((a, b) => Number(b.isDefault) - Number(a.isDefault)).map(address =>
+          <option key={address.id} value={address.id}>{address.type} · {address.city} {address.postalCode}{address.isDefault ? " (Default)" : ""}</option>)}
+      </select>
+    </label>;
+  }
   const { items, buyerType, getItemPrice, subtotal, tax, allMoqValid, clearCart } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
@@ -450,7 +485,7 @@ export default function Checkout() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="max-w-full overflow-x-hidden">
+          <form ref={checkoutForm} onSubmit={handleSubmit} className="max-w-full overflow-x-hidden">
             <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(400px,0.82fr)] gap-4 md:gap-6 items-start min-w-0">
               {/* Shipping & Billing */}
               <div className="space-y-4 sm:space-y-6 min-w-0">
@@ -463,6 +498,7 @@ export default function Checkout() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4 px-4 sm:px-6">
+                    {savedAddressPicker()}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0">
                       <div className="space-y-2">
                         <Label htmlFor="billingFullName">Full Name *</Label>
@@ -575,6 +611,7 @@ export default function Checkout() {
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-4 px-4 sm:px-6">
+                    {savedAddressPicker(true)}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0">
                           <div className="space-y-2">
                             <Label htmlFor="fullName">Full Name *</Label>
