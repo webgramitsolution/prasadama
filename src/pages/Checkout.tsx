@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { BulkOrderHero } from "@/components/rfq/BulkOrderHero";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Header } from "@/components/layout/Header";
@@ -12,11 +13,11 @@ import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { CreditCard, Truck, FileText, AlertTriangle, CheckCircle, Loader2, WalletCards, Landmark, HandCoins, ShieldCheck } from "lucide-react";
+import { CreditCard, Truck, FileText, AlertTriangle, CheckCircle, Loader2, WalletCards, Landmark, HandCoins, ShieldCheck, ShoppingCart, MapPin, Check, Plus, Minus, X, Package } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SEOHead } from "@/components/SEOHead";
 import { CouponInput } from "@/components/checkout/CouponInput";
-import { BulkOrderHero } from "@/components/rfq/BulkOrderHero";
+import { getSavedAddresses, type AccountAddress } from "@/lib/accountAddresses";
 import { RFQBenefits } from "@/components/rfq/RFQBenefits";
 import { OrderSuccessFlow, type OrderFlowStage } from "@/components/checkout/OrderSuccessFlow";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -60,7 +61,7 @@ export default function Checkout() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user, profile, role } = useAuth();
-  const { items, buyerType, getItemPrice, subtotal, tax, allMoqValid, clearCart } = useCart();
+  const { items, buyerType, getItemPrice, subtotal, tax, allMoqValid, clearCart, updateQuantity, removeFromCart, getItemMoq } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
@@ -76,6 +77,31 @@ export default function Checkout() {
     rate: 25
   });
   const [billingPhoneValue, setBillingPhoneValue] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
+  const [selectedAddress, setSelectedAddress] = useState("");
+  const [updatingCart, setUpdatingCart] = useState(false);
+  const savedAddresses = getSavedAddresses(user);
+
+  function fillAddress(address: AccountAddress) {
+    const fields = billingSameAsShipping
+      ? { billingFullName: address.name, billingAddress: [address.street, address.landmark].filter(Boolean).join(", "),
+          billingCity: address.city, billingState: address.state, billingPostalCode: address.postalCode, billingCountry: "India" }
+      : { fullName: address.name, phone: address.phone, address: [address.street, address.landmark].filter(Boolean).join(", "),
+          city: address.city, state: address.state, postalCode: address.postalCode, country: "India" };
+
+    for (const [name, value] of Object.entries(fields)) {
+      const input = formRef.current?.elements.namedItem(name);
+      if (input instanceof HTMLInputElement && typeof value === "string") input.value = value;
+    }
+    if (billingSameAsShipping) setBillingPhoneValue(address.phone);
+    setSelectedAddress(address.id);
+  }
+
+  async function changeCart(operation: () => Promise<boolean>) {
+    setUpdatingCart(true);
+    try { await operation(); } finally { setUpdatingCart(false); }
+  }
+
 
   // Keep the billing phone in sync once the profile finishes loading
   useEffect(() => {
@@ -186,6 +212,10 @@ export default function Checkout() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (updatingCart) {
+      toast({ title: "Cart is updating", description: "Please wait and submit again." });
+      return;
+    }
     if (!user || !allMoqValid) return;
 
     setIsSubmitting(true);
@@ -440,8 +470,19 @@ export default function Checkout() {
       <SEOHead title="Checkout" description="Complete your order on Prasadam. Secure checkout with multiple payment options." noIndex />
       <Header />
       
-      <main className="pb-20 overflow-x-hidden">
-        <BulkOrderHero variant="checkout" />
+      <main className="bg-[#fcf7f0] pb-16">
+        <div className="mx-auto max-w-4xl px-4 py-5 sm:py-7">
+          <h1 className="mb-4 text-center font-serif text-2xl font-bold text-[#800b12]">Secure Checkout</h1>
+          <ol aria-label="Checkout progress" className="flex items-center justify-between gap-2">
+            {[[ShoppingCart, "Cart"], [MapPin, "Address"], [CreditCard, "Payment"], [Check, "Order Placed"]].map(([StepIcon, label], index) => {
+              const Icon = StepIcon as typeof ShoppingCart;
+              return <li key={String(label)} aria-current={index === 1 ? "step" : undefined} className="flex flex-1 flex-col items-center gap-1 text-center text-xs font-semibold sm:text-sm">
+                <span className={cn("grid h-9 w-9 place-items-center rounded-full border bg-white", index <= 1 && "border-[#850d12] bg-[#850d12] text-white")}><Icon size={17} /></span>
+                {String(label)}
+              </li>;
+            })}
+          </ol>
+        </div>
         <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 overflow-x-hidden">
           {!allMoqValid && (
             <div className="mt-4 flex items-center gap-2 rounded-lg bg-destructive/10 p-4 text-destructive mb-6">
@@ -450,16 +491,26 @@ export default function Checkout() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="max-w-full overflow-x-hidden">
+          <form ref={formRef} onSubmit={handleSubmit} className="max-w-full overflow-x-hidden">
             <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(400px,0.82fr)] gap-4 md:gap-6 items-start min-w-0">
               {/* Shipping & Billing */}
-              <div className="space-y-4 sm:space-y-6 min-w-0">
+              <div className="min-w-0 space-y-4">
+                {savedAddresses.length > 0 && <section className="rounded-lg border border-[#eee4dd] bg-white p-4 sm:p-5">
+                  <h2 className="flex items-center gap-2 font-serif text-xl font-bold text-[#800b12]"><MapPin size={20} />Delivery Address</h2>
+                  <p className="mt-1 text-sm text-muted-foreground">Choose a saved address or enter your details below.</p>
+                  <div className="mt-3 space-y-2">{[...savedAddresses].sort((left, right) => Number(right.isDefault) - Number(left.isDefault)).map(address =>
+                    <button type="button" key={address.id} aria-pressed={selectedAddress === address.id} onClick={() => fillAddress(address)}
+                      className="block w-full rounded-lg border p-3 text-left text-sm hover:border-[#850d12] aria-pressed:border-[#850d12] aria-pressed:bg-[#fcf0ee]">
+                      <span className="font-semibold">{address.name}</span><span className="ml-2 rounded bg-[#f9ead9] px-2 py-1 text-xs">{address.type}</span>
+                      <span className="mt-1 block">{address.street}, {address.city} {address.postalCode}</span><span className="block text-muted-foreground">{address.phone}</span>
+                    </button>)}</div>
+                </section>}
                 {/* Billing Address (Primary) */}
                 <Card className="overflow-hidden max-w-full">
                   <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
                     <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
                       <FileText className="h-5 w-5" />
-                      Billing Details
+                      Billing & Delivery Details
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4 px-4 sm:px-6">
@@ -551,7 +602,7 @@ export default function Checkout() {
                       <Checkbox
                         id="shipToDifferent"
                         checked={!billingSameAsShipping}
-                        onCheckedChange={(checked) => setBillingSameAsShipping(checked !== true)}
+                        onCheckedChange={(checked) => { setBillingSameAsShipping(checked !== true); setSelectedAddress(""); }}
                       />
                       <Label htmlFor="shipToDifferent" className="text-sm font-medium cursor-pointer">
                         Ship to a different address?
@@ -625,14 +676,33 @@ export default function Checkout() {
                 <Card className="overflow-hidden max-w-full">
                   <CardContent className="pt-6 px-4 sm:px-6">
                     <div className="space-y-2">
-                      <Label htmlFor="notes">Order Notes (Optional)</Label>
+                      <Label htmlFor="notes">Delivery Instructions (Optional)</Label>
                       <Textarea
                         id="notes"
                         name="notes"
-                        placeholder="Special delivery instructions, etc."
+                        placeholder="Leave at the gate, call before delivery, etc."
                         rows={3}
                       />
                     </div>
+                  </CardContent>
+                </Card>
+                <Card className="border-[#eee4dd]">
+                  <CardHeader><CardTitle className="flex items-center gap-2 font-serif text-xl text-[#800b12]"><Package size={20} />Review Your Items</CardTitle></CardHeader>
+                  <CardContent className="space-y-2">
+                    {items.map(item => (
+                      <div key={item.id} className="flex flex-wrap items-center gap-3 rounded-lg border p-3">
+                        {item.product?.images?.[0] && <img src={item.product.images[0]} alt="" className="h-14 w-14 rounded-md object-cover" loading="lazy" />}
+                        <div className="min-w-0 flex-1"><Link className="line-clamp-2 text-sm font-semibold hover:underline" to={`/product/${item.product_id}`}>{item.product?.name || "Product"}</Link>
+                          <span className="text-sm text-muted-foreground">₹{getItemPrice(item).toLocaleString("en-IN")} each</span></div>
+                        <div className="flex items-center rounded-md border">
+                          <Button variant="ghost" size="icon" type="button" className="h-8 w-8" aria-label="Decrease quantity" disabled={updatingCart || isSubmitting || item.quantity <= Math.max(1, getItemMoq(item))} onClick={() => changeCart(() => updateQuantity(item.id, item.quantity - 1))}><Minus size={15} /></Button>
+                          <span className="px-1 text-sm tabular-nums">{item.quantity}</span>
+                          <Button variant="ghost" size="icon" type="button" className="h-8 w-8" aria-label="Increase quantity" disabled={updatingCart || isSubmitting} onClick={() => changeCart(() => updateQuantity(item.id, item.quantity + 1))}><Plus size={15} /></Button>
+                        </div>
+                        <span className="text-sm font-semibold">₹{(getItemPrice(item) * item.quantity).toLocaleString("en-IN")}</span>
+                        <Button variant="ghost" size="icon" type="button" className="h-8 w-8" aria-label={`Remove ${item.product?.name || "item"}`} disabled={updatingCart || isSubmitting} onClick={() => changeCart(() => removeFromCart(item.id))}><X size={16} /></Button>
+                      </div>
+                    ))}
                   </CardContent>
                 </Card>
               </div>
@@ -647,26 +717,9 @@ export default function Checkout() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4 px-4 sm:px-6">
-                    {/* Items */}
-                    <div className="space-y-3">
-                      {items.map((item) => (
-                        <div key={item.id} className="flex justify-between gap-3 text-sm min-w-0">
-                          <div className="flex-1 min-w-0">
-                            <Link to={`/product/${item.product_id}`} className="font-medium truncate hover:text-accent transition-colors block">{item.product?.name}</Link>
-                            <p className="text-muted-foreground">
-                              {item.quantity} x ₹{getItemPrice(item).toLocaleString("en-IN")}
-                            </p>
-                          </div>
-                          <p className="font-semibold">
-                            ₹{(getItemPrice(item) * item.quantity).toLocaleString("en-IN")}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="border-t pt-4 space-y-2">
+                    <div className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Subtotal</span>
+                        <span className="text-muted-foreground">Subtotal ({items.length} {items.length === 1 ? "item" : "items"})</span>
                         <span>₹{subtotal.toLocaleString("en-IN")}</span>
                       </div>
                       <div className="flex justify-between text-sm">
@@ -681,7 +734,7 @@ export default function Checkout() {
                         <span>₹{tax.toLocaleString("en-IN")}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Shipping</span>
+                        <span className="text-muted-foreground">Delivery Charges</span>
                         <span>{shipping === 0 ? "Free" : `₹${shipping.toLocaleString("en-IN")}`}</span>
                       </div>
                       {couponDiscount > 0 && (

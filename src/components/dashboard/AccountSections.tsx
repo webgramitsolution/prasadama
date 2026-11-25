@@ -1,3 +1,4 @@
+import { getSavedAddresses, type AccountAddress } from "@/lib/accountAddresses";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import type { User } from "@supabase/supabase-js";
 import { Bell, Check, CircleHelp, Globe, House, Link2, MapPin, Package, Pencil, Plus, Shield, Star, Ticket, Trash2, Truck, UserRound, Wallet, Briefcase } from "lucide-react";
@@ -13,14 +14,14 @@ import { cn } from "@/lib/utils";
 
 const panel = "rounded-xl border border-[#eee4dd] bg-white p-4 sm:p-5";
 const primary = "bg-[#850d12] text-white hover:bg-[#6c090e]";
-const heading = "font-display font-bold text-[#800b12]";
+const heading = "font-serif font-bold text-[#800b12]";
 const field = "h-10 w-full rounded-md border bg-white px-3 text-sm";
 
 function SectionTitle({ title, description }: { title: string; description: string }) {
   return <div><h1 className={cn(heading, "text-3xl")}>{title}</h1><p className="mt-1 text-sm text-muted-foreground">{description}</p></div>;
 }
 
-export function OrderProgress({ status }: { status: string }) {
+export function OrderProgress({ status, placedAt }: { status: string; placedAt?: string }) {
   const cancelled = status === "cancelled";
   const stages = cancelled ? ["Order Placed", "Cancelled"] : status === "delivered"
     ? ["Order Placed", "Packed", "Shipped", "Delivered"]
@@ -35,7 +36,7 @@ export function OrderProgress({ status }: { status: string }) {
         </span>
         {position < stages.length - 1 && <span className={cn("hidden h-px flex-1 bg-slate-200 sm:block", position < index && "bg-[#850d12]")} />}
       </span>
-      {stage}
+      <span>{stage}{position === 0 && placedAt && <time className="block text-[11px] text-muted-foreground" dateTime={placedAt}>{new Date(placedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</time>}</span>
     </li>)}
   </ol>;
 }
@@ -45,19 +46,6 @@ const addressFields = [
   ["state", "State", "text"], ["city", "City", "text"], ["street", "House number, building and street", "text"], ["landmark", "Landmark (optional)", "text"],
 ] as const;
 const addressTypes = { Home: House, Office: Briefcase, Other: MapPin };
-type AccountAddress = {
-  id: string; type: "Home" | "Office" | "Other"; name: string; phone: string; postalCode: string;
-  state: string; city: string; street: string; landmark: string; isDefault: boolean;
-};
-function getSavedAddresses(user: User | null | undefined): AccountAddress[] {
-  const addresses: unknown = user?.user_metadata["saved_addresses"];
-  if (!Array.isArray(addresses)) return [];
-  return addresses.filter((address): address is AccountAddress =>
-    address && ["Home", "Office", "Other"].includes(address.type) &&
-    ["id", "name", "phone", "postalCode", "state", "city", "street", "landmark"].every(key => typeof address[key] === "string") &&
-    typeof address.isDefault === "boolean");
-}
-
 type LegacyAddress = { full_name: string | null; phone: string | null; postal_code: string | null; address: string | null; state: string | null; city: string | null } | null | undefined;
 const emptyAddress: AccountAddress = { id: "", type: "Home", name: "", phone: "", postalCode: "", state: "", city: "", street: "", landmark: "", isDefault: false };
 
@@ -129,7 +117,7 @@ export function AccountAddresses({ user, profile }: { user: User; profile: Legac
       </article>;
     })}
     <Dialog open={!!draft} onOpenChange={open => { if (!open && !saving) setDraft(null); }}>
-      <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-2xl">
+      <DialogContent className="max-h-[88dvh] overflow-y-auto rounded-xl border-[#eee4dd] bg-[#fffaf5] max-sm:bottom-0 max-sm:top-auto max-sm:translate-y-0 max-sm:rounded-b-none sm:max-w-2xl">
         <DialogHeader><DialogTitle className={cn(heading, "text-2xl")}>{draft?.id ? "Edit Address" : "Add New Address"}</DialogTitle></DialogHeader>
         {draft && <form onSubmit={save} className="space-y-4">
           <div className="grid grid-cols-3 gap-2">
@@ -228,7 +216,13 @@ export function AccountReviews({ userId }: { userId: string }) {
           </div>
         </article>)}
       </div>
-      <aside className={panel}><h2 className={cn(heading, "text-xl")}>Overall Rating</h2><p className="mt-2 text-3xl font-bold">{list.length ? (list.reduce((sum, review) => sum + review.rating, 0) / list.length).toFixed(1) : "—"}<span className="text-sm font-normal"> / 5</span></p><p className="text-sm text-muted-foreground">{list.length} reviews</p></aside>
+      <aside className={panel}><h2 className={cn(heading, "text-xl")}>Overall Rating</h2><p className="mt-2 text-3xl font-bold">{list.length ? (list.reduce((sum, review) => sum + review.rating, 0) / list.length).toFixed(1) : "—"}<span className="text-sm font-normal"> / 5</span></p><p className="text-sm text-muted-foreground">{list.length} reviews</p>
+        <div className="mt-4 space-y-2">{[5, 4, 3, 2, 1].map(star => {
+          const count = list.filter(review => review.rating === star).length;
+          return <div key={star} className="grid grid-cols-[3rem_1fr_1rem] items-center gap-2 text-xs">
+            <span>{star} star</span><progress className="h-2 w-full overflow-hidden rounded [&::-webkit-progress-bar]:bg-[#f4eeeb] [&::-webkit-progress-value]:bg-[#850d12]" value={count} max={list.length || 1} aria-label={`${star} star reviews`} /><span>{count}</span>
+          </div>;
+        })}</div></aside>
     </div>
     <Dialog open={!!edit} onOpenChange={open => { if (!open && !saving) setEdit(null); }}>
       <DialogContent><DialogHeader><DialogTitle>Edit Review</DialogTitle></DialogHeader>
@@ -299,39 +293,3 @@ export function AccountSettings({ user, profileContent, openAddresses, openSuppo
   </section>;
 }
 
-const helpTopics = [
-  { icon: Truck, title: "Track My Order", body: "Check your shipment status from My Orders.", to: "/track-order" },
-  { icon: Package, title: "Returns & Refunds", body: "Read the returns process and eligibility.", to: "/help" },
-  { icon: Ticket, title: "Offers & Coupons", body: "Get help applying a coupon at checkout.", to: "/help" },
-  { icon: Wallet, title: "Account & Payments", body: "Find answers about billing and payments.", to: "/help" },
-];
-
-export function AccountSupport({ openChat }: { openChat: () => void }) {
-  const [search, setSearch] = useState("");
-  const query = search.trim().toLowerCase();
-  const topics = helpTopics.filter(topic => `${topic.title} ${topic.body}`.toLowerCase().includes(query));
-  return <section className="space-y-4">
-    <SectionTitle title="Support" description="Find answers or get in touch with our support team." />
-    <div className="grid grid-cols-2 gap-2 xl:grid-cols-4">
-      {helpTopics.map(({ icon: Icon, title, body, to }) => <Link to={to} key={title} className={cn(panel, "block hover:border-[#b84d53]")}>
-        <Icon className="mb-2 text-[#850d12]" size={22} /><h2 className={heading}>{title}</h2><p className="mt-1 text-sm text-muted-foreground">{body}</p>
-      </Link>)}
-    </div>
-    <div className="rounded-xl bg-[#fbe8e6] p-5"><h2 className={cn(heading, "mb-2 text-xl")}>How can we help you?</h2>
-      <Input className="bg-white" aria-label="Search help topics" placeholder="Search delivery, refunds, coupons…" value={search} onChange={event => setSearch(event.target.value)} />
-    </div>
-    <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_15rem]">
-      <div className={panel}><h2 className={cn(heading, "text-xl")}>Popular Help Topics</h2>
-        <div className="mt-2 divide-y">{topics.map(({ icon: Icon, title, body, to }) => <details key={title} className="py-3">
-          <summary className="cursor-pointer text-sm font-semibold"><Icon className="mr-2 inline text-[#850d12]" size={17} />{title}</summary>
-          <p className="ml-6 mt-2 text-sm text-muted-foreground">{body} <Link className="underline" to={to}>Learn more</Link></p>
-        </details>)}</div>
-        {!topics.length && <p className="mt-2 text-sm">No help topics match your search.</p>}
-      </div>
-      <div className={panel}><h2 className={cn(heading, "text-xl")}>Contact Us</h2><p className="my-2 text-sm text-muted-foreground">Tell us what you need help with.</p>
-        <Button className={cn(primary, "w-full")} onClick={openChat}><CircleHelp size={16} className="mr-2" />Open Support Chat</Button>
-        <Button asChild variant="link" className="mt-2"><Link to="/help">View Help Centre</Link></Button>
-      </div>
-    </div>
-  </section>;
-}

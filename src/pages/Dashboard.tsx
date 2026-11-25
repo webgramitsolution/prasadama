@@ -18,7 +18,7 @@ import {
   MapPin,
   Loader2,
   Menu,
-  Home, LayoutGrid, Search,
+  Home, LayoutGrid, Search, ChevronRight, CircleHelp, RefreshCcw, Settings,
   Camera,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -32,9 +32,10 @@ import { useToast } from "@/hooks/use-toast";
 import { Tables } from "@/integrations/supabase/types";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { RFQTab } from "@/components/dashboard/RFQTab";
-import { AccountAddresses, AccountReviews, AccountSettings, AccountSupport, OrderProgress } from "@/components/dashboard/AccountSections";
+import { AccountAddresses, AccountReviews, AccountSettings, OrderProgress } from "@/components/dashboard/AccountSections";
 import { BuyerSidebar } from "@/components/dashboard/BuyerSidebar";
 import { ChatInterface } from "@/components/chat/ChatInterface";
+import { SupportCenter } from "@/components/support/SupportCenter";
 import { RelatedProducts } from "@/components/products/RelatedProducts";
 import { useCart } from "@/contexts/CartContext";
 
@@ -89,6 +90,7 @@ export default function Dashboard() {
   const [filter, setFilter] = useState("All Orders");
   const [query, setQuery] = useState("");
   const [period, setPeriod] = useState("all");
+  const [orderPage, setOrderPage] = useState(1);
   const [itemsByOrder, setItemsByOrder] = useState<Record<string, Tables<"order_items">[]>>({});
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [orderItems, setOrderItems] = useState<Tables<"order_items">[]>([]);
@@ -430,12 +432,12 @@ export default function Dashboard() {
     toast({ title: added ? "Items added to your cart" : "No items were added", description: `${added} of ${items.length} order lines added. Check your cart for current prices and availability.` });
   };
 
-  const renderOrderCard = (order: Order) => {
+  const renderOrderCard = (order: Order, compact = false) => {
     const items = itemsByOrder[order.id] ?? [];
     const status = String(order.status || "pending");
     const image = items.find(item => item.product_image)?.product_image;
     return (
-      <article key={order.id} className="rounded-xl border border-[#eee4dd] bg-white p-4 sm:p-5">
+      <article key={order.id} className="rounded-xl border border-[#eee4dd] bg-white p-3 sm:p-4">
         <div className="flex flex-wrap items-start justify-between gap-2">
           <div>
             <h3 className="font-semibold">Order #{order.order_number || order.id}</h3>
@@ -452,9 +454,11 @@ export default function Dashboard() {
         <div className="mt-4 flex gap-4">
           {image ? <img src={image} alt={items[0]?.product_name || ""} className="h-20 w-20 shrink-0 rounded-lg object-cover" loading="lazy" />
             : <div className="grid h-20 w-20 shrink-0 place-items-center rounded-lg bg-[#fbefe1] text-[#860d13]"><Package /></div>}
-          <OrderProgress status={status} />
+          <div className={cn("min-w-0 flex-1", compact && "hidden sm:block")}><OrderProgress status={status} placedAt={order.created_at} /></div>
+          {compact && <Button size="sm" variant="ghost" className="ml-auto self-center sm:hidden" aria-label="View order details" onClick={() => { setActiveTab("orders"); void viewOrder(order); }}><ChevronRight size={20} /></Button>}
         </div>
-        <div className="mt-4 flex flex-wrap justify-end gap-2">
+        <div className={cn("mt-3 flex flex-wrap items-center justify-end gap-2", compact && "hidden sm:flex")}>
+          <div className="mr-auto flex gap-1">{items.filter(item => item.product_image && item.product_image !== image).slice(0, 3).map(item => <img key={item.id} alt={item.product_name || ""} src={item.product_image!} className="h-9 w-9 rounded object-cover" loading="lazy" />)}</div>
           {status !== "cancelled" && status !== "delivered" && <Button asChild size="sm" className="bg-[#850d12] text-white hover:bg-[#6c090e]"><Link to={`/track-order/${encodeURIComponent(order.order_number || order.id)}`}>Track Order</Link></Button>}
           <Button variant="outline" size="sm" onClick={() => { setActiveTab("orders"); void viewOrder(order); }}>View Details</Button>
           {items.some(item => item.product_id) && <Button variant="outline" size="sm" disabled={reordering} onClick={() => reorder(items)}>{status === "delivered" ? "Buy Again" : "Reorder"}</Button>}
@@ -465,31 +469,53 @@ export default function Dashboard() {
   };
 
   const lastPurchasedProduct = orders.flatMap(order => itemsByOrder[order.id] ?? []).find(item => item.product_id)?.product_id;
+  const latestOrderImage = orders.flatMap(order => itemsByOrder[order.id] ?? []).find(item => item.product_image)?.product_image;
+  const recentReorder = orders.find(order => itemsByOrder[order.id]?.some(item => item.product_id));
+  const shortcuts = [
+    { label: "Track Order", detail: "Check your order status", icon: Truck, action: () => selectTab("orders") },
+    { label: "Reorder", detail: "Buy your favourites again", icon: RefreshCcw, action: () => recentReorder ? void reorder(itemsByOrder[recentReorder.id] ?? []) : selectTab("orders") },
+    { label: "My Addresses", detail: "Manage delivery addresses", icon: MapPin, action: () => selectTab("addresses") },
+    { label: "My Reviews", detail: "Share your experience", icon: CheckCircle, action: () => selectTab("reviews") },
+  ];
+  const accountLinks = [...shortcuts.slice(2), { label: "Account Settings", detail: "Profile and preferences", icon: Settings, action: () => selectTab("profile") }];
   const OverviewContent = () => (
     <div className="space-y-4">
-      <section className="rounded-xl border border-[#eedac4] bg-gradient-to-r from-[#fff5e7] to-[#f4d3a9] p-5 sm:p-8">
-        <p className="text-sm font-medium text-[#800b12]">My Account</p>
-        <h1 className="mt-1 max-w-xl font-display text-3xl font-bold text-[#800b12] sm:text-4xl">Welcome back, {profile?.full_name || "Buyer"}!</h1>
+      <section className="relative isolate overflow-hidden rounded-xl border border-[#eedac4] bg-[#fae6ca] p-5 sm:p-7">
+        {latestOrderImage && <img src={latestOrderImage} alt="" className="absolute inset-y-0 right-0 -z-20 h-full w-3/5 object-cover object-center" />}
+        <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-[#fff3df] via-[#fff0d8] to-transparent" />
+        <h1 className="max-w-[70%] font-serif text-3xl font-bold leading-tight text-[#800b12] sm:text-4xl">Welcome back,<br />{profile?.full_name || "Buyer"}!</h1>
+        <p className="mt-2 text-sm font-medium text-[#800b12]">Good food, good blessings.</p>
       </section>
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {[
-          { name: "Track Order", icon: Truck, tab: "orders" },
-          { name: "My Addresses", icon: MapPin, tab: "addresses" },
-          { name: "My Reviews", icon: CheckCircle, tab: "reviews" },
-          { name: "Account Settings", icon: User, tab: "profile" },
-        ].map(({ name, icon: Icon, tab }) => (
-          <button type="button" key={tab} onClick={() => selectTab(tab)} className="flex min-h-16 items-center gap-2 rounded-lg border border-[#eee4dd] bg-white p-3 text-left text-sm font-medium hover:border-[#b84d53]">
-            <span className="rounded-full bg-[#fff0dd] p-2 text-[#840e14]"><Icon size={18} /></span>{name}
+        {shortcuts.map(({ label, detail, icon: Icon, action }) => (
+          <button type="button" key={label} onClick={action} disabled={label === "Reorder" && reordering} className="flex min-h-16 items-center gap-2 rounded-lg border border-[#eee4dd] bg-white p-3 text-left text-sm hover:border-[#b84d53] disabled:opacity-60">
+            <span className="shrink-0 rounded-full bg-[#fff0dd] p-2 text-[#840e14]"><Icon size={18} /></span>
+            <span><strong className="block font-semibold">{label}</strong><span className="hidden text-xs text-muted-foreground xl:block">{detail}</span></span>
           </button>
         ))}
       </div>
-      <div className="flex items-center justify-between">
-        <h2 className="font-display text-xl font-bold text-[#800b12]">Recent Orders</h2>
-        <Button variant="link" onClick={() => selectTab("orders")}>View All Orders</Button>
+      <div className="grid items-start gap-3 xl:grid-cols-[minmax(0,1fr)_15rem]">
+        <section className="min-w-0 rounded-xl border border-[#eee4dd] bg-white p-3">
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-1"><h2 className="flex items-center gap-2 font-serif text-xl font-bold text-[#800b12]"><Package size={20} />Recent Orders</h2>
+            <Button variant="link" className="text-[#850d12]" onClick={() => selectTab("orders")}>View All Orders</Button></div>
+          {isLoading ? <Loader2 className="animate-spin" aria-label="Loading orders" /> : orders.length ?
+            <div className="space-y-2">{orders.slice(0, 2).map(order => renderOrderCard(order, true))}</div> :
+            <div className="space-y-3 p-3"><p>You haven’t placed an order yet.</p><Button asChild><Link to="/products">Start Shopping</Link></Button></div>}
+        </section>
+        <aside className="space-y-3">
+          <section className="rounded-xl border border-[#eee4dd] bg-white p-3">
+            <h2 className="font-serif text-xl font-bold text-[#800b12]">Quick Links</h2>
+            <div className="mt-2 divide-y">{accountLinks.map(({ label, detail, icon: Icon, action }) =>
+              <button type="button" key={label} onClick={action} className="flex w-full items-center gap-2 py-3 text-left hover:text-[#850d12]">
+                <Icon size={17} className="shrink-0 text-[#850d12]" /><span className="flex-1 text-sm">{label}<span className="block text-xs text-muted-foreground">{detail}</span></span><ChevronRight size={15} />
+              </button>)}</div>
+          </section>
+          <section className="rounded-xl border border-[#eedac4] bg-[#fff1df] p-4">
+            <h2 className="flex items-center gap-2 font-serif text-lg font-bold text-[#800b12]"><CircleHelp size={18} />Need Help?</h2>
+            <Button className="mt-2 bg-[#850d12] text-white hover:bg-[#6c090e]" onClick={() => selectTab("support")}>Contact Support</Button>
+          </section>
+        </aside>
       </div>
-      {isLoading ? <Loader2 className="animate-spin" aria-label="Loading orders" /> : orders.length ? orders.slice(0, 2).map(renderOrderCard) : (
-        <Card><CardContent className="space-y-3 p-5"><p>You haven’t placed an order yet.</p><Button asChild><Link to="/products">Start Shopping</Link></Button></CardContent></Card>
-      )}
       {lastPurchasedProduct && <RelatedProducts currentProductId={lastPurchasedProduct} compactTopOnMobile />}
     </div>
   );
@@ -578,16 +604,20 @@ export default function Dashboard() {
       order.order_number, order.id, ...(itemsByOrder[order.id] ?? []).map(item => item.product_name),
     ].some(value => value?.toLowerCase().includes(search)));
 
+    const pageSize = 5;
+    const pages = Math.max(1, Math.ceil(visible.length / pageSize));
+    const currentPage = Math.min(orderPage, pages);
+
     return (
       <div className="space-y-4">
         <div className="flex flex-wrap items-end justify-between gap-3">
-          <div><h1 className="font-display text-3xl font-bold text-[#800b12]">My Orders</h1>
+          <div><h1 className="font-serif text-3xl font-bold text-[#800b12]">My Orders</h1>
           <p className="text-sm text-muted-foreground">View, track and manage your orders.</p></div>
           <div className="flex w-full gap-2 sm:w-auto">
             <label className="relative min-w-0 flex-1"><Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input aria-label="Search orders" value={query} onChange={event => setQuery(event.target.value)} placeholder="Order ID or product" className="bg-white pl-9" />
+              <Input aria-label="Search orders" value={query} onChange={event => { setQuery(event.target.value); setOrderPage(1); }} placeholder="Order ID or product" className="bg-white pl-9" />
             </label>
-            <select aria-label="Order date range" value={period} onChange={event => setPeriod(event.target.value)} className="rounded-md border bg-white px-2 text-sm">
+            <select aria-label="Order date range" value={period} onChange={event => { setPeriod(event.target.value); setOrderPage(1); }} className="rounded-md border bg-white px-2 text-sm">
               <option value="all">All dates</option><option value="6">Last 6 months</option><option value="12">Last year</option>
             </select>
           </div>
@@ -595,11 +625,16 @@ export default function Dashboard() {
         <div aria-label="Filter orders by status" className="flex gap-1 overflow-x-auto rounded-lg border bg-white p-1">
           {Object.entries(tabs).map(([label, statuses]) => <Button key={label} type="button" variant="ghost" aria-pressed={label === filter}
             className={cn("shrink-0 rounded-none border-b-2 border-transparent", label === filter && "border-[#870d15] text-[#870d15]")}
-            onClick={() => setFilter(label)}>{label} ({recent.filter(order => matches(order, statuses)).length})</Button>)}
+            onClick={() => { setFilter(label); setOrderPage(1); }}>{label} ({recent.filter(order => matches(order, statuses)).length})</Button>)}
         </div>
         {isLoading ? <Loader2 className="animate-spin" aria-label="Loading orders" /> :
-          visible.length ? visible.map(renderOrderCard) :
+          visible.length ? visible.slice((currentPage - 1) * pageSize, currentPage * pageSize).map(order => renderOrderCard(order)) :
           <Card><CardContent className="p-5 text-sm">No orders match the selected filters.</CardContent></Card>}
+        {!isLoading && pages > 1 && <nav aria-label="Order pages" className="flex items-center justify-center gap-3">
+          <Button size="sm" variant="outline" disabled={currentPage === 1} onClick={() => setOrderPage(currentPage - 1)}>Previous</Button>
+          <span className="text-sm">Page {currentPage} of {pages}</span>
+          <Button size="sm" variant="outline" disabled={currentPage === pages} onClick={() => setOrderPage(currentPage + 1)}>Next</Button>
+        </nav>}
       </div>
     );
   };
@@ -879,7 +914,7 @@ export default function Dashboard() {
       case "reviews":
         return <AccountReviews userId={user.id} />;
       case "support":
-        return <AccountSupport openChat={() => selectTab("chat")} />;
+        return <SupportCenter openChat={() => selectTab("chat")} />;
       case "chat":
         return (
           <div className="h-[calc(100vh-180px)] min-h-[500px]">

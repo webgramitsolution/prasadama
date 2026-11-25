@@ -62,7 +62,7 @@ export function BuyerSidebar({ activeTab, onTabChange }: BuyerSidebarProps) {
   const initials = name.split(/\s+/).filter(Boolean).slice(0, 2).map(word => word[0]).join("").toUpperCase();
 
   return (
-    <aside aria-label="My account" className="flex max-h-full w-full flex-col rounded-xl border border-[#eee4dd] bg-white text-foreground">
+    <aside aria-label="My account" className="flex max-h-full w-full flex-col rounded-xl border border-[#eee4dd] bg-white shadow-sm text-foreground">
       {/* Navigation */}
       <div className="flex-1 overflow-y-auto py-4 px-2">
         <div>
