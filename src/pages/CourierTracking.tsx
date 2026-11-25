@@ -295,8 +295,7 @@ export default function CourierTracking() {
                 </p>
 
                 <div className="bg-card rounded-2xl border border-border shadow-sm p-2 flex items-center gap-2">
-                  <div className="flex-1 flex items-center gap-2 pl-3">
-                    <Search className="h-4 w-4 text-muted-foreground shrink-0" />
+                  <div className="min-w-0 flex-1">
                     <Input
                       placeholder="Order Number or Tracking Number"
                       value={trackingId}
