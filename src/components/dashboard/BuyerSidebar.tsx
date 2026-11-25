@@ -62,9 +62,9 @@ export function BuyerSidebar({ activeTab, onTabChange }: BuyerSidebarProps) {
   const initials = name.split(/\s+/).filter(Boolean).slice(0, 2).map(word => word[0]).join("").toUpperCase();
 
   return (
-    <aside aria-label="My account" className="flex max-h-full w-full flex-col rounded-xl border border-[#eee4dd] bg-white shadow-sm text-foreground">
+    <aside aria-label="My account" className="flex h-full min-h-0 w-full flex-col border-r border-[#eee4dd] bg-white shadow-sm text-foreground">
       {/* Navigation */}
-      <div className="flex-1 overflow-y-auto py-4 px-2">
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 py-4">
         <div>
           <div className="flex items-center gap-3 p-3 pb-5">
             <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#d59a58] font-semibold text-white">{initials}</span>
@@ -106,7 +106,7 @@ export function BuyerSidebar({ activeTab, onTabChange }: BuyerSidebarProps) {
       </div>
 
       {/* Logout */}
-      <div className="p-4 border-t border-[#eee4dd]">
+      <div className="shrink-0 border-t border-[#eee4dd] p-4">
         <Button
           variant="ghost"
           onClick={signOut}

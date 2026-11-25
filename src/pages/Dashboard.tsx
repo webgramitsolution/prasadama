@@ -912,11 +912,7 @@ export default function Dashboard() {
       case "support":
         return <SupportCenter openChat={() => selectTab("chat")} />;
       case "chat":
-        return (
-          <div className="h-[calc(100vh-180px)] min-h-[500px]">
-            <ChatInterface />
-          </div>
-        );
+        return <ChatInterface />;
       case "profile":
         return <AccountSettings user={user} profileContent={ProfileContent()} openAddresses={() => selectTab("addresses")} openSupport={() => selectTab("chat")} />;
       default:
@@ -931,7 +927,7 @@ export default function Dashboard() {
       </div>
       <div className="flex flex-1 min-h-0">
       {/* Desktop Sidebar */}
-      <div className="hidden h-full w-56 shrink-0 overflow-y-auto p-3 md:block xl:w-64">
+      <div className="hidden min-h-0 w-56 shrink-0 md:block xl:w-64">
         <BuyerSidebar
           activeTab={activeTab}
           onTabChange={selectTab}
@@ -955,9 +951,9 @@ export default function Dashboard() {
       {/* Main Content */}
        <div className="flex-1 flex flex-col min-w-0 min-h-0">
         {/* Main Content Area */}
-         <main className="flex-1 min-h-0 overflow-y-auto p-3 lg:p-5">
+         <main className={cn("flex-1 min-h-0 p-3 lg:p-5", activeTab === "chat" ? "flex flex-col overflow-hidden" : "overflow-y-auto")}>
           {/* Mobile Sidebar Toggle */}
-          <div className="md:hidden mb-4">
+          <div className="mb-2 shrink-0 md:hidden">
             <Button 
               variant="outline" 
               size="sm" 
@@ -969,7 +965,7 @@ export default function Dashboard() {
             </Button>
           </div>
           
-          <div className="mx-auto w-full max-w-7xl text-[15px]">
+          <div className={cn("mx-auto w-full max-w-7xl text-[15px]", activeTab === "chat" && "min-h-0 flex-1")}>
             {renderContent()}
           </div>
         </main>

@@ -145,7 +145,8 @@ export function ChatInterface() {
   }, [activeConversation, user]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const viewport = messagesEndRef.current?.closest("[data-radix-scroll-area-viewport]");
+    if (viewport) viewport.scrollTop = viewport.scrollHeight;
   }, [messages, otherTyping]);
 
   const broadcastTyping = () => {
@@ -227,10 +228,10 @@ export function ChatInterface() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-6rem)] sm:h-[calc(100vh-7rem)] min-h-[450px] bg-card rounded-xl border border-border overflow-hidden">
+    <div className="flex h-full min-h-0 bg-card rounded-xl border border-border overflow-hidden">
       {/* Conversations List */}
       <div className={cn(
-        "w-full sm:w-80 border-r border-border flex flex-col",
+        "w-full sm:w-80 border-r border-border flex min-h-0 flex-col",
         activeConversation && "hidden sm:flex"
       )}>
         <div className="p-3 sm:p-4 border-b border-border space-y-3">
@@ -253,7 +254,7 @@ export function ChatInterface() {
           />
         </div>
 
-        <ScrollArea className="flex-1">
+        <ScrollArea className="min-h-0 flex-1 [&>[data-radix-scroll-area-viewport]]:overscroll-contain">
           {conversations.filter(c => c.subject?.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 ? (
             <div className="p-4 text-center text-muted-foreground">
               <MessageSquare className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-2 opacity-30" />
@@ -304,13 +305,13 @@ export function ChatInterface() {
 
       {/* Messages Area */}
       <div className={cn(
-        "flex-1 flex flex-col min-w-0",
+        "flex-1 flex flex-col min-w-0 min-h-0",
         !activeConversation && "hidden sm:flex"
       )}>
         {activeConversation ? (
           <>
             {/* Header */}
-            <div className="p-3 sm:p-4 border-b border-border flex items-center gap-3">
+            <div className="shrink-0 p-3 sm:p-4 border-b border-border flex items-center gap-3">
               <Button
                 variant="ghost"
                 size="icon"
@@ -336,7 +337,7 @@ export function ChatInterface() {
             </div>
 
             {/* Messages */}
-            <ScrollArea className="flex-1 p-3 sm:p-4">
+            <ScrollArea className="min-h-0 flex-1 [&>[data-radix-scroll-area-viewport]]:overscroll-contain p-3 sm:p-4">
               <div className="space-y-3 sm:space-y-4">
                 <AnimatePresence initial={false}>
                   {messages.map((msg) => {
@@ -428,16 +429,16 @@ export function ChatInterface() {
             </ScrollArea>
 
             {/* Quick Replies */}
-            <div className="px-3 sm:px-4 py-2 border-t border-border bg-secondary/30">
+            <div className="shrink-0 px-3 sm:px-4 py-2 border-t border-border bg-secondary/30">
               <p className="text-[11px] text-muted-foreground mb-1.5">Quick Replies:</p>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex gap-1.5 overflow-x-auto">
                 {quickReplyTemplates.map((tpl, idx) => (
                   <Button
                     key={idx}
                     type="button"
                     variant="outline"
                     size="sm"
-                    className="text-[11px] h-7 px-2"
+                    className="shrink-0 text-[11px] h-7 px-2"
                     onClick={() => setNewMessage(tpl.message)}
                   >
                     <tpl.icon className="h-3 w-3 mr-1" />
@@ -448,7 +449,7 @@ export function ChatInterface() {
             </div>
 
             {/* Input */}
-            <form onSubmit={sendMessage} className="p-3 sm:p-4 border-t border-border">
+            <form onSubmit={sendMessage} className="shrink-0 bg-card p-3 sm:p-4 border-t border-border">
               <div className="flex gap-2">
                 <Input
                   value={newMessage}

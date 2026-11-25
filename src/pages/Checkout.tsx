@@ -485,7 +485,7 @@ export default function Checkout() {
             })}
           </ol>
         </div>
-        <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 overflow-x-hidden">
+        <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 overflow-x-clip">
           {!allMoqValid && (
             <div className="mt-4 flex items-center gap-2 rounded-lg bg-destructive/10 p-4 text-destructive mb-6">
               <AlertTriangle className="h-5 w-5" />
@@ -493,7 +493,7 @@ export default function Checkout() {
             </div>
           )}
 
-          <form ref={formRef} onSubmit={handleSubmit} className="max-w-full overflow-x-hidden">
+          <form ref={formRef} onSubmit={handleSubmit} className="max-w-full overflow-x-clip">
             <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(400px,0.82fr)] gap-4 md:gap-6 items-start min-w-0">
               {/* Shipping & Billing */}
               <div className="min-w-0 space-y-4">
@@ -711,7 +711,7 @@ export default function Checkout() {
 
               {/* Order Summary */}
               <div className="min-w-0">
-                <Card className="md:sticky md:top-6 overflow-hidden max-w-full">
+                <Card className="max-w-full overflow-hidden lg:sticky lg:top-36 lg:max-h-[calc(100dvh-10rem)] lg:overflow-y-auto">
                   <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
                     <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
                       <CreditCard className="h-5 w-5" />
