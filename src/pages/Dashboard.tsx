@@ -30,7 +30,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Tables } from "@/integrations/supabase/types";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { RFQTab } from "@/components/dashboard/RFQTab";
 import { AccountAddresses, AccountReviews, AccountSettings, AccountSupport, OrderProgress } from "@/components/dashboard/AccountSections";
 import { BuyerSidebar } from "@/components/dashboard/BuyerSidebar";
@@ -910,6 +910,7 @@ export default function Dashboard() {
       {/* Mobile Sidebar */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
         <SheetContent side="left" className="w-64 p-0">
+          <SheetTitle className="sr-only">My Account</SheetTitle>
           <BuyerSidebar
             activeTab={activeTab}
             onTabChange={(tab) => {

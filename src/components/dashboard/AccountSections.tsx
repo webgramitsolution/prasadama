@@ -10,7 +10,6 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { cn } from "@/lib/utils";
-import { getSavedAddresses, type AccountAddress } from "@/lib/accountAddresses";
 
 const panel = "rounded-xl border border-[#eee4dd] bg-white p-4 sm:p-5";
 const primary = "bg-[#850d12] text-white hover:bg-[#6c090e]";
@@ -46,6 +45,19 @@ const addressFields = [
   ["state", "State", "text"], ["city", "City", "text"], ["street", "House number, building and street", "text"], ["landmark", "Landmark (optional)", "text"],
 ] as const;
 const addressTypes = { Home: House, Office: Briefcase, Other: MapPin };
+type AccountAddress = {
+  id: string; type: "Home" | "Office" | "Other"; name: string; phone: string; postalCode: string;
+  state: string; city: string; street: string; landmark: string; isDefault: boolean;
+};
+function getSavedAddresses(user: User | null | undefined): AccountAddress[] {
+  const addresses: unknown = user?.user_metadata["saved_addresses"];
+  if (!Array.isArray(addresses)) return [];
+  return addresses.filter((address): address is AccountAddress =>
+    address && ["Home", "Office", "Other"].includes(address.type) &&
+    ["id", "name", "phone", "postalCode", "state", "city", "street", "landmark"].every(key => typeof address[key] === "string") &&
+    typeof address.isDefault === "boolean");
+}
+
 type LegacyAddress = { full_name: string | null; phone: string | null; postal_code: string | null; address: string | null; state: string | null; city: string | null } | null | undefined;
 const emptyAddress: AccountAddress = { id: "", type: "Home", name: "", phone: "", postalCode: "", state: "", city: "", street: "", landmark: "", isDefault: false };
 
