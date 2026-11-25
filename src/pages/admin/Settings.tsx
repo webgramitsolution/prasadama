@@ -37,13 +37,6 @@ export default function AdminSettings() {
     storePhone: "+91 75511 20242",
     storeAddress: "123 Business Street, City, Country",
     storeGSTIN: "",
-    ekartClientId: "",
-    ekartUsername: "",
-    ekartPassword: "",
-    ekartPickupAlias: "",
-    ekartCategory: "Temple Prasad",
-    ekartWeight: "500",
-    ekartGstin: "",
     currency: "INR",
     taxRate: "18",
     gstEnabled: false,
@@ -137,29 +130,14 @@ export default function AdminSettings() {
       supabase.from("site_settings").select("value").eq("key", "shipping_settings").maybeSingle(),
     ]);
 
-    // Ekart integration credentials live in a separate admin-only settings row
-    const { data: ekartRes } = await supabase
-      .from("site_settings")
-      .select("value")
-      .eq("key", "ekart_settings")
-      .maybeSingle();
-    const ek = (ekartRes?.value ?? {}) as any;
-
     if (storeRes.data?.value) {
-      const v = { ...(storeRes.data.value as any), ...ek } as any;
+      const v = storeRes.data.value as any;
       setStoreSettings({
         storeName: v.storeName || "VendorHub Commerce",
         storeEmail: v.storeEmail || "info@webgramitsolution",
         storePhone: v.storePhone || "+91 75511 20242",
         storeAddress: v.storeAddress || "",
         storeGSTIN: v.storeGSTIN || "",
-        ekartClientId: v.ekartClientId || "",
-        ekartUsername: v.ekartUsername || "",
-        ekartPassword: v.ekartPassword || "",
-        ekartPickupAlias: v.ekartPickupAlias || "",
-        ekartCategory: v.ekartCategory || "Temple Prasad",
-        ekartWeight: v.ekartWeight || "500",
-        ekartGstin: v.ekartGstin || "",
         currency: v.currency || "INR",
         taxRate: v.taxRate || "18",
         gstEnabled: v.gstEnabled ?? false,
@@ -238,18 +216,8 @@ export default function AdminSettings() {
 
   const handleSaveSettings = async () => {
     setIsSaving(true);
-    // Keep courier credentials out of the publicly readable "store" settings row
-    const {
-      ekartClientId, ekartUsername, ekartPassword, ekartPickupAlias,
-      ekartCategory, ekartWeight, ekartGstin, ...publicStoreSettings
-    } = storeSettings;
-    const ekartSettings = {
-      ekartClientId, ekartUsername, ekartPassword, ekartPickupAlias,
-      ekartCategory, ekartWeight, ekartGstin,
-    };
     await Promise.all([
-      supabase.from("site_settings").upsert({ key: "store", value: publicStoreSettings as any }, { onConflict: "key" }),
-      supabase.from("site_settings").upsert({ key: "ekart_settings", value: ekartSettings as any }, { onConflict: "key" }),
+      supabase.from("site_settings").upsert({ key: "store", value: storeSettings as any }, { onConflict: "key" }),
       supabase.from("site_settings").upsert({ key: "bottom_menu", value: { items: bottomMenuItems } as any }, { onConflict: "key" }),
       supabase.from("site_settings").upsert({ key: "announcement_bar", value: announcementSettings as any }, { onConflict: "key" }),
       supabase.from("site_settings").upsert({ key: "hero_marquee", value: heroMarqueeSettings as any }, { onConflict: "key" }),
@@ -298,10 +266,6 @@ export default function AdminSettings() {
           <TabsTrigger value="bottom-menu" className="gap-2 flex-1 min-w-[100px]">
             <Smartphone className="h-4 w-4" />
             Bottom Menu
-          </TabsTrigger>
-          <TabsTrigger value="integrations" className="gap-2 flex-1 min-w-[100px]">
-            <Truck className="h-4 w-4" />
-            Integrations
           </TabsTrigger>
         </TabsList>
 
@@ -593,93 +557,6 @@ export default function AdminSettings() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="integrations">
-          <Card className="shadow-card">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Truck className="h-5 w-5" />
-                Ekart Logistics Integration
-              </CardTitle>
-              <CardDescription>
-                Test your Ekart credentials and manage webhook settings.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg bg-secondary/20">
-                  <div>
-                    <h3 className="font-semibold">Credentials Tester</h3>
-                    <p className="text-sm text-muted-foreground">Verify your Client Id, Username, and Password are correct.</p>
-                  </div>
-                  <Button 
-                    onClick={async () => {
-                      setIsSaving(true);
-                      try {
-                        const { data, error } = await supabase.functions.invoke("ekart-test-credentials", { body: { action: "test" } });
-                        if (error) throw error;
-                        if (data.success) {
-                          toast({ title: "Connection Successful", description: data.message });
-                        } else {
-                          toast({ 
-                            title: "Connection Failed", 
-                            description: data.error || "Authentication failed", 
-                            variant: "destructive" 
-                          });
-                        }
-                      } catch (err: any) {
-                        toast({ 
-                          title: "Test Failed", 
-                          description: err.message || "Could not connect to Ekart", 
-                          variant: "destructive" 
-                        });
-                      } finally {
-                        setIsSaving(false);
-                      }
-                    }}
-                    disabled={isSaving}
-                    className="gap-2"
-                  >
-                    {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Truck className="h-4 w-4" />}
-                    Test Connection
-                  </Button>
-                </div>
-
-                <div className="space-y-3">
-                  <Label>Webhook Endpoint</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Copy this URL to your Ekart developer portal to receive real-time order updates.
-                  </p>
-                  <div className="flex gap-2">
-                    <Input 
-                      readOnly 
-                      value="https://cxyfwxbirzskvoesgtia.supabase.co/functions/v1/ekart-webhook" 
-                      className="bg-secondary/30 font-mono text-xs"
-                    />
-                    <Button 
-                      variant="outline" 
-                      onClick={() => {
-                        navigator.clipboard.writeText("https://cxyfwxbirzskvoesgtia.supabase.co/functions/v1/ekart-webhook");
-                        toast({ title: "Copied", description: "Webhook URL copied to clipboard" });
-                      }}
-                    >
-                      Copy
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="rounded-lg bg-info/10 p-4 border border-info/20 text-sm text-info-foreground">
-                  <p className="font-semibold mb-1">Integration Info:</p>
-                  <ul className="list-disc list-inside space-y-1 opacity-90">
-                    <li>COD orders are synced immediately upon checkout.</li>
-                    <li>Prepaid orders are synced after successful payment.</li>
-                    <li>Sync failures generate an email notification to admin.</li>
-                    <li>Tracking IDs are automatically updated in the order details.</li>
-                  </ul>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
       </Tabs>
     </div>
   );

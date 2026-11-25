@@ -16,91 +16,24 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   Truck,
   Package,
-  CheckCircle,
-  XCircle,
   Search,
   Loader2,
-  MapPin,
   ArrowLeft,
   ArrowRight,
-  Copy,
   Check,
-  Calendar,
-  Clock,
   Phone,
   Mail,
   MessageCircle,
   Globe,
   ShieldCheck,
   Headphones,
-  ExternalLink,
   AlertCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SEOHead } from "@/components/SEOHead";
-import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import type { Tables } from "@/integrations/supabase/types";
 
-
-interface TrackEvent {
-  status: string;
-  desc: string;
-  ctime: number;
-  location?: string;
-  ndrStatus?: string;
-}
-
-interface TrackData {
-  tracking_id: string;
-  order_number: string | null;
-  edd: number | null;
-  current: {
-    status: string | null;
-    desc: string | null;
-    location: string | null;
-    ctime: number | null;
-    pickupTime: number | null;
-    ndrStatus: string | null;
-    attempts: number | null;
-  };
-  history: TrackEvent[];
-  public_url: string;
-}
-
-const statusTone = (status?: string | null) => {
-  const s = (status || "").toLowerCase();
-  if (s.includes("deliver")) return "bg-success/10 text-success border-success/20";
-  if (s.includes("out for")) return "bg-info/10 text-info border-info/20";
-  if (s.includes("transit") || s.includes("shipped") || s.includes("dispatched"))
-    return "bg-accent/10 text-accent border-accent/20";
-  if (s.includes("pick")) return "bg-primary/10 text-primary border-primary/20";
-  if (s.includes("cancel") || s.includes("rto") || s.includes("undelivered"))
-    return "bg-destructive/10 text-destructive border-destructive/20";
-  if (s.includes("ndr") || s.includes("hold"))
-    return "bg-warning/10 text-warning border-warning/20";
-  return "bg-muted text-muted-foreground border-border";
-};
-
-const fmtTime = (ts?: number | null) => {
-  if (!ts) return "";
-  return new Date(ts).toLocaleString("en-IN", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
-
-const fmtDate = (ts?: number | null) => {
-  if (!ts) return "";
-  return new Date(ts).toLocaleDateString("en-IN", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-};
 
 const AWB_REGEX = /^[A-Za-z0-9\-]{6,32}$/;
 const UUID_REGEX =
@@ -110,11 +43,7 @@ export default function CourierTracking() {
   const { orderNumber } = useParams();
   const { user } = useAuth();
   const [trackingId, setTrackingId] = useState("");
-  const [data, setData] = useState<TrackData | null>(null);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [copied, setCopied] = useState(false);
   const [order, setOrder] = useState<Tables<"orders"> | null>(null);
   const [orderItems, setOrderItems] = useState<Tables<"order_items">[]>([]);
   const [orderLoading, setOrderLoading] = useState(false);
@@ -127,13 +56,12 @@ export default function CourierTracking() {
     }
     setOrderLoading(true);
     setError(null);
-    setData(null);
     setCouponCode(null);
     const isId = UUID_REGEX.test(reference);
-    const query = supabase.from("orders").select("*");
+    const query = supabase.from("orders").select("*").eq("user_id", user.id);
     const { data: found, error: orderError } = isId
       ? await query.eq("id", reference).maybeSingle()
-      : await query.eq("order_number", reference.toUpperCase()).maybeSingle();
+      : await query.or(`order_number.eq.${reference.toUpperCase()},tracking_number.eq.${reference}`).maybeSingle();
     if (orderError || !found) {
       setOrder(null);
       setOrderItems([]);
@@ -170,12 +98,8 @@ export default function CourierTracking() {
         },
         {
           label: "Shipment created",
-          detail: order.ekart_last_error
-            ? `Sync error: ${order.ekart_last_error}`
-            : order.ekart_last_attempt_at
-              ? new Date(order.ekart_last_attempt_at).toLocaleString("en-IN")
-              : "Awaiting courier sync",
-          done: (order.ekart_sync_status || "").toLowerCase() === "success" || !!order.tracking_number,
+          detail: order.tracking_number ? `AWB ${order.tracking_number}` : "Awaiting dispatch",
+          done: !!order.tracking_number,
         },
         {
           label: "In transit",
@@ -191,84 +115,31 @@ export default function CourierTracking() {
     : [];
 
   useEffect(() => {
-    if (orderNumber) loadOrder(decodeURIComponent(orderNumber));
+    if (orderNumber && (UUID_REGEX.test(orderNumber) || AWB_REGEX.test(orderNumber))) void loadOrder(orderNumber);
   }, [orderNumber, user?.id]);
 
 
   const handleTrack = async (idOverride?: string) => {
     const raw = (idOverride ?? trackingId).trim();
-    setError(null);
-
-    if (!raw) {
-      setError("Please enter an order number or tracking number to continue.");
-      setData(null);
+    if (!UUID_REGEX.test(raw) && !AWB_REGEX.test(raw)) {
+      setOrder(null);
+      setError("Enter a valid order number or tracking number.");
       return;
     }
-    if (raw.toUpperCase().startsWith("ORD-") || UUID_REGEX.test(raw)) {
-      await loadOrder(UUID_REGEX.test(raw) ? raw : raw.toUpperCase());
-      return;
-    }
-    if (!AWB_REGEX.test(raw)) {
-      setError(
-        "Invalid tracking ID. Use 6–32 characters (letters, digits, or hyphens only)."
-      );
-      setData(null);
-      return;
-    }
-
-    setLoading(true);
-    setData(null);
-    try {
-      const { data: res, error: fnErr } = await supabase.functions.invoke(
-        "ekart-track",
-        { body: { tracking_id: raw } }
-      );
-      if (fnErr || !res || (res as any).error) {
-        setError(
-          (res as any)?.error === "Tracking details not found"
-            ? "No tracking details found for this ID. Please check and try again."
-            : "Unable to fetch tracking right now. Please try again in a moment."
-        );
-      } else {
-        setData(res as TrackData);
-        setLastUpdated(new Date());
-      }
-    } catch {
-      setError("Something went wrong. Please try again.");
-    }
-    setLoading(false);
-  };
-
-  const handleCopy = async () => {
-    if (!data) return;
-    try {
-      await navigator.clipboard.writeText(data.tracking_id);
-      setCopied(true);
-      toast({ title: "Copied", description: "Tracking ID copied to clipboard." });
-      setTimeout(() => setCopied(false), 1500);
-    } catch {
-      /* ignore */
-    }
+    await loadOrder(raw);
   };
 
   const handleReset = () => {
-    setData(null);
     setOrder(null);
     setOrderItems([]);
     setError(null);
-    setLastUpdated(null);
   };
-
-  const sortedHistory = data
-    ? [...data.history].sort((a, b) => (a.ctime || 0) - (b.ctime || 0))
-    : [];
-  const latestIdx = sortedHistory.length - 1;
 
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Track Your Shipment | Courier Tracking"
-        description="Track your Prasadam order and view courier shipment updates."
+        description="View your Prasadam order status and saved tracking number."
       />
       <Header />
 
@@ -291,7 +162,7 @@ export default function CourierTracking() {
                   Track Your Shipment
                 </h1>
                 <p className="text-muted-foreground mb-6 max-w-md">
-                  Enter your order number or tracking number to get real-time updates.
+                  Enter your order number or tracking number to view the latest saved order status.
                 </p>
 
                 <div className="bg-card rounded-2xl border border-border shadow-sm p-2 flex items-center gap-2">
@@ -310,10 +181,10 @@ export default function CourierTracking() {
                   </div>
                   <Button
                     onClick={() => handleTrack()}
-                    disabled={loading}
+                    disabled={orderLoading}
                     className="h-11 px-5 bg-accent hover:bg-accent-hover"
                   >
-                    {loading ? (
+                    {orderLoading ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
                       <>
@@ -333,7 +204,7 @@ export default function CourierTracking() {
 
                 <p className="text-xs text-muted-foreground mt-4">
                   <span className="text-accent font-medium">Supports:</span>{" "}
-                  Ekart & partner couriers
+                  Order status and saved tracking numbers
                 </p>
               </div>
 
@@ -366,7 +237,7 @@ export default function CourierTracking() {
                     <p className="text-xs text-muted-foreground">Order</p>
                     <h2 className="text-xl font-bold">{order.order_number}</h2>
                   </div>
-                  <Badge className={cn("border", statusTone(order.status))}>{order.status || "pending"}</Badge>
+                  <Badge className={cn("border", "bg-primary/10 text-primary")}>{order.status || "pending"}</Badge>
                 </div>
                 <div className="divide-y divide-border">
                   {orderItems.map((item) => (
@@ -401,10 +272,8 @@ export default function CourierTracking() {
                 </div>
                 <div className="bg-card border border-border rounded-2xl p-6">
                   <h3 className="font-semibold mb-3">Delivery</h3>
-                  <p className="text-sm text-muted-foreground">Ekart sync</p>
-                  <p className="font-medium capitalize">{order.ekart_sync_status || "pending"}</p>
-                  {order.ekart_last_attempt_at && <p className="text-xs text-muted-foreground mt-1">Last attempt: {new Date(order.ekart_last_attempt_at).toLocaleString("en-IN")}</p>}
-                  {order.tracking_number && <Button className="mt-4 w-full" onClick={() => handleTrack(order.tracking_number || "")}>Track courier</Button>}
+                  <p className="text-sm text-muted-foreground">Tracking number</p>
+                  <p className="font-medium">{order.tracking_number || "Awaiting dispatch"}</p>
                 </div>
                 <div className="bg-card border border-border rounded-2xl p-6">
                   <h3 className="font-semibold mb-3">Billing & shipping</h3>
@@ -421,7 +290,7 @@ export default function CourierTracking() {
 
           {/* Loading skeleton */}
           <AnimatePresence>
-            {loading && (
+            {orderLoading && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -444,240 +313,10 @@ export default function CourierTracking() {
           </AnimatePresence>
 
           {/* Result */}
-          <AnimatePresence>
-            {data && !loading && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="grid md:grid-cols-2 gap-6"
-              >
-                {/* Summary */}
-                <div className="bg-card border border-border rounded-2xl p-6">
-                  <button
-                    onClick={handleReset}
-                    className="flex items-center gap-1 text-sm text-accent hover:underline mb-4"
-                  >
-                    <ArrowLeft className="h-4 w-4" /> Back to Search
-                  </button>
 
-                  <p className="text-xs text-muted-foreground">Tracking ID</p>
-                  <div className="flex items-center gap-2 mb-3">
-                    <h2 className="text-xl font-bold text-foreground break-all">
-                      {data.tracking_id}
-                    </h2>
-                    <button
-                      onClick={handleCopy}
-                      className="p-1.5 rounded-md hover:bg-muted transition-colors"
-                      aria-label="Copy tracking ID"
-                    >
-                      {copied ? (
-                        <Check className="h-4 w-4 text-success" />
-                      ) : (
-                        <Copy className="h-4 w-4 text-muted-foreground" />
-                      )}
-                    </button>
-                  </div>
-
-                  <Badge
-                    className={cn(
-                      "border rounded-full font-medium mb-4",
-                      statusTone(data.current.status)
-                    )}
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-current mr-1.5 inline-block" />
-                    {data.current.status || "In Progress"}
-                  </Badge>
-
-                  {data.current.desc && (
-                    <p className="text-sm text-muted-foreground mb-5">
-                      {data.current.desc}
-                      {data.edd && (
-                        <>
-                          {" "}
-                          Expected delivery by{" "}
-                          <span className="text-accent font-medium">
-                            {fmtDate(data.edd)}
-                          </span>
-                          .
-                        </>
-                      )}
-                    </p>
-                  )}
-
-                  <div className="space-y-3">
-                    {data.edd && (
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-muted/60 flex items-center justify-center">
-                          <Calendar className="h-4 w-4 text-muted-foreground" />
-                        </div>
-                        <div>
-                          <p className="text-[11px] text-muted-foreground">
-                            Estimated Delivery
-                          </p>
-                          <p className="text-sm font-semibold">{fmtDate(data.edd)}</p>
-                        </div>
-                      </div>
-                    )}
-                    {data.current.location && (
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-muted/60 flex items-center justify-center">
-                          <MapPin className="h-4 w-4 text-muted-foreground" />
-                        </div>
-                        <div>
-                          <p className="text-[11px] text-muted-foreground">
-                            Current Location
-                          </p>
-                          <p className="text-sm font-semibold">
-                            {data.current.location}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                    {data.current.ctime && (
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-muted/60 flex items-center justify-center">
-                          <Clock className="h-4 w-4 text-muted-foreground" />
-                        </div>
-                        <div>
-                          <p className="text-[11px] text-muted-foreground">
-                            Last Scan
-                          </p>
-                          <p className="text-sm font-semibold">
-                            {fmtTime(data.current.ctime)}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {data.current.ndrStatus && (
-                    <div className="mt-4 rounded-lg border border-warning/40 bg-warning/5 p-3 text-sm">
-                      <p className="font-semibold text-warning">
-                        NDR: {data.current.ndrStatus}
-                      </p>
-                      {data.current.attempts != null && (
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                          Delivery attempts: {data.current.attempts}
-                        </p>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="mt-5 pt-4 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
-                    <span>
-                      {lastUpdated
-                        ? `Last updated: ${lastUpdated.toLocaleTimeString("en-IN", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}`
-                        : ""}
-                    </span>
-                    <button
-                      onClick={() => handleTrack(data.tracking_id)}
-                      className="text-accent hover:underline font-medium"
-                    >
-                      Refresh
-                    </button>
-                  </div>
-                </div>
-
-                {/* Timeline */}
-                <div className="bg-card border border-border rounded-2xl p-6">
-                  <h3 className="text-base font-bold text-foreground mb-5">
-                    Tracking History
-                  </h3>
-
-                  {sortedHistory.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">
-                      {data.current.desc || "No scan updates yet."}
-                    </p>
-                  ) : (
-                    <div className="relative pl-7">
-                      <div className="absolute left-[10px] top-2 bottom-2 w-px bg-border" />
-                      {sortedHistory
-                        .slice()
-                        .reverse()
-                        .map((ev, idx) => {
-                          const originalIdx = sortedHistory.length - 1 - idx;
-                          const isLatest = originalIdx === latestIdx;
-                          const isDone = originalIdx < latestIdx;
-                          return (
-                            <motion.div
-                              key={idx}
-                              initial={{ opacity: 0, x: -6 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: idx * 0.04 }}
-                              className="relative pb-5 last:pb-0"
-                            >
-                              <div
-                                className={cn(
-                                  "absolute -left-7 top-0.5 w-5 h-5 rounded-full border-2 flex items-center justify-center",
-                                  isLatest
-                                    ? "bg-accent/10 border-accent"
-                                    : isDone
-                                    ? "bg-success border-success"
-                                    : "bg-card border-border"
-                                )}
-                              >
-                                {isLatest ? (
-                                  <span className="w-2 h-2 rounded-full bg-accent" />
-                                ) : isDone ? (
-                                  <CheckCircle className="h-3 w-3 text-white" />
-                                ) : (
-                                  <Package className="h-3 w-3 text-muted-foreground" />
-                                )}
-                              </div>
-                              <p
-                                className={cn(
-                                  "text-sm font-semibold",
-                                  isLatest ? "text-accent" : "text-foreground"
-                                )}
-                              >
-                                {ev.status}
-                              </p>
-                              <p className="text-xs text-muted-foreground mt-0.5">
-                                {fmtTime(ev.ctime)}
-                              </p>
-                              {ev.desc && (
-                                <p
-                                  className={cn(
-                                    "text-xs mt-1",
-                                    isLatest
-                                      ? "bg-accent/5 text-accent rounded-md px-2 py-1.5"
-                                      : "text-muted-foreground"
-                                  )}
-                                >
-                                  {ev.desc}
-                                </p>
-                              )}
-                              {ev.location && (
-                                <p className="text-[11px] text-muted-foreground mt-1 flex items-center gap-1">
-                                  <MapPin className="h-3 w-3" />
-                                  {ev.location}
-                                </p>
-                              )}
-                            </motion.div>
-                          );
-                        })}
-                    </div>
-                  )}
-
-                  <a
-                    href={data.public_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 mt-4 text-xs text-accent hover:underline"
-                  >
-                    View on courier site <ExternalLink className="h-3 w-3" />
-                  </a>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
 
           {/* Empty state hero card when nothing searched */}
-          {!data && !order && !loading && !orderLoading && !error && (
+          {!order && !orderLoading && !error && (
             <div className="grid md:grid-cols-3 gap-4">
               <div className="bg-primary/5 border border-primary/10 rounded-2xl p-5">
                 <h3 className="font-semibold text-foreground mb-1">

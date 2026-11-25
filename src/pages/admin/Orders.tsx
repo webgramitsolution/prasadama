@@ -76,12 +76,10 @@ const paymentBadge: Record<PaymentKind, { label: string; className: string }> = 
   cod: { label: "COD", className: "bg-accent/10 text-accent border-accent/20" },
   pending: { label: "Payment pending", className: "bg-warning/10 text-warning border-warning/20" },
 };
-function shipmentLabel(order: { ekart_sync_status?: string | null; tracking_number?: string | null; status?: string | null }) {
+function shipmentLabel(order: { tracking_number?: string | null; status?: string | null }) {
   if (order.status === "delivered") return { label: "Delivered", className: "bg-success/10 text-success" };
   if (order.status === "cancelled") return { label: "Cancelled", className: "bg-destructive/10 text-destructive" };
   if (order.tracking_number) return { label: `Shipped · ${order.tracking_number}`, className: "bg-primary/10 text-primary" };
-  if (order.ekart_sync_status === "synced") return { label: "Shipment created", className: "bg-primary/10 text-primary" };
-  if (order.ekart_sync_status === "failed") return { label: "Shipment failed", className: "bg-destructive/10 text-destructive" };
   return { label: "Not shipped", className: "bg-muted text-muted-foreground" };
 }
 
@@ -104,7 +102,6 @@ export default function AdminOrders() {
   const [paymentFilter, setPaymentFilter] = useState<"all" | "paid" | "cod" | "pending">("all");
   const [selectedOrder, setSelectedOrder] = useState<OrderWithProfile | null>(null);
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
-  const [ekartLogs, setEkartLogs] = useState<any[]>([]);
   const [isUpdating, setIsUpdating] = useState(false);
   const { toast } = useToast();
 
@@ -191,13 +188,6 @@ export default function AdminOrders() {
         .eq("order_id", order.id);
       setOrderItems(data || []);
       
-      // Fetch Ekart logs
-      const { data: logs } = await supabase
-        .from("ekart_integration_logs")
-        .select("*")
-        .eq("order_id", order.id)
-        .order("created_at", { ascending: false });
-      setEkartLogs(logs || []);
     } catch (error) {
       console.error("Error fetching order items:", error);
     }
@@ -367,63 +357,8 @@ export default function AdminOrders() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="mt-4 pt-4 border-t flex flex-wrap items-center justify-between gap-3">
-                  <div className="flex flex-col">
-                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1">
-                      EKART SYNC STATUS
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className={cn(
-                        "text-[10px] px-1.5 h-5",
-                        selectedOrder.ekart_sync_status === 'synced' ? "bg-green-50 text-green-700 border-green-200" :
-                        selectedOrder.ekart_sync_status === 'failed' ? "bg-red-50 text-red-700 border-red-200" :
-                        "bg-gray-50 text-gray-700 border-gray-200"
-                      )}>
-                        {selectedOrder.ekart_sync_status?.toUpperCase() || 'NOT SYNCED'}
-                      </Badge>
-                      {selectedOrder.ekart_last_attempt_at && (
-                        <span className="text-[10px] text-muted-foreground">
-                          Last: {new Date(selectedOrder.ekart_last_attempt_at).toLocaleTimeString()}
-                        </span>
-                      )}
-                    </div>
-                    {selectedOrder.ekart_last_error && (
-                      <p className="text-[10px] text-destructive mt-1 max-w-[200px] truncate" title={selectedOrder.ekart_last_error}>
-                        Error: {selectedOrder.ekart_last_error}
-                      </p>
-                    )}
-                  </div>
+                <div className="mt-4 border-t pt-4">
                   <div className="flex flex-wrap gap-2">
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      className="gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
-                      disabled={isUpdating}
-                      onClick={async () => {
-                        setIsUpdating(true);
-                        try {
-                          const { data, error } = await supabase.functions.invoke("ekart-create-shipment", {
-                            body: { order_id: selectedOrder.id },
-                          });
-                          if (error) throw error;
-                          if (data.error) throw new Error(data.error);
-                          
-                          toast({ 
-                            title: data.already ? "Already Synced" : "Ekart Sync Success", 
-                            description: `Tracking ID: ${data.tracking_id}` 
-                          });
-                          fetchOrders();
-                          handleViewOrder(selectedOrder);
-                        } catch (err: any) {
-                          toast({ title: "Sync Failed", description: err.message || "Ekart error", variant: "destructive" });
-                        } finally {
-                          setIsUpdating(false);
-                        }
-                      }}
-                    >
-                      <Truck className="h-4 w-4" />
-                      Sync to Ekart
-                    </Button>
                     <Button 
                       size="sm" 
                       variant="outline" 
@@ -518,54 +453,6 @@ export default function AdminOrders() {
 
           {/* Right column - Customer Info */}
           <div className="space-y-6">
-            {/* Ekart Sync Timeline */}
-            <Card className="shadow-card overflow-hidden">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-semibold flex items-center gap-2">
-                    <Truck className="h-4 w-4" />
-                    Ekart Sync Timeline
-                  </h4>
-                  {selectedOrder.ekart_sync_status && (
-                    <Badge className={selectedOrder.ekart_sync_status === 'synced' ? 'bg-success/10 text-success' : 'bg-destructive/10 text-destructive'}>
-                      {selectedOrder.ekart_sync_status}
-                    </Badge>
-                  )}
-
-                </div>
-                <div className="space-y-4">
-                  {ekartLogs.length === 0 ? (
-                    <p className="text-sm text-muted-foreground italic text-center py-4">No sync attempts recorded.</p>
-                  ) : (
-                    ekartLogs.map((log, idx) => (
-                      <div key={log.id} className="relative pl-6 pb-4 border-l last:pb-0 last:border-l-transparent">
-                        <div className={`absolute left-[-5px] top-1.5 w-2.5 h-2.5 rounded-full ${log.success ? 'bg-success' : 'bg-destructive'}`} />
-                        <div className="text-xs text-muted-foreground mb-1">
-                          {new Date(log.created_at).toLocaleString()}
-                        </div>
-                        <div className="text-sm font-medium flex items-center justify-between">
-                          <span>{log.action}</span>
-                          {log.status_code && <span className="text-[10px] px-1 bg-secondary rounded">{log.status_code}</span>}
-                        </div>
-                        {log.error_message && (
-                          <div className="text-xs text-destructive mt-1 bg-destructive/5 p-2 rounded border border-destructive/10 break-words">
-                            {log.error_message}
-                          </div>
-                        )}
-                        {!log.success && log.request_payload && (
-                          <details className="mt-2">
-                            <summary className="text-[10px] text-muted-foreground cursor-pointer hover:underline">View Payload</summary>
-                            <pre className="text-[9px] mt-1 p-2 bg-secondary/50 rounded overflow-x-auto whitespace-pre-wrap">
-                              {JSON.stringify(log.request_payload, null, 2)}
-                            </pre>
-                          </details>
-                        )}
-                      </div>
-                    ))
-                  )}
-                </div>
-              </CardContent>
-            </Card>
 
 
             <Card className="shadow-card">

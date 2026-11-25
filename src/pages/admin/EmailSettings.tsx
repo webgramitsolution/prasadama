@@ -277,7 +277,7 @@ export default function AdminEmailSettings() {
       <Card>
         <CardHeader>
           <CardTitle>Email delivery log</CardTitle>
-          <CardDescription>Signup OTP, password reset, order emails and SMTP tests.</CardDescription>
+          <CardDescription>Order emails and SMTP tests.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">

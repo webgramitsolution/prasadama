@@ -73,16 +73,12 @@ const AdminReels = lazy(() => import("./pages/admin/Reels"));
 const AdminRoles = lazy(() => import("./pages/admin/Roles"));
 const AdminDiagnostics = lazy(() => import("./pages/admin/Diagnostics"));
 const AdminContactInquiries = lazy(() => import("./pages/admin/ContactInquiries"));
-const AdminEkartLogs = lazy(() => import("./pages/admin/EkartLogs"));
-const AdminEkartSettings = lazy(() => import("./pages/admin/EkartSettings"));
 const AdminBlog = lazy(() => import("./pages/admin/Blog"));
 const AdminFamilyTestimonials = lazy(() => import("./pages/admin/FamilyTestimonials"));
 const AdminWebhookLogs = lazy(() => import("./pages/admin/WebhookLogs"));
-const AdminOtpLogs = lazy(() => import("./pages/admin/OtpLogs"));
 const AdminSecurityLogs = lazy(() => import("./pages/admin/SecurityLogs"));
 const InvoicePreview = lazy(() => import("./pages/dev/InvoicePreview"));
 const AdminSecurityDiagnostics = lazy(() => import("./pages/admin/SecurityDiagnostics"));
-const AdminSmsLogs = lazy(() => import("./pages/admin/SmsLogs"));
 const AdminEmailSettings = lazy(() => import("./pages/admin/EmailSettings"));
 const AdminHomeMerchandising = lazy(() => import("./pages/admin/HomeMerchandising"));
 
@@ -180,14 +176,10 @@ const App = () => (
                 <Route path="diagnostics" element={<AdminDiagnostics />} />
                 <Route path="security-diagnostics" element={<AdminSecurityDiagnostics />} />
                 <Route path="contact-inquiries" element={<AdminContactInquiries />} />
-                <Route path="ekart-logs" element={<AdminEkartLogs />} />
-                <Route path="ekart-settings" element={<AdminEkartSettings />} />
                 <Route path="blog" element={<AdminBlog />} />
                 <Route path="family-testimonials" element={<AdminFamilyTestimonials />} />
                 <Route path="webhook-logs" element={<AdminWebhookLogs />} />
-                 <Route path="otp-logs" element={<AdminOtpLogs />} />
                  <Route path="security-logs" element={<AdminSecurityLogs />} />
-                 <Route path="sms-logs" element={<AdminSmsLogs />} />
                  <Route path="email-settings" element={<AdminEmailSettings />} />
                  <Route path="dev/invoice-preview" element={<InvoicePreview />} />
                  <Route path="dev/email-preview-internal" element={<EmailPreview />} />

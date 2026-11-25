@@ -57,31 +57,6 @@ serve(async (req) => {
       "Content-Type": "application/json",
     };
 
-    if (type === "all" || type === "otp") {
-      // Test Signup OTP
-      const signupRes = await fetch(`${functionUrl}/send-signup-otp`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          email: "test@houskase.com",
-          password: "testpassword",
-          fullName: "Test User",
-          correlationId: "test-uuid"
-        }),
-      });
-      results.push({ name: "send-signup-otp", status: signupRes.status, ok: signupRes.ok });
-
-      // Test Reset OTP
-      const resetRes = await fetch(`${functionUrl}/manage-password-reset`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          action: "send-otp",
-          email: "test@houskase.com"
-        }),
-      });
-      results.push({ name: "manage-password-reset", status: resetRes.status, ok: resetRes.ok });
-    }
 
     if (type === "all" || type === "order") {
       const orderStatuses = ["new_order", "order_confirmed", "order_processing", "order_shipped", "order_delivered", "order_cancelled"];

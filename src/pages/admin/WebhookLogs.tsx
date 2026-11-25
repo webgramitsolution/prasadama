@@ -30,7 +30,6 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { useToast } from "@/hooks/use-toast";
 
 interface WebhookEvent {
   id: string;
@@ -50,8 +49,6 @@ export default function AdminWebhookLogs() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [selected, setSelected] = useState<WebhookEvent | null>(null);
-  const [retrying, setRetrying] = useState<string | null>(null);
-  const { toast } = useToast();
 
   const { data: logs, isLoading, isFetching, refetch, dataUpdatedAt } = useQuery({
     queryKey: ["admin-webhook-logs"],
@@ -87,31 +84,6 @@ export default function AdminWebhookLogs() {
   });
 
   const failedCount = rows.filter((l) => isFailure(l.status)).length;
-
-  const retry = async (log: WebhookEvent) => {
-    const payload = (log.payload as Record<string, unknown>) || {};
-    const orderId = (payload["order_id"] ?? payload["orderId"]) as string | undefined;
-    if (!orderId) {
-      toast({
-        title: "Cannot retry",
-        description: "This event has no order reference to replay.",
-        variant: "destructive",
-      });
-      return;
-    }
-    setRetrying(log.id);
-    const { data, error } = await supabase.functions.invoke("ekart-create-shipment", {
-      body: { order_id: orderId },
-    });
-    setRetrying(null);
-    const fnError = error?.message || (data as { error?: string } | null)?.error;
-    if (fnError) {
-      toast({ title: "Retry failed", description: fnError, variant: "destructive" });
-    } else {
-      toast({ title: "Retry sent", description: `Replayed webhook for order ${orderId}.` });
-    }
-    refetch();
-  };
 
   return (
     <div className="space-y-6">
@@ -221,15 +193,6 @@ export default function AdminWebhookLogs() {
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-1.5">
                             <Button size="sm" variant="outline" onClick={() => setSelected(log)}>View</Button>
-                            {failed && (
-                              <Button size="sm" onClick={() => retry(log)} disabled={retrying === log.id}>
-                                {retrying === log.id ? (
-                                  <Loader2 className="h-3 w-3 animate-spin" />
-                                ) : (
-                                  <Send className="h-3 w-3" />
-                                )}
-                              </Button>
-                            )}
                           </div>
                         </TableCell>
                       </TableRow>

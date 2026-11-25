@@ -66,14 +66,10 @@ const menuItems = [
   { icon: MessageSquare, label: "Chat", href: "/admin/chat" },
   { icon: Inbox, label: "Contact Inquiries", href: "/admin/contact-inquiries" },
     
-    { icon: Mail, label: "OTP Logs", href: "/admin/otp-logs" },
     { icon: Mail, label: "Email & SMTP", href: "/admin/email-settings" },
-    { icon: MessageSquare, label: "SMS Logs", href: "/admin/sms-logs" },
     { icon: ShieldAlert, label: "Security Logs", href: "/admin/security-logs" },
    { icon: Bell, label: "Notifications", href: "/admin/notifications" },
   { icon: UserCog, label: "Roles", href: "/admin/roles" },
-  { icon: Truck, label: "Ekart Settings", href: "/admin/ekart-settings" },
-  { icon: Activity, label: "Ekart Logs", href: "/admin/ekart-logs" },
   { icon: Webhook, label: "Webhook Logs", href: "/admin/webhook-logs" },
   { icon: Settings, label: "Settings", href: "/admin/settings" },
 
