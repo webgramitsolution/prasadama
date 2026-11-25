@@ -101,7 +101,7 @@ function FilterSidebar({
   };
 
   return (
-    <div className={isSheet ? "space-y-6" : "space-y-6 sticky top-24"}>
+    <div className="space-y-6">
       {isSheet && (
         <div className="-mx-1 rounded-2xl bg-gradient-to-br from-accent/10 via-accent/5 to-transparent p-4 border border-accent/15">
           <div className="text-[11px] font-bold uppercase tracking-wider text-accent">Refine</div>
@@ -348,8 +348,8 @@ export default function Products() {
         ]}
       />
       <Header />
-      <main className="pt-4 pb-10 sm:pb-12 overflow-x-hidden">
-        <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 overflow-x-hidden">
+      <main className="pt-4 pb-10 sm:pb-12 overflow-x-clip">
+        <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 overflow-x-clip">
           {/* Category Banner */}
           {(categoryBanner?.banner_image || categoryBanner?.image_url) && selectedCategory ? (
             <div className="relative h-[150px] sm:h-[200px] md:h-[250px] rounded-lg overflow-hidden mb-6">
@@ -433,7 +433,7 @@ export default function Products() {
           <div className="flex gap-4 min-w-0">
             {/* Desktop Filter Sidebar */}
             <div className="hidden lg:block w-64 flex-shrink-0">
-              <div className="sticky top-36 bg-card rounded-xl p-6 shadow-card border border-border">
+              <div className="sticky top-36 max-h-[calc(100dvh-10rem)] overflow-y-auto bg-card rounded-xl p-6 shadow-card border border-border">
                 <h2 className="font-display font-semibold text-lg mb-4 flex items-center gap-2">
                   <Filter className="h-5 w-5" />
                   Filters
