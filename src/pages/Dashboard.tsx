@@ -480,9 +480,9 @@ export default function Dashboard() {
   const OverviewContent = () => (
     <div className="space-y-4">
       <section className="relative isolate overflow-hidden rounded-xl border border-[#eedac4] bg-[#fae6ca] p-5 sm:min-h-40 sm:p-7">
-        <img src="/auth-mithai.jpg" alt="" fetchPriority="high" className="absolute inset-y-0 right-0 -z-20 h-full w-3/4 object-cover object-center sm:w-3/5" />
-        <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-[#fff3df] via-[#fff0d8]/95 to-[#fff0d8]/15" />
-        <h1 className="max-w-[70%] font-serif text-3xl font-bold leading-tight text-[#800b12] sm:text-4xl">Welcome back,<br />{profile?.full_name || "Buyer"}!</h1>
+        <img src="/cdn/account-mithai-hero.webp" alt="" fetchPriority="high" className="absolute inset-y-0 right-0 -z-20 h-full w-[66%] object-cover object-right sm:w-[65%]" />
+        <div aria-hidden className="absolute inset-y-0 left-0 -z-10 w-[58%] bg-gradient-to-r from-[#fff3df] from-65% to-transparent sm:w-[53%]" />
+        <h1 className="max-w-[58%] break-words font-serif text-3xl font-bold leading-tight text-[#800b12] sm:text-4xl">Welcome back,<br />{profile?.full_name || "Buyer"}!</h1>
         <p className="mt-2 text-sm font-medium text-[#800b12]">Good food, good blessings.</p>
       </section>
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -515,7 +515,7 @@ export default function Dashboard() {
           </section>
         </aside>
       </div>
-      {lastPurchasedProduct && <RelatedProducts currentProductId={lastPurchasedProduct} compactTopOnMobile />}
+      <RelatedProducts {...(lastPurchasedProduct ? { currentProductId: lastPurchasedProduct } : {})} compactTopOnMobile />
     </div>
   );
 

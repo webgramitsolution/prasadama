@@ -263,9 +263,11 @@ export function SupportCenter({ openChat }: { openChat?: () => void }) {
 
   const hero = (
     <div className="relative isolate flex min-h-44 items-center overflow-hidden rounded-xl border border-[#f2ddda] bg-[#fbe8e6] p-5 sm:min-h-52 sm:p-7">
-      <img src="/products-hero-banner.jpg" alt="" fetchPriority={openChat ? "auto" : "high"} className="absolute inset-y-0 right-0 -z-20 h-full w-full object-cover object-right sm:w-3/5" />
-      <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-[#fbe8e6] via-[#fbe8e6]/95 to-[#fbe8e6]/40 sm:to-transparent" />
-      <div className="w-full max-w-xl"><h2 className={`${title} text-2xl`}>How can we help you?</h2>
+      <img src="/cdn/support-center-hero.webp" alt="" fetchPriority={openChat ? "auto" : "high"} className="absolute inset-y-0 right-0 -z-20 h-full w-3/5 object-cover object-right sm:w-1/2" />
+      <div aria-hidden className="absolute inset-y-0 left-0 -z-10 w-[58%] bg-gradient-to-r from-[#fbe8e6] from-75% to-transparent sm:w-[55%]" />
+      <div className="w-[63%] max-w-lg sm:w-[49%]">{openChat
+        ? <h2 className={`${title} text-2xl`}>How can we help you?</h2>
+        : <h1 id="support-hero-heading" className={`${title} text-2xl sm:text-3xl`}>How can we help you?</h1>}
         <p className="mt-1 text-sm text-muted-foreground">Search for answers or browse our help topics.</p>
         <label className="relative mt-3 block"><Search aria-hidden className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input className="bg-white pl-9" aria-label="Search help articles" placeholder="Search delivery, refunds, coupons…" value={query}
@@ -275,11 +277,11 @@ export function SupportCenter({ openChat }: { openChat?: () => void }) {
     </div>
   );
 
-  return <section className="space-y-4" aria-labelledby="support-heading">
-    <div>
+  return <section className="space-y-4" aria-labelledby={openChat ? "support-heading" : "support-hero-heading"}>
+    {openChat && <div>
       <h1 id="support-heading" className={`${title} text-3xl`}>Support</h1>
       <p className="mt-1 text-muted-foreground">Find answers, contact us or raise a support request.</p>
-    </div>
+    </div>}
     {!openChat && hero}
     <div className="grid grid-cols-2 gap-2 lg:grid-cols-4 lg:gap-3">
       {shortcuts.map(({ icon: Icon, title: name, label, body, to, topic: shortcut, tone }) => {
@@ -293,7 +295,7 @@ export function SupportCenter({ openChat }: { openChat?: () => void }) {
     </div>
     {openChat && hero}
     <div className="grid items-start gap-3 lg:grid-cols-[minmax(0,1fr)_17rem]">
-      <div className="min-w-0 space-y-3">
+      <div className={`min-w-0 space-y-3 ${openChat ? "lg:max-h-[min(65dvh,40rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-2" : ""}`}>
         <section className={card}><h2 className={`${title} text-xl`}>Popular Help Topics</h2>
           <div className="mt-3 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
             {supportTopics.map(({ icon: Icon, title: name }) => <button type="button" key={name}
@@ -307,14 +309,14 @@ export function SupportCenter({ openChat }: { openChat?: () => void }) {
           <h2 className={`${title} text-xl`}>{topic || "Frequently Asked Questions"}</h2>
           {(topic || search) && <Button type="button" variant="link" onClick={() => { setQuery(""); setTopic(""); }}>View all FAQs</Button>}
         </div>
-          {results.length ? <div role="region" aria-label="FAQ answers" tabIndex={0} className="mt-2 rounded focus-visible:outline focus-visible:outline-[#850d12] lg:max-h-[min(52dvh,29rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-3"><Accordion type="single" collapsible>
+          {results.length ? <div role="region" aria-label="FAQ answers" tabIndex={0} className={`mt-2 rounded focus-visible:outline focus-visible:outline-[#850d12] ${openChat ? "" : "lg:max-h-[min(52dvh,29rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-3"}`}><Accordion type="single" collapsible>
             {results.flatMap(category => category.faqs).map(faq => <AccordionItem key={faq.question} value={faq.question}>
               <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger><AccordionContent>{faq.answer}</AccordionContent>
             </AccordionItem>)}
           </Accordion></div> : <p className="mt-3 text-sm text-muted-foreground">No matching answers. Try another search or contact support.</p>}
         </section>
       </div>
-      <aside className={`${card} lg:sticky lg:top-40`}><h2 className={`${title} text-xl`}>Contact Us</h2>
+      <aside className={`${card} lg:sticky ${openChat ? "lg:top-0" : "lg:top-40"}`}><h2 className={`${title} text-xl`}>Contact Us</h2>
         <p className="mt-1 text-sm text-muted-foreground">Get in touch with our support team.</p>
         <div className="mt-3 space-y-2">{contactOptions.map(option => <div key={option.title} className="flex items-start gap-2 rounded-lg border p-3">
           <option.icon size={18} className="mt-1 shrink-0 text-[#850d12]" />

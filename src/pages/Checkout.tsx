@@ -17,6 +17,7 @@ import { CreditCard, Truck, FileText, AlertTriangle, CheckCircle, Loader2, Walle
 import { cn } from "@/lib/utils";
 import { SEOHead } from "@/components/SEOHead";
 import { CouponInput } from "@/components/checkout/CouponInput";
+import { AccountAddresses } from "@/components/dashboard/AccountSections";
 import { getSavedAddresses, type AccountAddress } from "@/lib/accountAddresses";
 import { RFQBenefits } from "@/components/rfq/RFQBenefits";
 import { OrderSuccessFlow, type OrderFlowStage } from "@/components/checkout/OrderSuccessFlow";
@@ -79,6 +80,7 @@ export default function Checkout() {
   const [billingPhoneValue, setBillingPhoneValue] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
   const [selectedAddress, setSelectedAddress] = useState("");
+  const [editSelection, setEditSelection] = useState<{ address: AccountAddress } | null>(null);
   const [updatingCart, setUpdatingCart] = useState(false);
   const savedAddresses = getSavedAddresses(user);
 
@@ -495,15 +497,15 @@ export default function Checkout() {
             <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(400px,0.82fr)] gap-4 md:gap-6 items-start min-w-0">
               {/* Shipping & Billing */}
               <div className="min-w-0 space-y-4">
-                {savedAddresses.length > 0 && <section className="rounded-lg border border-[#eee4dd] bg-white p-4 sm:p-5">
-                  <h2 className="flex items-center gap-2 font-serif text-xl font-bold text-[#800b12]"><MapPin size={20} />Delivery Address</h2>
+                {user && <section className="rounded-lg border border-[#eee4dd] bg-white p-4 sm:p-5">
+                  <AccountAddresses user={user} profile={undefined} onSelect={fillAddress} editSelection={editSelection} />
                   <p className="mt-1 text-sm text-muted-foreground">Choose a saved address or enter your details below.</p>
                   <div className="mt-3 space-y-2">{[...savedAddresses].sort((left, right) => Number(right.isDefault) - Number(left.isDefault)).map(address =>
-                    <button type="button" key={address.id} aria-pressed={selectedAddress === address.id} onClick={() => fillAddress(address)}
-                      className="block w-full rounded-lg border p-3 text-left text-sm hover:border-[#850d12] aria-pressed:border-[#850d12] aria-pressed:bg-[#fcf0ee]">
+                    <div key={address.id} className="relative"><button type="button" aria-pressed={selectedAddress === address.id} onClick={() => fillAddress(address)}
+                      className="block w-full rounded-lg border p-3 pr-16 text-left text-sm hover:border-[#850d12] aria-pressed:border-[#850d12] aria-pressed:bg-[#fcf0ee]">
                       <span className="font-semibold">{address.name}</span><span className="ml-2 rounded bg-[#f9ead9] px-2 py-1 text-xs">{address.type}</span>
                       <span className="mt-1 block">{address.street}, {address.city} {address.postalCode}</span><span className="block text-muted-foreground">{address.phone}</span>
-                    </button>)}</div>
+                    </button><Button type="button" variant="ghost" size="sm" className="absolute right-2 top-2 text-[#850d12]" onClick={() => setEditSelection({ address })}>Edit</Button></div>)}</div>
                 </section>}
                 {/* Billing Address (Primary) */}
                 <Card className="overflow-hidden max-w-full">

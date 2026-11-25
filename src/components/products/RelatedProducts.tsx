@@ -16,7 +16,7 @@ interface Product {
 }
 
 interface RelatedProductsProps {
-  currentProductId: string;
+  currentProductId?: string;
   categoryId?: string | null;
   compactTopOnMobile?: boolean;
 }
@@ -42,16 +42,16 @@ export function RelatedProducts({ currentProductId, categoryId, compactTopOnMobi
         .from("products")
         .select("id, name, slug, images, guest_price, retail_price, shop_price, regular_price, has_variations")
         .eq("is_active", true)
-        .neq("id", currentProductId)
         .limit(10);
 
+      if (currentProductId) query = query.neq("id", currentProductId);
       if (categoryId) {
         query = query.eq("category_id", categoryId);
       }
 
       const { data } = await query.order("created_at", { ascending: false });
 
-      if (!data || data.length < 10) {
+      if (currentProductId && (!data || data.length < 10)) {
         const existing = data?.map(p => p.id) || [];
         const { data: moreData } = await supabase
           .from("products")
@@ -63,7 +63,7 @@ export function RelatedProducts({ currentProductId, categoryId, compactTopOnMobi
 
         setProducts([...(data || []), ...(moreData || [])] as unknown as Product[]);
       } else {
-        setProducts(data as unknown as Product[]);
+        setProducts((data ?? []) as unknown as Product[]);
       }
       
       setLoading(false);
@@ -92,7 +92,7 @@ export function RelatedProducts({ currentProductId, categoryId, compactTopOnMobi
       <div className="flex items-center justify-center gap-3 sm:gap-4 mb-5">
         <span aria-hidden className="hidden sm:block h-px w-12 sm:w-24 bg-gradient-to-r from-transparent to-border" />
         <h2 id="related-products-heading" className="text-lg sm:text-xl font-display font-bold text-foreground text-center">
-          Related Products
+          {currentProductId ? "Related Products" : "Recommended for You"}
         </h2>
         <span aria-hidden className="hidden sm:block h-px w-12 sm:w-24 bg-gradient-to-l from-transparent to-border" />
       </div>

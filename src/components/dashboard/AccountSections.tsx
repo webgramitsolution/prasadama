@@ -49,7 +49,9 @@ const addressTypes = { Home: House, Office: Briefcase, Other: MapPin };
 type LegacyAddress = { full_name: string | null; phone: string | null; postal_code: string | null; address: string | null; state: string | null; city: string | null } | null | undefined;
 const emptyAddress: AccountAddress = { id: "", type: "Home", name: "", phone: "", postalCode: "", state: "", city: "", street: "", landmark: "", isDefault: false };
 
-export function AccountAddresses({ user, profile }: { user: User; profile: LegacyAddress }) {
+export function AccountAddresses({ user, profile, onSelect, editSelection }: {
+  user: User; profile: LegacyAddress; onSelect?: (address: AccountAddress) => void; editSelection?: { address: AccountAddress } | null;
+}) {
   const { toast } = useToast();
   const saved: AccountAddress[] = Array.isArray(user.user_metadata["saved_addresses"]) ? getSavedAddresses(user) : profile?.address ? [{
     ...emptyAddress, id: "legacy", name: profile.full_name ?? "", phone: profile.phone ?? "", postalCode: profile.postal_code ?? "",
@@ -61,8 +63,11 @@ export function AccountAddresses({ user, profile }: { user: User; profile: Legac
   const [saving, setSaving] = useState(false);
   const [checking, setChecking] = useState(false);
   const [pinResult, setPinResult] = useState("");
+  useEffect(() => {
+    if (editSelection) { setPinResult(""); setDraft(editSelection.address); }
+  }, [editSelection]);
 
-  async function persist(next: AccountAddress[]) {
+  async function persist(next: AccountAddress[], selected?: AccountAddress) {
     const normalized = next.length && !next.some(address => address.isDefault)
       ? next.map((address, index) => ({ ...address, isDefault: index === 0 })) : next;
     setSaving(true);
@@ -71,6 +76,7 @@ export function AccountAddresses({ user, profile }: { user: User; profile: Legac
     if (error) { toast({ title: error.message, variant: "destructive" }); return; }
     setLocal(normalized);
     setDraft(null);
+    if (selected) onSelect?.(selected);
     toast({ title: "Saved addresses updated" });
   }
 
@@ -88,20 +94,21 @@ export function AccountAddresses({ user, profile }: { user: User; profile: Legac
 
   function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    event.stopPropagation();
     if (!draft || saving) return;
     const next = { ...draft, id: draft.id || crypto.randomUUID() };
     const remaining = addresses.filter(address => address.id !== next.id)
       .map(address => next.isDefault ? { ...address, isDefault: false } : address);
-    void persist([...remaining, next]);
+    void persist([...remaining, next], next);
   }
 
   return <section className="space-y-4">
     <div className="flex flex-wrap items-center justify-between gap-3">
-      <SectionTitle title="My Addresses" description="Manage your saved delivery addresses." />
+      {onSelect ? <h2 className={cn(heading, "text-xl")}>Delivery Address</h2> : <SectionTitle title="My Addresses" description="Manage your saved delivery addresses." />}
       <Button className={cn(primary, "w-full sm:w-auto")} onClick={() => { setPinResult(""); setDraft({ ...emptyAddress, name: profile?.full_name ?? "" }); }}><Plus size={16} className="mr-2" />Add New Address</Button>
     </div>
-    {!addresses.length && <p className={panel}>You haven’t saved a delivery address.</p>}
-    {[...addresses].sort((a, b) => Number(b.isDefault) - Number(a.isDefault)).map(address => {
+    {!onSelect && !addresses.length && <p className={panel}>You haven’t saved a delivery address.</p>}
+    {!onSelect && [...addresses].sort((a, b) => Number(b.isDefault) - Number(a.isDefault)).map(address => {
       const Icon = addressTypes[address.type];
       return <article key={address.id} className={cn(panel, "flex flex-wrap items-start gap-3", address.isDefault && "border-[#cb777b] bg-[#fcf0ee]")}>
         <span className="rounded-full bg-[#faead7] p-3 text-[#850d12]"><Icon size={21} /></span>
@@ -117,15 +124,15 @@ export function AccountAddresses({ user, profile }: { user: User; profile: Legac
       </article>;
     })}
     <Dialog open={!!draft} onOpenChange={open => { if (!open && !saving) setDraft(null); }}>
-      <DialogContent className="max-h-[88dvh] overflow-y-auto rounded-xl border-[#eee4dd] bg-[#fffaf5] max-sm:bottom-0 max-sm:top-auto max-sm:translate-y-0 max-sm:rounded-b-none sm:max-w-2xl">
+      <DialogContent className="max-h-[90dvh] overflow-y-auto rounded-xl border-[#eee4dd] bg-[#fffaf5] max-sm:bottom-0 max-sm:top-auto max-sm:translate-y-0 max-sm:rounded-b-none sm:max-w-3xl">
         <DialogHeader><DialogTitle className={cn(heading, "text-2xl")}>{draft?.id ? "Edit Address" : "Add New Address"}</DialogTitle></DialogHeader>
-        {draft && <form onSubmit={save} className="space-y-4">
-          <div className="grid grid-cols-3 gap-2">
+        {draft && <form onSubmit={save} className="grid gap-5 sm:grid-cols-[12rem_minmax(0,1fr)]">
+          <div className="grid grid-cols-3 content-start gap-2 sm:grid-cols-1 sm:border-r sm:border-[#eee4dd] sm:pr-4">
             {Object.entries(addressTypes).map(([type, Icon]) => <Button type="button" key={type} variant="outline" aria-pressed={draft.type === type}
               className={cn("h-auto flex-col gap-1 py-3", draft.type === type && "border-[#850d12] bg-[#fcf0ee] text-[#850d12]")}
               onClick={() => setDraft({ ...draft, type: type as AccountAddress["type"] })}><Icon size={19} />{type}</Button>)}
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="space-y-4"><div className="grid gap-3 sm:grid-cols-2">
             {addressFields.map(([key, label, type]) => <div key={key} className={cn("space-y-1", key === "street" && "sm:col-span-2")}>
               <Label htmlFor={`address-${key}`}>{label}</Label>
               <div className="flex gap-2">
@@ -141,7 +148,7 @@ export function AccountAddresses({ user, profile }: { user: User; profile: Legac
             </div>)}
           </div>
           <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={draft.isDefault} onChange={event => setDraft({ ...draft, isDefault: event.target.checked })} />Save as default address</label>
-          <Button className={cn(primary, "w-full")} disabled={saving}>{saving ? "Saving…" : "Save Address"}</Button>
+          <Button className={cn(primary, "w-full")} disabled={saving}>{saving ? "Saving…" : "Save Address"}</Button></div>
         </form>}
       </DialogContent>
     </Dialog>
@@ -258,14 +265,30 @@ export function AccountSettings({ user, profileContent, openAddresses, openSuppo
   const [language, setLanguage] = useState<string>(previous?.language === "hi" ? "hi" : "en");
   const [birthday, setBirthday] = useState<string>(typeof previous?.birthday === "string" ? previous.birthday : "");
   const [offers, setOffers] = useState(previous?.offers === true);
+  const addresses = getSavedAddresses(user);
+  const [defaultAddress, setDefaultAddress] = useState(addresses.find(address => address.isDefault)?.id ?? "");
 
   async function savePreferences(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSaving(true);
-    const { error } = await supabase.auth.updateUser({ data: { account_preferences: { language, birthday, offers } } });
+    const addressUpdate = defaultAddress && addresses.some(address => address.id === defaultAddress)
+      ? { saved_addresses: addresses.map(address => ({ ...address, isDefault: address.id === defaultAddress })) } : {};
+    const { error } = await supabase.auth.updateUser({ data: { account_preferences: { language, birthday, offers }, ...addressUpdate } });
     setSaving(false);
     toast(error ? { title: error.message, variant: "destructive" } : { title: "Account preferences saved" });
   }
+  const preferencesForm = (
+    <form className={cn(panel, "space-y-3")} onSubmit={savePreferences}>
+      <h2 className={cn(heading, "text-xl")}>Default Preferences</h2>
+      <div className="grid gap-3 sm:grid-cols-3">
+        <label className="space-y-1 text-sm"><span>Default Delivery Address</span><select className={field} value={defaultAddress} onChange={event => setDefaultAddress(event.target.value)}><option value="" disabled>{addresses.length ? "Choose an address" : "No saved addresses"}</option>{addresses.map(address => <option key={address.id} value={address.id}>{address.type} · {address.city} {address.postalCode}</option>)}</select></label>
+        <label className="space-y-1 text-sm"><span>Preferred language</span><select className={field} value={language} onChange={event => setLanguage(event.target.value)}><option value="en">English</option><option value="hi">Hindi</option></select></label>
+        <label className="space-y-1 text-sm"><span>Date of birth (optional)</span><Input type="date" value={birthday} onChange={event => setBirthday(event.target.value)} /></label>
+      </div>
+      <p className="text-sm text-muted-foreground">Set your default delivery address in My Addresses. Store prices are displayed in INR.</p>
+      <div className="flex flex-wrap gap-2"><Button className={primary} disabled={saving}>Save Preferences</Button><Button type="button" variant="outline" onClick={openAddresses}>Manage Addresses</Button></div>
+    </form>
+  );
   return <section className="space-y-4">
     <SectionTitle title="Account Settings" description="Manage your profile, security and communication preferences." />
     <div className="flex overflow-x-auto rounded-xl border bg-white">
@@ -274,7 +297,7 @@ export function AccountSettings({ user, profileContent, openAddresses, openSuppo
     </div>
     {tab === "Profile" && <>
       {profileContent}
-      <div className={panel}><h2 className={cn(heading, "text-xl")}>Default Delivery Address</h2><p className="my-2 text-sm">Manage the addresses you can select at checkout.</p><Button variant="outline" onClick={openAddresses}>Manage Addresses</Button></div>
+      {preferencesForm}
       <div className={cn(panel, "bg-[#fbe8e6]")}><h2 className={cn(heading, "text-xl")}>Delete Account</h2><p className="my-2 text-sm">Contact support to request account deletion.</p><Button variant="outline" onClick={openSupport}>Contact Support</Button></div>
     </>}
     {tab === "Security" && <div className={panel}><h2 className={cn(heading, "text-xl")}>Password</h2><p className="my-2 text-sm">Request a secure reset link for your account.</p><Button asChild className={primary}><Link to="/forgot-password">Reset Password</Link></Button></div>}
@@ -284,15 +307,7 @@ export function AccountSettings({ user, profileContent, openAddresses, openSuppo
       <p className="text-sm text-muted-foreground">Visit My Orders for current shipping and delivery updates.</p>
       <Button className={primary} disabled={saving}>Save Preferences</Button>
     </form>}
-    {tab === "Preferences" && <form className={cn(panel, "space-y-3")} onSubmit={savePreferences}>
-      <h2 className={cn(heading, "text-xl")}>Shopping Preferences</h2>
-      <div className="grid gap-3 sm:grid-cols-2">
-        <label className="space-y-1 text-sm"><span>Preferred language</span><select className={field} value={language} onChange={event => setLanguage(event.target.value)}><option value="en">English</option><option value="hi">Hindi</option></select></label>
-        <label className="space-y-1 text-sm"><span>Date of birth (optional)</span><Input type="date" value={birthday} onChange={event => setBirthday(event.target.value)} /></label>
-      </div>
-      <p className="text-sm text-muted-foreground">Set your default delivery address in My Addresses. Store prices are displayed in INR.</p>
-      <div className="flex flex-wrap gap-2"><Button className={primary} disabled={saving}>Save Preferences</Button><Button type="button" variant="outline" onClick={openAddresses}>Manage Addresses</Button></div>
-    </form>}
+    {tab === "Preferences" && preferencesForm}
     {tab === "Connected Accounts" && <div className={panel}><h2 className={cn(heading, "text-xl")}>Sign-in Methods</h2>
       <ul className="mt-3 divide-y">{user.identities?.map(identity => <li key={identity.id} className="flex justify-between py-3 capitalize"><span>{identity.provider}</span><span className="text-sm text-emerald-800">Connected</span></li>)}</ul>
       {!user.identities?.length && <p className="mt-2 text-sm">No connected providers are available.</p>}
